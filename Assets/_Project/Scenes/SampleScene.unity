@@ -153,35 +153,93 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toSave:
-    priority: 0
-    duration: 0
-    offset:
+    atFrame: 0
+    flags: 0
+    velocity:
       X:
         m_rawValue: 0
       Y:
         m_rawValue: 0
       Z:
         m_rawValue: 0
-    size:
+    hitboxes:
+    - priority: 0
+      duration: 0
+      offset:
+        X:
+          m_rawValue: 0
+        Y:
+          m_rawValue: 0
+        Z:
+          m_rawValue: 0
+      size:
+        X:
+          m_rawValue: 4294967296
+        Y:
+          m_rawValue: 4294967296
+        Z:
+          m_rawValue: 4294967296
+      launchAngle:
+        m_rawValue: 42949672960
+      launchForce:
+        m_rawValue: 0
+      damage: 0
+      chipDamage: 0
+      hitstop: 0
+      hitstun: 0
+      untechTime: 0
+      blockstun: 0
+      type: 0
+      renderType: 0
+      onHitCancel: 0
+    - priority: 1
+      duration: 0
+      offset:
+        X:
+          m_rawValue: 0
+        Y:
+          m_rawValue: 0
+        Z:
+          m_rawValue: 0
+      size:
+        X:
+          m_rawValue: 0
+        Y:
+          m_rawValue: 0
+        Z:
+          m_rawValue: 0
+      launchAngle:
+        m_rawValue: 0
+      launchForce:
+        m_rawValue: 0
+      damage: 0
+      chipDamage: 0
+      hitstop: 0
+      hitstun: 0
+      untechTime: 0
+      blockstun: 0
+      type: 0
+      renderType: 0
+      onHitCancel: 0
+    hurtboxes: []
+    AudioID: 0
+    stateConditions: 0
+    cancelCondition: 0
+  fromSave:
+    atFrame: 0
+    flags: 0
+    velocity:
       X:
         m_rawValue: 0
       Y:
         m_rawValue: 0
       Z:
         m_rawValue: 0
-    launchAngle:
-      m_rawValue: 0
-    launchForce:
-      m_rawValue: 0
-    damage: 0
-    chipDamage: 0
-    hitstop: 0
-    hitstun: 0
-    untechTime: 0
-    blockstun: 0
-    type: 0
-    renderType: 0
-    onHitCancel: 0
+    hitboxes: []
+    hurtboxes: []
+    AudioID: 0
+    stateConditions: 0
+    cancelCondition: 0
   json: 
 --- !u!4 &229946327
 Transform:
