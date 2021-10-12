@@ -1,4 +1,761 @@
 {
-    "atFrame": 0,
-    "flags": 0
+    "moveStats": {
+        "mass": {
+            "m_rawValue": 0
+        },
+        "maxGroundSpeed": {
+            "m_rawValue": 0
+        },
+        "maxWalkSpeed": {
+            "m_rawValue": 0
+        },
+        "maxAirSpeed": {
+            "m_rawValue": 0
+        },
+        "maxFallSpeed": {
+            "m_rawValue": 0
+        },
+        "groundAcceleration": {
+            "m_rawValue": 0
+        },
+        "walkAcceleration": {
+            "m_rawValue": 0
+        },
+        "airAcceleration": {
+            "m_rawValue": 0
+        },
+        "groundFriction": {
+            "m_rawValue": 0
+        },
+        "airFriction": {
+            "m_rawValue": 0
+        },
+        "jumpForce": {
+            "m_rawValue": 0
+        },
+        "maxAirJumps": 0
+    },
+    "moveCondition": {
+        "curAirJumps": 0,
+        "facingRight": false,
+        "isGrounded": false
+    },
+    "MaxHealth": 0,
+    "CurHealth": 0,
+    "currentState": {
+        "stateName": "New State",
+        "stateID": 0,
+        "parentID": 0,
+        "enterStateConditions": 0,
+        "exitStateConditions": 0,
+        "stateConditions": 0,
+        "cancelCondition": 2147483647,
+        "_transitions": [],
+        "duration": 0,
+        "Frames": []
+    },
+    "defaultState": {
+        "stateName": "New State",
+        "stateID": 0,
+        "parentID": 0,
+        "enterStateConditions": 0,
+        "exitStateConditions": 0,
+        "stateConditions": 0,
+        "cancelCondition": 2147483647,
+        "_transitions": [],
+        "duration": 0,
+        "Frames": []
+    },
+    "allStates": [],
+    "inputRecorder": {
+        "prevInput": {
+            "prevInputs": [
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                },
+                {
+                    "direction": 0,
+                    "buttons": 0
+                }
+            ],
+            "prevInputsCode": [
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                },
+                {
+                    "framesHeld": 0,
+                    "code": "",
+                    "inputCode": 0
+                }
+            ],
+            "arrayPos": 0,
+            "codeArrayPos": 0
+        }
+    },
+    "commandList": {
+        "moveList": []
+    },
+    "cancelCondition": 0,
+    "stateCondition": 0,
+    "xtraCondition": 0
 }

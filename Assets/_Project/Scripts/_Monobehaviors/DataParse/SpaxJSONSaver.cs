@@ -35,15 +35,19 @@ public class SpaxJSONSaver : MonoBehaviour
 
         json = JsonUtility.ToJson(toSave, true);
 
-        //System.IO.File.WriteAllText(Application.persistentDataPath + "/Assets/Resources/JSON/TestData/Test.json", json);
-        System.IO.File.WriteAllText (path, json);
-
-        fromSave = JsonUtility.FromJson<CharacterData>(json);
-
         //refresh to correctly see the changes to json
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
 #endif
+
+
+        //System.IO.File.WriteAllText(Application.persistentDataPath + "/Assets/Resources/JSON/TestData/Test.json", json);
+        System.IO.File.WriteAllText (path, json);
+
+        TextAsset jsonData =
+            Resources.Load<TextAsset>("JSON/TestData/Test");
+        Debug.Log(jsonData);
+        fromSave = JsonUtility.FromJson<CharacterData>(jsonData.text);
     }
 
     // Update is called once per frame
