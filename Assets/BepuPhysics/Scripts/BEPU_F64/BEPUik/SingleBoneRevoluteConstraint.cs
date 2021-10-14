@@ -5,26 +5,26 @@ namespace BEPUik
 {
     public class SingleBoneRevoluteConstraint : SingleBoneConstraint
     {
-        private Vector3 freeAxis;
-        private Vector3 constrainedAxis1;
-        private Vector3 constrainedAxis2;
+        private BepuVector3 freeAxis;
+        private BepuVector3 constrainedAxis1;
+        private BepuVector3 constrainedAxis2;
 
         /// <summary>
         /// Gets or sets the direction to constrain the bone free axis to.
         /// </summary>
-        public Vector3 FreeAxis
+        public BepuVector3 FreeAxis
         {
             get { return freeAxis; }
             set
             {
                 freeAxis = value;
-                constrainedAxis1 = Vector3.Cross(freeAxis, Vector3.Up);
+                constrainedAxis1 = BepuVector3.Cross(freeAxis, BepuVector3.Up);
                 if (constrainedAxis1.LengthSquared() < Toolbox.Epsilon)
                 {
-                    constrainedAxis1 = Vector3.Cross(freeAxis, Vector3.Right);
+                    constrainedAxis1 = BepuVector3.Cross(freeAxis, BepuVector3.Right);
                 }
                 constrainedAxis1.Normalize();
-                constrainedAxis2 = Vector3.Cross(freeAxis, constrainedAxis1);
+                constrainedAxis2 = BepuVector3.Cross(freeAxis, constrainedAxis1);
             }
         }
 
@@ -32,7 +32,7 @@ namespace BEPUik
         /// <summary>
         /// Axis of allowed rotation in the bone's local space.
         /// </summary>
-        public Vector3 BoneLocalFreeAxis;
+        public BepuVector3 BoneLocalFreeAxis;
 
         protected internal override void UpdateJacobiansAndVelocityBias()
         {
@@ -40,8 +40,8 @@ namespace BEPUik
 
             linearJacobian = new Matrix3x3();
 
-            Vector3 boneAxis;
-            Quaternion.Transform(ref BoneLocalFreeAxis, ref TargetBone.Orientation, out boneAxis);
+            BepuVector3 boneAxis;
+            BepuQuaternion.Transform(ref BoneLocalFreeAxis, ref TargetBone.Orientation, out boneAxis);
 
 
             angularJacobian = new Matrix3x3
@@ -55,11 +55,11 @@ namespace BEPUik
             };
 
 
-            Vector3 error;
-            Vector3.Cross(ref boneAxis, ref freeAxis, out error);
-            Vector2 constraintSpaceError;
-            Vector3.Dot(ref error, ref constrainedAxis1, out constraintSpaceError.X);
-            Vector3.Dot(ref error, ref constrainedAxis2, out constraintSpaceError.Y);
+            BepuVector3 error;
+            BepuVector3.Cross(ref boneAxis, ref freeAxis, out error);
+            BepuVector2 constraintSpaceError;
+            BepuVector3.Dot(ref error, ref constrainedAxis1, out constraintSpaceError.X);
+            BepuVector3.Dot(ref error, ref constrainedAxis2, out constraintSpaceError.Y);
             velocityBias.X = errorCorrectionFactor * constraintSpaceError.X;
             velocityBias.Y = errorCorrectionFactor * constraintSpaceError.Y;
 

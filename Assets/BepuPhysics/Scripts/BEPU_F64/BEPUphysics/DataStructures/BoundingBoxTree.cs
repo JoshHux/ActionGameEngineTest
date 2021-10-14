@@ -423,17 +423,17 @@ namespace BEPUphysics.DataStructures
                 BoundingBox.CreateMerged(ref childA.BoundingBox, ref node.BoundingBox, out mergedA);
                 BoundingBox.CreateMerged(ref childB.BoundingBox, ref node.BoundingBox, out mergedB);
 
-                Vector3 offset;
+                BepuVector3 offset;
                 Fix64 originalAVolume, originalBVolume;
-                Vector3.Subtract(ref childA.BoundingBox.Max, ref childA.BoundingBox.Min, out offset);
+                BepuVector3.Subtract(ref childA.BoundingBox.Max, ref childA.BoundingBox.Min, out offset);
                 originalAVolume = offset.X * offset.Y * offset.Z;
-                Vector3.Subtract(ref childB.BoundingBox.Max, ref childB.BoundingBox.Min, out offset);
+                BepuVector3.Subtract(ref childB.BoundingBox.Max, ref childB.BoundingBox.Min, out offset);
                 originalBVolume = offset.X * offset.Y * offset.Z;
 
                 Fix64 mergedAVolume, mergedBVolume;
-                Vector3.Subtract(ref mergedA.Max, ref mergedA.Min, out offset);
+                BepuVector3.Subtract(ref mergedA.Max, ref mergedA.Min, out offset);
                 mergedAVolume = offset.X * offset.Y * offset.Z;
-                Vector3.Subtract(ref mergedB.Max, ref mergedB.Min, out offset);
+                BepuVector3.Subtract(ref mergedB.Max, ref mergedB.Min, out offset);
                 mergedBVolume = offset.X * offset.Y * offset.Z;
 
                 //Could use factor increase or absolute difference

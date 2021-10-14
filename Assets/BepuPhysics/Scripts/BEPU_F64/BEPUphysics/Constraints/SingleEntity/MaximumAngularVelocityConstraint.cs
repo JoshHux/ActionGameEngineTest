@@ -13,7 +13,7 @@ namespace BEPUphysics.Constraints.SingleEntity
         private Matrix3x3 effectiveMassMatrix;
         private Fix64 maxForceDt = Fix64.MaxValue;
         private Fix64 maxForceDtSquared = Fix64.MaxValue;
-        private Vector3 accumulatedImpulse;
+        private BepuVector3 accumulatedImpulse;
         private Fix64 maximumForce = Fix64.MaxValue;
         private Fix64 maximumSpeed;
         private Fix64 maximumSpeedSquared;
@@ -91,7 +91,7 @@ namespace BEPUphysics.Constraints.SingleEntity
         /// <summary>
         /// Gets the current relative velocity between the connected entities with respect to the constraint.
         /// </summary>
-        Vector3 I3DImpulseConstraint.RelativeVelocity
+        BepuVector3 I3DImpulseConstraint.RelativeVelocity
         {
             get { return entity.angularVelocity; }
         }
@@ -99,7 +99,7 @@ namespace BEPUphysics.Constraints.SingleEntity
         /// <summary>
         /// Gets the total impulse applied by the constraint.
         /// </summary>
-        public Vector3 TotalImpulse
+        public BepuVector3 TotalImpulse
         {
             get { return accumulatedImpulse; }
         }
@@ -116,23 +116,23 @@ namespace BEPUphysics.Constraints.SingleEntity
             if (angularSpeed > maximumSpeedSquared)
             {
                 angularSpeed = Fix64.Sqrt(angularSpeed);
-                Vector3 impulse;
+                BepuVector3 impulse;
                 //divide by angularSpeed to normalize the velocity.
                 //Multiply by angularSpeed - maximumSpeed to get the 'velocity change vector.'
-                Vector3.Multiply(ref entity.angularVelocity, -(angularSpeed - maximumSpeed) / angularSpeed, out impulse);
+                BepuVector3.Multiply(ref entity.angularVelocity, -(angularSpeed - maximumSpeed) / angularSpeed, out impulse);
 
                 //incorporate softness
-                Vector3 softnessImpulse;
-                Vector3.Multiply(ref accumulatedImpulse, usedSoftness, out softnessImpulse);
-                Vector3.Subtract(ref impulse, ref softnessImpulse, out impulse);
+                BepuVector3 softnessImpulse;
+                BepuVector3.Multiply(ref accumulatedImpulse, usedSoftness, out softnessImpulse);
+                BepuVector3.Subtract(ref impulse, ref softnessImpulse, out impulse);
 
                 //Transform into impulse
                 Matrix3x3.Transform(ref impulse, ref effectiveMassMatrix, out impulse);
 
 
                 //Accumulate
-                Vector3 previousAccumulatedImpulse = accumulatedImpulse;
-                Vector3.Add(ref accumulatedImpulse, ref impulse, out accumulatedImpulse);
+                BepuVector3 previousAccumulatedImpulse = accumulatedImpulse;
+                BepuVector3.Add(ref accumulatedImpulse, ref impulse, out accumulatedImpulse);
                 Fix64 forceMagnitude = accumulatedImpulse.LengthSquared();
                 if (forceMagnitude > maxForceDtSquared)
                 {

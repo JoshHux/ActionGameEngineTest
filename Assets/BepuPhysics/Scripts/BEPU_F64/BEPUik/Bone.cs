@@ -16,24 +16,24 @@ namespace BEPUik
         /// <summary>
         /// Gets or sets the position of the bone.
         /// </summary>
-        public Vector3 Position;
+        public BepuVector3 Position;
 
         /// <summary>
         /// Gets or sets the orientation of the bone.
         /// </summary>
-        public Quaternion Orientation = Quaternion.Identity;
+        public BepuQuaternion Orientation = BepuQuaternion.Identity;
 
         /// <summary>
         /// The mid-iteration angular velocity associated with the bone.
         /// This is computed during the velocity subiterations and then applied to the orientation at the end of each position iteration.
         /// </summary>
-        internal Vector3 angularVelocity;
+        internal BepuVector3 angularVelocity;
 
         /// <summary>
         /// The mid-iteration linear velocity associated with the bone.
         /// This is computed during the velocity subiterations and then applied to the position at the end of each position iteration.
         /// </summary>
-        internal Vector3 linearVelocity;
+        internal BepuVector3 linearVelocity;
 
 
         internal Fix64 inverseMass;
@@ -140,7 +140,7 @@ namespace BEPUik
         /// <param name="radius">Radius of the bone.</param>
         /// <param name="height">Height of the bone.</param>
         /// <param name="mass">Mass of the bone.</param>
-        public Bone(Vector3 position, Quaternion orientation, Fix64 radius, Fix64 height, Fix64 mass)
+        public Bone(BepuVector3 position, BepuQuaternion orientation, Fix64 radius, Fix64 height, Fix64 mass)
             :this(position, orientation, radius, height)
         {
             Mass = mass;
@@ -153,7 +153,7 @@ namespace BEPUik
         /// <param name="orientation">Initial orientation of the bone.</param>
         /// <param name="radius">Radius of the bone.</param>
         /// <param name="height">Height of the bone.</param>
-        public Bone(Vector3 position, Quaternion orientation, Fix64 radius, Fix64 height)
+        public Bone(BepuVector3 position, BepuQuaternion orientation, Fix64 radius, Fix64 height)
         {
             Mass = F64.C1;
             Position = position;
@@ -182,7 +182,7 @@ namespace BEPUik
             //This is separate from the position update because the orientation can change outside of our iteration loop, so this has to run first.
             //Iworld^-1 = RT * Ilocal^1 * R
             Matrix3x3 orientationMatrix;
-            Matrix3x3.CreateFromQuaternion(ref Orientation, out orientationMatrix);
+            Matrix3x3.CreateFromBepuQuaternion(ref Orientation, out orientationMatrix);
             Matrix3x3.MultiplyTransposed(ref orientationMatrix, ref localInertiaTensorInverse, out inertiaTensorInverse);
             Matrix3x3.Multiply(ref inertiaTensorInverse, ref orientationMatrix, out inertiaTensorInverse);
         }
@@ -193,21 +193,21 @@ namespace BEPUik
         internal void UpdatePosition()
         {
             //Update the position based on the linear velocity.
-            Vector3.Add(ref Position, ref linearVelocity, out Position);
+            BepuVector3.Add(ref Position, ref linearVelocity, out Position);
 
             //Update the orientation based on the angular velocity.
-            Vector3 increment;
-            Vector3.Multiply(ref angularVelocity, F64.C0p5, out increment);
-            var multiplier = new Quaternion(increment.X, increment.Y, increment.Z, F64.C0);
-            Quaternion.Multiply(ref multiplier, ref Orientation, out multiplier);
-            Quaternion.Add(ref Orientation, ref multiplier, out Orientation);
+            BepuVector3 increment;
+            BepuVector3.Multiply(ref angularVelocity, F64.C0p5, out increment);
+            var multiplier = new BepuQuaternion(increment.X, increment.Y, increment.Z, F64.C0);
+            BepuQuaternion.Multiply(ref multiplier, ref Orientation, out multiplier);
+            BepuQuaternion.Add(ref Orientation, ref multiplier, out Orientation);
             Orientation.Normalize();
 
             //Eliminate any latent velocity in the bone to prevent unwanted simulation feedback.
             //This is the only thing conceptually separating this "IK" solver from the regular dynamics loop in BEPUphysics.
             //(Well, that and the whole lack of collision detection...)
-            linearVelocity = new Vector3();
-            angularVelocity = new Vector3();
+            linearVelocity = new BepuVector3();
+            angularVelocity = new BepuVector3();
 
             //Note: Unlike a regular dynamics simulation, we do not include any 'dt' parameter in the above integration.
             //Setting the velocity to 0 every update means that no more than a single iteration's worth of velocity accumulates.
@@ -216,18 +216,18 @@ namespace BEPUik
             //This is not a rigorously justifiable approach, but this isn't a regular dynamic simulation anyway.
         }
 
-        internal void ApplyLinearImpulse(ref Vector3 impulse)
+        internal void ApplyLinearImpulse(ref BepuVector3 impulse)
         {
-            Vector3 velocityChange;
-            Vector3.Multiply(ref impulse, inverseMass, out velocityChange);
-            Vector3.Add(ref linearVelocity, ref velocityChange, out linearVelocity);
+            BepuVector3 velocityChange;
+            BepuVector3.Multiply(ref impulse, inverseMass, out velocityChange);
+            BepuVector3.Add(ref linearVelocity, ref velocityChange, out linearVelocity);
         }
 
-        internal void ApplyAngularImpulse(ref Vector3 impulse)
+        internal void ApplyAngularImpulse(ref BepuVector3 impulse)
         {
-            Vector3 velocityChange;
+            BepuVector3 velocityChange;
             Matrix3x3.Transform(ref impulse, ref inertiaTensorInverse, out velocityChange);
-            Vector3.Add(ref velocityChange, ref angularVelocity, out angularVelocity);
+            BepuVector3.Add(ref velocityChange, ref angularVelocity, out angularVelocity);
         }
 
         /// <summary>

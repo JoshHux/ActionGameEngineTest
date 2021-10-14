@@ -10,7 +10,7 @@ namespace Spax.Input
 
     }
     [Flags]
-    public enum InputTags
+    public enum InputTags : byte
     {
         DETECT_AS_4_WAY = 1 << 0,
         MUST_BE_SAME_FRAME = 1 << 1,

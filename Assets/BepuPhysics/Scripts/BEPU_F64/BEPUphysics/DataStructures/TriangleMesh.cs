@@ -176,7 +176,7 @@ namespace BEPUphysics.DataStructures
             tree.GetOverlaps(ray, maximumLength, hitElements);
             for (int i = 0; i < hitElements.Count; i++)
             {
-                Vector3 v1, v2, v3;
+                BepuVector3 v1, v2, v3;
                 data.GetTriangle(hitElements[i], out v1, out v2, out v3);
                 RayHit hit;
                 if (Toolbox.FindRayTriangleIntersection(ref ray, maximumLength, sidedness, ref v1, ref v2, ref v3, out hit))

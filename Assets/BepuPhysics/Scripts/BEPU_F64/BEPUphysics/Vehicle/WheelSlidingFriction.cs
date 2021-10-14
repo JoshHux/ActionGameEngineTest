@@ -50,7 +50,7 @@ namespace BEPUphysics.Vehicle
         private Fix64 blendedCoefficient;
         private Fix64 kineticCoefficient;
         private WheelFrictionBlender frictionBlender = DefaultSlidingFrictionBlender;
-        internal Vector3 slidingFrictionAxis;
+        internal BepuVector3 slidingFrictionAxis;
         internal SolverSettings solverSettings = new SolverSettings();
         private Fix64 staticCoefficient;
         private Fix64 staticFrictionVelocityThreshold = F64.C5;
@@ -109,7 +109,7 @@ namespace BEPUphysics.Vehicle
         /// <summary>
         /// Gets the axis along which sliding friction is applied.
         /// </summary>
-        public Vector3 SlidingFrictionAxis
+        public BepuVector3 SlidingFrictionAxis
         {
             get { return slidingFrictionAxis; }
         }
@@ -195,10 +195,10 @@ namespace BEPUphysics.Vehicle
 
             //Apply the impulse
 #if !WINDOWS
-            Vector3 linear = new Vector3();
-            Vector3 angular = new Vector3();
+            BepuVector3 linear = new BepuVector3();
+            BepuVector3 angular = new BepuVector3();
 #else
-            Vector3 linear, angular;
+            BepuVector3 linear, angular;
 #endif
             linear.X = lambda * linearAX;
             linear.Y = lambda * linearAY;
@@ -231,16 +231,16 @@ namespace BEPUphysics.Vehicle
             vehicleEntity = wheel.Vehicle.Body;
             supportEntity = wheel.SupportingEntity;
             supportIsDynamic = supportEntity != null && supportEntity.isDynamic;
-            Vector3.Cross(ref wheel.worldForwardDirection, ref wheel.normal, out slidingFrictionAxis);
+            BepuVector3.Cross(ref wheel.worldForwardDirection, ref wheel.normal, out slidingFrictionAxis);
             Fix64 axisLength = slidingFrictionAxis.LengthSquared();
             //Safety against bad cross product
             if (axisLength < Toolbox.BigEpsilon)
             {
-                Vector3.Cross(ref wheel.worldForwardDirection, ref Toolbox.UpVector, out slidingFrictionAxis);
+                BepuVector3.Cross(ref wheel.worldForwardDirection, ref Toolbox.UpVector, out slidingFrictionAxis);
                 axisLength = slidingFrictionAxis.LengthSquared();
                 if (axisLength < Toolbox.BigEpsilon)
                 {
-                    Vector3.Cross(ref wheel.worldForwardDirection, ref Toolbox.RightVector, out slidingFrictionAxis);
+                    BepuVector3.Cross(ref wheel.worldForwardDirection, ref Toolbox.RightVector, out slidingFrictionAxis);
                 }
             }
             slidingFrictionAxis.Normalize();
@@ -301,10 +301,10 @@ namespace BEPUphysics.Vehicle
         {
             //Warm starting
 #if !WINDOWS
-            Vector3 linear = new Vector3();
-            Vector3 angular = new Vector3();
+            BepuVector3 linear = new BepuVector3();
+            BepuVector3 angular = new BepuVector3();
 #else
-            Vector3 linear, angular;
+            BepuVector3 linear, angular;
 #endif
             linear.X = accumulatedImpulse * linearAX;
             linear.Y = accumulatedImpulse * linearAY;

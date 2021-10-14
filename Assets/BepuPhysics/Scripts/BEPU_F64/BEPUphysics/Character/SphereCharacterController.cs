@@ -51,11 +51,11 @@ namespace BEPUphysics.Character
         /// </summary>
         private CharacterPairLocker PairLocker { get; set; }
 
-        private Vector3 down = new Vector3(F64.C0, -1, F64.C0);
+        private BepuVector3 down = new BepuVector3(F64.C0, -1, F64.C0);
         /// <summary>
         /// Gets or sets the down direction of the character. Controls the interpretation of movement and support finding.
         /// </summary>
-        public Vector3 Down
+        public BepuVector3 Down
         {
             get
             {
@@ -66,19 +66,19 @@ namespace BEPUphysics.Character
                 Fix64 lengthSquared = value.LengthSquared();
                 if (lengthSquared < Toolbox.Epsilon)
                     return; //Silently fail. Assuming here that a dynamic process is setting this property; don't need to make a stink about it.
-                Vector3.Divide(ref value, Fix64.Sqrt(lengthSquared), out value);
+                BepuVector3.Divide(ref value, Fix64.Sqrt(lengthSquared), out value);
                 down = value;
             }
         }
 
-        Vector3 viewDirection = new Vector3(F64.C0, F64.C0, -1);
+        BepuVector3 viewDirection = new BepuVector3(F64.C0, F64.C0, -1);
 
         /// <summary>
         /// Gets or sets the view direction associated with the character.
         /// Also sets the horizontal view direction internally based on the current down vector.
         /// This is used to interpret the movement directions.
         /// </summary>
-        public Vector3 ViewDirection
+        public BepuVector3 ViewDirection
         {
             get
             {
@@ -293,7 +293,7 @@ namespace BEPUphysics.Character
         /// <param name="maximumGlueForce">Maximum force the vertical motion constraint is allowed to apply in an attempt to keep the character on the ground.</param>
         public SphereCharacterController(
 			// Fix64 cannot be used for default parameters. As a workaround, make all parameters nullable and assign default values inside the constructor
-			Vector3 position = new Vector3(),
+			BepuVector3 position = new BepuVector3(),
             Fix64? radius = null, Fix64? mass = null,
             Fix64? maximumTractionSlope = null, Fix64? maximumSupportSlope = null,
             Fix64? speed = null, Fix64? tractionForce = null, Fix64? slidingSpeed = null, Fix64? slidingForce = null, Fix64? airSpeed = null, Fix64? airForce = null,
@@ -382,7 +382,7 @@ namespace BEPUphysics.Character
             {
                 //This runs after the bounding box updater is run, but before the broad phase.
                 //The expansion allows the downward pointing raycast to collect hit points.
-                Vector3 expansion = SupportFinder.MaximumAssistedDownStepHeight * down;
+                BepuVector3 expansion = SupportFinder.MaximumAssistedDownStepHeight * down;
                 BoundingBox box = Body.CollisionInformation.BoundingBox;
                 if (down.X < F64.C0)
                     box.Min.X += expansion.X;
@@ -422,9 +422,9 @@ namespace BEPUphysics.Character
                 supportData = SupportFinder.SupportData;
 
                 //Compute the initial velocities relative to the support.
-                Vector3 relativeVelocity;
+                BepuVector3 relativeVelocity;
                 ComputeRelativeVelocity(ref supportData, out relativeVelocity);
-                Fix64 verticalVelocity = Vector3.Dot(supportData.Normal, relativeVelocity);
+                Fix64 verticalVelocity = BepuVector3.Dot(supportData.Normal, relativeVelocity);
 
 
 
@@ -447,7 +447,7 @@ namespace BEPUphysics.Character
                     {
                         //The character has traction, so jump straight up.
                         Fix64 currentDownVelocity;
-                        Vector3.Dot(ref down, ref relativeVelocity, out currentDownVelocity);
+                        BepuVector3.Dot(ref down, ref relativeVelocity, out currentDownVelocity);
                         //Target velocity is JumpSpeed.
                         Fix64 velocityChange = MathHelper.Max(jumpSpeed + currentDownVelocity, F64.C0);
                         ApplyJumpVelocity(ref supportData, down * -velocityChange, ref relativeVelocity);
@@ -462,7 +462,7 @@ namespace BEPUphysics.Character
                     else if (SupportFinder.HasSupport)
                     {
                         //The character does not have traction, so jump along the surface normal instead.
-                        Fix64 currentNormalVelocity = Vector3.Dot(supportData.Normal, relativeVelocity);
+                        Fix64 currentNormalVelocity = BepuVector3.Dot(supportData.Normal, relativeVelocity);
                         //Target velocity is JumpSpeed.
                         Fix64 velocityChange = MathHelper.Max(slidingJumpSpeed - currentNormalVelocity, F64.C0);
                         ApplyJumpVelocity(ref supportData, supportData.Normal * -velocityChange, ref relativeVelocity);
@@ -516,7 +516,7 @@ namespace BEPUphysics.Character
 
         }
 
-        void ComputeRelativeVelocity(ref SupportData supportData, out Vector3 relativeVelocity)
+        void ComputeRelativeVelocity(ref SupportData supportData, out BepuVector3 relativeVelocity)
         {
 
             //Compute the relative velocity between the body and its support, if any.
@@ -530,7 +530,7 @@ namespace BEPUphysics.Character
                 {
                     //It's possible for the support's velocity to change due to another character jumping if the support is dynamic.
                     //Don't let that happen while the character is computing a relative velocity!
-                    Vector3 entityVelocity;
+                    BepuVector3 entityVelocity;
                     bool locked;
                     if (locked = entityCollidable.Entity.IsDynamic)
                         entityCollidable.Entity.Locker.Enter();
@@ -543,7 +543,7 @@ namespace BEPUphysics.Character
                         if (locked)
                             entityCollidable.Entity.Locker.Exit();
                     }
-                    Vector3.Subtract(ref relativeVelocity, ref entityVelocity, out relativeVelocity);
+                    BepuVector3.Subtract(ref relativeVelocity, ref entityVelocity, out relativeVelocity);
                 }
             }
 
@@ -555,7 +555,7 @@ namespace BEPUphysics.Character
         /// <param name="supportData">Support data to use to jump.</param>
         /// <param name="velocityChange">Change to apply to the character and support relative velocity.</param>
         /// <param name="relativeVelocity">Relative velocity to update.</param>
-        void ApplyJumpVelocity(ref SupportData supportData, Vector3 velocityChange, ref Vector3 relativeVelocity)
+        void ApplyJumpVelocity(ref SupportData supportData, BepuVector3 velocityChange, ref BepuVector3 relativeVelocity)
         {
             Body.LinearVelocity += velocityChange;
             var entityCollidable = supportData.SupportObject as EntityCollidable;
@@ -563,7 +563,7 @@ namespace BEPUphysics.Character
             {
                 if (entityCollidable.Entity.IsDynamic)
                 {
-                    Vector3 change = velocityChange * jumpForceFactor;
+                    BepuVector3 change = velocityChange * jumpForceFactor;
                     //Multiple characters cannot attempt to modify another entity's velocity at the same time.
                     entityCollidable.Entity.Locker.Enter();
                     try
@@ -579,7 +579,7 @@ namespace BEPUphysics.Character
             }
 
             //Update the relative velocity as well.  It's a ref parameter, so this update will be reflected in the calling scope.
-            Vector3.Add(ref relativeVelocity, ref velocityChange, out relativeVelocity);
+            BepuVector3.Add(ref relativeVelocity, ref velocityChange, out relativeVelocity);
 
         }
 
@@ -606,8 +606,8 @@ namespace BEPUphysics.Character
             //This character controller requires the standard implementation of Space.
             newSpace.BoundingBoxUpdater.Finishing += ExpandBoundingBox;
 
-            Body.AngularVelocity = new Vector3();
-            Body.LinearVelocity = new Vector3();
+            Body.AngularVelocity = new BepuVector3();
+            Body.LinearVelocity = new BepuVector3();
         }
         public override void OnRemovalFromSpace(Space oldSpace)
         {
@@ -618,8 +618,8 @@ namespace BEPUphysics.Character
             //This character controller requires the standard implementation of Space.
             oldSpace.BoundingBoxUpdater.Finishing -= ExpandBoundingBox;
             SupportFinder.ClearSupportData();
-            Body.AngularVelocity = new Vector3();
-            Body.LinearVelocity = new Vector3();
+            Body.AngularVelocity = new BepuVector3();
+            Body.LinearVelocity = new BepuVector3();
         }
 
 

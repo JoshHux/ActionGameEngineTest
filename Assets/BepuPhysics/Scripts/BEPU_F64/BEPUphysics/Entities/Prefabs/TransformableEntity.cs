@@ -61,7 +61,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// <param name="shape">Shape to transform.</param>
         /// <param name="transform">Transform to apply to the shape.</param>
         /// <param name="mass">Mass of the object.</param>
-        public TransformableEntity(Vector3 position, ConvexShape shape, Matrix3x3 transform, Fix64 mass)
+        public TransformableEntity(BepuVector3 position, ConvexShape shape, Matrix3x3 transform, Fix64 mass)
             : this(shape, transform, mass)
         {
             Position = position;
@@ -74,7 +74,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// <param name="position">Position of the entity.</param>
         /// <param name="shape">Shape to transform.</param>
         /// <param name="transform">Transform to apply to the shape.</param>
-        public TransformableEntity(Vector3 position, ConvexShape shape, Matrix3x3 transform)
+        public TransformableEntity(BepuVector3 position, ConvexShape shape, Matrix3x3 transform)
             : this(shape, transform)
         {
             Position = position;

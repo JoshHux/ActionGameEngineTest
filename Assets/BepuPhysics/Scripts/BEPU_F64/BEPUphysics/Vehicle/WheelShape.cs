@@ -26,7 +26,7 @@ namespace BEPUphysics.Vehicle
         /// <summary>
         /// Collects collision pairs from the environment.
         /// </summary>
-        protected internal Box detector = new Box(Vector3.Zero, F64.C0, F64.C0, F64.C0);
+        protected internal Box detector = new Box(BepuVector3.Zero, F64.C0, F64.C0, F64.C0);
 
         protected internal Matrix localGraphicTransform;
         protected Fix64 spinAngle;
@@ -243,7 +243,7 @@ namespace BEPUphysics.Vehicle
         /// <param name="entity">Entity supporting the wheel, if any.</param>
         /// <param name="material">Material of the support.</param>
         /// <returns>Whether or not any support was found.</returns>
-        protected internal abstract bool FindSupport(out Vector3 location, out Vector3 normal, out Fix64 suspensionLength, out Collidable supportCollidable, out Entity entity, out Material material);
+        protected internal abstract bool FindSupport(out BepuVector3 location, out BepuVector3 normal, out Fix64 suspensionLength, out Collidable supportCollidable, out Entity entity, out Material material);
 
         /// <summary>
         /// Initializes the detector entity and any other necessary logic.

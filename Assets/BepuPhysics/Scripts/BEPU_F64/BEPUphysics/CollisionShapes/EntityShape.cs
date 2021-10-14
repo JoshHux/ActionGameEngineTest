@@ -56,7 +56,7 @@ namespace BEPUphysics.CollisionShapes
         /// <param name="z">Local extreme point along the world Z axis.</param>
         /// <param name="transform">World transform.</param>
         /// <param name="result">Contains the transformed X coordinate of input X, transformed Y coordinate of input Y, and transformed Z coordinate of input Z.</param>
-        protected void TransformLocalExtremePoints(ref Vector3 x, ref Vector3 y, ref Vector3 z, ref Matrix3x3 transform, out Vector3 result)
+        protected void TransformLocalExtremePoints(ref BepuVector3 x, ref BepuVector3 y, ref BepuVector3 z, ref Matrix3x3 transform, out BepuVector3 result)
         {
             result.X = x.X * transform.M11 + x.Y * transform.M21 + x.Z * transform.M31;
             result.Y = y.X * transform.M12 + y.Y * transform.M22 + y.Z * transform.M32;

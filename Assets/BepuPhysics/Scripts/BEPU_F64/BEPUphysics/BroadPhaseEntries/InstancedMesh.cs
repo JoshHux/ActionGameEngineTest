@@ -182,8 +182,8 @@ namespace BEPUphysics.BroadPhaseEntries
             if (Shape.TriangleMesh.RayCast(localRay, maximumLength, sidedness, out rayHit))
             {
                 //Transform the hit into world space.
-                Vector3.Multiply(ref ray.Direction, rayHit.T, out rayHit.Location);
-                Vector3.Add(ref rayHit.Location, ref ray.Position, out rayHit.Location);
+                BepuVector3.Multiply(ref ray.Direction, rayHit.T, out rayHit.Location);
+                BepuVector3.Add(ref rayHit.Location, ref ray.Position, out rayHit.Location);
                 Matrix3x3.TransformTranspose(ref rayHit.Normal, ref inverse.LinearTransform, out rayHit.Normal);
                 return true;
             }
@@ -199,7 +199,7 @@ namespace BEPUphysics.BroadPhaseEntries
         /// <param name="sweep">Sweep to apply to the shape.</param>
         /// <param name="hit">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public override bool ConvexCast(CollisionShapes.ConvexShapes.ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
+        public override bool ConvexCast(CollisionShapes.ConvexShapes.ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, out RayHit hit)
         {
             hit = new RayHit();
             BoundingBox boundingBox;
@@ -215,13 +215,13 @@ namespace BEPUphysics.BroadPhaseEntries
                     AffineTransform.Transform(ref tri.vA, ref worldTransform, out tri.vA);
                     AffineTransform.Transform(ref tri.vB, ref worldTransform, out tri.vB);
                     AffineTransform.Transform(ref tri.vC, ref worldTransform, out tri.vC);
-                    Vector3 center;
-                    Vector3.Add(ref tri.vA, ref tri.vB, out center);
-                    Vector3.Add(ref center, ref tri.vC, out center);
-                    Vector3.Multiply(ref center, F64.OneThird, out center);
-                    Vector3.Subtract(ref tri.vA, ref center, out tri.vA);
-                    Vector3.Subtract(ref tri.vB, ref center, out tri.vB);
-                    Vector3.Subtract(ref tri.vC, ref center, out tri.vC);
+                    BepuVector3 center;
+                    BepuVector3.Add(ref tri.vA, ref tri.vB, out center);
+                    BepuVector3.Add(ref center, ref tri.vC, out center);
+                    BepuVector3.Multiply(ref center, F64.OneThird, out center);
+                    BepuVector3.Subtract(ref tri.vA, ref center, out tri.vA);
+                    BepuVector3.Subtract(ref tri.vB, ref center, out tri.vB);
+                    BepuVector3.Subtract(ref tri.vC, ref center, out tri.vC);
                     tri.MaximumRadius = tri.vA.LengthSquared();
 					Fix64 radius = tri.vB.LengthSquared();
                     if (tri.MaximumRadius < radius)
@@ -231,7 +231,7 @@ namespace BEPUphysics.BroadPhaseEntries
                         tri.MaximumRadius = radius;
                     tri.MaximumRadius = Fix64.Sqrt(tri.MaximumRadius);
                     tri.collisionMargin = F64.C0;
-                    var triangleTransform = new RigidTransform { Orientation = Quaternion.Identity, Position = center };
+                    var triangleTransform = new RigidTransform { Orientation = BepuQuaternion.Identity, Position = center };
                     RayHit tempHit;
                     if (MPRToolbox.Sweep(castShape, tri, ref sweep, ref Toolbox.ZeroVector, ref startingTransform, ref triangleTransform, out tempHit) && tempHit.T < hit.T)
                     {

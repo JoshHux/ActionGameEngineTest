@@ -298,15 +298,15 @@ namespace BEPUutilities
         /// <summary>
         /// Transforms the vector by the matrix.
         /// </summary>
-        /// <param name="v">Vector2 to transform.</param>
+        /// <param name="v">BepuVector2 to transform.</param>
         /// <param name="matrix">Matrix to use as the transformation.</param>
         /// <param name="result">Product of the transformation.</param>
-        public static void Transform(ref Vector2 v, ref Matrix2x2 matrix, out Vector2 result)
+        public static void Transform(ref BepuVector2 v, ref Matrix2x2 matrix, out BepuVector2 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
 #if !WINDOWS
-            result = new Vector2();
+            result = new BepuVector2();
 #endif
             result.X = vX * matrix.M11 + vY * matrix.M21;
             result.Y = vX * matrix.M12 + vY * matrix.M22;

@@ -7,6 +7,7 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionTests;
+using BEPUutilities;
 
 namespace Spax
 {
@@ -47,7 +48,7 @@ namespace Spax
 
             bepuCollider = this.GetComponent<BEPUSphere>();
             //ShapeBase = this.GetComponent<Fix64BoxbepuCollider>();
-            //ShapeBase.position=new BEPUutilities.Vector3(0,1,5);
+            //ShapeBase.position=new BepuVector3(0,1,5);
             player = transform.parent.GetComponentInParent<FighterController>();
             timer = new FrameTimer();
             timer.onEnd += DeactivateBox;
@@ -69,7 +70,7 @@ namespace Spax
                 {
                     //Debug.Log("hit :: "+ShapeBase.Center);
                     //corrects position of hurtbox when rotating
-                    //ShapeBase.Center = BEPUutilities.Vector3.Transform(data.offset, Fix64Matrix.CreateFromQuaternion(ShapeBase.tsParent.rotation));
+                    //ShapeBase.Center = BepuVector3.Transform(data.offset, Fix64Matrix.CreateFromQuaternion(ShapeBase.tsParent.rotation));
                 }
             }
         }
@@ -85,14 +86,14 @@ namespace Spax
 
             //Debug.Log("hit :: "+ShapeBase.Center);
             //corrects position of hurtbox when rotating
-            //ShapeBase.Center = BEPUutilities.Vector3.Transform(data.offset, Fix64Matrix.CreateFromQuaternion(ShapeBase.tsParent.rotation));
+            //ShapeBase.Center = BepuVector3.Transform(data.offset, Fix64Matrix.CreateFromQuaternion(ShapeBase.tsParent.rotation));
 
             //ShapeBase._body.Orientation = (Fix64Matrix.CreateFromQuaternion(ShapeBase.tsParent.rotation));
             //ShapeBase.localRotation=Fix64Quaternion.identity;
-            //Debug.Log("active :: " + BEPUutilities.Vector3.Transform(new BEPUutilities.Vector3(data.offset.X, data.offset.Y, data.offset.Z), Fix64Matrix.CreateFromQuaternion(ShapeBase.tsParent.localRotation)) + " || forwards :: " + ShapeBase.tsParent.forward);
+            //Debug.Log("active :: " + BepuVector3.Transform(new BepuVector3(data.offset.X, data.offset.Y, data.offset.Z), Fix64Matrix.CreateFromQuaternion(ShapeBase.tsParent.localRotation)) + " || forwards :: " + ShapeBase.tsParent.forward);
             //query collisions if the hitbox is supposed to be active
             //basically a hitscan, the cast is off of world position, not local position
-            //bepuCollider.Center = new BEPUutilities.Vector3(ShapeBase.position.x + data.offset.X, ShapeBase.position.y + data.offset.Y, ShapeBase.position.z + data.offset.Z);
+            //bepuCollider.Center = new BepuVector3(ShapeBase.position.x + data.offset.X, ShapeBase.position.y + data.offset.Y, ShapeBase.position.z + data.offset.Z);
             //ShapeBase.Center = data.offset;
 
 
@@ -142,10 +143,10 @@ namespace Spax
             timer.StartTimer(data.duration);
 
 
-            //bepuCollider._body.position = new BEPUutilities.Vector3(-data.offset.X, -data.offset.Y, -data.offset.Z);
-            //ShapeBase.Body.Fix64Position =ShapeBase._body.position+ new BEPUutilities.Vector3(-data.offset.X, -data.offset.Y, -data.offset.Z);
-            bepuCollider.localPosition = new BEPUutilities.Vector3(data.offset.X, data.offset.Y, data.offset.Z);
-            //ShapeBase.size = new BEPUutilities.Vector3(data.size.X, data.size.Y, data.size.Z);
+            //bepuCollider._body.position = new BepuVector3(-data.offset.X, -data.offset.Y, -data.offset.Z);
+            //ShapeBase.Body.Fix64Position =ShapeBase._body.position+ new BepuVector3(-data.offset.X, -data.offset.Y, -data.offset.Z);
+            bepuCollider.localPosition = new BepuVector3(data.offset.X, data.offset.Y, data.offset.Z);
+            //ShapeBase.size = new BepuVector3(data.size.X, data.size.Y, data.size.Z);
             bepuCollider.radius = data.size.Z;
 
             //renderer stuff
@@ -164,7 +165,7 @@ namespace Spax
             }
 
             //Debug.Log(data.size.Z);
-            //ShapeBase = new BEPUutilities.Vector3(-data.offset.X,  -data.offset.Y, -data.offset.Z);
+            //ShapeBase = new BepuVector3(-data.offset.X,  -data.offset.Y, -data.offset.Z);
 
         }
 
@@ -177,10 +178,10 @@ namespace Spax
         {
 
 
-            //ShapeBase.Center = new BEPUutilities.Vector3(0, 0, 0);
+            //ShapeBase.Center = new BepuVector3(0, 0, 0);
             //bepuCollider.radius = 1;
 
-            //ShapeBase.size = new BEPUutilities.Vector3(0, 0, 0);
+            //ShapeBase.size = new BepuVector3(0, 0, 0);
             //refreshes list to prepare for collision queries
             curCollidingGo.Clear();
             curColliding.Clear();
@@ -190,7 +191,7 @@ namespace Spax
             //renderer stuff
             Transform renderer = this.transform.GetChild(0);
 
-            bepuCollider.localPosition = BEPUutilities.Vector3.Zero;
+            bepuCollider.localPosition = BepuVector3.Zero;
 
             if (renderer != null)
             {

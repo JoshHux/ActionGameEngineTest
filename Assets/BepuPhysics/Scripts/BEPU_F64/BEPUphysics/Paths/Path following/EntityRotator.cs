@@ -70,28 +70,28 @@ namespace BEPUphysics.Paths.PathFollowing
         /// <summary>
         /// Gets or sets the target orientation of the entity rotator.
         /// </summary>
-        public Quaternion TargetOrientation { get; set; }
+        public BepuQuaternion TargetOrientation { get; set; }
 
         /// <summary>
         /// Gets the angular velocity necessary to change an entity's orientation from
-        /// the starting quaternion to the ending quaternion over time dt.
+        /// the starting BepuQuaternion to the ending BepuQuaternion over time dt.
         /// </summary>
         /// <param name="start">Initial orientation.</param>
         /// <param name="end">Final orientation.</param>
         /// <param name="dt">Time over which the angular velocity is to be applied.</param>
         /// <returns>Angular velocity to reach the goal in time.</returns>
-        public static Vector3 GetAngularVelocity(Quaternion start, Quaternion end, Fix64 dt)
+        public static BepuVector3 GetAngularVelocity(BepuQuaternion start, BepuQuaternion end, Fix64 dt)
         {
             //Compute the relative orientation R' between R and the target relative orientation.
-            Quaternion errorOrientation;
-            Quaternion.Conjugate(ref start, out errorOrientation);
-            Quaternion.Multiply(ref end, ref errorOrientation, out errorOrientation);
+            BepuQuaternion errorOrientation;
+            BepuQuaternion.Conjugate(ref start, out errorOrientation);
+            BepuQuaternion.Multiply(ref end, ref errorOrientation, out errorOrientation);
 
-            Vector3 axis;
+            BepuVector3 axis;
 			Fix64 angle;
             //Turn this into an axis-angle representation.
-            Quaternion.GetAxisAngleFromQuaternion(ref errorOrientation, out axis, out angle);
-            Vector3.Multiply(ref axis, angle / dt, out axis);
+            BepuQuaternion.GetAxisAngleFromBepuQuaternion(ref errorOrientation, out axis, out angle);
+            BepuVector3.Multiply(ref axis, angle / dt, out axis);
             return axis;
         }
 

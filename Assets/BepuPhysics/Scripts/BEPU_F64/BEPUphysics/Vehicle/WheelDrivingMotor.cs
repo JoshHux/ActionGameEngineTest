@@ -47,7 +47,7 @@ namespace BEPUphysics.Vehicle
         internal bool isActive = true;
         internal Fix64 linearAX, linearAY, linearAZ;
         private Fix64 currentFrictionCoefficient;
-        internal Vector3 forceAxis;
+        internal BepuVector3 forceAxis;
         private Fix64 gripFriction;
         private WheelFrictionBlender gripFrictionBlender = DefaultGripFrictionBlender;
         private Fix64 maxMotorForceDt;
@@ -93,7 +93,7 @@ namespace BEPUphysics.Vehicle
         /// <summary>
         /// Gets the axis along which the driving forces are applied.
         /// </summary>
-        public Vector3 ForceAxis
+        public BepuVector3 ForceAxis
         {
             get { return forceAxis; }
         }
@@ -219,10 +219,10 @@ namespace BEPUphysics.Vehicle
 
             //Apply the impulse
 #if !WINDOWS
-            Vector3 linear = new Vector3();
-            Vector3 angular = new Vector3();
+            BepuVector3 linear = new BepuVector3();
+            BepuVector3 angular = new BepuVector3();
 #else
-            Vector3 linear, angular;
+            BepuVector3 linear, angular;
 #endif
             linear.X = lambda * linearAX;
             linear.Y = lambda * linearAY;
@@ -256,7 +256,7 @@ namespace BEPUphysics.Vehicle
             supportEntity = wheel.SupportingEntity;
             supportIsDynamic = supportEntity != null && supportEntity.isDynamic;
 
-            Vector3.Cross(ref wheel.normal, ref wheel.slidingFriction.slidingFrictionAxis, out forceAxis);
+            BepuVector3.Cross(ref wheel.normal, ref wheel.slidingFriction.slidingFrictionAxis, out forceAxis);
             forceAxis.Normalize();
             //Do not need to check for normalize safety because normal and sliding friction axis must be perpendicular.
 
@@ -318,10 +318,10 @@ namespace BEPUphysics.Vehicle
         {
             //Warm starting
 #if !WINDOWS
-            Vector3 linear = new Vector3();
-            Vector3 angular = new Vector3();
+            BepuVector3 linear = new BepuVector3();
+            BepuVector3 angular = new BepuVector3();
 #else
-            Vector3 linear, angular;
+            BepuVector3 linear, angular;
 #endif
             linear.X = accumulatedImpulse * linearAX;
             linear.Y = accumulatedImpulse * linearAY;

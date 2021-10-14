@@ -17,7 +17,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         /// <summary>
         /// Position of the candidate contact.
         /// </summary>
-        public Vector3 Position;
+        public BepuVector3 Position;
 
         /// <summary>
         /// Depth of the candidate contact.
@@ -111,13 +111,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Matrix3x3 bR;
 
             Matrix3x3 aO;
-            Matrix3x3.CreateFromQuaternion(ref transformA.Orientation, out aO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformA.Orientation, out aO);
             Matrix3x3 bO;
-            Matrix3x3.CreateFromQuaternion(ref transformB.Orientation, out bO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformB.Orientation, out bO);
 
             //Relative translation rotated into A's configuration space.
-            Vector3 t;
-            Vector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
+            BepuVector3 t;
+            BepuVector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
 
             bR.M11 = aO.M11 * bO.M11 + aO.M12 * bO.M12 + aO.M13 * bO.M13;
             bR.M12 = aO.M11 * bO.M21 + aO.M12 * bO.M22 + aO.M13 * bO.M23;
@@ -247,7 +247,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         /// <param name="transformA">Transform to apply to shape A.</param>
         /// <param name="transformB">Transform to apply to shape B.</param>
         /// <returns>Whether or not the boxes collide.</returns>
-        public static bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 separationDistance, out Vector3 separatingAxis)
+        public static bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 separationDistance, out BepuVector3 separatingAxis)
         {
             Fix64 aX = a.HalfWidth;
             Fix64 aY = a.HalfHeight;
@@ -261,13 +261,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Matrix3x3 bR;
 
             Matrix3x3 aO;
-            Matrix3x3.CreateFromQuaternion(ref transformA.Orientation, out aO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformA.Orientation, out aO);
             Matrix3x3 bO;
-            Matrix3x3.CreateFromQuaternion(ref transformB.Orientation, out bO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformB.Orientation, out bO);
 
             //Relative translation rotated into A's configuration space.
-            Vector3 t;
-            Vector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
+            BepuVector3 t;
+            BepuVector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
 
             #region A Face Normals
 
@@ -288,13 +288,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.X > rarb)
             {
                 separationDistance = t.X - rarb;
-                separatingAxis = new Vector3(aO.M11, aO.M12, aO.M13);
+                separatingAxis = new BepuVector3(aO.M11, aO.M12, aO.M13);
                 return false;
             }
             if (t.X < -rarb)
             {
                 separationDistance = -t.X - rarb;
-                separatingAxis = new Vector3(-aO.M11, -aO.M12, -aO.M13);
+                separatingAxis = new BepuVector3(-aO.M11, -aO.M12, -aO.M13);
                 return false;
             }
 
@@ -313,13 +313,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.Y > rarb)
             {
                 separationDistance = t.Y - rarb;
-                separatingAxis = new Vector3(aO.M21, aO.M22, aO.M23);
+                separatingAxis = new BepuVector3(aO.M21, aO.M22, aO.M23);
                 return false;
             }
             if (t.Y < -rarb)
             {
                 separationDistance = -t.Y - rarb;
-                separatingAxis = new Vector3(-aO.M21, -aO.M22, -aO.M23);
+                separatingAxis = new BepuVector3(-aO.M21, -aO.M22, -aO.M23);
                 return false;
             }
 
@@ -336,13 +336,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.Z > rarb)
             {
                 separationDistance = t.Z - rarb;
-                separatingAxis = new Vector3(aO.M31, aO.M32, aO.M33);
+                separatingAxis = new BepuVector3(aO.M31, aO.M32, aO.M33);
                 return false;
             }
             if (t.Z < -rarb)
             {
                 separationDistance = -t.Z - rarb;
-                separatingAxis = new Vector3(-aO.M31, -aO.M32, -aO.M33);
+                separatingAxis = new BepuVector3(-aO.M31, -aO.M32, -aO.M33);
                 return false;
             }
 
@@ -357,13 +357,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(bO.M11, bO.M12, bO.M13);
+                separatingAxis = new BepuVector3(bO.M11, bO.M12, bO.M13);
                 return false;
             }
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(-bO.M11, -bO.M12, -bO.M13);
+                separatingAxis = new BepuVector3(-bO.M11, -bO.M12, -bO.M13);
                 return false;
             }
 
@@ -373,13 +373,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(bO.M21, bO.M22, bO.M23);
+                separatingAxis = new BepuVector3(bO.M21, bO.M22, bO.M23);
                 return false;
             }
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(-bO.M21, -bO.M22, -bO.M23);
+                separatingAxis = new BepuVector3(-bO.M21, -bO.M22, -bO.M23);
                 return false;
             }
 
@@ -390,13 +390,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(bO.M31, bO.M32, bO.M33);
+                separatingAxis = new BepuVector3(bO.M31, bO.M32, bO.M33);
                 return false;
             }
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(-bO.M31, -bO.M32, -bO.M33);
+                separatingAxis = new BepuVector3(-bO.M31, -bO.M32, -bO.M33);
                 return false;
             }
 
@@ -412,7 +412,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
+                separatingAxis = new BepuVector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
                                              aO.M13 * bO.M11 - aO.M11 * bO.M13,
                                              aO.M11 * bO.M12 - aO.M12 * bO.M11);
                 return false;
@@ -420,7 +420,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
+                separatingAxis = new BepuVector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
                                              bO.M13 * aO.M11 - bO.M11 * aO.M13,
                                              bO.M11 * aO.M12 - bO.M12 * aO.M11);
                 return false;
@@ -433,7 +433,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
+                separatingAxis = new BepuVector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
                                              aO.M13 * bO.M21 - aO.M11 * bO.M23,
                                              aO.M11 * bO.M22 - aO.M12 * bO.M21);
                 return false;
@@ -441,7 +441,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
+                separatingAxis = new BepuVector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
                                              bO.M23 * aO.M11 - bO.M21 * aO.M13,
                                              bO.M21 * aO.M12 - bO.M22 * aO.M11);
                 return false;
@@ -454,7 +454,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
+                separatingAxis = new BepuVector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
                                              aO.M13 * bO.M31 - aO.M11 * bO.M33,
                                              aO.M11 * bO.M32 - aO.M12 * bO.M31);
                 return false;
@@ -462,7 +462,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
+                separatingAxis = new BepuVector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
                                              bO.M33 * aO.M11 - bO.M31 * aO.M13,
                                              bO.M31 * aO.M12 - bO.M32 * aO.M11);
                 return false;
@@ -479,7 +479,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
+                separatingAxis = new BepuVector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
                                              aO.M23 * bO.M11 - aO.M21 * bO.M13,
                                              aO.M21 * bO.M12 - aO.M22 * bO.M11);
                 return false;
@@ -487,7 +487,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
+                separatingAxis = new BepuVector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
                                              bO.M13 * aO.M21 - bO.M11 * aO.M23,
                                              bO.M11 * aO.M22 - bO.M12 * aO.M21);
                 return false;
@@ -500,7 +500,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
+                separatingAxis = new BepuVector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
                                              aO.M23 * bO.M21 - aO.M21 * bO.M23,
                                              aO.M21 * bO.M22 - aO.M22 * bO.M21);
                 return false;
@@ -508,7 +508,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
+                separatingAxis = new BepuVector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
                                              bO.M23 * aO.M21 - bO.M21 * aO.M23,
                                              bO.M21 * aO.M22 - bO.M22 * aO.M21);
                 return false;
@@ -521,7 +521,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
+                separatingAxis = new BepuVector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
                                              aO.M23 * bO.M31 - aO.M21 * bO.M33,
                                              aO.M21 * bO.M32 - aO.M22 * bO.M31);
                 return false;
@@ -529,7 +529,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
+                separatingAxis = new BepuVector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
                                              bO.M33 * aO.M21 - bO.M31 * aO.M23,
                                              bO.M31 * aO.M22 - bO.M32 * aO.M21);
                 return false;
@@ -546,7 +546,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
+                separatingAxis = new BepuVector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
                                              aO.M33 * bO.M11 - aO.M31 * bO.M13,
                                              aO.M31 * bO.M12 - aO.M32 * bO.M11);
                 return false;
@@ -554,7 +554,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
+                separatingAxis = new BepuVector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
                                              bO.M13 * aO.M31 - bO.M11 * aO.M33,
                                              bO.M11 * aO.M32 - bO.M12 * aO.M31);
                 return false;
@@ -567,7 +567,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
+                separatingAxis = new BepuVector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
                                              aO.M33 * bO.M21 - aO.M31 * bO.M23,
                                              aO.M31 * bO.M22 - aO.M32 * bO.M21);
                 return false;
@@ -575,7 +575,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
+                separatingAxis = new BepuVector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
                                              bO.M23 * aO.M31 - bO.M21 * aO.M33,
                                              bO.M21 * aO.M32 - bO.M22 * aO.M31);
                 return false;
@@ -588,7 +588,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 separationDistance = tl - rarb;
-                separatingAxis = new Vector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
+                separatingAxis = new BepuVector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
                                              aO.M33 * bO.M31 - aO.M31 * bO.M33,
                                              aO.M31 * bO.M32 - aO.M32 * bO.M31);
                 return false;
@@ -596,7 +596,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 separationDistance = -tl - rarb;
-                separatingAxis = new Vector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
+                separatingAxis = new BepuVector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
                                              bO.M33 * aO.M31 - bO.M31 * aO.M33,
                                              bO.M31 * aO.M32 - bO.M32 * aO.M31);
                 return false;
@@ -605,7 +605,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             #endregion
 
             separationDistance = F64.C0;
-            separatingAxis = Vector3.Zero;
+            separatingAxis = BepuVector3.Zero;
             return true;
         }
 
@@ -619,7 +619,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         /// <param name="transformA">Transform to apply to shape A.</param>
         /// <param name="transformB">Transform to apply to shape B.</param>
         /// <returns>Whether or not the boxes collide.</returns>
-        public static bool AreBoxesCollidingWithPenetration(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out Vector3 axis)
+        public static bool AreBoxesCollidingWithPenetration(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out BepuVector3 axis)
         {
             Fix64 aX = a.HalfWidth;
             Fix64 aY = a.HalfHeight;
@@ -633,17 +633,17 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Matrix3x3 bR;
 
             Matrix3x3 aO;
-            Matrix3x3.CreateFromQuaternion(ref transformA.Orientation, out aO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformA.Orientation, out aO);
             Matrix3x3 bO;
-            Matrix3x3.CreateFromQuaternion(ref transformB.Orientation, out bO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformB.Orientation, out bO);
 
             //Relative translation rotated into A's configuration space.
-            Vector3 t;
-            Vector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
+            BepuVector3 t;
+            BepuVector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
 
             Fix64 tempDistance;
             Fix64 minimumDistance = -Fix64.MaxValue;
-            var minimumAxis = new Vector3();
+            var minimumAxis = new BepuVector3();
 
             #region A Face Normals
 
@@ -664,13 +664,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.X > rarb)
             {
                 distance = t.X - rarb;
-                axis = new Vector3(aO.M11, aO.M12, aO.M13);
+                axis = new BepuVector3(aO.M11, aO.M12, aO.M13);
                 return false;
             }
             if (t.X < -rarb)
             {
                 distance = -t.X - rarb;
-                axis = new Vector3(-aO.M11, -aO.M12, -aO.M13);
+                axis = new BepuVector3(-aO.M11, -aO.M12, -aO.M13);
                 return false;
             }
             //Inside
@@ -680,7 +680,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(aO.M11, aO.M12, aO.M13);
+                    minimumAxis = new BepuVector3(aO.M11, aO.M12, aO.M13);
                 }
             }
             else
@@ -689,7 +689,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-aO.M11, -aO.M12, -aO.M13);
+                    minimumAxis = new BepuVector3(-aO.M11, -aO.M12, -aO.M13);
                 }
             }
 
@@ -708,13 +708,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.Y > rarb)
             {
                 distance = t.Y - rarb;
-                axis = new Vector3(aO.M21, aO.M22, aO.M23);
+                axis = new BepuVector3(aO.M21, aO.M22, aO.M23);
                 return false;
             }
             if (t.Y < -rarb)
             {
                 distance = -t.Y - rarb;
-                axis = new Vector3(-aO.M21, -aO.M22, -aO.M23);
+                axis = new BepuVector3(-aO.M21, -aO.M22, -aO.M23);
                 return false;
             }
             //Inside
@@ -724,7 +724,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(aO.M21, aO.M22, aO.M23);
+                    minimumAxis = new BepuVector3(aO.M21, aO.M22, aO.M23);
                 }
             }
             else
@@ -733,7 +733,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-aO.M21, -aO.M22, -aO.M23);
+                    minimumAxis = new BepuVector3(-aO.M21, -aO.M22, -aO.M23);
                 }
             }
 
@@ -750,13 +750,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.Z > rarb)
             {
                 distance = t.Z - rarb;
-                axis = new Vector3(aO.M31, aO.M32, aO.M33);
+                axis = new BepuVector3(aO.M31, aO.M32, aO.M33);
                 return false;
             }
             if (t.Z < -rarb)
             {
                 distance = -t.Z - rarb;
-                axis = new Vector3(-aO.M31, -aO.M32, -aO.M33);
+                axis = new BepuVector3(-aO.M31, -aO.M32, -aO.M33);
                 return false;
             }
             //Inside
@@ -766,7 +766,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(aO.M31, aO.M32, aO.M33);
+                    minimumAxis = new BepuVector3(aO.M31, aO.M32, aO.M33);
                 }
             }
             else
@@ -775,7 +775,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-aO.M31, -aO.M32, -aO.M33);
+                    minimumAxis = new BepuVector3(-aO.M31, -aO.M32, -aO.M33);
                 }
             }
 
@@ -790,13 +790,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M11, bO.M12, bO.M13);
+                axis = new BepuVector3(bO.M11, bO.M12, bO.M13);
                 return false;
             }
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(-bO.M11, -bO.M12, -bO.M13);
+                axis = new BepuVector3(-bO.M11, -bO.M12, -bO.M13);
                 return false;
             }
             //Inside
@@ -806,7 +806,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(bO.M11, bO.M12, bO.M13);
+                    minimumAxis = new BepuVector3(bO.M11, bO.M12, bO.M13);
                 }
             }
             else
@@ -815,7 +815,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-bO.M11, -bO.M12, -bO.M13);
+                    minimumAxis = new BepuVector3(-bO.M11, -bO.M12, -bO.M13);
                 }
             }
 
@@ -825,13 +825,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M21, bO.M22, bO.M23);
+                axis = new BepuVector3(bO.M21, bO.M22, bO.M23);
                 return false;
             }
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(-bO.M21, -bO.M22, -bO.M23);
+                axis = new BepuVector3(-bO.M21, -bO.M22, -bO.M23);
                 return false;
             }
             //Inside
@@ -841,7 +841,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(bO.M21, bO.M22, bO.M23);
+                    minimumAxis = new BepuVector3(bO.M21, bO.M22, bO.M23);
                 }
             }
             else
@@ -850,7 +850,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-bO.M21, -bO.M22, -bO.M23);
+                    minimumAxis = new BepuVector3(-bO.M21, -bO.M22, -bO.M23);
                 }
             }
 
@@ -860,13 +860,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M31, bO.M32, bO.M33);
+                axis = new BepuVector3(bO.M31, bO.M32, bO.M33);
                 return false;
             }
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(-bO.M31, -bO.M32, -bO.M33);
+                axis = new BepuVector3(-bO.M31, -bO.M32, -bO.M33);
                 return false;
             }
             //Inside
@@ -876,7 +876,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(bO.M31, bO.M32, bO.M33);
+                    minimumAxis = new BepuVector3(bO.M31, bO.M32, bO.M33);
                 }
             }
             else
@@ -885,14 +885,14 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-bO.M31, -bO.M32, -bO.M33);
+                    minimumAxis = new BepuVector3(-bO.M31, -bO.M32, -bO.M33);
                 }
             }
 
             #endregion
 
             Fix64 axisLengthInverse;
-            Vector3 tempAxis;
+            BepuVector3 tempAxis;
 
             #region A.X x B.()
 
@@ -904,7 +904,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
+                axis = new BepuVector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
                                    aO.M13 * bO.M11 - aO.M11 * bO.M13,
                                    aO.M11 * bO.M12 - aO.M12 * bO.M11);
                 return false;
@@ -912,7 +912,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
+                axis = new BepuVector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
                                    bO.M13 * aO.M11 - bO.M11 * aO.M13,
                                    bO.M11 * aO.M12 - bO.M12 * aO.M11);
                 return false;
@@ -920,7 +920,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
+                tempAxis = new BepuVector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
                                        aO.M13 * bO.M11 - aO.M11 * bO.M13,
                                        aO.M11 * bO.M12 - aO.M12 * bO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -936,7 +936,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
+                tempAxis = new BepuVector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
                                        bO.M13 * aO.M11 - bO.M11 * aO.M13,
                                        bO.M11 * aO.M12 - bO.M12 * aO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -958,7 +958,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
+                axis = new BepuVector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
                                    aO.M13 * bO.M21 - aO.M11 * bO.M23,
                                    aO.M11 * bO.M22 - aO.M12 * bO.M21);
                 return false;
@@ -966,7 +966,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
+                axis = new BepuVector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
                                    bO.M23 * aO.M11 - bO.M21 * aO.M13,
                                    bO.M21 * aO.M12 - bO.M22 * aO.M11);
                 return false;
@@ -974,7 +974,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
+                tempAxis = new BepuVector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
                                        aO.M13 * bO.M21 - aO.M11 * bO.M23,
                                        aO.M11 * bO.M22 - aO.M12 * bO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -990,7 +990,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
+                tempAxis = new BepuVector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
                                        bO.M23 * aO.M11 - bO.M21 * aO.M13,
                                        bO.M21 * aO.M12 - bO.M22 * aO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1012,7 +1012,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
+                axis = new BepuVector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
                                    aO.M13 * bO.M31 - aO.M11 * bO.M33,
                                    aO.M11 * bO.M32 - aO.M12 * bO.M31);
                 return false;
@@ -1020,7 +1020,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
+                axis = new BepuVector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
                                    bO.M33 * aO.M11 - bO.M31 * aO.M13,
                                    bO.M31 * aO.M12 - bO.M32 * aO.M11);
                 return false;
@@ -1028,7 +1028,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
+                tempAxis = new BepuVector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
                                        aO.M13 * bO.M31 - aO.M11 * bO.M33,
                                        aO.M11 * bO.M32 - aO.M12 * bO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1044,7 +1044,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
+                tempAxis = new BepuVector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
                                        bO.M33 * aO.M11 - bO.M31 * aO.M13,
                                        bO.M31 * aO.M12 - bO.M32 * aO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1070,7 +1070,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
+                axis = new BepuVector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
                                    aO.M23 * bO.M11 - aO.M21 * bO.M13,
                                    aO.M21 * bO.M12 - aO.M22 * bO.M11);
                 return false;
@@ -1078,7 +1078,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
+                axis = new BepuVector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
                                    bO.M13 * aO.M21 - bO.M11 * aO.M23,
                                    bO.M11 * aO.M22 - bO.M12 * aO.M21);
                 return false;
@@ -1086,7 +1086,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
+                tempAxis = new BepuVector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
                                        aO.M23 * bO.M11 - aO.M21 * bO.M13,
                                        aO.M21 * bO.M12 - aO.M22 * bO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1102,7 +1102,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
+                tempAxis = new BepuVector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
                                        bO.M13 * aO.M21 - bO.M11 * aO.M23,
                                        bO.M11 * aO.M22 - bO.M12 * aO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1124,7 +1124,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
+                axis = new BepuVector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
                                    aO.M23 * bO.M21 - aO.M21 * bO.M23,
                                    aO.M21 * bO.M22 - aO.M22 * bO.M21);
                 return false;
@@ -1132,7 +1132,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
+                axis = new BepuVector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
                                    bO.M23 * aO.M21 - bO.M21 * aO.M23,
                                    bO.M21 * aO.M22 - bO.M22 * aO.M21);
                 return false;
@@ -1140,7 +1140,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
+                tempAxis = new BepuVector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
                                        aO.M23 * bO.M21 - aO.M21 * bO.M23,
                                        aO.M21 * bO.M22 - aO.M22 * bO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1156,7 +1156,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
+                tempAxis = new BepuVector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
                                        bO.M23 * aO.M21 - bO.M21 * aO.M23,
                                        bO.M21 * aO.M22 - bO.M22 * aO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1178,7 +1178,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
+                axis = new BepuVector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
                                    aO.M23 * bO.M31 - aO.M21 * bO.M33,
                                    aO.M21 * bO.M32 - aO.M22 * bO.M31);
                 return false;
@@ -1186,7 +1186,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
+                axis = new BepuVector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
                                    bO.M33 * aO.M21 - bO.M31 * aO.M23,
                                    bO.M31 * aO.M22 - bO.M32 * aO.M21);
                 return false;
@@ -1194,7 +1194,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
+                tempAxis = new BepuVector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
                                        aO.M23 * bO.M31 - aO.M21 * bO.M33,
                                        aO.M21 * bO.M32 - aO.M22 * bO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1210,7 +1210,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
+                tempAxis = new BepuVector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
                                        bO.M33 * aO.M21 - bO.M31 * aO.M23,
                                        bO.M31 * aO.M22 - bO.M32 * aO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1236,7 +1236,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
+                axis = new BepuVector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
                                    aO.M33 * bO.M11 - aO.M31 * bO.M13,
                                    aO.M31 * bO.M12 - aO.M32 * bO.M11);
                 return false;
@@ -1244,7 +1244,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
+                axis = new BepuVector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
                                    bO.M13 * aO.M31 - bO.M11 * aO.M33,
                                    bO.M11 * aO.M32 - bO.M12 * aO.M31);
                 return false;
@@ -1252,7 +1252,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
+                tempAxis = new BepuVector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
                                        aO.M33 * bO.M11 - aO.M31 * bO.M13,
                                        aO.M31 * bO.M12 - aO.M32 * bO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1268,7 +1268,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
+                tempAxis = new BepuVector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
                                        bO.M13 * aO.M31 - bO.M11 * aO.M33,
                                        bO.M11 * aO.M32 - bO.M12 * aO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1290,7 +1290,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
+                axis = new BepuVector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
                                    aO.M33 * bO.M21 - aO.M31 * bO.M23,
                                    aO.M31 * bO.M22 - aO.M32 * bO.M21);
                 return false;
@@ -1298,7 +1298,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
+                axis = new BepuVector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
                                    bO.M23 * aO.M31 - bO.M21 * aO.M33,
                                    bO.M21 * aO.M32 - bO.M22 * aO.M31);
                 return false;
@@ -1306,7 +1306,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
+                tempAxis = new BepuVector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
                                        aO.M33 * bO.M21 - aO.M31 * bO.M23,
                                        aO.M31 * bO.M22 - aO.M32 * bO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1322,7 +1322,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
+                tempAxis = new BepuVector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
                                        bO.M23 * aO.M31 - bO.M21 * aO.M33,
                                        bO.M21 * aO.M32 - bO.M22 * aO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1344,7 +1344,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
+                axis = new BepuVector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
                                    aO.M33 * bO.M31 - aO.M31 * bO.M33,
                                    aO.M31 * bO.M32 - aO.M32 * bO.M31);
                 return false;
@@ -1352,7 +1352,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
+                axis = new BepuVector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
                                    bO.M33 * aO.M31 - bO.M31 * aO.M33,
                                    bO.M31 * aO.M32 - bO.M32 * aO.M31);
                 return false;
@@ -1360,7 +1360,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
+                tempAxis = new BepuVector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
                                        aO.M33 * bO.M31 - aO.M31 * bO.M33,
                                        aO.M31 * bO.M32 - aO.M32 * bO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1376,7 +1376,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
+                tempAxis = new BepuVector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
                                        bO.M33 * aO.M31 - bO.M31 * aO.M33,
                                        bO.M31 * aO.M32 - bO.M32 * aO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1410,7 +1410,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         /// <param name="transformA">Transform to apply to shape A.</param>
         /// <param name="transformB">Transform to apply to shape B.</param>
         /// <returns>Whether or not the boxes collide.</returns>
-        public static unsafe bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out Vector3 axis, out TinyStructList<BoxContactData> contactData)
+        public static unsafe bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out BepuVector3 axis, out TinyStructList<BoxContactData> contactData)
         {
             BoxContactDataCache tempData;
             bool toReturn = AreBoxesColliding(a, b, ref transformA, ref transformB, out distance, out axis, out tempData);
@@ -1436,9 +1436,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         /// <param name="transformB">Transform to apply to shape B.</param>
         /// <returns>Whether or not the boxes collide.</returns>
 #if ALLOWUNSAFE
-        public static bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out Vector3 axis, out BoxContactDataCache contactData)
+        public static bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out BepuVector3 axis, out BoxContactDataCache contactData)
 #else
-        public static bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out Vector3 axis, out TinyStructList<BoxContactData> contactData)
+        public static bool AreBoxesColliding(BoxShape a, BoxShape b, ref RigidTransform transformA, ref RigidTransform transformB, out Fix64 distance, out BepuVector3 axis, out TinyStructList<BoxContactData> contactData)
 #endif
         {
             Fix64 aX = a.HalfWidth;
@@ -1458,17 +1458,17 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Matrix3x3 bR;
 
             Matrix3x3 aO;
-            Matrix3x3.CreateFromQuaternion(ref transformA.Orientation, out aO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformA.Orientation, out aO);
             Matrix3x3 bO;
-            Matrix3x3.CreateFromQuaternion(ref transformB.Orientation, out bO);
+            Matrix3x3.CreateFromBepuQuaternion(ref transformB.Orientation, out bO);
 
             //Relative translation rotated into A's configuration space.
-            Vector3 t;
-            Vector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
+            BepuVector3 t;
+            BepuVector3.Subtract(ref transformB.Position, ref transformA.Position, out t);
 
             Fix64 tempDistance;
             Fix64 minimumDistance = -Fix64.MaxValue;
-            var minimumAxis = new Vector3();
+            var minimumAxis = new BepuVector3();
             byte minimumFeature = 2; //2 means edge.  0-> A face, 1 -> B face.
 
             #region A Face Normals
@@ -1490,13 +1490,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.X > rarb)
             {
                 distance = t.X - rarb;
-                axis = new Vector3(-aO.M11, -aO.M12, -aO.M13);
+                axis = new BepuVector3(-aO.M11, -aO.M12, -aO.M13);
                 return false;
             }
             if (t.X < -rarb)
             {
                 distance = -t.X - rarb;
-                axis = new Vector3(aO.M11, aO.M12, aO.M13);
+                axis = new BepuVector3(aO.M11, aO.M12, aO.M13);
                 return false;
             }
             //Inside
@@ -1506,7 +1506,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-aO.M11, -aO.M12, -aO.M13);
+                    minimumAxis = new BepuVector3(-aO.M11, -aO.M12, -aO.M13);
                     minimumFeature = 0;
                 }
             }
@@ -1516,7 +1516,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(aO.M11, aO.M12, aO.M13);
+                    minimumAxis = new BepuVector3(aO.M11, aO.M12, aO.M13);
                     minimumFeature = 0;
                 }
             }
@@ -1536,13 +1536,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.Y > rarb)
             {
                 distance = t.Y - rarb;
-                axis = new Vector3(-aO.M21, -aO.M22, -aO.M23);
+                axis = new BepuVector3(-aO.M21, -aO.M22, -aO.M23);
                 return false;
             }
             if (t.Y < -rarb)
             {
                 distance = -t.Y - rarb;
-                axis = new Vector3(aO.M21, aO.M22, aO.M23);
+                axis = new BepuVector3(aO.M21, aO.M22, aO.M23);
                 return false;
             }
             //Inside
@@ -1552,7 +1552,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-aO.M21, -aO.M22, -aO.M23);
+                    minimumAxis = new BepuVector3(-aO.M21, -aO.M22, -aO.M23);
                     minimumFeature = 0;
                 }
             }
@@ -1562,7 +1562,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(aO.M21, aO.M22, aO.M23);
+                    minimumAxis = new BepuVector3(aO.M21, aO.M22, aO.M23);
                     minimumFeature = 0;
                 }
             }
@@ -1580,13 +1580,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (t.Z > rarb)
             {
                 distance = t.Z - rarb;
-                axis = new Vector3(-aO.M31, -aO.M32, -aO.M33);
+                axis = new BepuVector3(-aO.M31, -aO.M32, -aO.M33);
                 return false;
             }
             if (t.Z < -rarb)
             {
                 distance = -t.Z - rarb;
-                axis = new Vector3(aO.M31, aO.M32, aO.M33);
+                axis = new BepuVector3(aO.M31, aO.M32, aO.M33);
                 return false;
             }
             //Inside
@@ -1596,7 +1596,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-aO.M31, -aO.M32, -aO.M33);
+                    minimumAxis = new BepuVector3(-aO.M31, -aO.M32, -aO.M33);
                     minimumFeature = 0;
                 }
             }
@@ -1606,7 +1606,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(aO.M31, aO.M32, aO.M33);
+                    minimumAxis = new BepuVector3(aO.M31, aO.M32, aO.M33);
                     minimumFeature = 0;
                 }
             }
@@ -1625,13 +1625,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(-bO.M11, -bO.M12, -bO.M13);
+                axis = new BepuVector3(-bO.M11, -bO.M12, -bO.M13);
                 return false;
             }
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M11, bO.M12, bO.M13);
+                axis = new BepuVector3(bO.M11, bO.M12, bO.M13);
                 return false;
             }
             //Inside
@@ -1641,7 +1641,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-bO.M11, -bO.M12, -bO.M13);
+                    minimumAxis = new BepuVector3(-bO.M11, -bO.M12, -bO.M13);
                     minimumFeature = 1;
                 }
             }
@@ -1651,7 +1651,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(bO.M11, bO.M12, bO.M13);
+                    minimumAxis = new BepuVector3(bO.M11, bO.M12, bO.M13);
                     minimumFeature = 1;
                 }
             }
@@ -1662,13 +1662,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(-bO.M21, -bO.M22, -bO.M23);
+                axis = new BepuVector3(-bO.M21, -bO.M22, -bO.M23);
                 return false;
             }
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M21, bO.M22, bO.M23);
+                axis = new BepuVector3(bO.M21, bO.M22, bO.M23);
                 return false;
             }
             //Inside
@@ -1678,7 +1678,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-bO.M21, -bO.M22, -bO.M23);
+                    minimumAxis = new BepuVector3(-bO.M21, -bO.M22, -bO.M23);
                     minimumFeature = 1;
                 }
             }
@@ -1688,7 +1688,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(bO.M21, bO.M22, bO.M23);
+                    minimumAxis = new BepuVector3(bO.M21, bO.M22, bO.M23);
                     minimumFeature = 1;
                 }
             }
@@ -1699,13 +1699,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(-bO.M31, -bO.M32, -bO.M33);
+                axis = new BepuVector3(-bO.M31, -bO.M32, -bO.M33);
                 return false;
             }
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(bO.M31, bO.M32, bO.M33);
+                axis = new BepuVector3(bO.M31, bO.M32, bO.M33);
                 return false;
             }
             //Inside
@@ -1715,7 +1715,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(-bO.M31, -bO.M32, -bO.M33);
+                    minimumAxis = new BepuVector3(-bO.M31, -bO.M32, -bO.M33);
                     minimumFeature = 1;
                 }
             }
@@ -1725,7 +1725,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (tempDistance > minimumDistance)
                 {
                     minimumDistance = tempDistance;
-                    minimumAxis = new Vector3(bO.M31, bO.M32, bO.M33);
+                    minimumAxis = new BepuVector3(bO.M31, bO.M32, bO.M33);
                     minimumFeature = 1;
                 }
             }
@@ -1738,7 +1738,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Fix64 antiEdgeBias = F64.C0p01;
             minimumDistance += antiEdgeBias;
             Fix64 axisLengthInverse;
-            Vector3 tempAxis;
+            BepuVector3 tempAxis;
 
             #region A.X x B.()
 
@@ -1750,7 +1750,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
+                axis = new BepuVector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
                                    bO.M13 * aO.M11 - bO.M11 * aO.M13,
                                    bO.M11 * aO.M12 - bO.M12 * aO.M11);
                 return false;
@@ -1758,7 +1758,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
+                axis = new BepuVector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
                                    aO.M13 * bO.M11 - aO.M11 * bO.M13,
                                    aO.M11 * bO.M12 - aO.M12 * bO.M11);
                 return false;
@@ -1766,7 +1766,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
+                tempAxis = new BepuVector3(bO.M12 * aO.M13 - bO.M13 * aO.M12,
                                        bO.M13 * aO.M11 - bO.M11 * aO.M13,
                                        bO.M11 * aO.M12 - bO.M12 * aO.M11);
 
@@ -1784,7 +1784,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
+                tempAxis = new BepuVector3(aO.M12 * bO.M13 - aO.M13 * bO.M12,
                                        aO.M13 * bO.M11 - aO.M11 * bO.M13,
                                        aO.M11 * bO.M12 - aO.M12 * bO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1807,7 +1807,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
+                axis = new BepuVector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
                                    bO.M23 * aO.M11 - bO.M21 * aO.M13,
                                    bO.M21 * aO.M12 - bO.M22 * aO.M11);
                 return false;
@@ -1815,7 +1815,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
+                axis = new BepuVector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
                                    aO.M13 * bO.M21 - aO.M11 * bO.M23,
                                    aO.M11 * bO.M22 - aO.M12 * bO.M21);
 
@@ -1824,7 +1824,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
+                tempAxis = new BepuVector3(bO.M22 * aO.M13 - bO.M23 * aO.M12,
                                        bO.M23 * aO.M11 - bO.M21 * aO.M13,
                                        bO.M21 * aO.M12 - bO.M22 * aO.M11);
 
@@ -1842,7 +1842,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
+                tempAxis = new BepuVector3(aO.M12 * bO.M23 - aO.M13 * bO.M22,
                                        aO.M13 * bO.M21 - aO.M11 * bO.M23,
                                        aO.M11 * bO.M22 - aO.M12 * bO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1865,7 +1865,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
+                axis = new BepuVector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
                                    bO.M33 * aO.M11 - bO.M31 * aO.M13,
                                    bO.M31 * aO.M12 - bO.M32 * aO.M11);
                 return false;
@@ -1874,7 +1874,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 distance = -tl - rarb;
 
-                axis = new Vector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
+                axis = new BepuVector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
                                    aO.M13 * bO.M31 - aO.M11 * bO.M33,
                                    aO.M11 * bO.M32 - aO.M12 * bO.M31);
                 return false;
@@ -1882,7 +1882,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
+                tempAxis = new BepuVector3(bO.M32 * aO.M13 - bO.M33 * aO.M12,
                                        bO.M33 * aO.M11 - bO.M31 * aO.M13,
                                        bO.M31 * aO.M12 - bO.M32 * aO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1899,7 +1899,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
+                tempAxis = new BepuVector3(aO.M12 * bO.M33 - aO.M13 * bO.M32,
                                        aO.M13 * bO.M31 - aO.M11 * bO.M33,
                                        aO.M11 * bO.M32 - aO.M12 * bO.M31);
 
@@ -1927,7 +1927,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
+                axis = new BepuVector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
                                    bO.M13 * aO.M21 - bO.M11 * aO.M23,
                                    bO.M11 * aO.M22 - bO.M12 * aO.M21);
                 return false;
@@ -1935,7 +1935,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
+                axis = new BepuVector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
                                    aO.M23 * bO.M11 - aO.M21 * bO.M13,
                                    aO.M21 * bO.M12 - aO.M22 * bO.M11);
 
@@ -1944,7 +1944,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
+                tempAxis = new BepuVector3(bO.M12 * aO.M23 - bO.M13 * aO.M22,
                                        bO.M13 * aO.M21 - bO.M11 * aO.M23,
                                        bO.M11 * aO.M22 - bO.M12 * aO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -1961,7 +1961,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
+                tempAxis = new BepuVector3(aO.M22 * bO.M13 - aO.M23 * bO.M12,
                                        aO.M23 * bO.M11 - aO.M21 * bO.M13,
                                        aO.M21 * bO.M12 - aO.M22 * bO.M11);
 
@@ -1985,7 +1985,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
+                axis = new BepuVector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
                                    bO.M23 * aO.M21 - bO.M21 * aO.M23,
                                    bO.M21 * aO.M22 - bO.M22 * aO.M21);
                 return false;
@@ -1994,7 +1994,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 distance = -tl - rarb;
 
-                axis = new Vector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
+                axis = new BepuVector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
                                    aO.M23 * bO.M21 - aO.M21 * bO.M23,
                                    aO.M21 * bO.M22 - aO.M22 * bO.M21);
                 return false;
@@ -2002,7 +2002,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
+                tempAxis = new BepuVector3(bO.M22 * aO.M23 - bO.M23 * aO.M22,
                                        bO.M23 * aO.M21 - bO.M21 * aO.M23,
                                        bO.M21 * aO.M22 - bO.M22 * aO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -2019,7 +2019,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
+                tempAxis = new BepuVector3(aO.M22 * bO.M23 - aO.M23 * bO.M22,
                                        aO.M23 * bO.M21 - aO.M21 * bO.M23,
                                        aO.M21 * bO.M22 - aO.M22 * bO.M21);
 
@@ -2043,7 +2043,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
+                axis = new BepuVector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
                                    bO.M33 * aO.M21 - bO.M31 * aO.M23,
                                    bO.M31 * aO.M22 - bO.M32 * aO.M21);
                 return false;
@@ -2052,7 +2052,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 distance = -tl - rarb;
 
-                axis = new Vector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
+                axis = new BepuVector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
                                    aO.M23 * bO.M31 - aO.M21 * bO.M33,
                                    aO.M21 * bO.M32 - aO.M22 * bO.M31);
                 return false;
@@ -2060,7 +2060,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
+                tempAxis = new BepuVector3(bO.M32 * aO.M23 - bO.M33 * aO.M22,
                                        bO.M33 * aO.M21 - bO.M31 * aO.M23,
                                        bO.M31 * aO.M22 - bO.M32 * aO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -2077,7 +2077,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
+                tempAxis = new BepuVector3(aO.M22 * bO.M33 - aO.M23 * bO.M32,
                                        aO.M23 * bO.M31 - aO.M21 * bO.M33,
                                        aO.M21 * bO.M32 - aO.M22 * bO.M31);
 
@@ -2105,7 +2105,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
+                axis = new BepuVector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
                                    bO.M13 * aO.M31 - bO.M11 * aO.M33,
                                    bO.M11 * aO.M32 - bO.M12 * aO.M31);
                 return false;
@@ -2114,7 +2114,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 distance = -tl - rarb;
 
-                axis = new Vector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
+                axis = new BepuVector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
                                    aO.M33 * bO.M11 - aO.M31 * bO.M13,
                                    aO.M31 * bO.M12 - aO.M32 * bO.M11);
                 return false;
@@ -2122,7 +2122,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
+                tempAxis = new BepuVector3(bO.M12 * aO.M33 - bO.M13 * aO.M32,
                                        bO.M13 * aO.M31 - bO.M11 * aO.M33,
                                        bO.M11 * aO.M32 - bO.M12 * aO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -2139,7 +2139,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
+                tempAxis = new BepuVector3(aO.M32 * bO.M13 - aO.M33 * bO.M12,
                                        aO.M33 * bO.M11 - aO.M31 * bO.M13,
                                        aO.M31 * bO.M12 - aO.M32 * bO.M11);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -2162,7 +2162,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
+                axis = new BepuVector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
                                    bO.M23 * aO.M31 - bO.M21 * aO.M33,
                                    bO.M21 * aO.M32 - bO.M22 * aO.M31);
                 return false;
@@ -2171,7 +2171,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 distance = -tl - rarb;
 
-                axis = new Vector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
+                axis = new BepuVector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
                                    aO.M33 * bO.M21 - aO.M31 * bO.M23,
                                    aO.M31 * bO.M22 - aO.M32 * bO.M21);
                 return false;
@@ -2179,7 +2179,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
+                tempAxis = new BepuVector3(bO.M22 * aO.M33 - bO.M23 * aO.M32,
                                        bO.M23 * aO.M31 - bO.M21 * aO.M33,
                                        bO.M21 * aO.M32 - bO.M22 * aO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -2196,7 +2196,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
+                tempAxis = new BepuVector3(aO.M32 * bO.M23 - aO.M33 * bO.M22,
                                        aO.M33 * bO.M21 - aO.M31 * bO.M23,
                                        aO.M31 * bO.M22 - aO.M32 * bO.M21);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -2219,7 +2219,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl > rarb)
             {
                 distance = tl - rarb;
-                axis = new Vector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
+                axis = new BepuVector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
                                    bO.M33 * aO.M31 - bO.M31 * aO.M33,
                                    bO.M31 * aO.M32 - bO.M32 * aO.M31);
                 return false;
@@ -2227,7 +2227,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             if (tl < -rarb)
             {
                 distance = -tl - rarb;
-                axis = new Vector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
+                axis = new BepuVector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
                                    aO.M33 * bO.M31 - aO.M31 * bO.M33,
                                    aO.M31 * bO.M32 - aO.M32 * bO.M31);
                 return false;
@@ -2235,7 +2235,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //Inside
             if (tl > F64.C0)
             {
-                tempAxis = new Vector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
+                tempAxis = new BepuVector3(bO.M32 * aO.M33 - bO.M33 * aO.M32,
                                        bO.M33 * aO.M31 - bO.M31 * aO.M33,
                                        bO.M31 * aO.M32 - bO.M32 * aO.M31);
                 axisLengthInverse = F64.C1 / tempAxis.Length();
@@ -2252,7 +2252,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                tempAxis = new Vector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
+                tempAxis = new BepuVector3(aO.M32 * bO.M33 - aO.M33 * bO.M32,
                                        aO.M33 * bO.M31 - aO.M31 * bO.M33,
                                        aO.M31 * bO.M32 - aO.M32 * bO.M31);
 
@@ -2277,7 +2277,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //Edge-edge contact conceptually only has one contact, but allowing it to create multiple due to penetration is more robust.
                 GetEdgeEdgeContact(a, b, ref transformA.Position, ref aO, ref transformB.Position, ref bO, minimumDistance, ref minimumAxis, out contactData);
 
-                //Vector3 position;
+                //BepuVector3 position;
                 //Fix64 depth;
                 //int id;
                 //                GetEdgeEdgeContact(a, b, ref transformA.Position, ref aO, ref transformB.Position, ref bO, ref minimumAxis, out position, out id);
@@ -2307,9 +2307,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         }
 
 #if ALLOWUNSAFE
-        internal static void GetEdgeEdgeContact(BoxShape a, BoxShape b, ref Vector3 positionA, ref Matrix3x3 orientationA, ref Vector3 positionB, ref Matrix3x3 orientationB, Fix64 depth, ref Vector3 mtd, out BoxContactDataCache contactData)
+        internal static void GetEdgeEdgeContact(BoxShape a, BoxShape b, ref BepuVector3 positionA, ref Matrix3x3 orientationA, ref BepuVector3 positionB, ref Matrix3x3 orientationB, Fix64 depth, ref BepuVector3 mtd, out BoxContactDataCache contactData)
 #else
-        internal static void GetEdgeEdgeContact(BoxShape a, BoxShape b, ref Vector3 positionA, ref Matrix3x3 orientationA, ref Vector3 positionB, ref Matrix3x3 orientationB, Fix64 depth, ref Vector3 mtd, out TinyStructList<BoxContactData> contactData)
+        internal static void GetEdgeEdgeContact(BoxShape a, BoxShape b, ref BepuVector3 positionA, ref Matrix3x3 orientationA, ref BepuVector3 positionB, ref Matrix3x3 orientationB, Fix64 depth, ref BepuVector3 mtd, out TinyStructList<BoxContactData> contactData)
 #endif
         {
             //Edge-edge contacts conceptually can only create one contact in perfectly rigid collisions.
@@ -2347,19 +2347,19 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
 
             //Put the minimum translation direction into the local space of each object.
-            Vector3 mtdA, mtdB;
-            Vector3 negatedMtd;
-            Vector3.Negate(ref mtd, out negatedMtd);
+            BepuVector3 mtdA, mtdB;
+            BepuVector3 negatedMtd;
+            BepuVector3.Negate(ref mtd, out negatedMtd);
             Matrix3x3.TransformTranspose(ref negatedMtd, ref orientationA, out mtdA);
             Matrix3x3.TransformTranspose(ref mtd, ref orientationB, out mtdB);
 
 
 #if !WINDOWS
-            Vector3 edgeAStart1 = new Vector3(), edgeAEnd1 = new Vector3(), edgeAStart2 = new Vector3(), edgeAEnd2 = new Vector3();
-            Vector3 edgeBStart1 = new Vector3(), edgeBEnd1 = new Vector3(), edgeBStart2 = new Vector3(), edgeBEnd2 = new Vector3();
+            BepuVector3 edgeAStart1 = new BepuVector3(), edgeAEnd1 = new BepuVector3(), edgeAStart2 = new BepuVector3(), edgeAEnd2 = new BepuVector3();
+            BepuVector3 edgeBStart1 = new BepuVector3(), edgeBEnd1 = new BepuVector3(), edgeBStart2 = new BepuVector3(), edgeBEnd2 = new BepuVector3();
 #else
-            Vector3 edgeAStart1, edgeAEnd1, edgeAStart2, edgeAEnd2;
-            Vector3 edgeBStart1, edgeBEnd1, edgeBStart2, edgeBEnd2;
+            BepuVector3 edgeAStart1, edgeAEnd1, edgeAStart2, edgeAEnd2;
+            BepuVector3 edgeBStart1, edgeBEnd1, edgeBStart2, edgeBEnd2;
 #endif
             Fix64 aHalfWidth = a.halfWidth;
             Fix64 aHalfHeight = a.halfHeight;
@@ -2510,18 +2510,18 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Matrix3x3.Transform(ref edgeBStart2, ref orientationB, out edgeBStart2);
             Matrix3x3.Transform(ref edgeBEnd2, ref orientationB, out edgeBEnd2);
 
-            Vector3.Add(ref edgeAStart1, ref positionA, out edgeAStart1);
-            Vector3.Add(ref edgeAEnd1, ref positionA, out edgeAEnd1);
-            Vector3.Add(ref edgeBStart1, ref positionB, out edgeBStart1);
-            Vector3.Add(ref edgeBEnd1, ref positionB, out edgeBEnd1);
+            BepuVector3.Add(ref edgeAStart1, ref positionA, out edgeAStart1);
+            BepuVector3.Add(ref edgeAEnd1, ref positionA, out edgeAEnd1);
+            BepuVector3.Add(ref edgeBStart1, ref positionB, out edgeBStart1);
+            BepuVector3.Add(ref edgeBEnd1, ref positionB, out edgeBEnd1);
 
-            Vector3.Add(ref edgeAStart2, ref positionA, out edgeAStart2);
-            Vector3.Add(ref edgeAEnd2, ref positionA, out edgeAEnd2);
-            Vector3.Add(ref edgeBStart2, ref positionB, out edgeBStart2);
-            Vector3.Add(ref edgeBEnd2, ref positionB, out edgeBEnd2);
+            BepuVector3.Add(ref edgeAStart2, ref positionA, out edgeAStart2);
+            BepuVector3.Add(ref edgeAEnd2, ref positionA, out edgeAEnd2);
+            BepuVector3.Add(ref edgeBStart2, ref positionB, out edgeBStart2);
+            BepuVector3.Add(ref edgeBEnd2, ref positionB, out edgeBEnd2);
 
-            Vector3 onA, onB;
-            Vector3 offset;
+            BepuVector3 onA, onB;
+            BepuVector3 offset;
             Fix64 dot;
 #if ALLOWUNSAFE
             var tempContactData = new BoxContactDataCache();
@@ -2536,8 +2536,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             if (GetClosestPointsBetweenSegments(ref edgeAStart1, ref edgeAEnd1, ref edgeBStart1, ref edgeBEnd1, out onA, out onB))
             {
-                Vector3.Subtract(ref onA, ref onB, out offset);
-                Vector3.Dot(ref offset, ref mtd, out dot);
+                BepuVector3.Subtract(ref onA, ref onB, out offset);
+                BepuVector3.Dot(ref offset, ref mtd, out dot);
                 if (dot < F64.C0) //Distance must be negative.
                 {
                     BoxContactData data;
@@ -2555,8 +2555,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             if (GetClosestPointsBetweenSegments(ref edgeAStart1, ref edgeAEnd1, ref edgeBStart2, ref edgeBEnd2, out onA, out onB))
             {
-                Vector3.Subtract(ref onA, ref onB, out offset);
-                Vector3.Dot(ref offset, ref mtd, out dot);
+                BepuVector3.Subtract(ref onA, ref onB, out offset);
+                BepuVector3.Dot(ref offset, ref mtd, out dot);
                 if (dot < F64.C0) //Distance must be negative.
                 {
                     BoxContactData data;
@@ -2574,8 +2574,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             if (GetClosestPointsBetweenSegments(ref edgeAStart2, ref edgeAEnd2, ref edgeBStart1, ref edgeBEnd1, out onA, out onB))
             {
-                Vector3.Subtract(ref onA, ref onB, out offset);
-                Vector3.Dot(ref offset, ref mtd, out dot);
+                BepuVector3.Subtract(ref onA, ref onB, out offset);
+                BepuVector3.Dot(ref offset, ref mtd, out dot);
                 if (dot < F64.C0) //Distance must be negative.
                 {
                     BoxContactData data;
@@ -2593,8 +2593,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             if (GetClosestPointsBetweenSegments(ref edgeAStart2, ref edgeAEnd2, ref edgeBStart2, ref edgeBEnd2, out onA, out onB))
             {
-                Vector3.Subtract(ref onA, ref onB, out offset);
-                Vector3.Dot(ref offset, ref mtd, out dot);
+                BepuVector3.Subtract(ref onA, ref onB, out offset);
+                BepuVector3.Dot(ref offset, ref mtd, out dot);
                 if (dot < F64.C0) //Distance must be negative.
                 {
                     BoxContactData data;
@@ -2617,7 +2617,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
         }
 
-        private static void GetEdgeData(int index, int axis, Fix64 x, Fix64 y, Fix64 z, out Vector3 edgeStart, out Vector3 edgeEnd, out int edgeStartId, out int edgeEndId)
+        private static void GetEdgeData(int index, int axis, Fix64 x, Fix64 y, Fix64 z, out BepuVector3 edgeStart, out BepuVector3 edgeEnd, out int edgeStartId, out int edgeEndId)
         {
             //Index defines which edge to use.
             //They follow this pattern:
@@ -2632,8 +2632,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //2: plane with normal Z
 
 #if !WINDOWS
-            edgeStart = new Vector3();
-            edgeEnd = new Vector3();
+            edgeStart = new BepuVector3();
+            edgeEnd = new BepuVector3();
 #endif
 
             switch (index + axis * 4)
@@ -2822,21 +2822,21 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         /// <param name="q2">Second point of second segment.</param>
         /// <param name="c1">Closest point on first segment.</param>
         /// <param name="c2">Closest point on second segment.</param>
-        static bool GetClosestPointsBetweenSegments(ref Vector3 p1, ref Vector3 q1, ref Vector3 p2, ref Vector3 q2,
-                                                           out Vector3 c1, out Vector3 c2)
+        static bool GetClosestPointsBetweenSegments(ref BepuVector3 p1, ref BepuVector3 q1, ref BepuVector3 p2, ref BepuVector3 q2,
+                                                           out BepuVector3 c1, out BepuVector3 c2)
         {
             //Segment direction vectors
-            Vector3 d1;
-            Vector3.Subtract(ref q1, ref p1, out d1);
-            Vector3 d2;
-            Vector3.Subtract(ref q2, ref p2, out d2);
-            Vector3 r;
-            Vector3.Subtract(ref p1, ref p2, out r);
+            BepuVector3 d1;
+            BepuVector3.Subtract(ref q1, ref p1, out d1);
+            BepuVector3 d2;
+            BepuVector3.Subtract(ref q2, ref p2, out d2);
+            BepuVector3 r;
+            BepuVector3.Subtract(ref p1, ref p2, out r);
             //distance
             Fix64 a = d1.LengthSquared();
             Fix64 e = d2.LengthSquared();
             Fix64 f;
-            Vector3.Dot(ref d2, ref r, out f);
+            BepuVector3.Dot(ref d2, ref r, out f);
 
             Fix64 s, t;
 
@@ -2854,14 +2854,14 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 t = f / e;
                 if (t < F64.C0 || t > F64.C1)
                 {
-                    c1 = new Vector3();
-                    c2 = new Vector3();
+                    c1 = new BepuVector3();
+                    c2 = new BepuVector3();
                     return false;
                 }
             }
             else
             {
-                Fix64 c = Vector3.Dot(d1, r);
+                Fix64 c = BepuVector3.Dot(d1, r);
                 if (e <= Toolbox.Epsilon)
                 {
                     // Second segment is basically a point.
@@ -2870,7 +2870,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 }
                 else
                 {
-                    Fix64 b = Vector3.Dot(d1, d2);
+                    Fix64 b = BepuVector3.Dot(d1, d2);
                     Fix64 denom = a * e - b * b;
 
                     // If segments not parallel, compute closest point on L1 to L2, and
@@ -2881,8 +2881,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                         if (s < F64.C0 || s > F64.C1)
                         {
                             //Closest point would be outside of the segment.
-                            c1 = new Vector3();
-                            c2 = new Vector3();
+                            c1 = new BepuVector3();
+                            c2 = new BepuVector3();
                             return false;
                         }
                     }
@@ -2895,36 +2895,36 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     if (t < F64.C0 || t > F64.C1)
                     {
                         //Closest point would be outside of the segment.
-                        c1 = new Vector3();
-                        c2 = new Vector3();
+                        c1 = new BepuVector3();
+                        c2 = new BepuVector3();
                         return false;
                     }
                 }
             }
 
-            Vector3.Multiply(ref d1, s, out c1);
-            Vector3.Add(ref c1, ref p1, out c1);
-            Vector3.Multiply(ref d2, t, out c2);
-            Vector3.Add(ref c2, ref p2, out c2);
+            BepuVector3.Multiply(ref d1, s, out c1);
+            BepuVector3.Add(ref c1, ref p1, out c1);
+            BepuVector3.Multiply(ref d2, t, out c2);
+            BepuVector3.Add(ref c2, ref p2, out c2);
             return true;
         }
 
-        //        internal static void GetEdgeEdgeContact(BoxShape a, BoxShape b, ref Vector3 positionA, ref Matrix3X3 orientationA, ref Vector3 positionB, ref Matrix3X3 orientationB, Fix64 depth, ref Vector3 mtd, out TinyStructList<BoxContactData> contactData)
+        //        internal static void GetEdgeEdgeContact(BoxShape a, BoxShape b, ref BepuVector3 positionA, ref Matrix3X3 orientationA, ref BepuVector3 positionB, ref Matrix3X3 orientationB, Fix64 depth, ref BepuVector3 mtd, out TinyStructList<BoxContactData> contactData)
         //        {
         //            //Put the minimum translation direction into the local space of each object.
-        //            Vector3 mtdA, mtdB;
-        //            Vector3 negatedMtd;
-        //            Vector3.Negate(ref mtd, out negatedMtd);
+        //            BepuVector3 mtdA, mtdB;
+        //            BepuVector3 negatedMtd;
+        //            BepuVector3.Negate(ref mtd, out negatedMtd);
         //            Matrix3X3.TransformTranspose(ref negatedMtd, ref orientationA, out mtdA);
         //            Matrix3X3.TransformTranspose(ref mtd, ref orientationB, out mtdB);
 
 
         //#if !WINDOWS
-        //            Vector3 edgeA1 = new Vector3(), edgeA2 = new Vector3();
-        //            Vector3 edgeB1 = new Vector3(), edgeB2 = new Vector3();
+        //            BepuVector3 edgeA1 = new BepuVector3(), edgeA2 = new BepuVector3();
+        //            BepuVector3 edgeB1 = new BepuVector3(), edgeB2 = new BepuVector3();
         //#else
-        //            Vector3 edgeA1, edgeA2;
-        //            Vector3 edgeB1, edgeB2;
+        //            BepuVector3 edgeA1, edgeA2;
+        //            BepuVector3 edgeB1, edgeB2;
         //#endif
         //            Fix64 aHalfWidth = a.halfWidth;
         //            Fix64 aHalfHeight = a.halfHeight;
@@ -3356,16 +3356,16 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //            Matrix3X3.Transform(ref edgeA2, ref orientationA, out edgeA2);
         //            Matrix3X3.Transform(ref edgeB1, ref orientationB, out edgeB1);
         //            Matrix3X3.Transform(ref edgeB2, ref orientationB, out edgeB2);
-        //            Vector3.Add(ref edgeA1, ref positionA, out edgeA1);
-        //            Vector3.Add(ref edgeA2, ref positionA, out edgeA2);
-        //            Vector3.Add(ref edgeB1, ref positionB, out edgeB1);
-        //            Vector3.Add(ref edgeB2, ref positionB, out edgeB2);
+        //            BepuVector3.Add(ref edgeA1, ref positionA, out edgeA1);
+        //            BepuVector3.Add(ref edgeA2, ref positionA, out edgeA2);
+        //            BepuVector3.Add(ref edgeB1, ref positionB, out edgeB1);
+        //            BepuVector3.Add(ref edgeB2, ref positionB, out edgeB2);
 
         //            Fix64 s, t;
-        //            Vector3 onA, onB;
+        //            BepuVector3 onA, onB;
         //            Toolbox.GetClosestPointsBetweenSegments(ref edgeA1, ref edgeA2, ref edgeB1, ref edgeB2, out s, out t, out onA, out onB);
-        //            //Vector3.Add(ref onA, ref onB, out point);
-        //            //Vector3.Multiply(ref point, .5f, out point);
+        //            //BepuVector3.Add(ref onA, ref onB, out point);
+        //            //BepuVector3.Multiply(ref point, .5f, out point);
         //            point = onA;
 
         //            //depth = (onB.X - onA.X) * mtd.X + (onB.Y - onA.Y) * mtd.Y + (onB.Z - onA.Z) * mtd.Z;
@@ -3374,9 +3374,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        }
 
 #if ALLOWUNSAFE
-        internal static void GetFaceContacts(BoxShape a, BoxShape b, ref Vector3 positionA, ref Matrix3x3 orientationA, ref Vector3 positionB, ref Matrix3x3 orientationB, bool aIsFaceOwner, ref Vector3 mtd, out BoxContactDataCache contactData)
+        internal static void GetFaceContacts(BoxShape a, BoxShape b, ref BepuVector3 positionA, ref Matrix3x3 orientationA, ref BepuVector3 positionB, ref Matrix3x3 orientationB, bool aIsFaceOwner, ref BepuVector3 mtd, out BoxContactDataCache contactData)
 #else
-        internal static void GetFaceContacts(BoxShape a, BoxShape b, ref Vector3 positionA, ref Matrix3x3 orientationA, ref Vector3 positionB, ref Matrix3x3 orientationB, bool aIsFaceOwner, ref Vector3 mtd, out TinyStructList<BoxContactData> contactData)
+        internal static void GetFaceContacts(BoxShape a, BoxShape b, ref BepuVector3 positionA, ref Matrix3x3 orientationA, ref BepuVector3 positionB, ref Matrix3x3 orientationB, bool aIsFaceOwner, ref BepuVector3 mtd, out TinyStructList<BoxContactData> contactData)
 #endif
         {
             Fix64 aHalfWidth = a.halfWidth;
@@ -3389,8 +3389,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             BoxFace aBoxFace, bBoxFace;
 
-            Vector3 negatedMtd;
-            Vector3.Negate(ref mtd, out negatedMtd);
+            BepuVector3 negatedMtd;
+            BepuVector3.Negate(ref mtd, out negatedMtd);
             GetNearestFace(ref positionA, ref orientationA, ref negatedMtd, aHalfWidth, aHalfHeight, aHalfLength, out aBoxFace);
 
 
@@ -3406,7 +3406,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         }
 
 #if ALLOWUNSAFE
-        private static unsafe void PruneContactsMaxDistance(ref Vector3 mtd, BoxContactDataCache input, out BoxContactDataCache output)
+        private static unsafe void PruneContactsMaxDistance(ref BepuVector3 mtd, BoxContactDataCache input, out BoxContactDataCache output)
         {
             BoxContactData* data = &input.D1;
             int count = input.Count;
@@ -3429,7 +3429,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             for (int i = 0; i < count; i++)
             {
                 Fix64 distance;
-                Vector3.DistanceSquared(ref data[deepestIndex].Position, ref data[i].Position, out distance);
+                BepuVector3.DistanceSquared(ref data[deepestIndex].Position, ref data[i].Position, out distance);
                 if (distance > furthestDistance)
                 {
                     furthestDistance = distance;
@@ -3438,23 +3438,23 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             }
 
-            Vector3 xAxis;
-            Vector3.Subtract(ref data[furthestIndex].Position, ref data[deepestIndex].Position, out xAxis);
+            BepuVector3 xAxis;
+            BepuVector3.Subtract(ref data[furthestIndex].Position, ref data[deepestIndex].Position, out xAxis);
 
-            Vector3 yAxis;
-            Vector3.Cross(ref mtd, ref xAxis, out yAxis);
+            BepuVector3 yAxis;
+            BepuVector3.Cross(ref mtd, ref xAxis, out yAxis);
 
             Fix64 minY;
             Fix64 maxY;
             int minYindex = 0;
             int maxYindex = 0;
 
-            Vector3.Dot(ref data[0].Position, ref yAxis, out minY);
+            BepuVector3.Dot(ref data[0].Position, ref yAxis, out minY);
             maxY = minY;
             for (int i = 1; i < count; i++)
             {
                 Fix64 dot;
-                Vector3.Dot(ref yAxis, ref data[i].Position, out dot);
+                BepuVector3.Dot(ref yAxis, ref data[i].Position, out dot);
                 if (dot < minY)
                 {
                     minY = dot;
@@ -3477,8 +3477,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                          };
 
 
-            //Vector3 v;
-            //var maximumOffset = new Vector3();
+            //BepuVector3 v;
+            //var maximumOffset = new BepuVector3();
             //int maxIndexA = -1, maxIndexB = -1;
             //Fix64 temp;
             //Fix64 maximumDistanceSquared = -Fix64.MaxValue;
@@ -3486,7 +3486,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //{
             //    for (int j = i + 1; j < count; j++)
             //    {
-            //        Vector3.Subtract(ref data[j].Position, ref data[i].Position, out v);
+            //        BepuVector3.Subtract(ref data[j].Position, ref data[i].Position, out v);
             //        temp = v.LengthSquared();
             //        if (temp > maximumDistanceSquared)
             //        {
@@ -3498,8 +3498,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //    }
             //}
 
-            //Vector3 otherDirection;
-            //Vector3.Cross(ref mtd, ref maximumOffset, out otherDirection);
+            //BepuVector3 otherDirection;
+            //BepuVector3.Cross(ref mtd, ref maximumOffset, out otherDirection);
             //int minimumIndex = -1, maximumIndex = -1;
             //Fix64 minimumDistance = Fix64.MaxValue, maximumDistance = -Fix64.MaxValue;
 
@@ -3507,7 +3507,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //{
             //    if (i != maxIndexA && i != maxIndexB)
             //    {
-            //        Vector3.Dot(ref data[i].Position, ref otherDirection, out temp);
+            //        BepuVector3.Dot(ref data[i].Position, ref otherDirection, out temp);
             //        if (temp > maximumDistance)
             //        {
             //            maximumDistance = temp;
@@ -3529,7 +3529,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //output.D4 = data[maximumIndex];
         }
 #else
-        private static void PruneContactsMaxDistance(ref Vector3 mtd, TinyStructList<BoxContactData> input, out TinyStructList<BoxContactData> output)
+        private static void PruneContactsMaxDistance(ref BepuVector3 mtd, TinyStructList<BoxContactData> input, out TinyStructList<BoxContactData> output)
         {
             int count = input.Count;
             //Find the deepest point.
@@ -3548,12 +3548,12 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             BoxContactData furthestData;
             input.Get(0, out furthestData);
             Fix64 furthestDistance;
-            Vector3.DistanceSquared(ref deepestData.Position, ref furthestData.Position, out furthestDistance);
+            BepuVector3.DistanceSquared(ref deepestData.Position, ref furthestData.Position, out furthestDistance);
             for (int i = 1; i < count; i++)
             {
                 input.Get(i, out data);
                 Fix64 distance;
-                Vector3.DistanceSquared(ref deepestData.Position, ref data.Position, out distance);
+                BepuVector3.DistanceSquared(ref deepestData.Position, ref data.Position, out distance);
                 if (distance > furthestDistance)
                 {
                     furthestDistance = distance;
@@ -3562,11 +3562,11 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             }
 
-            Vector3 xAxis;
-            Vector3.Subtract(ref furthestData.Position, ref deepestData.Position, out xAxis);
+            BepuVector3 xAxis;
+            BepuVector3.Subtract(ref furthestData.Position, ref deepestData.Position, out xAxis);
 
-            Vector3 yAxis;
-            Vector3.Cross(ref mtd, ref xAxis, out yAxis);
+            BepuVector3 yAxis;
+            BepuVector3.Cross(ref mtd, ref xAxis, out yAxis);
 
             Fix64 minY;
             Fix64 maxY;
@@ -3574,13 +3574,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             input.Get(0, out minData);
             maxData = minData;
 
-            Vector3.Dot(ref minData.Position, ref yAxis, out minY);
+            BepuVector3.Dot(ref minData.Position, ref yAxis, out minY);
             maxY = minY;
             for (int i = 1; i < count; i++)
             {
                 input.Get(i, out data);
                 Fix64 dot;
-                Vector3.Dot(ref yAxis, ref data.Position, out dot);
+                BepuVector3.Dot(ref yAxis, ref data.Position, out dot);
                 if (dot < minY)
                 {
                     minY = dot;
@@ -3601,8 +3601,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
 
             //int count = input.Count;
-            //Vector3 v;
-            //var maximumOffset = new Vector3();
+            //BepuVector3 v;
+            //var maximumOffset = new BepuVector3();
             //int maxIndexA = -1, maxIndexB = -1;
             //Fix64 temp;
             //Fix64 maximumDistanceSquared = -Fix64.MaxValue;
@@ -3613,7 +3613,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //    {
             //        input.Get(j, out itemB);
             //        input.Get(i, out itemA);
-            //        Vector3.Subtract(ref itemB.Position, ref itemA.Position, out v);
+            //        BepuVector3.Subtract(ref itemB.Position, ref itemA.Position, out v);
             //        temp = v.LengthSquared();
             //        if (temp > maximumDistanceSquared)
             //        {
@@ -3625,8 +3625,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //    }
             //}
 
-            //Vector3 otherDirection;
-            //Vector3.Cross(ref mtd, ref maximumOffset, out otherDirection);
+            //BepuVector3 otherDirection;
+            //BepuVector3.Cross(ref mtd, ref maximumOffset, out otherDirection);
             //int minimumIndex = -1, maximumIndex = -1;
             //Fix64 minimumDistance = Fix64.MaxValue, maximumDistance = -Fix64.MaxValue;
 
@@ -3635,7 +3635,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //    if (i != maxIndexA && i != maxIndexB)
             //    {
             //        input.Get(i, out itemA);
-            //        Vector3.Dot(ref itemA.Position, ref otherDirection, out temp);
+            //        BepuVector3.Dot(ref itemA.Position, ref otherDirection, out temp);
             //        if (temp > maximumDistance)
             //        {
             //            maximumDistance = temp;
@@ -3662,7 +3662,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 #endif
 
 #if ALLOWUNSAFE
-        private static unsafe void ClipFacesDirect(ref BoxFace clipFace, ref BoxFace face, ref Vector3 mtd, out BoxContactDataCache outputData)
+        private static unsafe void ClipFacesDirect(ref BoxFace clipFace, ref BoxFace face, ref BepuVector3 mtd, out BoxContactDataCache outputData)
         {
             var contactData = new BoxContactDataCache();
             BoxContactDataCache tempData; //Local version.
@@ -3670,9 +3670,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             BoxContactData* temp = &tempData.D1;
 
             //Local directions on the clip face.  Their length is equal to the length of an edge.
-            Vector3 clipX, clipY;
-            Vector3.Subtract(ref clipFace.V4, ref clipFace.V3, out clipX);
-            Vector3.Subtract(ref clipFace.V2, ref clipFace.V3, out clipY);
+            BepuVector3 clipX, clipY;
+            BepuVector3.Subtract(ref clipFace.V4, ref clipFace.V3, out clipX);
+            BepuVector3.Subtract(ref clipFace.V2, ref clipFace.V3, out clipY);
             Fix64 inverseClipWidth = F64.C1 / clipFace.Width;
             Fix64 inverseClipHeight = F64.C1 / clipFace.Height;
             Fix64 inverseClipWidthSquared = inverseClipWidth * inverseClipWidth;
@@ -3685,9 +3685,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             clipY.Z *= inverseClipHeightSquared;
 
             //Local directions on the opposing face.  Their length is equal to the length of an edge.
-            Vector3 faceX, faceY;
-            Vector3.Subtract(ref face.V4, ref face.V3, out faceX);
-            Vector3.Subtract(ref face.V2, ref face.V3, out faceY);
+            BepuVector3 faceX, faceY;
+            BepuVector3.Subtract(ref face.V4, ref face.V3, out faceX);
+            BepuVector3.Subtract(ref face.V2, ref face.V3, out faceY);
             Fix64 inverseFaceWidth = F64.C1 / face.Width;
             Fix64 inverseFaceHeight = F64.C1 / face.Height;
             Fix64 inverseFaceWidthSquared = inverseFaceWidth * inverseFaceWidth;
@@ -3699,21 +3699,21 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             faceY.Y *= inverseFaceHeightSquared;
             faceY.Z *= inverseFaceHeightSquared;
 
-            Vector3 clipCenter;
-            Vector3.Add(ref clipFace.V1, ref clipFace.V3, out clipCenter);
+            BepuVector3 clipCenter;
+            BepuVector3.Add(ref clipFace.V1, ref clipFace.V3, out clipCenter);
             //Defer division until after dot product (2 multiplies instead of 3)
             Fix64 clipCenterX, clipCenterY;
-            Vector3.Dot(ref clipCenter, ref clipX, out clipCenterX);
-            Vector3.Dot(ref clipCenter, ref clipY, out clipCenterY);
+            BepuVector3.Dot(ref clipCenter, ref clipX, out clipCenterX);
+            BepuVector3.Dot(ref clipCenter, ref clipY, out clipCenterY);
             clipCenterX *= F64.C0p5;
             clipCenterY *= F64.C0p5;
 
-            Vector3 faceCenter;
-            Vector3.Add(ref face.V1, ref face.V3, out faceCenter);
+            BepuVector3 faceCenter;
+            BepuVector3.Add(ref face.V1, ref face.V3, out faceCenter);
             //Defer division until after dot product (2 multiplies instead of 3)
             Fix64 faceCenterX, faceCenterY;
-            Vector3.Dot(ref faceCenter, ref faceX, out faceCenterX);
-            Vector3.Dot(ref faceCenter, ref faceY, out faceCenterY);
+            BepuVector3.Dot(ref faceCenter, ref faceX, out faceCenterX);
+            BepuVector3.Dot(ref faceCenter, ref faceY, out faceCenterY);
             faceCenterX *= F64.C0p5;
             faceCenterY *= F64.C0p5;
 
@@ -3745,67 +3745,67 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //The four edges can be thought of as minX, maxX, minY and maxY.
 
             //Face v1
-            Vector3.Dot(ref clipX, ref face.V1, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V1, out dotX);
             bool v1MaxXInside = dotX < clipCenterMaxX;
             bool v1MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V1, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V1, out dotY);
             bool v1MaxYInside = dotY < clipCenterMaxY;
             bool v1MinYInside = dotY > clipCenterMinY;
 
             //Face v2
-            Vector3.Dot(ref clipX, ref face.V2, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V2, out dotX);
             bool v2MaxXInside = dotX < clipCenterMaxX;
             bool v2MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V2, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V2, out dotY);
             bool v2MaxYInside = dotY < clipCenterMaxY;
             bool v2MinYInside = dotY > clipCenterMinY;
 
             //Face v3
-            Vector3.Dot(ref clipX, ref face.V3, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V3, out dotX);
             bool v3MaxXInside = dotX < clipCenterMaxX;
             bool v3MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V3, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V3, out dotY);
             bool v3MaxYInside = dotY < clipCenterMaxY;
             bool v3MinYInside = dotY > clipCenterMinY;
 
             //Face v4
-            Vector3.Dot(ref clipX, ref face.V4, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V4, out dotX);
             bool v4MaxXInside = dotX < clipCenterMaxX;
             bool v4MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V4, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V4, out dotY);
             bool v4MaxYInside = dotY < clipCenterMaxY;
             bool v4MinYInside = dotY > clipCenterMinY;
 
             //Find out where the clip face is.
             //Clip v1
-            Vector3.Dot(ref faceX, ref clipFace.V1, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V1, out dotX);
             bool clipv1MaxXInside = dotX < faceCenterMaxX;
             bool clipv1MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V1, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V1, out dotY);
             bool clipv1MaxYInside = dotY < faceCenterMaxY;
             bool clipv1MinYInside = dotY > faceCenterMinY;
 
             //Clip v2
-            Vector3.Dot(ref faceX, ref clipFace.V2, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V2, out dotX);
             bool clipv2MaxXInside = dotX < faceCenterMaxX;
             bool clipv2MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V2, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V2, out dotY);
             bool clipv2MaxYInside = dotY < faceCenterMaxY;
             bool clipv2MinYInside = dotY > faceCenterMinY;
 
             //Clip v3
-            Vector3.Dot(ref faceX, ref clipFace.V3, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V3, out dotX);
             bool clipv3MaxXInside = dotX < faceCenterMaxX;
             bool clipv3MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V3, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V3, out dotY);
             bool clipv3MaxYInside = dotY < faceCenterMaxY;
             bool clipv3MinYInside = dotY > faceCenterMinY;
 
             //Clip v4
-            Vector3.Dot(ref faceX, ref clipFace.V4, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V4, out dotX);
             bool clipv4MaxXInside = dotX < faceCenterMaxX;
             bool clipv4MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V4, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V4, out dotY);
             bool clipv4MaxYInside = dotY < faceCenterMaxY;
             bool clipv4MinYInside = dotY > faceCenterMinY;
 
@@ -3846,10 +3846,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             contactData.Count = 0;
             Fix64 depth;
             Fix64 clipFaceDot, faceDot;
-            Vector3.Dot(ref clipFace.V1, ref mtd, out clipFaceDot);
+            BepuVector3.Dot(ref clipFace.V1, ref mtd, out clipFaceDot);
             for (int i = 0; i < tempData.Count; i++)
             {
-                Vector3.Dot(ref temp[i].Position, ref mtd, out faceDot);
+                BepuVector3.Dot(ref temp[i].Position, ref mtd, out faceDot);
                 depth = faceDot - clipFaceDot;
                 if (depth <= F64.C0)
                 {
@@ -3869,15 +3869,15 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
         #region Clip face vertices
 
-            Vector3 v;
+            BepuVector3 v;
             Fix64 a, b;
-            Vector3.Dot(ref face.V1, ref face.Normal, out b);
+            BepuVector3.Dot(ref face.V1, ref face.Normal, out b);
             //CLIP FACE
             if (clipv1MinXInside && clipv1MaxXInside && clipv1MinYInside && clipv1MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V1, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V1, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V1, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V1, ref v, out v);
                 data[contactData.Count].Position = v;
                 data[contactData.Count].Id = clipFace.Id1 + 8;
                 contactData.Count++;
@@ -3885,9 +3885,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             if (clipv2MinXInside && clipv2MaxXInside && clipv2MinYInside && clipv2MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V2, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V2, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V2, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V2, ref v, out v);
                 data[contactData.Count].Position = v;
                 data[contactData.Count].Id = clipFace.Id2 + 8;
                 contactData.Count++;
@@ -3895,9 +3895,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             if (clipv3MinXInside && clipv3MaxXInside && clipv3MinYInside && clipv3MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V3, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V3, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V3, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V3, ref v, out v);
                 data[contactData.Count].Position = v;
                 data[contactData.Count].Id = clipFace.Id3 + 8;
                 contactData.Count++;
@@ -3905,9 +3905,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             if (clipv4MinXInside && clipv4MaxXInside && clipv4MinYInside && clipv4MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V4, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V4, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V4, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V4, ref v, out v);
                 data[contactData.Count].Position = v;
                 data[contactData.Count].Id = clipFace.Id4 + 8;
                 contactData.Count++;
@@ -3921,7 +3921,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             for (int i = previousCount; i < tempData.Count; i++)
             {
-                Vector3.Dot(ref temp[i].Position, ref mtd, out faceDot);
+                BepuVector3.Dot(ref temp[i].Position, ref mtd, out faceDot);
                 depth = faceDot - clipFaceDot;
                 if (depth <= F64.C0)
                 {
@@ -3959,7 +3959,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxYInside)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -3971,7 +3971,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxYInside)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -3986,7 +3986,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxYInside)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -3998,7 +3998,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxYInside)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4013,7 +4013,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxYInside)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4025,7 +4025,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4040,7 +4040,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4052,7 +4052,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4074,7 +4074,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v2 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4087,7 +4087,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v3 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4103,7 +4103,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v2 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4116,7 +4116,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v2-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4132,7 +4132,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v3 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4145,7 +4145,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v3-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4161,7 +4161,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v2-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4174,7 +4174,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v3-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4195,7 +4195,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4207,7 +4207,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4222,7 +4222,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4234,7 +4234,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4249,7 +4249,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4261,7 +4261,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4276,7 +4276,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4288,7 +4288,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4309,7 +4309,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4321,7 +4321,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4336,7 +4336,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4348,7 +4348,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4363,7 +4363,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4375,7 +4375,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4390,7 +4390,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4402,7 +4402,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4421,7 +4421,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             for (int i = previousCount; i < tempData.Count; i++)
             {
-                Vector3.Dot(ref temp[i].Position, ref mtd, out faceDot);
+                BepuVector3.Dot(ref temp[i].Position, ref mtd, out faceDot);
                 depth = faceDot - clipFaceDot;
                 if (depth <= F64.C0)
                 {
@@ -4434,14 +4434,14 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             outputData = contactData;
         }
 #else
-        private static void ClipFacesDirect(ref BoxFace clipFace, ref BoxFace face, ref Vector3 mtd, out TinyStructList<BoxContactData> contactData)
+        private static void ClipFacesDirect(ref BoxFace clipFace, ref BoxFace face, ref BepuVector3 mtd, out TinyStructList<BoxContactData> contactData)
         {
             contactData = new TinyStructList<BoxContactData>();
 
             //Local directions on the clip face.  Their length is equal to the length of an edge.
-            Vector3 clipX, clipY;
-            Vector3.Subtract(ref clipFace.V4, ref clipFace.V3, out clipX);
-            Vector3.Subtract(ref clipFace.V2, ref clipFace.V3, out clipY);
+            BepuVector3 clipX, clipY;
+            BepuVector3.Subtract(ref clipFace.V4, ref clipFace.V3, out clipX);
+            BepuVector3.Subtract(ref clipFace.V2, ref clipFace.V3, out clipY);
             Fix64 inverseClipWidth = 1 / clipFace.Width;
             Fix64 inverseClipHeight = 1 / clipFace.Height;
             Fix64 inverseClipWidthSquared = inverseClipWidth * inverseClipWidth;
@@ -4454,9 +4454,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             clipY.Z *= inverseClipHeightSquared;
 
             //Local directions on the opposing face.  Their length is equal to the length of an edge.
-            Vector3 faceX, faceY;
-            Vector3.Subtract(ref face.V4, ref face.V3, out faceX);
-            Vector3.Subtract(ref face.V2, ref face.V3, out faceY);
+            BepuVector3 faceX, faceY;
+            BepuVector3.Subtract(ref face.V4, ref face.V3, out faceX);
+            BepuVector3.Subtract(ref face.V2, ref face.V3, out faceY);
             Fix64 inverseFaceWidth = 1 / face.Width;
             Fix64 inverseFaceHeight = 1 / face.Height;
             Fix64 inverseFaceWidthSquared = inverseFaceWidth * inverseFaceWidth;
@@ -4468,21 +4468,21 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             faceY.Y *= inverseFaceHeightSquared;
             faceY.Z *= inverseFaceHeightSquared;
 
-            Vector3 clipCenter;
-            Vector3.Add(ref clipFace.V1, ref clipFace.V3, out clipCenter);
+            BepuVector3 clipCenter;
+            BepuVector3.Add(ref clipFace.V1, ref clipFace.V3, out clipCenter);
             //Defer division until after dot product (2 multiplies instead of 3)
             Fix64 clipCenterX, clipCenterY;
-            Vector3.Dot(ref clipCenter, ref clipX, out clipCenterX);
-            Vector3.Dot(ref clipCenter, ref clipY, out clipCenterY);
+            BepuVector3.Dot(ref clipCenter, ref clipX, out clipCenterX);
+            BepuVector3.Dot(ref clipCenter, ref clipY, out clipCenterY);
             clipCenterX /= 2;
             clipCenterY /= 2;
 
-            Vector3 faceCenter;
-            Vector3.Add(ref face.V1, ref face.V3, out faceCenter);
+            BepuVector3 faceCenter;
+            BepuVector3.Add(ref face.V1, ref face.V3, out faceCenter);
             //Defer division until after dot product (2 multiplies instead of 3)
             Fix64 faceCenterX, faceCenterY;
-            Vector3.Dot(ref faceCenter, ref faceX, out faceCenterX);
-            Vector3.Dot(ref faceCenter, ref faceY, out faceCenterY);
+            BepuVector3.Dot(ref faceCenter, ref faceX, out faceCenterX);
+            BepuVector3.Dot(ref faceCenter, ref faceY, out faceCenterY);
             faceCenterX /= 2;
             faceCenterY /= 2;
 
@@ -4514,67 +4514,67 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //The four edges can be thought of as minX, maxX, minY and maxY.
 
             //Face v1
-            Vector3.Dot(ref clipX, ref face.V1, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V1, out dotX);
             bool v1MaxXInside = dotX < clipCenterMaxX;
             bool v1MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V1, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V1, out dotY);
             bool v1MaxYInside = dotY < clipCenterMaxY;
             bool v1MinYInside = dotY > clipCenterMinY;
 
             //Face v2
-            Vector3.Dot(ref clipX, ref face.V2, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V2, out dotX);
             bool v2MaxXInside = dotX < clipCenterMaxX;
             bool v2MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V2, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V2, out dotY);
             bool v2MaxYInside = dotY < clipCenterMaxY;
             bool v2MinYInside = dotY > clipCenterMinY;
 
             //Face v3
-            Vector3.Dot(ref clipX, ref face.V3, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V3, out dotX);
             bool v3MaxXInside = dotX < clipCenterMaxX;
             bool v3MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V3, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V3, out dotY);
             bool v3MaxYInside = dotY < clipCenterMaxY;
             bool v3MinYInside = dotY > clipCenterMinY;
 
             //Face v4
-            Vector3.Dot(ref clipX, ref face.V4, out dotX);
+            BepuVector3.Dot(ref clipX, ref face.V4, out dotX);
             bool v4MaxXInside = dotX < clipCenterMaxX;
             bool v4MinXInside = dotX > clipCenterMinX;
-            Vector3.Dot(ref clipY, ref face.V4, out dotY);
+            BepuVector3.Dot(ref clipY, ref face.V4, out dotY);
             bool v4MaxYInside = dotY < clipCenterMaxY;
             bool v4MinYInside = dotY > clipCenterMinY;
 
             //Find out where the clip face is.
             //Clip v1
-            Vector3.Dot(ref faceX, ref clipFace.V1, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V1, out dotX);
             bool clipv1MaxXInside = dotX < faceCenterMaxX;
             bool clipv1MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V1, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V1, out dotY);
             bool clipv1MaxYInside = dotY < faceCenterMaxY;
             bool clipv1MinYInside = dotY > faceCenterMinY;
 
             //Clip v2
-            Vector3.Dot(ref faceX, ref clipFace.V2, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V2, out dotX);
             bool clipv2MaxXInside = dotX < faceCenterMaxX;
             bool clipv2MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V2, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V2, out dotY);
             bool clipv2MaxYInside = dotY < faceCenterMaxY;
             bool clipv2MinYInside = dotY > faceCenterMinY;
 
             //Clip v3
-            Vector3.Dot(ref faceX, ref clipFace.V3, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V3, out dotX);
             bool clipv3MaxXInside = dotX < faceCenterMaxX;
             bool clipv3MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V3, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V3, out dotY);
             bool clipv3MaxYInside = dotY < faceCenterMaxY;
             bool clipv3MinYInside = dotY > faceCenterMinY;
 
             //Clip v4
-            Vector3.Dot(ref faceX, ref clipFace.V4, out dotX);
+            BepuVector3.Dot(ref faceX, ref clipFace.V4, out dotX);
             bool clipv4MaxXInside = dotX < faceCenterMaxX;
             bool clipv4MinXInside = dotX > faceCenterMinX;
-            Vector3.Dot(ref faceY, ref clipFace.V4, out dotY);
+            BepuVector3.Dot(ref faceY, ref clipFace.V4, out dotY);
             bool clipv4MaxYInside = dotY < faceCenterMaxY;
             bool clipv4MinYInside = dotY > faceCenterMinY;
 
@@ -4614,11 +4614,11 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             TinyStructList<BoxContactData> tempData = contactData;
             contactData.Clear();
             Fix64 clipFaceDot, faceDot;
-            Vector3.Dot(ref clipFace.V1, ref mtd, out clipFaceDot);
+            BepuVector3.Dot(ref clipFace.V1, ref mtd, out clipFaceDot);
             for (int i = 0; i < tempData.Count; i++)
             {
                 tempData.Get(i, out item);
-                Vector3.Dot(ref item.Position, ref mtd, out faceDot);
+                BepuVector3.Dot(ref item.Position, ref mtd, out faceDot);
                 item.Depth = faceDot - clipFaceDot;
                 if (item.Depth <= 0)
                 {
@@ -4634,15 +4634,15 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             #region Clip face vertices
 
-            Vector3 v;
+            BepuVector3 v;
             Fix64 a, b;
-            Vector3.Dot(ref face.V1, ref face.Normal, out b);
+            BepuVector3.Dot(ref face.V1, ref face.Normal, out b);
             //CLIP FACE
             if (clipv1MinXInside && clipv1MaxXInside && clipv1MinYInside && clipv1MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V1, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V1, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V1, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V1, ref v, out v);
                 item.Position = v;
                 item.Id = clipFace.Id1 + 8;
                 contactData.Add(ref item);
@@ -4650,9 +4650,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             if (clipv2MinXInside && clipv2MaxXInside && clipv2MinYInside && clipv2MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V2, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V2, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V2, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V2, ref v, out v);
                 item.Position = v;
                 item.Id = clipFace.Id2 + 8;
                 contactData.Add(ref item);
@@ -4660,9 +4660,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             if (clipv3MinXInside && clipv3MaxXInside && clipv3MinYInside && clipv3MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V3, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V3, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V3, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V3, ref v, out v);
                 item.Position = v;
                 item.Id = clipFace.Id3 + 8;
                 contactData.Add(ref item);
@@ -4670,9 +4670,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             if (clipv4MinXInside && clipv4MaxXInside && clipv4MinYInside && clipv4MaxYInside)
             {
-                Vector3.Dot(ref clipFace.V4, ref face.Normal, out a);
-                Vector3.Multiply(ref face.Normal, a - b, out v);
-                Vector3.Subtract(ref clipFace.V4, ref v, out v);
+                BepuVector3.Dot(ref clipFace.V4, ref face.Normal, out a);
+                BepuVector3.Multiply(ref face.Normal, a - b, out v);
+                BepuVector3.Subtract(ref clipFace.V4, ref v, out v);
                 item.Position = v;
                 item.Id = clipFace.Id4 + 8;
                 contactData.Add(ref item);
@@ -4690,7 +4690,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             for (int i = previousCount; i < tempData.Count; i++)
             {
                 tempData.Get(i, out item);
-                Vector3.Dot(ref item.Position, ref mtd, out faceDot);
+                BepuVector3.Dot(ref item.Position, ref mtd, out faceDot);
                 item.Depth = faceDot - clipFaceDot;
                 if (item.Depth <= 0)
                 {
@@ -4723,7 +4723,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxYInside)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4735,7 +4735,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxYInside)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4750,7 +4750,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxYInside)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4762,7 +4762,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxYInside)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4777,7 +4777,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxYInside)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4789,7 +4789,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4804,7 +4804,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4816,7 +4816,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4838,7 +4838,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v2 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4851,7 +4851,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v3 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4867,7 +4867,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v2 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4880,7 +4880,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v2-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4896,7 +4896,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v1-v3 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -4909,7 +4909,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v3-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4925,7 +4925,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v2-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4938,7 +4938,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //test v3-v4 against minXminY-minXmaxY
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -4959,7 +4959,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4971,7 +4971,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -4986,7 +4986,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -4998,7 +4998,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -5013,7 +5013,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -5025,7 +5025,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -5040,7 +5040,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -5052,7 +5052,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MinYInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipX, ref v, out dot);
+                    //BepuVector3.Dot(ref clipX, ref v, out dot);
                     //if (dot > clipCenterMinX && dot < clipCenterMaxX)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -5073,7 +5073,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -5085,7 +5085,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -5100,7 +5100,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v))
                     {
@@ -5112,7 +5112,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -5127,7 +5127,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v2MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v))
                     {
@@ -5139,7 +5139,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v4MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -5154,7 +5154,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v1MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v))
                     {
@@ -5166,7 +5166,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 if (v3MaxXInside && contactData.Count < 8)
                 {
                     //ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-                    //Vector3.Dot(ref clipY, ref v, out dot);
+                    //BepuVector3.Dot(ref clipY, ref v, out dot);
                     //if (dot > clipCenterMinY && dot < clipCenterMaxY)
                     if (ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v))
                     {
@@ -5188,7 +5188,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             for (int i = previousCount; i < tempData.Count; i++)
             {
                 tempData.Get(i, out item);
-                Vector3.Dot(ref item.Position, ref mtd, out faceDot);
+                BepuVector3.Dot(ref item.Position, ref mtd, out faceDot);
                 item.Depth = faceDot - clipFaceDot;
                 if (item.Depth <= 0)
                 {
@@ -5196,16 +5196,16 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 }
             }
         }
-        //private static void ClipFacesDirect(ref BoxFace clipFace, ref BoxFace face, ref Vector3 mtd, out TinyStructList<BoxContactData> contactData)
+        //private static void ClipFacesDirect(ref BoxFace clipFace, ref BoxFace face, ref BepuVector3 mtd, out TinyStructList<BoxContactData> contactData)
         //{
         //    contactData = new TinyStructList<BoxContactData>();
         //    //BoxContactData* data = &contactData.d1;
         //    //BoxContactData* temp = &tempData.d1;
 
         //    //Local directions on the clip face.  Their length is equal to the length of an edge.
-        //    Vector3 clipX, clipY;
-        //    Vector3.Subtract(ref clipFace.V4, ref clipFace.V3, out clipX);
-        //    Vector3.Subtract(ref clipFace.V2, ref clipFace.V3, out clipY);
+        //    BepuVector3 clipX, clipY;
+        //    BepuVector3.Subtract(ref clipFace.V4, ref clipFace.V3, out clipX);
+        //    BepuVector3.Subtract(ref clipFace.V2, ref clipFace.V3, out clipY);
         //    Fix64 inverse = 1 / clipX.LengthSquared();
         //    clipX.X *= inverse;
         //    clipX.Y *= inverse;
@@ -5216,9 +5216,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //    clipY.Z *= inverse;
 
         //    //Local directions on the opposing face.  Their length is equal to the length of an edge.
-        //    Vector3 faceX, faceY;
-        //    Vector3.Subtract(ref face.V4, ref face.V3, out faceX);
-        //    Vector3.Subtract(ref face.V2, ref face.V3, out faceY);
+        //    BepuVector3 faceX, faceY;
+        //    BepuVector3.Subtract(ref face.V4, ref face.V3, out faceX);
+        //    BepuVector3.Subtract(ref face.V2, ref face.V3, out faceY);
         //    inverse = 1 / faceX.LengthSquared();
         //    faceX.X *= inverse;
         //    faceX.Y *= inverse;
@@ -5228,21 +5228,21 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //    faceY.Y *= inverse;
         //    faceY.Z *= inverse;
 
-        //    Vector3 clipCenter;
-        //    Vector3.Add(ref clipFace.V1, ref clipFace.V3, out clipCenter);
+        //    BepuVector3 clipCenter;
+        //    BepuVector3.Add(ref clipFace.V1, ref clipFace.V3, out clipCenter);
         //    //Defer division until after dot product (2 multiplies instead of 3)
         //    Fix64 clipCenterX, clipCenterY;
-        //    Vector3.Dot(ref clipCenter, ref clipX, out clipCenterX);
-        //    Vector3.Dot(ref clipCenter, ref clipY, out clipCenterY);
+        //    BepuVector3.Dot(ref clipCenter, ref clipX, out clipCenterX);
+        //    BepuVector3.Dot(ref clipCenter, ref clipY, out clipCenterY);
         //    clipCenterX *= .5f;
         //    clipCenterY *= .5f;
 
-        //    Vector3 faceCenter;
-        //    Vector3.Add(ref face.V1, ref face.V3, out faceCenter);
+        //    BepuVector3 faceCenter;
+        //    BepuVector3.Add(ref face.V1, ref face.V3, out faceCenter);
         //    //Defer division until after dot product (2 multiplies instead of 3)
         //    Fix64 faceCenterX, faceCenterY;
-        //    Vector3.Dot(ref faceCenter, ref faceX, out faceCenterX);
-        //    Vector3.Dot(ref faceCenter, ref faceY, out faceCenterY);
+        //    BepuVector3.Dot(ref faceCenter, ref faceX, out faceCenterX);
+        //    BepuVector3.Dot(ref faceCenter, ref faceY, out faceCenterY);
         //    faceCenterX *= .5f;
         //    faceCenterY *= .5f;
 
@@ -5266,67 +5266,67 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //    //The four edges can be thought of as minX, maxX, minY and maxY.
 
         //    //Face v1
-        //    Vector3.Dot(ref clipX, ref face.V1, out dotX);
+        //    BepuVector3.Dot(ref clipX, ref face.V1, out dotX);
         //    bool v1MaxXInside = dotX < clipCenterMaxX;
         //    bool v1MinXInside = dotX > clipCenterMinX;
-        //    Vector3.Dot(ref clipY, ref face.V1, out dotY);
+        //    BepuVector3.Dot(ref clipY, ref face.V1, out dotY);
         //    bool v1MaxYInside = dotY < clipCenterMaxY;
         //    bool v1MinYInside = dotY > clipCenterMinY;
 
         //    //Face v2
-        //    Vector3.Dot(ref clipX, ref face.V2, out dotX);
+        //    BepuVector3.Dot(ref clipX, ref face.V2, out dotX);
         //    bool v2MaxXInside = dotX < clipCenterMaxX;
         //    bool v2MinXInside = dotX > clipCenterMinX;
-        //    Vector3.Dot(ref clipY, ref face.V2, out dotY);
+        //    BepuVector3.Dot(ref clipY, ref face.V2, out dotY);
         //    bool v2MaxYInside = dotY < clipCenterMaxY;
         //    bool v2MinYInside = dotY > clipCenterMinY;
 
         //    //Face v3
-        //    Vector3.Dot(ref clipX, ref face.V3, out dotX);
+        //    BepuVector3.Dot(ref clipX, ref face.V3, out dotX);
         //    bool v3MaxXInside = dotX < clipCenterMaxX;
         //    bool v3MinXInside = dotX > clipCenterMinX;
-        //    Vector3.Dot(ref clipY, ref face.V3, out dotY);
+        //    BepuVector3.Dot(ref clipY, ref face.V3, out dotY);
         //    bool v3MaxYInside = dotY < clipCenterMaxY;
         //    bool v3MinYInside = dotY > clipCenterMinY;
 
         //    //Face v4
-        //    Vector3.Dot(ref clipX, ref face.V4, out dotX);
+        //    BepuVector3.Dot(ref clipX, ref face.V4, out dotX);
         //    bool v4MaxXInside = dotX < clipCenterMaxX;
         //    bool v4MinXInside = dotX > clipCenterMinX;
-        //    Vector3.Dot(ref clipY, ref face.V4, out dotY);
+        //    BepuVector3.Dot(ref clipY, ref face.V4, out dotY);
         //    bool v4MaxYInside = dotY < clipCenterMaxY;
         //    bool v4MinYInside = dotY > clipCenterMinY;
 
         //    //Find out where the clip face is.
         //    //Clip v1
-        //    Vector3.Dot(ref faceX, ref clipFace.V1, out dotX);
+        //    BepuVector3.Dot(ref faceX, ref clipFace.V1, out dotX);
         //    bool clipv1MaxXInside = dotX < faceCenterMaxX;
         //    bool clipv1MinXInside = dotX > faceCenterMinX;
-        //    Vector3.Dot(ref faceY, ref clipFace.V1, out dotY);
+        //    BepuVector3.Dot(ref faceY, ref clipFace.V1, out dotY);
         //    bool clipv1MaxYInside = dotY < faceCenterMaxY;
         //    bool clipv1MinYInside = dotY > faceCenterMinY;
 
         //    //Clip v2
-        //    Vector3.Dot(ref faceX, ref clipFace.V2, out dotX);
+        //    BepuVector3.Dot(ref faceX, ref clipFace.V2, out dotX);
         //    bool clipv2MaxXInside = dotX < faceCenterMaxX;
         //    bool clipv2MinXInside = dotX > faceCenterMinX;
-        //    Vector3.Dot(ref faceY, ref clipFace.V2, out dotY);
+        //    BepuVector3.Dot(ref faceY, ref clipFace.V2, out dotY);
         //    bool clipv2MaxYInside = dotY < faceCenterMaxY;
         //    bool clipv2MinYInside = dotY > faceCenterMinY;
 
         //    //Clip v3
-        //    Vector3.Dot(ref faceX, ref clipFace.V3, out dotX);
+        //    BepuVector3.Dot(ref faceX, ref clipFace.V3, out dotX);
         //    bool clipv3MaxXInside = dotX < faceCenterMaxX;
         //    bool clipv3MinXInside = dotX > faceCenterMinX;
-        //    Vector3.Dot(ref faceY, ref clipFace.V3, out dotY);
+        //    BepuVector3.Dot(ref faceY, ref clipFace.V3, out dotY);
         //    bool clipv3MaxYInside = dotY < faceCenterMaxY;
         //    bool clipv3MinYInside = dotY > faceCenterMinY;
 
         //    //Clip v4
-        //    Vector3.Dot(ref faceX, ref clipFace.V4, out dotX);
+        //    BepuVector3.Dot(ref faceX, ref clipFace.V4, out dotX);
         //    bool clipv4MaxXInside = dotX < faceCenterMaxX;
         //    bool clipv4MinXInside = dotX > faceCenterMinX;
-        //    Vector3.Dot(ref faceY, ref clipFace.V4, out dotY);
+        //    BepuVector3.Dot(ref faceY, ref clipFace.V4, out dotY);
         //    bool clipv4MaxYInside = dotY < faceCenterMaxY;
         //    bool clipv4MinYInside = dotY > faceCenterMinY;
 
@@ -5368,11 +5368,11 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //    TinyStructList<BoxContactData> tempData = contactData;
         //    contactData.Clear();
         //    Fix64 clipFaceDot, faceDot;
-        //    Vector3.Dot(ref clipFace.V1, ref mtd, out clipFaceDot);
+        //    BepuVector3.Dot(ref clipFace.V1, ref mtd, out clipFaceDot);
         //    for (int i = 0; i < tempData.Count; i++)
         //    {
         //        tempData.Get(i, out item);
-        //        Vector3.Dot(ref item.Position, ref mtd, out faceDot);
+        //        BepuVector3.Dot(ref item.Position, ref mtd, out faceDot);
         //        item.Depth = faceDot - clipFaceDot;
         //        if (item.Depth <= 0)
         //        {
@@ -5388,22 +5388,22 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
         //    #region Clip face vertices
 
-        //    Vector3 faceNormal;
-        //    Vector3.Cross(ref faceY, ref faceX, out faceNormal);
+        //    BepuVector3 faceNormal;
+        //    BepuVector3.Cross(ref faceY, ref faceX, out faceNormal);
         //    //inverse = 1 / faceNormal.LengthSquared();
         //    //faceNormal.X *= inverse;
         //    //faceNormal.Y *= inverse;
         //    //faceNormal.Z *= inverse;
         //    faceNormal.Normalize();
-        //    Vector3 v;
+        //    BepuVector3 v;
         //    Fix64 a, b;
-        //    Vector3.Dot(ref face.V1, ref faceNormal, out b);
+        //    BepuVector3.Dot(ref face.V1, ref faceNormal, out b);
         //    //CLIP FACE
         //    if (clipv1MinXInside && clipv1MaxXInside && clipv1MinYInside && clipv1MaxYInside)
         //    {
-        //        Vector3.Dot(ref clipFace.V1, ref faceNormal, out a);
-        //        Vector3.Multiply(ref faceNormal, a - b, out v);
-        //        Vector3.Subtract(ref clipFace.V1, ref v, out v);
+        //        BepuVector3.Dot(ref clipFace.V1, ref faceNormal, out a);
+        //        BepuVector3.Multiply(ref faceNormal, a - b, out v);
+        //        BepuVector3.Subtract(ref clipFace.V1, ref v, out v);
         //        item.Position = v;
         //        item.Id = clipFace.Id1 + 8;
         //        contactData.Add(ref item);
@@ -5411,9 +5411,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
         //    if (clipv2MinXInside && clipv2MaxXInside && clipv2MinYInside && clipv2MaxYInside)
         //    {
-        //        Vector3.Dot(ref clipFace.V2, ref faceNormal, out a);
-        //        Vector3.Multiply(ref faceNormal, a - b, out v);
-        //        Vector3.Subtract(ref clipFace.V2, ref v, out v);
+        //        BepuVector3.Dot(ref clipFace.V2, ref faceNormal, out a);
+        //        BepuVector3.Multiply(ref faceNormal, a - b, out v);
+        //        BepuVector3.Subtract(ref clipFace.V2, ref v, out v);
         //        item.Position = v;
         //        item.Id = clipFace.Id2 + 8;
         //        contactData.Add(ref item);
@@ -5421,9 +5421,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
         //    if (clipv3MinXInside && clipv3MaxXInside && clipv3MinYInside && clipv3MaxYInside)
         //    {
-        //        Vector3.Dot(ref clipFace.V3, ref faceNormal, out a);
-        //        Vector3.Multiply(ref faceNormal, a - b, out v);
-        //        Vector3.Subtract(ref clipFace.V3, ref v, out v);
+        //        BepuVector3.Dot(ref clipFace.V3, ref faceNormal, out a);
+        //        BepuVector3.Multiply(ref faceNormal, a - b, out v);
+        //        BepuVector3.Subtract(ref clipFace.V3, ref v, out v);
         //        item.Position = v;
         //        item.Id = clipFace.Id3 + 8;
         //        contactData.Add(ref item);
@@ -5431,9 +5431,9 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
         //    if (clipv4MinXInside && clipv4MaxXInside && clipv4MinYInside && clipv4MaxYInside)
         //    {
-        //        Vector3.Dot(ref clipFace.V4, ref faceNormal, out a);
-        //        Vector3.Multiply(ref faceNormal, a - b, out v);
-        //        Vector3.Subtract(ref clipFace.V4, ref v, out v);
+        //        BepuVector3.Dot(ref clipFace.V4, ref faceNormal, out a);
+        //        BepuVector3.Multiply(ref faceNormal, a - b, out v);
+        //        BepuVector3.Subtract(ref clipFace.V4, ref v, out v);
         //        item.Position = v;
         //        item.Id = clipFace.Id4 + 8;
         //        contactData.Add(ref item);
@@ -5451,7 +5451,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //    for (int i = previousCount; i < tempData.Count; i++)
         //    {
         //        tempData.Get(i, out item);
-        //        Vector3.Dot(ref item.Position, ref mtd, out faceDot);
+        //        BepuVector3.Dot(ref item.Position, ref mtd, out faceDot);
         //        item.Depth = faceDot - clipFaceDot;
         //        if (item.Depth <= 0)
         //        {
@@ -5485,7 +5485,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v2MaxYInside)
         //        {
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5496,7 +5496,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v4MaxYInside)
         //        {
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5510,7 +5510,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v1MaxYInside)
         //        {
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5521,7 +5521,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v3MaxYInside)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5535,7 +5535,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v2MaxYInside)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5546,7 +5546,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v4MaxYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5560,7 +5560,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v1MaxYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5571,7 +5571,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v3MaxYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5592,7 +5592,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        {
         //            //test v1-v2 against minXminY-minXmaxY
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5604,7 +5604,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        {
         //            //test v1-v3 against minXminY-minXmaxY
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5618,7 +5618,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v1MinXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5629,7 +5629,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v3MinXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5643,7 +5643,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v2MinXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5654,7 +5654,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v4MinXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5669,7 +5669,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        {
         //            //test v2-v4 against minXminY-minXmaxY
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5681,7 +5681,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        {
         //            //test v3-v4 against minXminY-minXmaxY
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5701,7 +5701,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v2MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5712,7 +5712,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v4MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5726,7 +5726,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v1MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5737,7 +5737,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v3MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5751,7 +5751,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v2MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5762,7 +5762,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v4MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5776,7 +5776,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v3MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5787,7 +5787,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v1MinYInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipX, ref v, out dot);
+        //            BepuVector3.Dot(ref clipX, ref v, out dot);
         //            if (dot > clipCenterMinX && dot < clipCenterMaxX)
         //            {
         //                item.Position = v;
@@ -5807,7 +5807,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v2MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5818,7 +5818,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v4MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5832,7 +5832,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v1MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V1, ref face.V2, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5843,7 +5843,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v3MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5857,7 +5857,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v2MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V2, ref face.V3, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5868,7 +5868,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v4MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5882,7 +5882,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v1MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V4, ref face.V1, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5893,7 +5893,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //        if (v3MaxXInside && contactData.Count < 8)
         //        {
         //            ComputeIntersection(ref face.V3, ref face.V4, ref clipEdge, out v);
-        //            Vector3.Dot(ref clipY, ref v, out dot);
+        //            BepuVector3.Dot(ref clipY, ref v, out dot);
         //            if (dot > clipCenterMinY && dot < clipCenterMaxY)
         //            {
         //                item.Position = v;
@@ -5914,7 +5914,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //    for (int i = previousCount; i < tempData.Count; i++)
         //    {
         //        tempData.Get(i, out item);
-        //        Vector3.Dot(ref item.Position, ref mtd, out faceDot);
+        //        BepuVector3.Dot(ref item.Position, ref mtd, out faceDot);
         //        item.Depth = faceDot - clipFaceDot;
         //        if (item.Depth <= 0)
         //        {
@@ -5924,33 +5924,33 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         //}
 #endif
 
-        private static bool ComputeIntersection(ref Vector3 edgeA1, ref Vector3 edgeA2, ref FaceEdge clippingEdge, out Vector3 intersection)
+        private static bool ComputeIntersection(ref BepuVector3 edgeA1, ref BepuVector3 edgeA2, ref FaceEdge clippingEdge, out BepuVector3 intersection)
         {
             //Intersect the incoming edge (edgeA1, edgeA2) with the clipping edge's PLANE.  Nicely given by one of its positions and its 'perpendicular,'
             //which is its normal.
 
-            Vector3 offset;
-            Vector3.Subtract(ref clippingEdge.A, ref edgeA1, out offset);
+            BepuVector3 offset;
+            BepuVector3.Subtract(ref clippingEdge.A, ref edgeA1, out offset);
 
-            Vector3 edgeDirection;
-            Vector3.Subtract(ref edgeA2, ref edgeA1, out edgeDirection);
+            BepuVector3 edgeDirection;
+            BepuVector3.Subtract(ref edgeA2, ref edgeA1, out edgeDirection);
             Fix64 distanceToPlane;
-            Vector3.Dot(ref offset, ref clippingEdge.Perpendicular, out distanceToPlane);
+            BepuVector3.Dot(ref offset, ref clippingEdge.Perpendicular, out distanceToPlane);
             Fix64 edgeDirectionLength;
-            Vector3.Dot(ref edgeDirection, ref clippingEdge.Perpendicular, out edgeDirectionLength);
+            BepuVector3.Dot(ref edgeDirection, ref clippingEdge.Perpendicular, out edgeDirectionLength);
             Fix64 t = distanceToPlane / edgeDirectionLength;
             if (t < F64.C0 || t > F64.C1)
             {
                 //It's outside of the incoming edge!
-                intersection = new Vector3();
+                intersection = new BepuVector3();
                 return false;
             }
-            Vector3.Multiply(ref edgeDirection, t, out offset);
-            Vector3.Add(ref offset, ref edgeA1, out intersection);
+            BepuVector3.Multiply(ref edgeDirection, t, out offset);
+            BepuVector3.Add(ref offset, ref edgeA1, out intersection);
 
-            Vector3.Subtract(ref intersection, ref clippingEdge.A, out offset);
-            Vector3.Subtract(ref clippingEdge.B, ref clippingEdge.A, out edgeDirection);
-            Vector3.Dot(ref edgeDirection, ref offset, out t);
+            BepuVector3.Subtract(ref intersection, ref clippingEdge.A, out offset);
+            BepuVector3.Subtract(ref clippingEdge.B, ref clippingEdge.A, out edgeDirection);
+            BepuVector3.Dot(ref edgeDirection, ref offset, out t);
             if (t < F64.C0 || t > edgeDirection.LengthSquared())
             {
                 //It's outside of the clipping edge!
@@ -5959,7 +5959,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             return true;
         }
 
-        private static void GetNearestFace(ref Vector3 position, ref Matrix3x3 orientation, ref Vector3 mtd, Fix64 halfWidth, Fix64 halfHeight, Fix64 halfLength, out BoxFace boxFace)
+        private static void GetNearestFace(ref BepuVector3 position, ref Matrix3x3 orientation, ref BepuVector3 mtd, Fix64 halfWidth, Fix64 halfHeight, Fix64 halfLength, out BoxFace boxFace)
         {
             boxFace = new BoxFace();
 
@@ -5984,7 +5984,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             worldTransform.M43 = position.Z;
             worldTransform.M44 = F64.C1;
 
-            Vector3 candidate;
+            BepuVector3 candidate;
             int bit;
             if (absX > absY && absX > absZ)
             {
@@ -5996,16 +5996,16 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 }
                 else
                     bit = 1;
-                candidate = new Vector3(halfWidth, halfHeight, halfLength);
+                candidate = new BepuVector3(halfWidth, halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V1 = candidate;
-                candidate = new Vector3(halfWidth, -halfHeight, halfLength);
+                candidate = new BepuVector3(halfWidth, -halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V2 = candidate;
-                candidate = new Vector3(halfWidth, -halfHeight, -halfLength);
+                candidate = new BepuVector3(halfWidth, -halfHeight, -halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V3 = candidate;
-                candidate = new Vector3(halfWidth, halfHeight, -halfLength);
+                candidate = new BepuVector3(halfWidth, halfHeight, -halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V4 = candidate;
 
@@ -6032,16 +6032,16 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 }
                 else
                     bit = 2;
-                candidate = new Vector3(halfWidth, halfHeight, halfLength);
+                candidate = new BepuVector3(halfWidth, halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V1 = candidate;
-                candidate = new Vector3(-halfWidth, halfHeight, halfLength);
+                candidate = new BepuVector3(-halfWidth, halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V2 = candidate;
-                candidate = new Vector3(-halfWidth, halfHeight, -halfLength);
+                candidate = new BepuVector3(-halfWidth, halfHeight, -halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V3 = candidate;
-                candidate = new Vector3(halfWidth, halfHeight, -halfLength);
+                candidate = new BepuVector3(halfWidth, halfHeight, -halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V4 = candidate;
 
@@ -6068,16 +6068,16 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 }
                 else
                     bit = 4;
-                candidate = new Vector3(halfWidth, halfHeight, halfLength);
+                candidate = new BepuVector3(halfWidth, halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V1 = candidate;
-                candidate = new Vector3(-halfWidth, halfHeight, halfLength);
+                candidate = new BepuVector3(-halfWidth, halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V2 = candidate;
-                candidate = new Vector3(-halfWidth, -halfHeight, halfLength);
+                candidate = new BepuVector3(-halfWidth, -halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V3 = candidate;
-                candidate = new Vector3(halfWidth, -halfHeight, halfLength);
+                candidate = new BepuVector3(halfWidth, -halfHeight, halfLength);
                 Matrix.Transform(ref candidate, ref worldTransform, out candidate);
                 boxFace.V4 = candidate;
 
@@ -6100,8 +6100,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
         private struct BoxFace
         {
             public int Id1, Id2, Id3, Id4;
-            public Vector3 V1, V2, V3, V4;
-            public Vector3 Normal;
+            public BepuVector3 V1, V2, V3, V4;
+            public BepuVector3 Normal;
             public Fix64 Width, Height;
 
             public int GetId(int i)
@@ -6120,7 +6120,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 return -1;
             }
 
-            public void GetVertex(int i, out Vector3 v)
+            public void GetVertex(int i, out BepuVector3 v)
             {
                 switch (i)
                 {
@@ -6142,7 +6142,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             internal void GetEdge(int i, out FaceEdge clippingEdge)
             {
-                Vector3 insidePoint;
+                BepuVector3 insidePoint;
                 switch (i)
                 {
                     case 0:
@@ -6173,22 +6173,22 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                         throw new IndexOutOfRangeException();
                 }
                 //TODO: Edge direction and perpendicular not normalized.
-                Vector3 edgeDirection;
-                Vector3.Subtract(ref clippingEdge.B, ref clippingEdge.A, out edgeDirection);
+                BepuVector3 edgeDirection;
+                BepuVector3.Subtract(ref clippingEdge.B, ref clippingEdge.A, out edgeDirection);
                 edgeDirection.Normalize();
-                Vector3.Cross(ref edgeDirection, ref Normal, out clippingEdge.Perpendicular);
+                BepuVector3.Cross(ref edgeDirection, ref Normal, out clippingEdge.Perpendicular);
 
                 Fix64 dot;
-                Vector3 offset;
-                Vector3.Subtract(ref insidePoint, ref clippingEdge.A, out offset);
-                Vector3.Dot(ref clippingEdge.Perpendicular, ref offset, out dot);
+                BepuVector3 offset;
+                BepuVector3.Subtract(ref insidePoint, ref clippingEdge.A, out offset);
+                BepuVector3.Dot(ref clippingEdge.Perpendicular, ref offset, out dot);
                 if (dot > F64.C0)
                 {
                     clippingEdge.Perpendicular.X = -clippingEdge.Perpendicular.X;
                     clippingEdge.Perpendicular.Y = -clippingEdge.Perpendicular.Y;
                     clippingEdge.Perpendicular.Z = -clippingEdge.Perpendicular.Z;
                 }
-                Vector3.Dot(ref clippingEdge.A, ref clippingEdge.Perpendicular, out clippingEdge.EdgeDistance);
+                BepuVector3.Dot(ref clippingEdge.A, ref clippingEdge.Perpendicular, out clippingEdge.EdgeDistance);
             }
         }
 
@@ -6209,10 +6209,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
         private struct FaceEdge : IEquatable<FaceEdge>
         {
-            public Vector3 A, B;
+            public BepuVector3 A, B;
             public Fix64 EdgeDistance;
             public int Id;
-            public Vector3 Perpendicular;
+            public BepuVector3 Perpendicular;
 
             #region IEquatable<FaceEdge> Members
 
@@ -6223,10 +6223,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             #endregion
 
-            public bool IsPointInside(ref Vector3 point)
+            public bool IsPointInside(ref BepuVector3 point)
             {
                 Fix64 distance;
-                Vector3.Dot(ref point, ref Perpendicular, out distance);
+                BepuVector3.Dot(ref point, ref Perpendicular, out distance);
                 return distance < EdgeDistance; // +1; //TODO: Bias this a little?
             }
         }

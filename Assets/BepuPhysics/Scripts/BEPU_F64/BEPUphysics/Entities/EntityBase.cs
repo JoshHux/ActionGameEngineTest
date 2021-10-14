@@ -33,13 +33,13 @@ namespace BEPUphysics.Entities
         ICollisionRulesOwner,
         IEquatable<Entity>
     {
-        internal Vector3 position;
-        internal Quaternion orientation = Quaternion.Identity;
+        internal BepuVector3 position;
+        internal BepuQuaternion orientation = BepuQuaternion.Identity;
         internal Matrix3x3 orientationMatrix = Matrix3x3.Identity;
-        internal Vector3 linearVelocity;
-        internal Vector3 angularVelocity;
+        internal BepuVector3 linearVelocity;
+        internal BepuVector3 angularVelocity;
 #if CONSERVE
-        internal Vector3 angularMomentum;
+        internal BepuVector3 angularMomentum;
 #endif
         internal bool isDynamic;
 
@@ -49,7 +49,7 @@ namespace BEPUphysics.Entities
         /// Gets or sets the position of the Entity.  This Position acts
         /// as the center of mass for dynamic entities.
         ///</summary>
-        public Vector3 Position
+        public BepuVector3 Position
         {
             get
             {
@@ -66,9 +66,9 @@ namespace BEPUphysics.Entities
 
 
         ///<summary>
-        /// Gets or sets the orientation quaternion of the entity.
+        /// Gets or sets the orientation BepuQuaternion of the entity.
         ///</summary>
-        public Quaternion Orientation
+        public BepuQuaternion Orientation
         {
             get
             {
@@ -76,8 +76,8 @@ namespace BEPUphysics.Entities
             }
             set
             {
-                Quaternion.Normalize(ref value, out orientation);
-                Matrix3x3.CreateFromQuaternion(ref orientation, out orientationMatrix);
+                BepuQuaternion.Normalize(ref value, out orientation);
+                Matrix3x3.CreateFromBepuQuaternion(ref orientation, out orientationMatrix);
                 //Update inertia tensors for consistency.
                 Matrix3x3 multiplied;
                 Matrix3x3.MultiplyTransposed(ref orientationMatrix, ref localInertiaTensorInverse, out multiplied);
@@ -100,7 +100,7 @@ namespace BEPUphysics.Entities
             }
             set
             {
-                Quaternion.CreateFromRotationMatrix(ref value, out orientation);
+                BepuQuaternion.CreateFromRotationMatrix(ref value, out orientation);
                 Orientation = orientation; //normalizes and sets.
             }
         }
@@ -121,7 +121,7 @@ namespace BEPUphysics.Entities
             }
             set
             {
-                Quaternion.CreateFromRotationMatrix(ref value, out orientation);
+                BepuQuaternion.CreateFromRotationMatrix(ref value, out orientation);
                 Orientation = orientation; //normalizes and sets.
                 position = value.Translation;
                 activityInformation.Activate();
@@ -133,7 +133,7 @@ namespace BEPUphysics.Entities
         /// <summary>
         /// Gets or sets the angular velocity of the entity.
         /// </summary>
-        public Vector3 AngularVelocity
+        public BepuVector3 AngularVelocity
         {
             get
             {
@@ -154,14 +154,14 @@ namespace BEPUphysics.Entities
         /// <summary>
         /// Gets or sets the angular momentum of the entity.
         /// </summary>
-        public Vector3 AngularMomentum
+        public BepuVector3 AngularMomentum
         {
             get
             {
 #if CONSERVE
                 return angularMomentum;
 #else
-                Vector3 v;
+                BepuVector3 v;
                 Matrix3x3.Transform(ref angularVelocity, ref inertiaTensor, out v);
                 return v;
 #endif
@@ -181,7 +181,7 @@ namespace BEPUphysics.Entities
         /// <summary>
         /// Gets or sets the linear velocity of the entity.
         /// </summary>
-        public Vector3 LinearVelocity
+        public BepuVector3 LinearVelocity
         {
             get
             {
@@ -198,17 +198,17 @@ namespace BEPUphysics.Entities
         /// <summary>
         /// Gets or sets the linear momentum of the entity.
         /// </summary>
-        public Vector3 LinearMomentum
+        public BepuVector3 LinearMomentum
         {
             get
             {
-                Vector3 momentum;
-                Vector3.Multiply(ref linearVelocity, mass, out momentum);
+                BepuVector3 momentum;
+                BepuVector3.Multiply(ref linearVelocity, mass, out momentum);
                 return momentum;
             }
             set
             {
-                Vector3.Multiply(ref value, inverseMass, out linearVelocity);
+                BepuVector3.Multiply(ref value, inverseMass, out linearVelocity);
                 activityInformation.Activate();
 
                 MathChecker.Validate(linearVelocity);
@@ -254,11 +254,11 @@ namespace BEPUphysics.Entities
 
 
         bool hasPersonalGravity;
-        private Vector3 personalGravity;
+        private BepuVector3 personalGravity;
         ///<summary>
         /// Gets or sets the entity's personal gravity. If null, the ForceUpdater's gravity is used instead. Defaults to null.
         ///</summary>
-        public Vector3? Gravity
+        public BepuVector3? Gravity
         {
             get
             {
@@ -288,7 +288,7 @@ namespace BEPUphysics.Entities
                         activityInformation.Activate();
                     }
                     hasPersonalGravity = false;
-                    personalGravity = new Vector3();
+                    personalGravity = new BepuVector3();
                 }
             }
         }
@@ -542,11 +542,11 @@ namespace BEPUphysics.Entities
         ///<summary>
         /// Gets the relative forward direction of the entity
         ///</summary>
-        public Vector3 Forward
+        public BepuVector3 Forward
         {
             get
             {
-                return Quaternion.Transform(Vector3.Forward, orientation);
+                return BepuQuaternion.Transform(BepuVector3.Forward, orientation);
             }
         }
 
@@ -718,7 +718,7 @@ namespace BEPUphysics.Entities
         ///</summary>
         ///<param name="location">Location to apply the impulse.</param>
         ///<param name="impulse">Impulse to apply.</param>
-        public void ApplyImpulse(Vector3 location, Vector3 impulse)
+        public void ApplyImpulse(BepuVector3 location, BepuVector3 impulse)
         {
             ApplyImpulse(ref location, ref impulse);
         }
@@ -728,7 +728,7 @@ namespace BEPUphysics.Entities
         ///</summary>
         ///<param name="location">Location to apply the impulse.</param>
         ///<param name="impulse">Impulse to apply.</param>
-        public void ApplyImpulse(ref Vector3 location, ref Vector3 impulse)
+        public void ApplyImpulse(ref BepuVector3 location, ref BepuVector3 impulse)
         {
             if (isDynamic)
             {
@@ -742,20 +742,20 @@ namespace BEPUphysics.Entities
         ///</summary>
         ///<param name="location">Location to apply the impulse.</param>
         ///<param name="impulse">Impulse to apply.</param>
-        public void ApplyImpulseWithoutActivating(ref Vector3 location, ref Vector3 impulse)
+        public void ApplyImpulseWithoutActivating(ref BepuVector3 location, ref BepuVector3 impulse)
         {
             ApplyLinearImpulse(ref impulse);
 #if WINDOWS
-            Vector3 positionDifference;
+            BepuVector3 positionDifference;
 #else
-            Vector3 positionDifference = new Vector3();
+            BepuVector3 positionDifference = new BepuVector3();
 #endif
             positionDifference.X = location.X - position.X;
             positionDifference.Y = location.Y - position.Y;
             positionDifference.Z = location.Z - position.Z;
 
-            Vector3 cross;
-            Vector3.Cross(ref positionDifference, ref impulse, out cross);
+            BepuVector3 cross;
+            BepuVector3.Cross(ref positionDifference, ref impulse, out cross);
             ApplyAngularImpulse(ref cross);
 
         }
@@ -769,7 +769,7 @@ namespace BEPUphysics.Entities
         /// Consider equivalently adding to the LinearMomentum property for convenience instead.
         /// </summary>
         /// <param name="impulse">Impulse to apply.</param>
-        public void ApplyLinearImpulse(ref Vector3 impulse)
+        public void ApplyLinearImpulse(ref BepuVector3 impulse)
         {
             linearVelocity.X += impulse.X * inverseMass;
             linearVelocity.Y += impulse.Y * inverseMass;
@@ -784,7 +784,7 @@ namespace BEPUphysics.Entities
         /// Consider equivalently adding to the AngularMomentum property for convenience instead.
         /// </summary>
         /// <param name="impulse">Impulse to apply.</param>
-        public void ApplyAngularImpulse(ref Vector3 impulse)
+        public void ApplyAngularImpulse(ref BepuVector3 impulse)
         {
             //There's some room here for SIMD-friendliness.  However, since the phone doesn't accelerate non-XNA types, the matrix3x3 operations don't gain much.
 #if CONSERVE
@@ -933,13 +933,13 @@ namespace BEPUphysics.Entities
             //Apply gravity.
             if (hasPersonalGravity)
             {
-                Vector3 gravityDt;
-                Vector3.Multiply(ref personalGravity, dt, out gravityDt);
-                Vector3.Add(ref gravityDt, ref linearVelocity, out linearVelocity);
+                BepuVector3 gravityDt;
+                BepuVector3.Multiply(ref personalGravity, dt, out gravityDt);
+                BepuVector3.Add(ref gravityDt, ref linearVelocity, out linearVelocity);
             }
             else
             {
-                Vector3.Add(ref forceUpdater.gravityDt, ref linearVelocity, out linearVelocity);
+                BepuVector3.Add(ref forceUpdater.gravityDt, ref linearVelocity, out linearVelocity);
             }
 
             //Boost damping at very low velocities.  This is a strong stabilizer; removes a ton of energy from the system.
@@ -959,16 +959,16 @@ namespace BEPUphysics.Entities
             Fix64 linear = LinearDamping + linearDampingBoost;
             if (linear > F64.C0)
             {
-                Vector3.Multiply(ref linearVelocity, Fix64.Pow(MathHelper.Clamp(F64.C1 - linear, F64.C0, F64.C1), dt), out linearVelocity);
+                BepuVector3.Multiply(ref linearVelocity, Fix64.Pow(MathHelper.Clamp(F64.C1 - linear, F64.C0, F64.C1), dt), out linearVelocity);
             }
             //When applying angular damping, the momentum or velocity is damped depending on the conservation setting.
             Fix64 angular = AngularDamping + angularDampingBoost;
             if (angular > F64.C0)
             {
 #if CONSERVE
-                Vector3.Multiply(ref angularMomentum, Fix64.Pow(MathHelper.Clamp(1 - angular, 0, 1), dt), out angularMomentum);
+                BepuVector3.Multiply(ref angularMomentum, Fix64.Pow(MathHelper.Clamp(1 - angular, 0, 1), dt), out angularMomentum);
 #else
-                Vector3.Multiply(ref angularVelocity, Fix64.Pow(MathHelper.Clamp(F64.C1 - angular, F64.C0, F64.C1), dt), out angularVelocity);
+                BepuVector3.Multiply(ref angularVelocity, Fix64.Pow(MathHelper.Clamp(F64.C1 - angular, F64.C0, F64.C1), dt), out angularVelocity);
 #endif
             }
 
@@ -1122,9 +1122,9 @@ namespace BEPUphysics.Entities
             //However, to be here, this object is not a discretely updated object.
             //That means we still need to update the linear motion.
 
-            Vector3 increment;
-            Vector3.Multiply(ref linearVelocity, dt * minimumToi, out increment);
-            Vector3.Add(ref position, ref increment, out position);
+            BepuVector3 increment;
+            BepuVector3.Multiply(ref linearVelocity, dt * minimumToi, out increment);
+            BepuVector3.Add(ref position, ref increment, out position);
 
             collisionInformation.UpdateWorldTransform(ref position, ref orientation);
 
@@ -1142,21 +1142,21 @@ namespace BEPUphysics.Entities
 
         void IPositionUpdateable.PreUpdatePosition(Fix64 dt)
         {
-            Vector3 increment;
+            BepuVector3 increment;
 
-            Vector3.Multiply(ref angularVelocity, dt * F64.C0p5, out increment);
-            var multiplier = new Quaternion(increment.X, increment.Y, increment.Z, F64.C0);
-            Quaternion.Multiply(ref multiplier, ref orientation, out multiplier);
-            Quaternion.Add(ref orientation, ref multiplier, out orientation);
+            BepuVector3.Multiply(ref angularVelocity, dt * F64.C0p5, out increment);
+            var multiplier = new BepuQuaternion(increment.X, increment.Y, increment.Z, F64.C0);
+            BepuQuaternion.Multiply(ref multiplier, ref orientation, out multiplier);
+            BepuQuaternion.Add(ref orientation, ref multiplier, out orientation);
             orientation.Normalize();
 
-            Matrix3x3.CreateFromQuaternion(ref orientation, out orientationMatrix);
+            Matrix3x3.CreateFromBepuQuaternion(ref orientation, out orientationMatrix);
 
             //Only do the linear motion if this object doesn't obey CCD.
             if (PositionUpdateMode == PositionUpdateMode.Discrete)
             {
-                Vector3.Multiply(ref linearVelocity, dt, out increment);
-                Vector3.Add(ref position, ref increment, out position);
+                BepuVector3.Multiply(ref linearVelocity, dt, out increment);
+                BepuVector3.Add(ref position, ref increment, out position);
 
                 collisionInformation.UpdateWorldTransform(ref position, ref orientation);
                 //The position update is complete if this is a discretely updated object.

@@ -1,40 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 [System.Serializable]
 public class FrameTimer
 {
     //maybe add event handler that is invoked every time it ticks
     public event TimerEventHandler onEnd;
 
+    //tells whether or not we should be ticking
     private bool isTicking = false;
-    public bool isDone = true;
-    [SerializeField] private int endTime;
-    [SerializeField] private int time;
+
+
+    [SerializeField]
+    private int endTime;
+
+    [SerializeField]
+    private int time;
 
     public void StartTimer(int setTime)
     {
-        SetTimer(setTime);
+        SetTimer (setTime);
         PlayTimer();
     }
 
     public void SetTimer(int setTime)
     {
-
         endTime = setTime;
-        isDone = false;
         time = 0;
 
-
         isTicking = false;
-
     }
 
     public void PlayTimer()
     {
-
         isTicking = true;
-
     }
 
     public bool TickTimer()
@@ -74,7 +74,6 @@ public class FrameTimer
     private void EndTimer()
     {
         isTicking = false;
-        isDone = true;
         endTime = 0;
         onEnd?.Invoke(this);
     }
@@ -83,6 +82,6 @@ public class FrameTimer
     {
         return endTime > 0;
     }
-    public delegate void TimerEventHandler(object sender);
 
+    public delegate void TimerEventHandler(object sender);
 }

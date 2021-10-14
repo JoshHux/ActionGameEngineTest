@@ -36,11 +36,11 @@ namespace BEPUphysics.CollisionTests.Manifolds
 
             if (convex.entity != null)
             {
-                Vector3 transformedVelocity;
+                BepuVector3 transformedVelocity;
                 Matrix3x3 inverse;
                 Matrix3x3.Invert(ref terrain.worldTransform.LinearTransform, out inverse);
                 Matrix3x3.Transform(ref convex.entity.linearVelocity, ref inverse, out transformedVelocity);
-                Vector3.Multiply(ref transformedVelocity, dt, out transformedVelocity);
+                BepuVector3.Multiply(ref transformedVelocity, dt, out transformedVelocity);
 
 
                 if (transformedVelocity.X > F64.C0)
@@ -114,7 +114,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                     //Found a hit!
                     rayHit.Normal.Normalize();
                     Fix64 dot;
-                    Vector3.Dot(ref ray.Direction, ref rayHit.Normal, out dot);
+                    BepuVector3.Dot(ref ray.Direction, ref rayHit.Normal, out dot);
 
                     var newContact = new ContactData
                     {
@@ -134,7 +134,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                             contacts.Elements[i].Position = newContact.Position;
                             contacts.Elements[i].PenetrationDepth = newContact.PenetrationDepth;
                             supplementData.Elements[i].BasePenetrationDepth = newContact.PenetrationDepth;
-                            supplementData.Elements[i].LocalOffsetA = new Vector3();
+                            supplementData.Elements[i].LocalOffsetA = new BepuVector3();
                             supplementData.Elements[i].LocalOffsetB = ray.Position; //convex local position in mesh.
                             found = true;
                             break;

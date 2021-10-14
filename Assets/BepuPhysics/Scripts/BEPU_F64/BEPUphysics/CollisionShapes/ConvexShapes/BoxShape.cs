@@ -154,23 +154,23 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
 #endif
 
             Matrix3x3 o;
-            Matrix3x3.CreateFromQuaternion(ref shapeTransform.Orientation, out o);
+            Matrix3x3.CreateFromBepuQuaternion(ref shapeTransform.Orientation, out o);
             //Sample the local directions from the orientation matrix, implicitly transposed.
             //Notice only three directions are used.  Due to box symmetry, 'left' is just -right.
-            var right = new Vector3(Fix64.Sign(o.M11) * halfWidth, Fix64.Sign(o.M21) * halfHeight, Fix64.Sign(o.M31) * halfLength);
+            var right = new BepuVector3(Fix64.Sign(o.M11) * halfWidth, Fix64.Sign(o.M21) * halfHeight, Fix64.Sign(o.M31) * halfLength);
 
-            var up = new Vector3(Fix64.Sign(o.M12) * halfWidth, Fix64.Sign(o.M22) * halfHeight, Fix64.Sign(o.M32) * halfLength);
+            var up = new BepuVector3(Fix64.Sign(o.M12) * halfWidth, Fix64.Sign(o.M22) * halfHeight, Fix64.Sign(o.M32) * halfLength);
 
-            var backward = new Vector3(Fix64.Sign(o.M13) * halfWidth, Fix64.Sign(o.M23) * halfHeight, Fix64.Sign(o.M33) * halfLength);
+            var backward = new BepuVector3(Fix64.Sign(o.M13) * halfWidth, Fix64.Sign(o.M23) * halfHeight, Fix64.Sign(o.M33) * halfLength);
 
 
             //Rather than transforming each axis independently (and doing three times as many operations as required), just get the 3 required values directly.
-            Vector3 offset;
+            BepuVector3 offset;
             TransformLocalExtremePoints(ref right, ref up, ref backward, ref o, out offset);
 
             //The positive and negative vectors represent the X, Y and Z coordinates of the extreme points in world space along the world space axes.
-            Vector3.Add(ref shapeTransform.Position, ref offset, out boundingBox.Max);
-            Vector3.Subtract(ref shapeTransform.Position, ref offset, out boundingBox.Min);
+            BepuVector3.Add(ref shapeTransform.Position, ref offset, out boundingBox.Max);
+            BepuVector3.Subtract(ref shapeTransform.Position, ref offset, out boundingBox.Min);
 
         }
 
@@ -180,9 +180,9 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         ///</summary>
         ///<param name="direction">Direction to find the extreme point in.</param>
         ///<param name="extremePoint">Extreme point on the shape.</param>
-        public override void GetLocalExtremePointWithoutMargin(ref Vector3 direction, out Vector3 extremePoint)
+        public override void GetLocalExtremePointWithoutMargin(ref BepuVector3 direction, out BepuVector3 extremePoint)
         {
-            extremePoint = new Vector3(Fix64.Sign(direction.X) * (halfWidth - collisionMargin), Fix64.Sign(direction.Y) * (halfHeight - collisionMargin), Fix64.Sign(direction.Z) * (halfLength - collisionMargin));
+            extremePoint = new BepuVector3(Fix64.Sign(direction.X) * (halfWidth - collisionMargin), Fix64.Sign(direction.Y) * (halfHeight - collisionMargin), Fix64.Sign(direction.Z) * (halfLength - collisionMargin));
         }
 
 
@@ -199,8 +199,8 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public override bool RayTest(ref Ray ray, ref RigidTransform transform, Fix64 maximumLength, out RayHit hit)
         {
 
-            Vector3.Subtract(ref ray.Position, ref transform.Position, out var offset);
-            Matrix3x3.CreateFromQuaternion(ref transform.Orientation, out var orientation);
+            BepuVector3.Subtract(ref ray.Position, ref transform.Position, out var offset);
+            Matrix3x3.CreateFromBepuQuaternion(ref transform.Orientation, out var orientation);
             Matrix3x3.TransformTranspose(ref offset, ref orientation, out var localOffset);
             Matrix3x3.TransformTranspose(ref ray.Direction, ref orientation, out var localDirection);
             //Note that this division has two odd properties:
@@ -208,19 +208,19 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             //The idea is that any interval computed using such an inverse would be enormous. Those values will not be exactly accurate, but they will never appear as a result
             //because a parallel ray will never actually intersect the surface. The resulting intervals are practical approximations of the 'true' infinite intervals.
             //2) To compensate for the clamp and abs, we reintroduce the sign in the numerator. Note that it has the reverse sign since it will be applied to the offset to get the T value.
-            var offsetToTScale = new Vector3(
+            var offsetToTScale = new BepuVector3(
                 (localDirection.X < 0 ? 1 : -1) / Fix64.Max((Fix64)1e-15, Fix64.Abs(localDirection.X)),
                 (localDirection.Y < 0 ? 1 : -1) / Fix64.Max((Fix64)1e-15, Fix64.Abs(localDirection.Y)),
                 (localDirection.Z < 0 ? 1 : -1) / Fix64.Max((Fix64)1e-15, Fix64.Abs(localDirection.Z)));
 
             //Compute impact times for each pair of planes in local space.
-            var halfExtent = new Vector3(HalfWidth, HalfHeight, HalfLength);
-            Vector3.Subtract(ref localOffset, ref halfExtent, out var negativeTNumerator);
-            Vector3.Add(ref localOffset, ref halfExtent, out var positiveTNumerator);
-            Vector3.Multiply(ref negativeTNumerator, ref offsetToTScale, out var negativeT);
-            Vector3.Multiply(ref positiveTNumerator, ref offsetToTScale, out var positiveT);
-            Vector3.Min(ref negativeT, ref positiveT, out var entryT);
-            Vector3.Max(ref negativeT, ref positiveT, out var exitT);
+            var halfExtent = new BepuVector3(HalfWidth, HalfHeight, HalfLength);
+            BepuVector3.Subtract(ref localOffset, ref halfExtent, out var negativeTNumerator);
+            BepuVector3.Add(ref localOffset, ref halfExtent, out var positiveTNumerator);
+            BepuVector3.Multiply(ref negativeTNumerator, ref offsetToTScale, out var negativeT);
+            BepuVector3.Multiply(ref positiveTNumerator, ref offsetToTScale, out var positiveT);
+            BepuVector3.Min(ref negativeT, ref positiveT, out var entryT);
+            BepuVector3.Max(ref negativeT, ref positiveT, out var exitT);
 
             //In order for an impact to occur, the ray must enter all three slabs formed by the axis planes before exiting any of them.
             //In other words, the first exit must occur after the last entry.
@@ -241,12 +241,12 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 if (entryT.X > entryT.Z)
                 {
                     latestEntry = entryT.X;
-                    hit.Normal = new Vector3(orientation.M11, orientation.M12, orientation.M13);
+                    hit.Normal = new BepuVector3(orientation.M11, orientation.M12, orientation.M13);
                 }
                 else
                 {
                     latestEntry = entryT.Z;
-                    hit.Normal = new Vector3(orientation.M31, orientation.M32, orientation.M33);
+                    hit.Normal = new BepuVector3(orientation.M31, orientation.M32, orientation.M33);
                 }
             }
             else
@@ -254,12 +254,12 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 if (entryT.Y > entryT.Z)
                 {
                     latestEntry = entryT.Y;
-                    hit.Normal = new Vector3(orientation.M21, orientation.M22, orientation.M23);
+                    hit.Normal = new BepuVector3(orientation.M21, orientation.M22, orientation.M23);
                 }
                 else
                 {
                     latestEntry = entryT.Z;
-                    hit.Normal = new Vector3(orientation.M31, orientation.M32, orientation.M33);
+                    hit.Normal = new BepuVector3(orientation.M31, orientation.M32, orientation.M33);
                 }
             }
 
@@ -271,12 +271,12 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             }
             hit.T = latestEntry < 0 ? 0 : latestEntry;
             //The normal should point away from the center of the box.
-            if (Vector3.Dot(hit.Normal, offset) < 0)
+            if (BepuVector3.Dot(hit.Normal, offset) < 0)
             {
-                Vector3.Negate(ref hit.Normal, out hit.Normal);
+                BepuVector3.Negate(ref hit.Normal, out hit.Normal);
             }
-            Vector3.Multiply(ref ray.Direction, hit.T, out var offsetFromOrigin);
-            Vector3.Add(ref ray.Position, ref offsetFromOrigin, out hit.Location);
+            BepuVector3.Multiply(ref ray.Direction, hit.T, out var offsetFromOrigin);
+            BepuVector3.Add(ref ray.Position, ref offsetFromOrigin, out hit.Location);
             return true;
         }
 

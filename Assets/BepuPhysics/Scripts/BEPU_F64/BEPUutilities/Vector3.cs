@@ -7,7 +7,7 @@ namespace BEPUutilities
     /// Provides XNA-like 3D vector math.
     /// </summary>
     [Serializable]
-    public struct Vector3 : IEquatable<Vector3>
+    public struct BepuVector3 : IEquatable<BepuVector3>
     {
         /// <summary>
         /// X component of the vector.
@@ -28,7 +28,7 @@ namespace BEPUutilities
         /// <param name="x">X component of the vector.</param>
         /// <param name="y">Y component of the vector.</param>
         /// <param name="z">Z component of the vector.</param>
-        public Vector3(Fix64 x, Fix64 y, Fix64 z)
+        public BepuVector3(Fix64 x, Fix64 y, Fix64 z)
         {
             this.X = x;
             this.Y = y;
@@ -40,7 +40,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="xy">X and Y components of the vector.</param>
         /// <param name="z">Z component of the vector.</param>
-        public Vector3(Vector2 xy, Fix64 z)
+        public BepuVector3(BepuVector2 xy, Fix64 z)
         {
             this.X = xy.X;
             this.Y = xy.Y;
@@ -52,7 +52,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="x">X component of the vector.</param>
         /// <param name="yz">Y and Z components of the vector.</param>
-        public Vector3(Fix64 x, Vector2 yz)
+        public BepuVector3(Fix64 x, BepuVector2 yz)
         {
             this.X = x;
             this.Y = yz.X;
@@ -90,10 +90,10 @@ namespace BEPUutilities
         /// <summary>
         /// Normalizes the vector and returns it without setting it to a different value.
         /// </summary>
-        public Vector3 Normalized()
+        public BepuVector3 Normalized()
         {
             Fix64 inverse = F64.C1 / Fix64.Sqrt(X * X + Y * Y + Z * Z);
-            return new Vector3(this.X, this.Y, this.Z) * inverse;
+            return new BepuVector3(this.X, this.Y, this.Z) * inverse;
         }
         /// <summary>
         /// Gets a string representation of the vector.
@@ -110,7 +110,7 @@ namespace BEPUutilities
         /// <param name="a">First vector in the product.</param>
         /// <param name="b">Second vector in the product.</param>
         /// <returns>Resulting dot product.</returns>
-        public static Fix64 Dot(Vector3 a, Vector3 b)
+        public static Fix64 Dot(BepuVector3 a, BepuVector3 b)
         {
             return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
         }
@@ -121,7 +121,7 @@ namespace BEPUutilities
         /// <param name="a">First vector in the product.</param>
         /// <param name="b">Second vector in the product.</param>
         /// <param name="product">Resulting dot product.</param>
-        public static void Dot(ref Vector3 a, ref Vector3 b, out Fix64 product)
+        public static void Dot(ref BepuVector3 a, ref BepuVector3 b, out Fix64 product)
         {
             product = a.X * b.X + a.Y * b.Y + a.Z * b.Z;
         }
@@ -131,7 +131,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to add.</param>
         /// <param name="b">Second vector to add.</param>
         /// <param name="sum">Sum of the two vectors.</param>
-        public static void Add(ref Vector3 a, ref Vector3 b, out Vector3 sum)
+        public static void Add(ref BepuVector3 a, ref BepuVector3 b, out BepuVector3 sum)
         {
             sum.X = a.X + b.X;
             sum.Y = a.Y + b.Y;
@@ -143,7 +143,7 @@ namespace BEPUutilities
         /// <param name="a">Vector to subtract from.</param>
         /// <param name="b">Vector to subtract from the first vector.</param>
         /// <param name="difference">Result of the subtraction.</param>
-        public static void Subtract(ref Vector3 a, ref Vector3 b, out Vector3 difference)
+        public static void Subtract(ref BepuVector3 a, ref BepuVector3 b, out BepuVector3 difference)
         {
             difference.X = a.X - b.X;
             difference.Y = a.Y - b.Y;
@@ -155,7 +155,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to scale.</param>
         /// <param name="scale">Amount to scale.</param>
         /// <param name="result">Scaled vector.</param>
-        public static void Multiply(ref Vector3 v, Fix64 scale, out Vector3 result)
+        public static void Multiply(ref BepuVector3 v, Fix64 scale, out BepuVector3 result)
         {
             result.X = v.X * scale;
             result.Y = v.Y * scale;
@@ -168,7 +168,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to multiply.</param>
         /// <param name="b">Second vector to multiply.</param>
         /// <param name="result">Result of the componentwise multiplication.</param>
-        public static void Multiply(ref Vector3 a, ref Vector3 b, out Vector3 result)
+        public static void Multiply(ref BepuVector3 a, ref BepuVector3 b, out BepuVector3 result)
         {
             result.X = a.X * b.X;
             result.Y = a.Y * b.Y;
@@ -181,7 +181,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to divide.</param>
         /// <param name="divisor">Value to divide the vector's components.</param>
         /// <param name="result">Result of the division.</param>
-        public static void Divide(ref Vector3 v, Fix64 divisor, out Vector3 result)
+        public static void Divide(ref BepuVector3 v, Fix64 divisor, out BepuVector3 result)
         {
             Fix64 inverse = F64.C1 / divisor;
             result.X = v.X * inverse;
@@ -194,9 +194,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to scale.</param>
         /// <param name="f">Amount to scale.</param>
         /// <returns>Scaled vector.</returns>
-        public static Vector3 operator *(Vector3 v, Fix64 f)
+        public static BepuVector3 operator *(BepuVector3 v, Fix64 f)
         {
-            Vector3 toReturn;
+            BepuVector3 toReturn;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
             toReturn.Z = v.Z * f;
@@ -209,9 +209,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to scale.</param>
         /// <param name="f">Amount to scale.</param>
         /// <returns>Scaled vector.</returns>
-        public static Vector3 operator *(Fix64 f, Vector3 v)
+        public static BepuVector3 operator *(Fix64 f, BepuVector3 v)
         {
-            Vector3 toReturn;
+            BepuVector3 toReturn;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
             toReturn.Z = v.Z * f;
@@ -224,9 +224,9 @@ namespace BEPUutilities
         /// <param name="a">First vector to multiply.</param>
         /// <param name="b">Second vector to multiply.</param>
         /// <returns>Result of the componentwise multiplication.</returns>
-        public static Vector3 operator *(Vector3 a, Vector3 b)
+        public static BepuVector3 operator *(BepuVector3 a, BepuVector3 b)
         {
-            Vector3 result;
+            BepuVector3 result;
             Multiply(ref a, ref b, out result);
             return result;
         }
@@ -237,9 +237,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to divide.</param>
         /// <param name="f">Value to divide the vector's components.</param>
         /// <returns>Result of the division.</returns>
-        public static Vector3 operator /(Vector3 v, Fix64 f)
+        public static BepuVector3 operator /(BepuVector3 v, Fix64 f)
         {
-            Vector3 toReturn;
+            BepuVector3 toReturn;
             f = F64.C1 / f;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
@@ -252,9 +252,9 @@ namespace BEPUutilities
         /// <param name="a">Vector to subtract from.</param>
         /// <param name="b">Vector to subtract from the first vector.</param>
         /// <returns>Result of the subtraction.</returns>
-        public static Vector3 operator -(Vector3 a, Vector3 b)
+        public static BepuVector3 operator -(BepuVector3 a, BepuVector3 b)
         {
-            Vector3 v;
+            BepuVector3 v;
             v.X = a.X - b.X;
             v.Y = a.Y - b.Y;
             v.Z = a.Z - b.Z;
@@ -266,9 +266,9 @@ namespace BEPUutilities
         /// <param name="a">First vector to add.</param>
         /// <param name="b">Second vector to add.</param>
         /// <returns>Sum of the two vectors.</returns>
-        public static Vector3 operator +(Vector3 a, Vector3 b)
+        public static BepuVector3 operator +(BepuVector3 a, BepuVector3 b)
         {
-            Vector3 v;
+            BepuVector3 v;
             v.X = a.X + b.X;
             v.Y = a.Y + b.Y;
             v.Z = a.Z + b.Z;
@@ -281,7 +281,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to negate.</param>
         /// <returns>Negated vector.</returns>
-        public static Vector3 operator -(Vector3 v)
+        public static BepuVector3 operator -(BepuVector3 v)
         {
             v.X = -v.X;
             v.Y = -v.Y;
@@ -294,7 +294,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to test for equivalence.</param>
         /// <param name="b">Second vector to test for equivalence.</param>
         /// <returns>Whether the vectors were equivalent.</returns>
-        public static bool operator ==(Vector3 a, Vector3 b)
+        public static bool operator ==(BepuVector3 a, BepuVector3 b)
         {
             return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
         }
@@ -304,7 +304,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to test for inequivalence.</param>
         /// <param name="b">Second vector to test for inequivalence.</param>
         /// <returns>Whether the vectors were inequivalent.</returns>
-        public static bool operator !=(Vector3 a, Vector3 b)
+        public static bool operator !=(BepuVector3 a, BepuVector3 b)
         {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
@@ -316,7 +316,7 @@ namespace BEPUutilities
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(Vector3 other)
+        public bool Equals(BepuVector3 other)
         {
             return X == other.X && Y == other.Y && Z == other.Z;
         }
@@ -330,9 +330,9 @@ namespace BEPUutilities
         /// <param name="obj">Another object to compare to. </param><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
         {
-            if (obj is Vector3)
+            if (obj is BepuVector3)
             {
-                return Equals((Vector3)obj);
+                return Equals((BepuVector3)obj);
             }
             return false;
         }
@@ -356,7 +356,7 @@ namespace BEPUutilities
         /// <param name="a">First vector.</param>
         /// <param name="b">Second vector.</param>
         /// <param name="distanceSquared">Squared distance between the two vectors.</param>
-        public static void DistanceSquared(ref Vector3 a, ref Vector3 b, out Fix64 distanceSquared)
+        public static void DistanceSquared(ref BepuVector3 a, ref BepuVector3 b, out Fix64 distanceSquared)
         {
             Fix64 x = a.X - b.X;
             Fix64 y = a.Y - b.Y;
@@ -370,7 +370,7 @@ namespace BEPUutilities
         /// <param name="a">First vector.</param>
         /// <param name="b">Second vector.</param>
         /// <returns>Squared distance between the two vectors.</returns>
-        public static Fix64 DistanceSquared(Vector3 a, Vector3 b)
+        public static Fix64 DistanceSquared(BepuVector3 a, BepuVector3 b)
         {
             Fix64 x = a.X - b.X;
             Fix64 y = a.Y - b.Y;
@@ -385,7 +385,7 @@ namespace BEPUutilities
         /// <param name="a">First vector.</param>
         /// <param name="b">Second vector.</param>
         /// <param name="distance">Distance between the two vectors.</param>
-        public static void Distance(ref Vector3 a, ref Vector3 b, out Fix64 distance)
+        public static void Distance(ref BepuVector3 a, ref BepuVector3 b, out Fix64 distance)
         {
             Fix64 x = a.X - b.X;
             Fix64 y = a.Y - b.Y;
@@ -398,7 +398,7 @@ namespace BEPUutilities
         /// <param name="a">First vector.</param>
         /// <param name="b">Second vector.</param>
         /// <returns>Distance between the two vectors.</returns>
-        public static Fix64 Distance(Vector3 a, Vector3 b)
+        public static Fix64 Distance(BepuVector3 a, BepuVector3 b)
         {
             Fix64 toReturn;
             Distance(ref a, ref b, out toReturn);
@@ -408,22 +408,22 @@ namespace BEPUutilities
         /// <summary>
         /// Gets the zero vector.
         /// </summary>
-        public static Vector3 Zero
+        public static BepuVector3 Zero
         {
             get
             {
-                return new Vector3();
+                return new BepuVector3();
             }
         }
 
         /// <summary>
         /// Gets the up vector (0,1,0).
         /// </summary>
-        public static Vector3 Up
+        public static BepuVector3 Up
         {
             get
             {
-                return new Vector3()
+                return new BepuVector3()
                 {
                     X = F64.C0,
                     Y = F64.C1,
@@ -435,11 +435,11 @@ namespace BEPUutilities
         /// <summary>
         /// Gets the down vector (0,-1,0).
         /// </summary>
-        public static Vector3 Down
+        public static BepuVector3 Down
         {
             get
             {
-                return new Vector3()
+                return new BepuVector3()
                 {
                     X = F64.C0,
                     Y = -1,
@@ -451,11 +451,11 @@ namespace BEPUutilities
         /// <summary>
         /// Gets the right vector (1,0,0).
         /// </summary>
-        public static Vector3 Right
+        public static BepuVector3 Right
         {
             get
             {
-                return new Vector3()
+                return new BepuVector3()
                 {
                     X = F64.C1,
                     Y = F64.C0,
@@ -467,11 +467,11 @@ namespace BEPUutilities
         /// <summary>
         /// Gets the left vector (-1,0,0).
         /// </summary>
-        public static Vector3 Left
+        public static BepuVector3 Left
         {
             get
             {
-                return new Vector3()
+                return new BepuVector3()
                 {
                     X = -1,
                     Y = F64.C0,
@@ -483,11 +483,11 @@ namespace BEPUutilities
         /// <summary>
         /// Gets the forward vector (0,0,-1).
         /// </summary>
-        public static Vector3 Forward
+        public static BepuVector3 Forward
         {
             get
             {
-                return new Vector3()
+                return new BepuVector3()
                 {
                     X = F64.C0,
                     Y = F64.C0,
@@ -499,11 +499,11 @@ namespace BEPUutilities
         /// <summary>
         /// Gets the back vector (0,0,1).
         /// </summary>
-        public static Vector3 Backward
+        public static BepuVector3 Backward
         {
             get
             {
-                return new Vector3()
+                return new BepuVector3()
                 {
                     X = F64.C0,
                     Y = F64.C0,
@@ -515,25 +515,25 @@ namespace BEPUutilities
         /// <summary>
         /// Gets a vector pointing along the X axis.
         /// </summary>
-        public static Vector3 UnitX
+        public static BepuVector3 UnitX
         {
-            get { return new Vector3 { X = F64.C1 }; }
+            get { return new BepuVector3 { X = F64.C1 }; }
         }
 
         /// <summary>
         /// Gets a vector pointing along the Y axis.
         /// </summary>
-        public static Vector3 UnitY
+        public static BepuVector3 UnitY
         {
-            get { return new Vector3 { Y = F64.C1 }; }
+            get { return new BepuVector3 { Y = F64.C1 }; }
         }
 
         /// <summary>
         /// Gets a vector pointing along the Z axis.
         /// </summary>
-        public static Vector3 UnitZ
+        public static BepuVector3 UnitZ
         {
-            get { return new Vector3 { Z = F64.C1 }; }
+            get { return new BepuVector3 { Z = F64.C1 }; }
         }
 
         /// <summary>
@@ -542,10 +542,10 @@ namespace BEPUutilities
         /// <param name="a">First vector.</param>
         /// <param name="b">Second vector.</param>
         /// <returns>Cross product of the two vectors.</returns>
-        public static Vector3 Cross(Vector3 a, Vector3 b)
+        public static BepuVector3 Cross(BepuVector3 a, BepuVector3 b)
         {
-            Vector3 toReturn;
-            Vector3.Cross(ref a, ref b, out toReturn);
+            BepuVector3 toReturn;
+            BepuVector3.Cross(ref a, ref b, out toReturn);
             return toReturn;
         }
         /// <summary>
@@ -554,7 +554,7 @@ namespace BEPUutilities
         /// <param name="a">First vector.</param>
         /// <param name="b">Second vector.</param>
         /// <param name="result">Cross product of the two vectors.</param>
-        public static void Cross(ref Vector3 a, ref Vector3 b, out Vector3 result)
+        public static void Cross(ref BepuVector3 a, ref BepuVector3 b, out BepuVector3 result)
         {
             Fix64 resultX = a.Y * b.Z - a.Z * b.Y;
             Fix64 resultY = a.Z * b.X - a.X * b.Z;
@@ -569,10 +569,10 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to normalize.</param>
         /// <returns>Normalized vector.</returns>
-        public static Vector3 Normalize(Vector3 v)
+        public static BepuVector3 Normalize(BepuVector3 v)
         {
-            Vector3 toReturn;
-            Vector3.Normalize(ref v, out toReturn);
+            BepuVector3 toReturn;
+            BepuVector3.Normalize(ref v, out toReturn);
             return toReturn;
         }
 
@@ -581,7 +581,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to normalize.</param>
         /// <param name="result">Normalized vector.</param>
-        public static void Normalize(ref Vector3 v, out Vector3 result)
+        public static void Normalize(ref BepuVector3 v, out BepuVector3 result)
         {
             Fix64 inverse = F64.C1 / Fix64.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
             result.X = v.X * inverse;
@@ -594,7 +594,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to negate.</param>
         /// <param name="negated">Negated vector.</param>
-        public static void Negate(ref Vector3 v, out Vector3 negated)
+        public static void Negate(ref BepuVector3 v, out BepuVector3 negated)
         {
             negated.X = -v.X;
             negated.Y = -v.Y;
@@ -606,7 +606,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to take the absolute value of.</param>
         /// <param name="result">Vector with nonnegative elements.</param>
-        public static void Abs(ref Vector3 v, out Vector3 result)
+        public static void Abs(ref BepuVector3 v, out BepuVector3 result)
         {
             if (v.X < F64.C0)
                 result.X = -v.X;
@@ -627,9 +627,9 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to take the absolute value of.</param>
         /// <returns>Vector with nonnegative elements.</returns>
-        public static Vector3 Abs(Vector3 v)
+        public static BepuVector3 Abs(BepuVector3 v)
         {
-            Vector3 result;
+            BepuVector3 result;
             Abs(ref v, out result);
             return result;
         }
@@ -640,7 +640,7 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <param name="min">Vector containing the lesser values of each vector.</param>
-        public static void Min(ref Vector3 a, ref Vector3 b, out Vector3 min)
+        public static void Min(ref BepuVector3 a, ref BepuVector3 b, out BepuVector3 min)
         {
             min.X = a.X < b.X ? a.X : b.X;
             min.Y = a.Y < b.Y ? a.Y : b.Y;
@@ -653,9 +653,9 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <returns>Vector containing the lesser values of each vector.</returns>
-        public static Vector3 Min(Vector3 a, Vector3 b)
+        public static BepuVector3 Min(BepuVector3 a, BepuVector3 b)
         {
-            Vector3 result;
+            BepuVector3 result;
             Min(ref a, ref b, out result);
             return result;
         }
@@ -667,7 +667,7 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <param name="max">Vector containing the greater values of each vector.</param>
-        public static void Max(ref Vector3 a, ref Vector3 b, out Vector3 max)
+        public static void Max(ref BepuVector3 a, ref BepuVector3 b, out BepuVector3 max)
         {
             max.X = a.X > b.X ? a.X : b.X;
             max.Y = a.Y > b.Y ? a.Y : b.Y;
@@ -680,9 +680,9 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <returns>Vector containing the greater values of each vector.</returns>
-        public static Vector3 Max(Vector3 a, Vector3 b)
+        public static BepuVector3 Max(BepuVector3 a, BepuVector3 b)
         {
-            Vector3 result;
+            BepuVector3 result;
             Max(ref a, ref b, out result);
             return result;
         }
@@ -694,9 +694,9 @@ namespace BEPUutilities
         /// <param name="end">Ending location of the interpolation.</param>
         /// <param name="interpolationAmount">Amount of the end location to use.</param>
         /// <returns>Interpolated intermediate state.</returns>
-        public static Vector3 Lerp(Vector3 start, Vector3 end, Fix64 interpolationAmount)
+        public static BepuVector3 Lerp(BepuVector3 start, BepuVector3 end, Fix64 interpolationAmount)
         {
-            Vector3 toReturn;
+            BepuVector3 toReturn;
             Lerp(ref start, ref end, interpolationAmount, out toReturn);
             return toReturn;
         }
@@ -707,7 +707,7 @@ namespace BEPUutilities
         /// <param name="end">Ending location of the interpolation.</param>
         /// <param name="interpolationAmount">Amount of the end location to use.</param>
         /// <param name="result">Interpolated intermediate state.</param>
-        public static void Lerp(ref Vector3 start, ref Vector3 end, Fix64 interpolationAmount, out Vector3 result)
+        public static void Lerp(ref BepuVector3 start, ref BepuVector3 end, Fix64 interpolationAmount, out BepuVector3 result)
         {
             Fix64 startAmount = F64.C1 - interpolationAmount;
             result.X = start.X * startAmount + end.X * interpolationAmount;
@@ -724,7 +724,7 @@ namespace BEPUutilities
         /// <param name="tangent2">Tangent associated with the second position.</param>
         /// <param name="interpolationAmount">Amount of the second point to use.</param>
         /// <param name="result">Interpolated intermediate state.</param>
-        public static void Hermite(ref Vector3 value1, ref Vector3 tangent1, ref Vector3 value2, ref Vector3 tangent2, Fix64 interpolationAmount, out Vector3 result)
+        public static void Hermite(ref BepuVector3 value1, ref BepuVector3 tangent1, ref BepuVector3 value2, ref BepuVector3 tangent2, Fix64 interpolationAmount, out BepuVector3 result)
         {
             Fix64 weightSquared = interpolationAmount * interpolationAmount;
             Fix64 weightCubed = interpolationAmount * weightSquared;
@@ -745,9 +745,9 @@ namespace BEPUutilities
         /// <param name="tangent2">Tangent associated with the second position.</param>
         /// <param name="interpolationAmount">Amount of the second point to use.</param>
         /// <returns>Interpolated intermediate state.</returns>
-        public static Vector3 Hermite(Vector3 value1, Vector3 tangent1, Vector3 value2, Vector3 tangent2, Fix64 interpolationAmount)
+        public static BepuVector3 Hermite(BepuVector3 value1, BepuVector3 tangent1, BepuVector3 value2, BepuVector3 tangent2, Fix64 interpolationAmount)
         {
-            Vector3 toReturn;
+            BepuVector3 toReturn;
             Hermite(ref value1, ref tangent1, ref value2, ref tangent2, interpolationAmount, out toReturn);
             return toReturn;
         }

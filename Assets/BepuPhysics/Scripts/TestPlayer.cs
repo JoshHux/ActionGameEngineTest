@@ -16,8 +16,8 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        rb.GetEntity().linearVelocity = new BEPUutilities.Vector3((Fix64)Input.GetAxis("Horizontal"), 0, (Fix64)Input.GetAxis("Vertical"));
-        rb.GetEntity().angularVelocity = new BEPUutilities.Vector3((Fix64)Input.GetAxis("Horizontal"), 0, (Fix64)Input.GetAxis("Vertical"));
+        rb.GetEntity().linearVelocity = new BEPUutilities.BepuVector3((Fix64)Input.GetAxis("Horizontal"), 0, (Fix64)Input.GetAxis("Vertical"));
+        rb.GetEntity().angularVelocity = new BEPUutilities.BepuVector3((Fix64)Input.GetAxis("Horizontal"), 0, (Fix64)Input.GetAxis("Vertical"));
 
     }
 }

@@ -8,7 +8,7 @@ namespace BEPUutilities
     /// </summary>
     [Serializable]
 
-    public struct Vector2 : IEquatable<Vector2>
+    public struct BepuVector2 : IEquatable<BepuVector2>
     {
         /// <summary>
         /// X component of the vector.
@@ -24,7 +24,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="x">X component of the vector.</param>
         /// <param name="y">Y component of the vector.</param>
-        public Vector2(Fix64 x, Fix64 y)
+        public BepuVector2(Fix64 x, Fix64 y)
         {
             this.X = x;
             this.Y = y;
@@ -63,7 +63,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to add.</param>
         /// <param name="b">Second vector to add.</param>
         /// <param name="sum">Sum of the two vectors.</param>
-        public static void Add(ref Vector2 a, ref Vector2 b, out Vector2 sum)
+        public static void Add(ref BepuVector2 a, ref BepuVector2 b, out BepuVector2 sum)
         {
             sum.X = a.X + b.X;
             sum.Y = a.Y + b.Y;
@@ -75,7 +75,7 @@ namespace BEPUutilities
         /// <param name="a">Vector to subtract from.</param>
         /// <param name="b">Vector to subtract from the first vector.</param>
         /// <param name="difference">Result of the subtraction.</param>
-        public static void Subtract(ref Vector2 a, ref Vector2 b, out Vector2 difference)
+        public static void Subtract(ref BepuVector2 a, ref BepuVector2 b, out BepuVector2 difference)
         {
             difference.X = a.X - b.X;
             difference.Y = a.Y - b.Y;
@@ -87,7 +87,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to scale.</param>
         /// <param name="scale">Amount to scale.</param>
         /// <param name="result">Scaled vector.</param>
-        public static void Multiply(ref Vector2 v, Fix64 scale, out Vector2 result)
+        public static void Multiply(ref BepuVector2 v, Fix64 scale, out BepuVector2 result)
         {
             result.X = v.X * scale;
             result.Y = v.Y * scale;
@@ -99,7 +99,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to multiply.</param>
         /// <param name="b">Second vector to multiply.</param>
         /// <param name="result">Result of the componentwise multiplication.</param>
-        public static void Multiply(ref Vector2 a, ref Vector2 b, out Vector2 result)
+        public static void Multiply(ref BepuVector2 a, ref BepuVector2 b, out BepuVector2 result)
         {
             result.X = a.X * b.X;
             result.Y = a.Y * b.Y;
@@ -111,7 +111,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to divide.</param>
         /// <param name="divisor">Value to divide the vector's components.</param>
         /// <param name="result">Result of the division.</param>
-        public static void Divide(ref Vector2 v, Fix64 divisor, out Vector2 result)
+        public static void Divide(ref BepuVector2 v, Fix64 divisor, out BepuVector2 result)
         {
             Fix64 inverse = F64.C1 / divisor;
             result.X = v.X * inverse;
@@ -124,7 +124,7 @@ namespace BEPUutilities
         /// <param name="a">First vector of the dot product.</param>
         /// <param name="b">Second vector of the dot product.</param>
         /// <param name="dot">Dot product of the two vectors.</param>
-        public static void Dot(ref Vector2 a, ref Vector2 b, out Fix64 dot)
+        public static void Dot(ref BepuVector2 a, ref BepuVector2 b, out Fix64 dot)
         {
             dot = a.X * b.X + a.Y * b.Y;
         }
@@ -135,7 +135,7 @@ namespace BEPUutilities
         /// <param name="a">First vector of the dot product.</param>
         /// <param name="b">Second vector of the dot product.</param>
         /// <returns>Dot product of the two vectors.</returns>
-        public static Fix64 Dot(Vector2 a, Vector2 b)
+        public static Fix64 Dot(BepuVector2 a, BepuVector2 b)
         {
             return a.X * b.X + a.Y * b.Y;
         }
@@ -143,28 +143,28 @@ namespace BEPUutilities
         /// <summary>
         /// Gets the zero vector.
         /// </summary>
-        public static Vector2 Zero
+        public static BepuVector2 Zero
         {
             get
             {
-                return new Vector2();
+                return new BepuVector2();
             }
         }
 
         /// <summary>
         /// Gets a vector pointing along the X axis.
         /// </summary>
-        public static Vector2 UnitX
+        public static BepuVector2 UnitX
         {
-            get { return new Vector2 { X = F64.C1 }; }
+            get { return new BepuVector2 { X = F64.C1 }; }
         }
 
         /// <summary>
         /// Gets a vector pointing along the Y axis.
         /// </summary>
-        public static Vector2 UnitY
+        public static BepuVector2 UnitY
         {
-            get { return new Vector2 { Y = F64.C1 }; }
+            get { return new BepuVector2 { Y = F64.C1 }; }
         }
 
 
@@ -173,10 +173,10 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to normalize.</param>
         /// <returns>Normalized copy of the vector.</returns>
-        public static Vector2 Normalize(Vector2 v)
+        public static BepuVector2 Normalize(BepuVector2 v)
         {
-            Vector2 toReturn;
-            Vector2.Normalize(ref v, out toReturn);
+            BepuVector2 toReturn;
+            BepuVector2.Normalize(ref v, out toReturn);
             return toReturn;
         }
 
@@ -185,7 +185,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to normalize.</param>
         /// <param name="result">Normalized vector.</param>
-        public static void Normalize(ref Vector2 v, out Vector2 result)
+        public static void Normalize(ref BepuVector2 v, out BepuVector2 result)
         {
             Fix64 inverse = F64.C1 / Fix64.Sqrt(v.X * v.X + v.Y * v.Y);
             result.X = v.X * inverse;
@@ -197,7 +197,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to negate.</param>
         /// <param name="negated">Negated version of the vector.</param>
-        public static void Negate(ref Vector2 v, out Vector2 negated)
+        public static void Negate(ref BepuVector2 v, out BepuVector2 negated)
         {
             negated.X = -v.X;
             negated.Y = -v.Y;
@@ -208,7 +208,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to take the absolute value of.</param>
         /// <param name="result">Vector with nonnegative elements.</param>
-        public static void Abs(ref Vector2 v, out Vector2 result)
+        public static void Abs(ref BepuVector2 v, out BepuVector2 result)
         {
             if (v.X < F64.C0)
                 result.X = -v.X;
@@ -225,9 +225,9 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to take the absolute value of.</param>
         /// <returns>Vector with nonnegative elements.</returns>
-        public static Vector2 Abs(Vector2 v)
+        public static BepuVector2 Abs(BepuVector2 v)
         {
-            Vector2 result;
+            BepuVector2 result;
             Abs(ref v, out result);
             return result;
         }
@@ -238,7 +238,7 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <param name="min">Vector containing the lesser values of each vector.</param>
-        public static void Min(ref Vector2 a, ref Vector2 b, out Vector2 min)
+        public static void Min(ref BepuVector2 a, ref BepuVector2 b, out BepuVector2 min)
         {
             min.X = a.X < b.X ? a.X : b.X;
             min.Y = a.Y < b.Y ? a.Y : b.Y;
@@ -250,9 +250,9 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <returns>Vector containing the lesser values of each vector.</returns>
-        public static Vector2 Min(Vector2 a, Vector2 b)
+        public static BepuVector2 Min(BepuVector2 a, BepuVector2 b)
         {
-            Vector2 result;
+            BepuVector2 result;
             Min(ref a, ref b, out result);
             return result;
         }
@@ -264,7 +264,7 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <param name="max">Vector containing the greater values of each vector.</param>
-        public static void Max(ref Vector2 a, ref Vector2 b, out Vector2 max)
+        public static void Max(ref BepuVector2 a, ref BepuVector2 b, out BepuVector2 max)
         {
             max.X = a.X > b.X ? a.X : b.X;
             max.Y = a.Y > b.Y ? a.Y : b.Y;
@@ -276,9 +276,9 @@ namespace BEPUutilities
         /// <param name="a">First input vector to compare values from.</param>
         /// <param name="b">Second input vector to compare values from.</param>
         /// <returns>Vector containing the greater values of each vector.</returns>
-        public static Vector2 Max(Vector2 a, Vector2 b)
+        public static BepuVector2 Max(BepuVector2 a, BepuVector2 b)
         {
-            Vector2 result;
+            BepuVector2 result;
             Max(ref a, ref b, out result);
             return result;
         }
@@ -299,9 +299,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to scale.</param>
         /// <param name="f">Amount to scale.</param>
         /// <returns>Scaled vector.</returns>
-        public static Vector2 operator *(Vector2 v, Fix64 f)
+        public static BepuVector2 operator *(BepuVector2 v, Fix64 f)
         {
-            Vector2 toReturn;
+            BepuVector2 toReturn;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
             return toReturn;
@@ -312,9 +312,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to scale.</param>
         /// <param name="f">Amount to scale.</param>
         /// <returns>Scaled vector.</returns>
-        public static Vector2 operator *(Fix64 f, Vector2 v)
+        public static BepuVector2 operator *(Fix64 f, BepuVector2 v)
         {
-            Vector2 toReturn;
+            BepuVector2 toReturn;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
             return toReturn;
@@ -326,9 +326,9 @@ namespace BEPUutilities
         /// <param name="a">First vector to multiply.</param>
         /// <param name="b">Second vector to multiply.</param>
         /// <returns>Result of the componentwise multiplication.</returns>
-        public static Vector2 operator *(Vector2 a, Vector2 b)
+        public static BepuVector2 operator *(BepuVector2 a, BepuVector2 b)
         {
-            Vector2 result;
+            BepuVector2 result;
             Multiply(ref a, ref b, out result);
             return result;
         }
@@ -339,9 +339,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to divide.</param>
         /// <param name="f">Amount to divide.</param>
         /// <returns>Divided vector.</returns>
-        public static Vector2 operator /(Vector2 v, Fix64 f)
+        public static BepuVector2 operator /(BepuVector2 v, Fix64 f)
         {
-            Vector2 toReturn;
+            BepuVector2 toReturn;
             f = F64.C1 / f;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
@@ -354,9 +354,9 @@ namespace BEPUutilities
         /// <param name="a">Vector to be subtracted from.</param>
         /// <param name="b">Vector to subtract from the first vector.</param>
         /// <returns>Resulting difference.</returns>
-        public static Vector2 operator -(Vector2 a, Vector2 b)
+        public static BepuVector2 operator -(BepuVector2 a, BepuVector2 b)
         {
-            Vector2 v;
+            BepuVector2 v;
             v.X = a.X - b.X;
             v.Y = a.Y - b.Y;
             return v;
@@ -368,9 +368,9 @@ namespace BEPUutilities
         /// <param name="a">First vector to add.</param>
         /// <param name="b">Second vector to add.</param>
         /// <returns>Sum of the addition.</returns>
-        public static Vector2 operator +(Vector2 a, Vector2 b)
+        public static BepuVector2 operator +(BepuVector2 a, BepuVector2 b)
         {
-            Vector2 v;
+            BepuVector2 v;
             v.X = a.X + b.X;
             v.Y = a.Y + b.Y;
             return v;
@@ -381,7 +381,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to negate.</param>
         /// <returns>Negated vector.</returns>
-        public static Vector2 operator -(Vector2 v)
+        public static BepuVector2 operator -(BepuVector2 v)
         {
             v.X = -v.X;
             v.Y = -v.Y;
@@ -394,7 +394,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to test for equivalence.</param>
         /// <param name="b">Second vector to test for equivalence.</param>
         /// <returns>Whether the vectors were equivalent.</returns>
-        public static bool operator ==(Vector2 a, Vector2 b)
+        public static bool operator ==(BepuVector2 a, BepuVector2 b)
         {
             return a.X == b.X && a.Y == b.Y;
         }
@@ -404,7 +404,7 @@ namespace BEPUutilities
         /// <param name="a">First vector to test for inequivalence.</param>
         /// <param name="b">Second vector to test for inequivalence.</param>
         /// <returns>Whether the vectors were inequivalent.</returns>
-        public static bool operator !=(Vector2 a, Vector2 b)
+        public static bool operator !=(BepuVector2 a, BepuVector2 b)
         {
             return a.X != b.X || a.Y != b.Y;
         }
@@ -416,7 +416,7 @@ namespace BEPUutilities
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(Vector2 other)
+        public bool Equals(BepuVector2 other)
         {
             return X == other.X && Y == other.Y;
         }
@@ -430,9 +430,9 @@ namespace BEPUutilities
         /// <param name="obj">Another object to compare to. </param><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
         {
-            if (obj is Vector2)
+            if (obj is BepuVector2)
             {
-                return Equals((Vector2)obj);
+                return Equals((BepuVector2)obj);
             }
             return false;
         }

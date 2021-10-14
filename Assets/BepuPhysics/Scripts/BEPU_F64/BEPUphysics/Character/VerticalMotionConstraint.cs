@@ -72,9 +72,9 @@ namespace BEPUphysics.Character
         }
         Fix64 effectiveMass;
         Entity supportEntity;
-        Vector3 linearJacobianA;
-        Vector3 linearJacobianB;
-        Vector3 angularJacobianB;
+        BepuVector3 linearJacobianA;
+        BepuVector3 linearJacobianB;
+        BepuVector3 angularJacobianB;
 
    
         Fix64 accumulatedImpulse;
@@ -183,21 +183,21 @@ namespace BEPUphysics.Character
             //Compute the jacobians and effective mass matrix.  This constraint works along a single degree of freedom, so the mass matrix boils down to a scalar.
 
             linearJacobianA = supportData.Normal;
-            Vector3.Negate(ref linearJacobianA, out linearJacobianB);
+            BepuVector3.Negate(ref linearJacobianA, out linearJacobianB);
             Fix64 inverseEffectiveMass = characterBody.InverseMass;
             if (supportEntity != null)
             {
-                Vector3 offsetB = supportData.Position - supportEntity.Position;
-                Vector3.Cross(ref offsetB, ref linearJacobianB, out angularJacobianB);
+                BepuVector3 offsetB = supportData.Position - supportEntity.Position;
+                BepuVector3.Cross(ref offsetB, ref linearJacobianB, out angularJacobianB);
                 if (supportEntity.IsDynamic)
                 {
                     //Only dynamic entities can actually contribute anything to the effective mass.
                     //Kinematic entities have infinite mass and inertia, so this would all zero out.
                     Matrix3x3 inertiaInverse = supportEntity.InertiaTensorInverse;
-                    Vector3 angularComponentB;
+                    BepuVector3 angularComponentB;
                     Matrix3x3.Transform(ref angularJacobianB, ref inertiaInverse, out angularComponentB);
                     Fix64 effectiveMassContribution;
-                    Vector3.Dot(ref angularComponentB, ref angularJacobianB, out effectiveMassContribution);
+                    BepuVector3.Dot(ref angularComponentB, ref angularJacobianB, out effectiveMassContribution);
 
                     inverseEffectiveMass += supportForceFactor * (effectiveMassContribution + supportEntity.InverseMass);
                 }
@@ -214,20 +214,20 @@ namespace BEPUphysics.Character
         {
             //Warm start the constraint using the previous impulses and the new jacobians!
 #if !WINDOWS
-            Vector3 impulse = new Vector3();
-            Vector3 torque= new Vector3();
+            BepuVector3 impulse = new BepuVector3();
+            BepuVector3 torque= new BepuVector3();
 #else
-            Vector3 impulse;
-            Vector3 torque;
+            BepuVector3 impulse;
+            BepuVector3 torque;
 #endif
-            Vector3.Multiply(ref linearJacobianA, accumulatedImpulse, out impulse);
+            BepuVector3.Multiply(ref linearJacobianA, accumulatedImpulse, out impulse);
 
             characterBody.ApplyLinearImpulse(ref impulse);
 
             if (supportEntity != null && supportEntity.IsDynamic)
             {
-                Vector3.Multiply(ref impulse, -supportForceFactor, out impulse);
-                Vector3.Multiply(ref angularJacobianB, accumulatedImpulse * supportForceFactor, out torque);
+                BepuVector3.Multiply(ref impulse, -supportForceFactor, out impulse);
+                BepuVector3.Multiply(ref angularJacobianB, accumulatedImpulse * supportForceFactor, out torque);
 
                 supportEntity.ApplyLinearImpulse(ref impulse);
                 supportEntity.ApplyAngularImpulse(ref torque);
@@ -257,21 +257,21 @@ namespace BEPUphysics.Character
             //Use the jacobians to put the impulse into world space.
 
 #if !WINDOWS
-            Vector3 impulse = new Vector3();
-            Vector3 torque= new Vector3();
+            BepuVector3 impulse = new BepuVector3();
+            BepuVector3 torque= new BepuVector3();
 #else
-            Vector3 impulse;
-            Vector3 torque;
+            BepuVector3 impulse;
+            BepuVector3 torque;
 #endif
-            Vector3.Multiply(ref linearJacobianA, lambda, out impulse);
+            BepuVector3.Multiply(ref linearJacobianA, lambda, out impulse);
 
             characterBody.ApplyLinearImpulse(ref impulse);
 
             if (supportEntity != null && supportEntity.IsDynamic)
             {
-                Vector3.Multiply(ref impulse, -supportForceFactor, out impulse);
+                BepuVector3.Multiply(ref impulse, -supportForceFactor, out impulse);
 
-                Vector3.Multiply(ref angularJacobianB, lambda * supportForceFactor, out torque);
+                BepuVector3.Multiply(ref angularJacobianB, lambda * supportForceFactor, out torque);
 
                 supportEntity.ApplyLinearImpulse(ref impulse);
                 supportEntity.ApplyAngularImpulse(ref torque);
@@ -290,14 +290,14 @@ namespace BEPUphysics.Character
             {
                 Fix64 relativeVelocity;
 
-                Vector3.Dot(ref linearJacobianA, ref characterBody.linearVelocity, out relativeVelocity);
+                BepuVector3.Dot(ref linearJacobianA, ref characterBody.linearVelocity, out relativeVelocity);
 
                 if (supportEntity != null)
                 {
                     Fix64 supportVelocity;
-                    Vector3.Dot(ref linearJacobianB, ref supportEntity.linearVelocity, out supportVelocity);
+                    BepuVector3.Dot(ref linearJacobianB, ref supportEntity.linearVelocity, out supportVelocity);
                     relativeVelocity += supportVelocity;
-                    Vector3.Dot(ref angularJacobianB, ref supportEntity.angularVelocity, out supportVelocity);
+                    BepuVector3.Dot(ref angularJacobianB, ref supportEntity.angularVelocity, out supportVelocity);
                     relativeVelocity += supportVelocity;
 
                 }

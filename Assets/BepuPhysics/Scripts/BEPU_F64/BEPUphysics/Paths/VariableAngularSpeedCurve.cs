@@ -9,14 +9,14 @@ namespace BEPUphysics.Paths
     /// <remarks>
     /// The speed curve should be designed with the wrapped curve's times in mind.
     /// Speeds will be sampled based on the wrapped curve's interval.</remarks>
-    public class VariableAngularSpeedCurve : VariableSpeedCurve<Quaternion>
+    public class VariableAngularSpeedCurve : VariableSpeedCurve<BepuQuaternion>
     {
         /// <summary>
         /// Constructs a new variable speed curve.
         /// </summary>
         /// <param name="speedCurve">Curve defining speeds to use.</param>
         /// <param name="curve">Curve to wrap.</param>
-        public VariableAngularSpeedCurve(Path<Fix64> speedCurve, Curve<Quaternion> curve)
+        public VariableAngularSpeedCurve(Path<Fix64> speedCurve, Curve<BepuQuaternion> curve)
             : base(speedCurve, curve)
         {
         }
@@ -28,16 +28,16 @@ namespace BEPUphysics.Paths
         /// <param name="curve">Curve to wrap.</param>
         /// <param name="sampleCount">Number of samples to use when constructing the wrapper curve.
         /// More samples increases the accuracy of the speed requirement at the cost of performance.</param>
-        public VariableAngularSpeedCurve(Path<Fix64> speedCurve, Curve<Quaternion> curve, int sampleCount)
+        public VariableAngularSpeedCurve(Path<Fix64> speedCurve, Curve<BepuQuaternion> curve, int sampleCount)
             : base(speedCurve, curve, sampleCount)
         {
         }
 
-        protected override Fix64 GetDistance(Quaternion start, Quaternion end)
+        protected override Fix64 GetDistance(BepuQuaternion start, BepuQuaternion end)
         {
-            Quaternion.Conjugate(ref end, out end);
-            Quaternion.Multiply(ref end, ref start, out end);
-            return Quaternion.GetAngleFromQuaternion(ref end);
+            BepuQuaternion.Conjugate(ref end, out end);
+            BepuQuaternion.Multiply(ref end, ref start, out end);
+            return BepuQuaternion.GetAngleFromBepuQuaternion(ref end);
         }
     }
 }

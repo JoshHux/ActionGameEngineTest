@@ -92,14 +92,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the backward vector of the matrix.
         /// </summary>
-        public Vector3 Backward
+        public BepuVector3 Backward
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = M31;
                 vector.Y = M32;
@@ -117,14 +117,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the down vector of the matrix.
         /// </summary>
-        public Vector3 Down
+        public BepuVector3 Down
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = -M21;
                 vector.Y = -M22;
@@ -142,14 +142,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the forward vector of the matrix.
         /// </summary>
-        public Vector3 Forward
+        public BepuVector3 Forward
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = -M31;
                 vector.Y = -M32;
@@ -167,14 +167,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the left vector of the matrix.
         /// </summary>
-        public Vector3 Left
+        public BepuVector3 Left
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = -M11;
                 vector.Y = -M12;
@@ -192,14 +192,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the right vector of the matrix.
         /// </summary>
-        public Vector3 Right
+        public BepuVector3 Right
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = M11;
                 vector.Y = M12;
@@ -217,14 +217,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the up vector of the matrix.
         /// </summary>
-        public Vector3 Up
+        public BepuVector3 Up
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = M21;
                 vector.Y = M22;
@@ -376,7 +376,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="v">Vector to base the matrix on.</param>
         /// <param name="result">Skew-symmetric matrix result.</param>
-        public static void CreateCrossProduct(ref Vector3 v, out Matrix3x3 result)
+        public static void CreateCrossProduct(ref BepuVector3 v, out Matrix3x3 result)
         {
             result.M11 = F64.C0;
             result.M12 = -v.Z;
@@ -456,7 +456,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="scale">Values defining the axis scales.</param>
         /// <param name="matrix">Scaling matrix.</param>
-        public static void CreateScale(ref Vector3 scale, out Matrix3x3 matrix)
+        public static void CreateScale(ref BepuVector3 scale, out Matrix3x3 matrix)
         {
             matrix = new Matrix3x3 {M11 = scale.X, M22 = scale.Y, M33 = scale.Z};
         }
@@ -466,7 +466,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="scale">Values defining the axis scales.</param>
         /// <returns>Scaling matrix.</returns>
-        public static Matrix3x3 CreateScale(ref Vector3 scale)
+        public static Matrix3x3 CreateScale(ref BepuVector3 scale)
         {
             var matrix = new Matrix3x3 {M11 = scale.X, M22 = scale.Y, M33 = scale.Z};
             return matrix;
@@ -1035,16 +1035,16 @@ namespace BEPUutilities
         /// <summary>
         /// Transforms the vector by the matrix.
         /// </summary>
-        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="v">BepuVector3 to transform.</param>
         /// <param name="matrix">Matrix to use as the transformation.</param>
         /// <param name="result">Product of the transformation.</param>
-        public static void Transform(ref Vector3 v, ref Matrix3x3 matrix, out Vector3 result)
+        public static void Transform(ref BepuVector3 v, ref Matrix3x3 matrix, out BepuVector3 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
             Fix64 vZ = v.Z;
 #if !WINDOWS
-            result = new Vector3();
+            result = new BepuVector3();
 #endif
             result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31;
             result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32;
@@ -1055,14 +1055,14 @@ namespace BEPUutilities
         /// <summary>
         /// Transforms the vector by the matrix.
         /// </summary>
-        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="v">BepuVector3 to transform.</param>
         /// <param name="matrix">Matrix to use as the transformation.</param>
         /// <returns>Product of the transformation.</returns>
-        public static Vector3 Transform(Vector3 v, Matrix3x3 matrix)
+        public static BepuVector3 Transform(BepuVector3 v, Matrix3x3 matrix)
         {
-            Vector3 result;
+            BepuVector3 result;
 #if !WINDOWS
-            result = new Vector3();
+            result = new BepuVector3();
 #endif
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
@@ -1077,16 +1077,16 @@ namespace BEPUutilities
         /// <summary>
         /// Transforms the vector by the matrix's transpose.
         /// </summary>
-        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="v">BepuVector3 to transform.</param>
         /// <param name="matrix">Matrix to use as the transformation transpose.</param>
         /// <param name="result">Product of the transformation.</param>
-        public static void TransformTranspose(ref Vector3 v, ref Matrix3x3 matrix, out Vector3 result)
+        public static void TransformTranspose(ref BepuVector3 v, ref Matrix3x3 matrix, out BepuVector3 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
             Fix64 vZ = v.Z;
 #if !WINDOWS
-            result = new Vector3();
+            result = new BepuVector3();
 #endif
             result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13;
             result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23;
@@ -1096,17 +1096,17 @@ namespace BEPUutilities
         /// <summary>
         /// Transforms the vector by the matrix's transpose.
         /// </summary>
-        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="v">BepuVector3 to transform.</param>
         /// <param name="matrix">Matrix to use as the transformation transpose.</param>
         /// <returns>Product of the transformation.</returns>
-        public static Vector3 TransformTranspose(Vector3 v, Matrix3x3 matrix)
+        public static BepuVector3 TransformTranspose(BepuVector3 v, Matrix3x3 matrix)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
             Fix64 vZ = v.Z;
-            Vector3 result;
+            BepuVector3 result;
 #if !WINDOWS
-            result = new Vector3();
+            result = new BepuVector3();
 #endif
             result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13;
             result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23;
@@ -1251,24 +1251,24 @@ namespace BEPUutilities
         }
         
         /// <summary>
-        /// Creates a 3x3 matrix representing the orientation stored in the quaternion.
+        /// Creates a 3x3 matrix representing the orientation stored in the BepuQuaternion.
         /// </summary>
-        /// <param name="quaternion">Quaternion to use to create a matrix.</param>
-        /// <param name="result">Matrix representing the quaternion's orientation.</param>
-        public static void CreateFromQuaternion(ref Quaternion quaternion, out Matrix3x3 result)
+        /// <param name="BepuQuaternion">BepuQuaternion to use to create a matrix.</param>
+        /// <param name="result">Matrix representing the BepuQuaternion's orientation.</param>
+        public static void CreateFromBepuQuaternion(ref BepuQuaternion BepuQuaternion, out Matrix3x3 result)
         {
-            Fix64 qX2 = quaternion.X + quaternion.X;
-            Fix64 qY2 = quaternion.Y + quaternion.Y;
-            Fix64 qZ2 = quaternion.Z + quaternion.Z;
-            Fix64 XX = qX2 * quaternion.X;
-            Fix64 YY = qY2 * quaternion.Y;
-            Fix64 ZZ = qZ2 * quaternion.Z;
-            Fix64 XY = qX2 * quaternion.Y;
-            Fix64 XZ = qX2 * quaternion.Z;
-            Fix64 XW = qX2 * quaternion.W;
-            Fix64 YZ = qY2 * quaternion.Z;
-            Fix64 YW = qY2 * quaternion.W;
-            Fix64 ZW = qZ2 * quaternion.W;
+            Fix64 qX2 = BepuQuaternion.X + BepuQuaternion.X;
+            Fix64 qY2 = BepuQuaternion.Y + BepuQuaternion.Y;
+            Fix64 qZ2 = BepuQuaternion.Z + BepuQuaternion.Z;
+            Fix64 XX = qX2 * BepuQuaternion.X;
+            Fix64 YY = qY2 * BepuQuaternion.Y;
+            Fix64 ZZ = qZ2 * BepuQuaternion.Z;
+            Fix64 XY = qX2 * BepuQuaternion.Y;
+            Fix64 XZ = qX2 * BepuQuaternion.Z;
+            Fix64 XW = qX2 * BepuQuaternion.W;
+            Fix64 YZ = qY2 * BepuQuaternion.Z;
+            Fix64 YW = qY2 * BepuQuaternion.W;
+            Fix64 ZW = qZ2 * BepuQuaternion.W;
 
             result.M11 = F64.C1 - YY - ZZ;
             result.M21 = XY - ZW;
@@ -1284,14 +1284,14 @@ namespace BEPUutilities
         }
 
         /// <summary>
-        /// Creates a 3x3 matrix representing the orientation stored in the quaternion.
+        /// Creates a 3x3 matrix representing the orientation stored in the BepuQuaternion.
         /// </summary>
-        /// <param name="quaternion">Quaternion to use to create a matrix.</param>
-        /// <returns>Matrix representing the quaternion's orientation.</returns>
-        public static Matrix3x3 CreateFromQuaternion(Quaternion quaternion)
+        /// <param name="BepuQuaternion">BepuQuaternion to use to create a matrix.</param>
+        /// <returns>Matrix representing the BepuQuaternion's orientation.</returns>
+        public static Matrix3x3 CreateFromBepuQuaternion(BepuQuaternion BepuQuaternion)
         {
             Matrix3x3 result;
-            CreateFromQuaternion(ref quaternion, out result);
+            CreateFromBepuQuaternion(ref BepuQuaternion, out result);
             return result;
         }
 
@@ -1301,7 +1301,7 @@ namespace BEPUutilities
         /// <param name="a">First vector.</param>
         /// <param name="b">Second vector.</param>
         /// <param name="result">Outer product result.</param>
-        public static void CreateOuterProduct(ref Vector3 a, ref Vector3 b, out Matrix3x3 result)
+        public static void CreateOuterProduct(ref BepuVector3 a, ref BepuVector3 b, out Matrix3x3 result)
         {
             result.M11 = a.X * b.X;
             result.M12 = a.X * b.Y;
@@ -1322,7 +1322,7 @@ namespace BEPUutilities
         /// <param name="axis">Axis around which to rotate.</param>
         /// <param name="angle">Amount to rotate.</param>
         /// <returns>Matrix representing the rotation.</returns>
-        public static Matrix3x3 CreateFromAxisAngle(Vector3 axis, Fix64 angle)
+        public static Matrix3x3 CreateFromAxisAngle(BepuVector3 axis, Fix64 angle)
         {
             Matrix3x3 toReturn;
             CreateFromAxisAngle(ref axis, angle, out toReturn);
@@ -1335,7 +1335,7 @@ namespace BEPUutilities
         /// <param name="axis">Axis around which to rotate.</param>
         /// <param name="angle">Amount to rotate.</param>
         /// <param name="result">Matrix representing the rotation.</param>
-        public static void CreateFromAxisAngle(ref Vector3 axis, Fix64 angle, out Matrix3x3 result)
+        public static void CreateFromAxisAngle(ref BepuVector3 axis, Fix64 angle, out Matrix3x3 result)
         {
             Fix64 xx = axis.X * axis.X;
             Fix64 yy = axis.Y * axis.Y;

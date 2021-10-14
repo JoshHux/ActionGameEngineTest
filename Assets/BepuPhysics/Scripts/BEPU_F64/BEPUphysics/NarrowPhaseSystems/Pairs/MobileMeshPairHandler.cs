@@ -143,11 +143,11 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 //CCD events are awfully rare under normal circumstances, so this isn't usually an issue.
 
                 //Only perform the test if the minimum radii are small enough relative to the size of the velocity.
-                Vector3 velocity;
+                BepuVector3 velocity;
                 if (convexMode == PositionUpdateMode.Discrete)
                 {                    
                     //Convex is static for the purposes of CCD.
-                    Vector3.Negate(ref mobileMesh.entity.linearVelocity, out velocity);
+                    BepuVector3.Negate(ref mobileMesh.entity.linearVelocity, out velocity);
                 }
                 else if (meshMode == PositionUpdateMode.Discrete)
                 {
@@ -157,10 +157,10 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 else
                 {
                     //Both objects can move.
-                    Vector3.Subtract(ref convex.entity.linearVelocity, ref mobileMesh.entity.linearVelocity, out velocity);
+                    BepuVector3.Subtract(ref convex.entity.linearVelocity, ref mobileMesh.entity.linearVelocity, out velocity);
 
                 }
-                Vector3.Multiply(ref velocity, dt, out velocity);
+                BepuVector3.Multiply(ref velocity, dt, out velocity);
                 Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
@@ -169,7 +169,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 {
                     TriangleSidedness sidedness = mobileMesh.Shape.Sidedness;
                     Matrix3x3 orientation;
-                    Matrix3x3.CreateFromQuaternion(ref mobileMesh.worldTransform.Orientation, out orientation);
+                    Matrix3x3.CreateFromBepuQuaternion(ref mobileMesh.worldTransform.Orientation, out orientation);
                     var triangle = PhysicsThreadResources.GetTriangle();
                     triangle.collisionMargin = F64.C0;
                     //Spherecast against all triangles to find the earliest time.
@@ -181,13 +181,13 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                         Matrix3x3.Transform(ref triangle.vA, ref orientation, out triangle.vA);
                         Matrix3x3.Transform(ref triangle.vB, ref orientation, out triangle.vB);
                         Matrix3x3.Transform(ref triangle.vC, ref orientation, out triangle.vC);
-                        Vector3.Add(ref triangle.vA, ref mobileMesh.worldTransform.Position, out triangle.vA);
-                        Vector3.Add(ref triangle.vB, ref mobileMesh.worldTransform.Position, out triangle.vB);
-                        Vector3.Add(ref triangle.vC, ref mobileMesh.worldTransform.Position, out triangle.vC);
+                        BepuVector3.Add(ref triangle.vA, ref mobileMesh.worldTransform.Position, out triangle.vA);
+                        BepuVector3.Add(ref triangle.vB, ref mobileMesh.worldTransform.Position, out triangle.vB);
+                        BepuVector3.Add(ref triangle.vC, ref mobileMesh.worldTransform.Position, out triangle.vC);
                         //Put the triangle into 'localish' space of the convex.
-                        Vector3.Subtract(ref triangle.vA, ref convex.worldTransform.Position, out triangle.vA);
-                        Vector3.Subtract(ref triangle.vB, ref convex.worldTransform.Position, out triangle.vB);
-                        Vector3.Subtract(ref triangle.vC, ref convex.worldTransform.Position, out triangle.vC);
+                        BepuVector3.Subtract(ref triangle.vA, ref convex.worldTransform.Position, out triangle.vA);
+                        BepuVector3.Subtract(ref triangle.vB, ref convex.worldTransform.Position, out triangle.vB);
+                        BepuVector3.Subtract(ref triangle.vC, ref convex.worldTransform.Position, out triangle.vC);
 
                         RayHit rayHit;
                         if (GJKToolbox.CCDSphereCast(new Ray(Toolbox.ZeroVector, velocity), minimumRadius, triangle, ref Toolbox.RigidIdentity, timeOfImpact, out rayHit) &&
@@ -196,13 +196,13 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
 
                             if (sidedness != TriangleSidedness.DoubleSided)
                             {
-                                Vector3 AB, AC;
-                                Vector3.Subtract(ref triangle.vB, ref triangle.vA, out AB);
-                                Vector3.Subtract(ref triangle.vC, ref triangle.vA, out AC);
-                                Vector3 normal;
-                                Vector3.Cross(ref AB, ref AC, out normal);
+                                BepuVector3 AB, AC;
+                                BepuVector3.Subtract(ref triangle.vB, ref triangle.vA, out AB);
+                                BepuVector3.Subtract(ref triangle.vC, ref triangle.vA, out AC);
+                                BepuVector3 normal;
+                                BepuVector3.Cross(ref AB, ref AC, out normal);
                                 Fix64 dot;
-                                Vector3.Dot(ref normal, ref rayHit.Normal, out dot);
+                                BepuVector3.Dot(ref normal, ref rayHit.Normal, out dot);
                                 //Only perform sweep if the object is in danger of hitting the object.
                                 //Triangles can be one sided, so check the impact normal against the triangle normal.
                                 if (sidedness == TriangleSidedness.Counterclockwise && dot < F64.C0 ||
@@ -244,22 +244,22 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
             }
 
             //Compute relative velocity
-            Vector3 velocity;
+            BepuVector3 velocity;
             if (convex.entity != null)
             {
-                Vector3.Subtract(ref info.Contact.Position, ref convex.entity.position, out velocity);
-                Vector3.Cross(ref convex.entity.angularVelocity, ref velocity, out velocity);
-                Vector3.Add(ref velocity, ref convex.entity.linearVelocity, out info.RelativeVelocity);
+                BepuVector3.Subtract(ref info.Contact.Position, ref convex.entity.position, out velocity);
+                BepuVector3.Cross(ref convex.entity.angularVelocity, ref velocity, out velocity);
+                BepuVector3.Add(ref velocity, ref convex.entity.linearVelocity, out info.RelativeVelocity);
             }
             else
-                info.RelativeVelocity = new Vector3();
+                info.RelativeVelocity = new BepuVector3();
 
             if (mobileMesh.entity != null)
             {
-                Vector3.Subtract(ref info.Contact.Position, ref mobileMesh.entity.position, out velocity);
-                Vector3.Cross(ref mobileMesh.entity.angularVelocity, ref velocity, out velocity);
-                Vector3.Add(ref velocity, ref mobileMesh.entity.linearVelocity, out velocity);
-                Vector3.Subtract(ref info.RelativeVelocity, ref velocity, out info.RelativeVelocity);
+                BepuVector3.Subtract(ref info.Contact.Position, ref mobileMesh.entity.position, out velocity);
+                BepuVector3.Cross(ref mobileMesh.entity.angularVelocity, ref velocity, out velocity);
+                BepuVector3.Add(ref velocity, ref mobileMesh.entity.linearVelocity, out velocity);
+                BepuVector3.Subtract(ref info.RelativeVelocity, ref velocity, out info.RelativeVelocity);
             }
 
             info.Pair = this;

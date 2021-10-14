@@ -60,7 +60,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// <param name="height">Height of the cylinder.</param>
         /// <param name="radius">Radius of the cylinder.</param>
         /// <param name="mass">Mass of the object.</param>
-        public Cylinder(Vector3 position, Fix64 height, Fix64 radius, Fix64 mass)
+        public Cylinder(BepuVector3 position, Fix64 height, Fix64 radius, Fix64 mass)
             : this(height, radius, mass)
         {
             Position = position;
@@ -72,7 +72,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// <param name="position">Position of the cylinder.</param>
         /// <param name="height">Height of the cylinder.</param>
         /// <param name="radius">Radius of the cylinder.</param>
-        public Cylinder(Vector3 position, Fix64 height, Fix64 radius)
+        public Cylinder(BepuVector3 position, Fix64 height, Fix64 radius)
             : this(height, radius)
         {
             Position = position;

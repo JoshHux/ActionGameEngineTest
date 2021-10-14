@@ -200,17 +200,17 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
             BoundingBox.CreateMerged(ref childA.BoundingBox, ref node.BoundingBox, out mergedA);
             BoundingBox.CreateMerged(ref childB.BoundingBox, ref node.BoundingBox, out mergedB);
 
-            Vector3 offset;
+            BepuVector3 offset;
             Fix64 originalAVolume, originalBVolume;
-            Vector3.Subtract(ref childA.BoundingBox.Max, ref childA.BoundingBox.Min, out offset);
+            BepuVector3.Subtract(ref childA.BoundingBox.Max, ref childA.BoundingBox.Min, out offset);
             originalAVolume = Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
-            Vector3.Subtract(ref childB.BoundingBox.Max, ref childB.BoundingBox.Min, out offset);
+            BepuVector3.Subtract(ref childB.BoundingBox.Max, ref childB.BoundingBox.Min, out offset);
             originalBVolume = Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
 
             Fix64 mergedAVolume, mergedBVolume;
-            Vector3.Subtract(ref mergedA.Max, ref mergedA.Min, out offset);
+            BepuVector3.Subtract(ref mergedA.Max, ref mergedA.Min, out offset);
             mergedAVolume = Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
-            Vector3.Subtract(ref mergedB.Max, ref mergedB.Min, out offset);
+            BepuVector3.Subtract(ref mergedB.Max, ref mergedB.Min, out offset);
             mergedBVolume = Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
 
             //Could use factor increase or absolute difference
@@ -334,8 +334,8 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
             {
                 BoundingBox.CreateMerged(ref BoundingBox, ref leafNodes.Elements[i].BoundingBox, out BoundingBox);
             }
-            Vector3 offset;
-            Vector3.Subtract(ref BoundingBox.Max, ref BoundingBox.Min, out offset);
+            BepuVector3 offset;
+            BepuVector3.Subtract(ref BoundingBox.Max, ref BoundingBox.Min, out offset);
             currentVolume = Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
             maximumVolume = Fix64.SafeMul(currentVolume, MaximumVolumeScale);
 
@@ -616,8 +616,8 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
 
         internal override Fix64 MeasureSubtreeCost()
         {
-            Vector3 offset;
-            Vector3.Subtract(ref BoundingBox.Max, ref BoundingBox.Min, out offset);
+            BepuVector3 offset;
+            BepuVector3.Subtract(ref BoundingBox.Max, ref BoundingBox.Min, out offset);
             return Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z) + ChildA.MeasureSubtreeCost() + childB.MeasureSubtreeCost();
         }
 
@@ -743,8 +743,8 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
         {
             var newTreeNode = InternalNode.nodePool.Take();
             BoundingBox.CreateMerged(ref BoundingBox, ref node.BoundingBox, out newTreeNode.BoundingBox);
-            Vector3 offset;
-            Vector3.Subtract(ref newTreeNode.BoundingBox.Max, ref newTreeNode.BoundingBox.Min, out offset);
+            BepuVector3 offset;
+            BepuVector3.Subtract(ref newTreeNode.BoundingBox.Max, ref newTreeNode.BoundingBox.Min, out offset);
             newTreeNode.currentVolume = Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
             //newTreeNode.maximumVolume = newTreeNode.currentVolume * InternalNode.MaximumVolumeScale;
             newTreeNode.childA = this;
@@ -850,8 +850,8 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
         internal override Fix64 MeasureSubtreeCost()
         {
             //Not much value in attempting to assign variable cost to leaves vs internal nodes for this diagnostic.
-            Vector3 offset;
-            Vector3.Subtract(ref BoundingBox.Max, ref BoundingBox.Min, out offset);
+            BepuVector3 offset;
+            BepuVector3.Subtract(ref BoundingBox.Max, ref BoundingBox.Min, out offset);
             return Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
         }
     }

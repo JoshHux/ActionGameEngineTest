@@ -42,12 +42,12 @@ namespace BEPUphysics.Constraints
         /// Gets the current relative velocity of the constraint.
         /// Computed based on the current connection velocities and jacobians.
         /// </summary>
-        Vector2 RelativeVelocity { get; }
+        BepuVector2 RelativeVelocity { get; }
 
         /// <summary>
         /// Gets the total impulse a constraint has applied.
         /// </summary>
-        Vector2 TotalImpulse { get; }
+        BepuVector2 TotalImpulse { get; }
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace BEPUphysics.Constraints
         /// <summary>
         /// Gets the current constraint error.
         /// </summary>
-        Vector2 Error { get; }
+        BepuVector2 Error { get; }
     }
 
     /// <summary>
@@ -70,12 +70,12 @@ namespace BEPUphysics.Constraints
         /// Gets the current relative velocity of the constraint.
         /// Computed based on the current connection velocities and jacobians.
         /// </summary>
-        Vector3 RelativeVelocity { get; }
+        BepuVector3 RelativeVelocity { get; }
 
         /// <summary>
         /// Gets the total impulse a constraint has applied.
         /// </summary>
-        Vector3 TotalImpulse { get; }
+        BepuVector3 TotalImpulse { get; }
     }
 
     /// <summary>
@@ -86,6 +86,6 @@ namespace BEPUphysics.Constraints
         /// <summary>
         /// Gets the current constraint error.
         /// </summary>
-        Vector3 Error { get; }
+        BepuVector3 Error { get; }
     }
 }

@@ -118,9 +118,9 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         ///</summary>
         ///<param name="direction">Direction to find the extreme point in.</param>
         ///<param name="extremePoint">Extreme point on the shape.</param>
-        public override void GetLocalExtremePointWithoutMargin(ref Vector3 direction, out Vector3 extremePoint)
+        public override void GetLocalExtremePointWithoutMargin(ref BepuVector3 direction, out BepuVector3 extremePoint)
         {
-            Vector3 d;
+            BepuVector3 d;
             Matrix3x3.TransformTranspose(ref direction, ref transform, out d);
             shape.GetLocalExtremePoint(d, out extremePoint);
             Matrix3x3.Transform(ref extremePoint, ref transform, out extremePoint);
@@ -139,8 +139,8 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             RigidTransform identity = RigidTransform.Identity;
             BoundingBox boundingBox;
             GetBoundingBox(ref identity, out boundingBox);
-            Vector3 diameter;
-            Vector3.Subtract(ref boundingBox.Max, ref boundingBox.Min, out diameter);
+            BepuVector3 diameter;
+            BepuVector3.Subtract(ref boundingBox.Max, ref boundingBox.Min, out diameter);
             return diameter.Length();
 
         }

@@ -124,7 +124,7 @@ namespace BEPUphysics.BroadPhaseEntries
         /// <param name="sweep">Sweep to apply to the shape.</param>
         /// <param name="hit">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
+        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, out RayHit hit)
         {
             RayCastResult result;
             bool toReturn = Shape.ConvexCast(castShape, ref startingTransform, ref sweep, out result);
@@ -142,7 +142,7 @@ namespace BEPUphysics.BroadPhaseEntries
         /// in the entry, this filter will be passed into inner ray casts.</param>
         /// <param name="hit">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayHit hit)
+        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayHit hit)
         {
             RayCastResult result;
             bool toReturn = Shape.ConvexCast(castShape, ref startingTransform, ref sweep, filter, out result);

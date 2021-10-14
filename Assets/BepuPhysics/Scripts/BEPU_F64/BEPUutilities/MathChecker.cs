@@ -40,7 +40,7 @@ namespace BEPUutilities
         /// This is only run when the CHECKMATH symbol is defined.
         /// </summary>
         [Conditional("CHECKMATH")]
-        public static void Validate(this Vector3 v)
+        public static void Validate(this BepuVector3 v)
         {
             if (IsInvalid(v.LengthSquared()))
             {
@@ -125,7 +125,7 @@ namespace BEPUutilities
         /// This is only run when the CHECKMATH symbol is defined.
         /// </summary>
         [Conditional("CHECKMATH")]
-        public static void Validate(this Quaternion q)
+        public static void Validate(this BepuQuaternion q)
         {
             if (IsInvalid(q.LengthSquared()))
             {

@@ -29,7 +29,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// <exception cref="ArgumentException">Thrown when the subbodies list contains zero entities.</exception>
         private WrappedBody(IList<ConvexShapeEntry> subShapes, Fix64 mass)
         {
-            Vector3 center;
+            BepuVector3 center;
             var shape = new WrappedShape(subShapes, out center);
             Initialize(new ConvexCollidable<WrappedShape>(shape), mass);
             Position = center;
@@ -38,7 +38,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// <exception cref="ArgumentException">Thrown when the subbodies list contains zero entities.</exception>
         private WrappedBody(IList<ConvexShapeEntry> subShapes)
         {
-            Vector3 center;
+            BepuVector3 center;
             var shape = new WrappedShape(subShapes, out center);
             Initialize(new ConvexCollidable<WrappedShape>(shape));
             Position = center;
@@ -50,7 +50,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// <param name="position">Position of the box.</param>
         /// <param name="subBodies">List of entities composing the body.</param>
         /// <param name="mass">Mass of the object.</param>
-        public WrappedBody(Vector3 position, IList<ConvexShapeEntry> subBodies, Fix64 mass)
+        public WrappedBody(BepuVector3 position, IList<ConvexShapeEntry> subBodies, Fix64 mass)
             : this(subBodies, mass)
         {
             Position = position;
@@ -61,7 +61,7 @@ namespace BEPUphysics.Entities.Prefabs
         /// </summary>
         /// <param name="position">Position of the box.</param>
         /// <param name="subBodies">List of entities composing the body.</param>
-        public WrappedBody(Vector3 position, IList<ConvexShapeEntry> subBodies)
+        public WrappedBody(BepuVector3 position, IList<ConvexShapeEntry> subBodies)
             : this(subBodies)
         {
             Position = position;

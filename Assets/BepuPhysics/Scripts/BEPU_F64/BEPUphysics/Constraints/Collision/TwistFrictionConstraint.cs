@@ -84,9 +84,9 @@ namespace BEPUphysics.Constraints.Collision
 
             //Apply the impulse
 #if !WINDOWS
-            Vector3 angular = new Vector3();
+            BepuVector3 angular = new BepuVector3();
 #else
-            Vector3 angular;
+            BepuVector3 angular;
 #endif
             angular.X = lambda * angularX;
             angular.Y = lambda * angularY;
@@ -119,7 +119,7 @@ namespace BEPUphysics.Constraints.Collision
             entityBDynamic = entityB != null && entityB.isDynamic;
 
             //Compute the jacobian......  Real hard!
-            Vector3 normal = contactManifoldConstraint.penetrationConstraints.Elements[0].contact.Normal;
+            BepuVector3 normal = contactManifoldConstraint.penetrationConstraints.Elements[0].contact.Normal;
             angularX = normal.X;
             angularY = normal.Y;
             angularZ = normal.Z;
@@ -155,7 +155,7 @@ namespace BEPUphysics.Constraints.Collision
             //Compute the relative velocity to determine what kind of friction to use
             Fix64 relativeAngularVelocity = RelativeVelocity;
             //Set up friction and find maximum friction force
-            Vector3 relativeSlidingVelocity = contactManifoldConstraint.SlidingFriction.relativeVelocity;
+            BepuVector3 relativeSlidingVelocity = contactManifoldConstraint.SlidingFriction.relativeVelocity;
             friction = Fix64.Abs(relativeAngularVelocity) > CollisionResponseSettings.StaticFrictionVelocityThreshold ||
 					   Fix64.Abs(relativeSlidingVelocity.X) + Fix64.Abs(relativeSlidingVelocity.Y) + Fix64.Abs(relativeSlidingVelocity.Z) > CollisionResponseSettings.StaticFrictionVelocityThreshold
                            ? contactManifoldConstraint.materialInteraction.KineticFriction
@@ -164,10 +164,10 @@ namespace BEPUphysics.Constraints.Collision
 
             contactCount = contactManifoldConstraint.penetrationConstraints.Count;
 
-            Vector3 contactOffset;
+            BepuVector3 contactOffset;
             for (int i = 0; i < contactCount; i++)
             {
-                Vector3.Subtract(ref contactManifoldConstraint.penetrationConstraints.Elements[i].contact.Position, ref contactManifoldConstraint.SlidingFriction.manifoldCenter, out contactOffset);
+                BepuVector3.Subtract(ref contactManifoldConstraint.penetrationConstraints.Elements[i].contact.Position, ref contactManifoldConstraint.SlidingFriction.manifoldCenter, out contactOffset);
                 leverArms[i] = contactOffset.Length();
             }
 
@@ -184,9 +184,9 @@ namespace BEPUphysics.Constraints.Collision
         {
             //Apply the warmstarting impulse.
 #if !WINDOWS
-            Vector3 angular = new Vector3();
+            BepuVector3 angular = new BepuVector3();
 #else
-            Vector3 angular;
+            BepuVector3 angular;
 #endif
             angular.X = accumulatedImpulse * angularX;
             angular.Y = accumulatedImpulse * angularY;

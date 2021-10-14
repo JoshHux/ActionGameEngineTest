@@ -35,16 +35,16 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
             var toReturn = PhysicsResources.GetTriangleCollidable();
             var shape = toReturn.Shape;
             mesh.Mesh.Data.GetTriangle(index, out shape.vA, out shape.vB, out shape.vC);
-            Vector3 center;
-            Vector3.Add(ref shape.vA, ref shape.vB, out center);
-            Vector3.Add(ref center, ref shape.vC, out center);
-            Vector3.Multiply(ref center, F64.OneThird, out center);
-            Vector3.Subtract(ref shape.vA, ref center, out shape.vA);
-            Vector3.Subtract(ref shape.vB, ref center, out shape.vB);
-            Vector3.Subtract(ref shape.vC, ref center, out shape.vC);
+            BepuVector3 center;
+            BepuVector3.Add(ref shape.vA, ref shape.vB, out center);
+            BepuVector3.Add(ref center, ref shape.vC, out center);
+            BepuVector3.Multiply(ref center, F64.OneThird, out center);
+            BepuVector3.Subtract(ref shape.vA, ref center, out shape.vA);
+            BepuVector3.Subtract(ref shape.vB, ref center, out shape.vB);
+            BepuVector3.Subtract(ref shape.vC, ref center, out shape.vC);
             //The bounding box doesn't update by itself.
             toReturn.worldTransform.Position = center;
-            toReturn.worldTransform.Orientation = Quaternion.Identity;
+            toReturn.worldTransform.Orientation = BepuQuaternion.Identity;
             toReturn.UpdateBoundingBoxInternal(F64.C0);
             shape.sidedness = mesh.sidedness;
             shape.collisionMargin = mobileMesh.Shape.MeshCollisionMargin;

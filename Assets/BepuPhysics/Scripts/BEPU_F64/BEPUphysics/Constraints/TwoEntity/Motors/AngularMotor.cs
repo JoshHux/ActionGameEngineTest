@@ -14,12 +14,12 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         private readonly JointBasis3D basis = new JointBasis3D();
 
         private readonly MotorSettingsOrientation settings;
-        private Vector3 accumulatedImpulse;
+        private BepuVector3 accumulatedImpulse;
 
 
         private Fix64 angle;
-        private Vector3 axis;
-        private Vector3 biasVelocity;
+        private BepuVector3 axis;
+        private BepuVector3 biasVelocity;
         private Matrix3x3 effectiveMassMatrix;
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             settings = new MotorSettingsOrientation(this);
 
             //Compute the rotation from A to B in A's local space.
-            Quaternion orientationAConjugate;
-            Quaternion.Conjugate(ref connectionA.orientation, out orientationAConjugate);
-            Quaternion.Concatenate(ref connectionB.orientation, ref orientationAConjugate, out settings.servo.goal);
+            BepuQuaternion orientationAConjugate;
+            BepuQuaternion.Conjugate(ref connectionA.orientation, out orientationAConjugate);
+            BepuQuaternion.Concatenate(ref connectionB.orientation, ref orientationAConjugate, out settings.servo.goal);
 
         }
 
@@ -74,7 +74,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         /// <summary>
         /// Gets the current relative velocity between the connected entities with respect to the constraint.
         /// </summary>
-        public Vector3 RelativeVelocity
+        public BepuVector3 RelativeVelocity
         {
             get { return connectionA.angularVelocity - connectionB.angularVelocity; }
         }
@@ -82,7 +82,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         /// <summary>
         /// Gets the total impulse applied by this constraint.
         /// </summary>
-        public Vector3 TotalImpulse
+        public BepuVector3 TotalImpulse
         {
             get { return accumulatedImpulse; }
         }
@@ -91,7 +91,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         /// Gets the current constraint error.
         /// If the motor is in velocity only mode, error is zero.
         /// </summary>
-        public Vector3 Error
+        public BepuVector3 Error
         {
             get { return axis * angle; }
         }
@@ -106,7 +106,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         /// <param name="jacobianX">First linear jacobian entry for the first connected entity.</param>
         /// <param name="jacobianY">Second linear jacobian entry for the first connected entity.</param>
         /// <param name="jacobianZ">Third linear jacobian entry for the first connected entity.</param>
-        public void GetLinearJacobianA(out Vector3 jacobianX, out Vector3 jacobianY, out Vector3 jacobianZ)
+        public void GetLinearJacobianA(out BepuVector3 jacobianX, out BepuVector3 jacobianY, out BepuVector3 jacobianZ)
         {
             jacobianX = Toolbox.ZeroVector;
             jacobianY = Toolbox.ZeroVector;
@@ -119,7 +119,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         /// <param name="jacobianX">First linear jacobian entry for the second connected entity.</param>
         /// <param name="jacobianY">Second linear jacobian entry for the second connected entity.</param>
         /// <param name="jacobianZ">Third linear jacobian entry for the second connected entity.</param>
-        public void GetLinearJacobianB(out Vector3 jacobianX, out Vector3 jacobianY, out Vector3 jacobianZ)
+        public void GetLinearJacobianB(out BepuVector3 jacobianX, out BepuVector3 jacobianY, out BepuVector3 jacobianZ)
         {
             jacobianX = Toolbox.ZeroVector;
             jacobianY = Toolbox.ZeroVector;
@@ -132,7 +132,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         /// <param name="jacobianX">First angular jacobian entry for the first connected entity.</param>
         /// <param name="jacobianY">Second angular jacobian entry for the first connected entity.</param>
         /// <param name="jacobianZ">Third angular jacobian entry for the first connected entity.</param>
-        public void GetAngularJacobianA(out Vector3 jacobianX, out Vector3 jacobianY, out Vector3 jacobianZ)
+        public void GetAngularJacobianA(out BepuVector3 jacobianX, out BepuVector3 jacobianY, out BepuVector3 jacobianZ)
         {
             jacobianX = Toolbox.RightVector;
             jacobianY = Toolbox.UpVector;
@@ -145,7 +145,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         /// <param name="jacobianX">First angular jacobian entry for the second connected entity.</param>
         /// <param name="jacobianY">Second angular jacobian entry for the second connected entity.</param>
         /// <param name="jacobianZ">Third angular jacobian entry for the second connected entity.</param>
-        public void GetAngularJacobianB(out Vector3 jacobianX, out Vector3 jacobianY, out Vector3 jacobianZ)
+        public void GetAngularJacobianB(out BepuVector3 jacobianX, out BepuVector3 jacobianY, out BepuVector3 jacobianZ)
         {
             jacobianX = Toolbox.RightVector;
             jacobianY = Toolbox.UpVector;
@@ -169,19 +169,19 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         public override Fix64 SolveIteration()
         {
 #if !WINDOWS
-            Vector3 lambda = new Vector3();
+            BepuVector3 lambda = new BepuVector3();
 #else
-            Vector3 lambda;
+            BepuVector3 lambda;
 #endif
-            Vector3 aVel = connectionA.angularVelocity;
-            Vector3 bVel = connectionB.angularVelocity;
+            BepuVector3 aVel = connectionA.angularVelocity;
+            BepuVector3 bVel = connectionB.angularVelocity;
             lambda.X = bVel.X - aVel.X - biasVelocity.X - usedSoftness * accumulatedImpulse.X;
             lambda.Y = bVel.Y - aVel.Y - biasVelocity.Y - usedSoftness * accumulatedImpulse.Y;
             lambda.Z = bVel.Z - aVel.Z - biasVelocity.Z - usedSoftness * accumulatedImpulse.Z;
 
             Matrix3x3.Transform(ref lambda, ref effectiveMassMatrix, out lambda);
 
-            Vector3 previousAccumulatedImpulse = accumulatedImpulse;
+            BepuVector3 previousAccumulatedImpulse = accumulatedImpulse;
             accumulatedImpulse.X += lambda.X;
             accumulatedImpulse.Y += lambda.Y;
             accumulatedImpulse.Z += lambda.Z;
@@ -208,8 +208,8 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             }
             if (connectionB.isDynamic)
             {
-                Vector3 torqueB;
-                Vector3.Negate(ref lambda, out torqueB);
+                BepuVector3 torqueB;
+                BepuVector3.Negate(ref lambda, out torqueB);
                 connectionB.ApplyAngularImpulse(ref torqueB);
             }
 
@@ -238,22 +238,22 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 //Error = (GoalRelativeOrientation * ConnectionA.Orientation)^-1 * ConnectionB.Orientation
 
                 //ConnectionA.Orientation is replaced in the above by the world space basis orientation.
-                Quaternion worldBasis = Quaternion.CreateFromRotationMatrix(basis.WorldTransform);
+                BepuQuaternion worldBasis = BepuQuaternion.CreateFromRotationMatrix(basis.WorldTransform);
 
-                Quaternion bTarget;
-                Quaternion.Concatenate(ref settings.servo.goal, ref worldBasis, out bTarget);
-                Quaternion bTargetConjugate;
-                Quaternion.Conjugate(ref bTarget, out bTargetConjugate);
+                BepuQuaternion bTarget;
+                BepuQuaternion.Concatenate(ref settings.servo.goal, ref worldBasis, out bTarget);
+                BepuQuaternion bTargetConjugate;
+                BepuQuaternion.Conjugate(ref bTarget, out bTargetConjugate);
 
-                Quaternion error;
-                Quaternion.Concatenate(ref bTargetConjugate, ref connectionB.orientation, out error);
+                BepuQuaternion error;
+                BepuQuaternion.Concatenate(ref bTargetConjugate, ref connectionB.orientation, out error);
 
 
                 Fix64 errorReduction;
                 settings.servo.springSettings.ComputeErrorReductionAndSoftness(dt, inverseDt, out errorReduction, out usedSoftness);
 
                 //Turn this into an axis-angle representation.
-                Quaternion.GetAxisAngleFromQuaternion(ref error, out axis, out angle);
+                BepuQuaternion.GetAxisAngleFromBepuQuaternion(ref error, out axis, out angle);
 
                 //Scale the axis by the desired velocity if the angle is sufficiently large (epsilon).
                 if (angle > Toolbox.BigEpsilon)
@@ -318,8 +318,8 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             }
             if (connectionB.isDynamic)
             {
-                Vector3 torqueB;
-                Vector3.Negate(ref accumulatedImpulse, out torqueB);
+                BepuVector3 torqueB;
+                BepuVector3.Negate(ref accumulatedImpulse, out torqueB);
                 connectionB.ApplyAngularImpulse(ref torqueB);
             }
         }

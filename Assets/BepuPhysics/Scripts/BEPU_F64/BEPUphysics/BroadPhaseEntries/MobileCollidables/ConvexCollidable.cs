@@ -30,7 +30,7 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
         }
 
 
-        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
+        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, out RayHit hit)
         {
             return MPRToolbox.Sweep(castShape, Shape, ref sweep, ref Toolbox.ZeroVector, ref startingTransform, ref worldTransform, out hit);
         }

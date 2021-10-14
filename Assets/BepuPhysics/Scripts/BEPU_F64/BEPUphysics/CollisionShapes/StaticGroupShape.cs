@@ -142,7 +142,7 @@ namespace BEPUphysics.CollisionShapes
         /// <param name="sweep">Sweep to apply to the shape.</param>
         /// <param name="result">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public bool ConvexCast(ConvexShapes.ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayCastResult result)
+        public bool ConvexCast(ConvexShapes.ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, out RayCastResult result)
         {
             var outputOverlappedElements = PhysicsResources.GetCollidableList();
             BoundingBox boundingBox;
@@ -177,7 +177,7 @@ namespace BEPUphysics.CollisionShapes
         /// in the entry, this filter will be passed into inner ray casts.</param>
         /// <param name="result">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public bool ConvexCast(ConvexShapes.ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayCastResult result)
+        public bool ConvexCast(ConvexShapes.ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayCastResult result)
         {
             var outputOverlappedElements = PhysicsResources.GetCollidableList();
             BoundingBox boundingBox;

@@ -28,17 +28,17 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             contactList = new TinyStructList<ContactData>();
 
 
-            Vector3 ab, ac;
-            Vector3.Subtract(ref triangle.vB, ref triangle.vA, out ab);
-            Vector3.Subtract(ref triangle.vC, ref triangle.vA, out ac);
-            Vector3 triangleNormal;
-            Vector3.Cross(ref ab, ref ac, out triangleNormal);
+            BepuVector3 ab, ac;
+            BepuVector3.Subtract(ref triangle.vB, ref triangle.vA, out ab);
+            BepuVector3.Subtract(ref triangle.vC, ref triangle.vA, out ac);
+            BepuVector3 triangleNormal;
+            BepuVector3.Cross(ref ab, ref ac, out triangleNormal);
             if (triangleNormal.LengthSquared() < Toolbox.Epsilon * F64.C0p01)
             {
                 //If the triangle is degenerate, use the offset between its center and the sphere.
-                Vector3.Add(ref triangle.vA, ref triangle.vB, out triangleNormal);
-                Vector3.Add(ref triangleNormal, ref triangle.vC, out triangleNormal);
-                Vector3.Multiply(ref triangleNormal, F64.OneThird, out triangleNormal);
+                BepuVector3.Add(ref triangle.vA, ref triangle.vB, out triangleNormal);
+                BepuVector3.Add(ref triangleNormal, ref triangle.vC, out triangleNormal);
+                BepuVector3.Multiply(ref triangleNormal, F64.OneThird, out triangleNormal);
                 if (triangleNormal.LengthSquared() < Toolbox.Epsilon * F64.C0p01)
                     triangleNormal = Toolbox.UpVector; //Alrighty then! Pick a random direction.
                     
@@ -46,12 +46,12 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             
             Fix64 dot;
-            Vector3.Dot(ref triangleNormal, ref triangle.vA, out dot);
+            BepuVector3.Dot(ref triangleNormal, ref triangle.vA, out dot);
             switch (triangle.sidedness)
             {
                 case TriangleSidedness.DoubleSided:
                     if (dot < F64.C0)
-                        Vector3.Negate(ref triangleNormal, out triangleNormal); //Normal must face outward.
+                        BepuVector3.Negate(ref triangleNormal, out triangleNormal); //Normal must face outward.
                     break;
                 case TriangleSidedness.Clockwise:
                     if (dot > F64.C0)
@@ -65,7 +65,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
 
 
-            Vector3 closestPoint;
+            BepuVector3 closestPoint;
             //Could optimize this process a bit.  The 'point' being compared is always zero.  Additionally, since the triangle normal is available,
             //there is a little extra possible optimization.
             lastRegion = Toolbox.GetClosestPointOnTriangleToPoint(ref triangle.vA, ref triangle.vB, ref triangle.vC, ref Toolbox.ZeroVector, out closestPoint);
@@ -79,7 +79,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //Super close to the triangle.  Normalizing would be dangerous.
 
-                    Vector3.Negate(ref triangleNormal, out contact.Normal);
+                    BepuVector3.Negate(ref triangleNormal, out contact.Normal);
                     contact.Normal.Normalize();
                     contact.PenetrationDepth = marginSum;
                     contactList.Add(ref contact);
@@ -87,7 +87,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 }
 
                 lengthSquared = Fix64.Sqrt(lengthSquared);
-                Vector3.Divide(ref closestPoint, lengthSquared, out contact.Normal);
+                BepuVector3.Divide(ref closestPoint, lengthSquared, out contact.Normal);
                 contact.PenetrationDepth = marginSum - lengthSquared;
                 contact.Position = closestPoint;
                 contactList.Add(ref contact);

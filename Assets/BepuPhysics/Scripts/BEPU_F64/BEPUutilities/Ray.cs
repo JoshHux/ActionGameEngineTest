@@ -11,11 +11,11 @@ namespace BEPUutilities
         /// <summary>
         /// Starting position of the ray.
         /// </summary>
-        public Vector3 Position;
+        public BepuVector3 Position;
         /// <summary>
         /// Direction in which the ray points.
         /// </summary>
-        public Vector3 Direction;
+        public BepuVector3 Direction;
 
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="position">Starting position of the ray.</param>
         /// <param name="direction">Direction in which the ray points.</param>
-        public Ray(Vector3 position, Vector3 direction)
+        public Ray(BepuVector3 position, BepuVector3 direction)
         {
             this.Position = position;
             this.Direction = direction;
@@ -151,14 +151,14 @@ namespace BEPUutilities
         public bool Intersects(ref Plane plane, out Fix64 t)
         {
 			Fix64 velocity;
-            Vector3.Dot(ref Direction, ref plane.Normal, out velocity);
+            BepuVector3.Dot(ref Direction, ref plane.Normal, out velocity);
             if (Fix64.Abs(velocity) < Toolbox.Epsilon)
             {
                 t = F64.C0;
                 return false;
             }
 			Fix64 distanceAlongNormal;
-            Vector3.Dot(ref Position, ref plane.Normal, out distanceAlongNormal);
+            BepuVector3.Dot(ref Position, ref plane.Normal, out distanceAlongNormal);
             distanceAlongNormal += plane.D;
             t = -distanceAlongNormal / velocity;
             return t >= -Toolbox.Epsilon;
@@ -180,10 +180,10 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="t">Length along the ray from the ray position in terms of the ray's direction.</param>
         /// <param name="v">Point along the ray at the given location.</param>
-        public void GetPointOnRay(Fix64 t, out Vector3 v)
+        public void GetPointOnRay(Fix64 t, out BepuVector3 v)
         {
-            Vector3.Multiply(ref Direction, t, out v);
-            Vector3.Add(ref v, ref Position, out v);
+            BepuVector3.Multiply(ref Direction, t, out v);
+            BepuVector3.Add(ref v, ref Position, out v);
         }
     }
 }

@@ -123,7 +123,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
 
 
                 //Only perform the test if the minimum radii are small enough relative to the size of the velocity.
-                Vector3 velocity;
+                BepuVector3 velocity;
                 if (convexMode == PositionUpdateMode.Discrete)
                 {
                     //Triangle is static for the purposes of this continuous test.
@@ -132,14 +132,14 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 else if (triangleMode == PositionUpdateMode.Discrete)
                 {
                     //Convex is static for the purposes of this continuous test.
-                    Vector3.Negate(ref convex.entity.linearVelocity, out velocity);
+                    BepuVector3.Negate(ref convex.entity.linearVelocity, out velocity);
                 }
                 else
                 {
                     //Both objects are moving.
-                    Vector3.Subtract(ref triangle.entity.linearVelocity, ref convex.entity.linearVelocity, out velocity);
+                    BepuVector3.Subtract(ref triangle.entity.linearVelocity, ref convex.entity.linearVelocity, out velocity);
                 }
-                Vector3.Multiply(ref velocity, dt, out velocity);
+                BepuVector3.Multiply(ref velocity, dt, out velocity);
                 Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadiusA = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
@@ -154,14 +154,14 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                         {                
                             //Only perform sweep if the object is in danger of hitting the object.
                             //Triangles can be one sided, so check the impact normal against the triangle normal.
-                            Vector3 AB, AC;
-                            Vector3.Subtract(ref triangle.Shape.vB, ref triangle.Shape.vA, out AB);
-                            Vector3.Subtract(ref triangle.Shape.vC, ref triangle.Shape.vA, out AC);
-                            Vector3 normal;
-                            Vector3.Cross(ref AB, ref AC, out normal);
+                            BepuVector3 AB, AC;
+                            BepuVector3.Subtract(ref triangle.Shape.vB, ref triangle.Shape.vA, out AB);
+                            BepuVector3.Subtract(ref triangle.Shape.vC, ref triangle.Shape.vA, out AC);
+                            BepuVector3 normal;
+                            BepuVector3.Cross(ref AB, ref AC, out normal);
 
                             Fix64 dot;
-                            Vector3.Dot(ref rayHit.Normal, ref normal, out dot);
+                            BepuVector3.Dot(ref rayHit.Normal, ref normal, out dot);
                             if (triangle.Shape.sidedness == TriangleSidedness.Counterclockwise && dot < F64.C0 ||
                                 triangle.Shape.sidedness == TriangleSidedness.Clockwise && dot > F64.C0)
                             {
@@ -187,7 +187,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 //        if (triangle.Shape.sidedness != TriangleSidedness.DoubleSided)
                 //        {
                 //            Fix64 dot;
-                //            Vector3.Dot(ref rayHit.Normal, ref normal, out dot);
+                //            BepuVector3.Dot(ref rayHit.Normal, ref normal, out dot);
                 //            if (dot > 0)
                 //            {
                 //                timeOfImpact = rayHit.T;

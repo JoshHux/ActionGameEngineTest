@@ -198,13 +198,13 @@ namespace BEPUutilities
         /// <summary>
         /// Transforms the vector by the matrix.
         /// </summary>
-        /// <param name="v">Vector2 to transform.  Considered to be a column vector for purposes of multiplication.</param>
+        /// <param name="v">BepuVector2 to transform.  Considered to be a column vector for purposes of multiplication.</param>
         /// <param name="matrix">Matrix to use as the transformation.</param>
         /// <param name="result">Column vector product of the transformation.</param>
-        public static void Transform(ref Vector2 v, ref Matrix3x2 matrix, out Vector3 result)
+        public static void Transform(ref BepuVector2 v, ref Matrix3x2 matrix, out BepuVector3 result)
         {
 #if !WINDOWS
-            result = new Vector3();
+            result = new BepuVector3();
 #endif
             result.X = matrix.M11 * v.X + matrix.M12 * v.Y;
             result.Y = matrix.M21 * v.X + matrix.M22 * v.Y;
@@ -214,13 +214,13 @@ namespace BEPUutilities
         /// <summary>
         /// Transforms the vector by the matrix.
         /// </summary>
-        /// <param name="v">Vector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
+        /// <param name="v">BepuVector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
         /// <param name="matrix">Matrix to use as the transformation.</param>
         /// <param name="result">Row vector product of the transformation.</param>
-        public static void Transform(ref Vector3 v, ref Matrix3x2 matrix, out Vector2 result)
+        public static void Transform(ref BepuVector3 v, ref Matrix3x2 matrix, out BepuVector2 result)
         {
 #if !WINDOWS
-            result = new Vector2();
+            result = new BepuVector2();
 #endif
             result.X = v.X * matrix.M11 + v.Y * matrix.M21 + v.Z * matrix.M31;
             result.Y = v.X * matrix.M12 + v.Y * matrix.M22 + v.Z * matrix.M32;

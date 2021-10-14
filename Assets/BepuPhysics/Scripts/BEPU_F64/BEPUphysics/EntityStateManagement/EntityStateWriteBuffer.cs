@@ -28,9 +28,9 @@ namespace BEPUphysics.EntityStateManagement
         internal struct EntityStateChange
         {
             [FieldOffset(0)]
-            internal Quaternion orientationQuaternion;
+            internal BepuQuaternion orientationBepuQuaternion;
             [FieldOffset(0)]
-            internal Vector3 vector;
+            internal BepuVector3 vector;
             [FieldOffset(32)]
             internal TargetField targetField;
             [FieldOffset(40)]
@@ -39,8 +39,8 @@ namespace BEPUphysics.EntityStateManagement
 #else
         internal struct EntityStateChange
         {
-            internal Quaternion orientationQuaternion;
-            internal Vector3 vector;
+            internal BepuQuaternion orientationBepuQuaternion;
+            internal BepuVector3 vector;
             internal TargetField targetField;
             internal Entity target;
         }
@@ -61,7 +61,7 @@ namespace BEPUphysics.EntityStateManagement
         ///</summary>
         ///<param name="entity">Entity to target.</param>
         ///<param name="newPosition">New position of the entity.</param>
-        public void EnqueuePosition(Entity entity, ref Vector3 newPosition)
+        public void EnqueuePosition(Entity entity, ref BepuVector3 newPosition)
         {
             stateChanges.Enqueue(new EntityStateChange { target = entity, vector = newPosition, targetField = TargetField.Position });
         }
@@ -69,17 +69,17 @@ namespace BEPUphysics.EntityStateManagement
         /// Enqueues a change to an entity's orientation.
         ///</summary>
         ///<param name="entity">Entity to target.</param>
-        ///<param name="newOrientationQuaternion">New orientation of the entity.</param>
-        public void EnqueueOrientation(Entity entity, ref Quaternion newOrientationQuaternion)
+        ///<param name="newOrientationBepuQuaternion">New orientation of the entity.</param>
+        public void EnqueueOrientation(Entity entity, ref BepuQuaternion newOrientationBepuQuaternion)
         {
-            stateChanges.Enqueue(new EntityStateChange { target = entity, orientationQuaternion = newOrientationQuaternion, targetField = TargetField.Orientation });
+            stateChanges.Enqueue(new EntityStateChange { target = entity, orientationBepuQuaternion = newOrientationBepuQuaternion, targetField = TargetField.Orientation });
         }
         ///<summary>
         /// Enqueues a change to an entity's linear velocity.
         ///</summary>
         ///<param name="entity">Entity to target.</param>
         ///<param name="newLinearVelocity">New linear velocity of the entity.</param>
-        public void EnqueueLinearVelocity(Entity entity, ref Vector3 newLinearVelocity)
+        public void EnqueueLinearVelocity(Entity entity, ref BepuVector3 newLinearVelocity)
         {
             stateChanges.Enqueue(new EntityStateChange { target = entity, vector = newLinearVelocity, targetField = TargetField.LinearVelocity });
         }
@@ -88,7 +88,7 @@ namespace BEPUphysics.EntityStateManagement
         ///</summary>
         ///<param name="entity">Entity to target.</param>
         ///<param name="newAngularVelocity">New angular velocity of the entity.</param>
-        public void EnqueueAngularVelocity(Entity entity, ref Vector3 newAngularVelocity)
+        public void EnqueueAngularVelocity(Entity entity, ref BepuVector3 newAngularVelocity)
         {
             stateChanges.Enqueue(new EntityStateChange { target = entity, vector = newAngularVelocity, targetField = TargetField.AngularVelocity });
         }
@@ -106,7 +106,7 @@ namespace BEPUphysics.EntityStateManagement
                         target.Position = item.vector;
                         break;
                     case TargetField.Orientation:
-                        target.Orientation = item.orientationQuaternion;
+                        target.Orientation = item.orientationBepuQuaternion;
                         break;
                     case TargetField.LinearVelocity:
                         target.LinearVelocity = item.vector;

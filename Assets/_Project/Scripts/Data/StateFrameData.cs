@@ -7,7 +7,7 @@ namespace Spax.StateMachine
     [System.Serializable]
     public class StateFrameData
     {
-        public string stateName = "New State";
+        public string animName = "New State";
         public uint stateID;
         public int parentID;
 
@@ -64,7 +64,7 @@ namespace Spax.StateMachine
         public StateFrameData DeepCopy()
         {
             StateFrameData ret = new StateFrameData();
-            ret.stateName = this.stateName;
+            ret.animName = this.animName;
             ret.stateID = this.stateID;
             ret.parentID = this.parentID;
             ret.enterStateConditions = this.enterStateConditions;

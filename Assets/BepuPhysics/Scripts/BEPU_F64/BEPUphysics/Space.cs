@@ -690,7 +690,7 @@ namespace BEPUphysics
         /// <param name="sweep">Sweep to apply to the shape. Avoid extremely long convex casts for better stability and performance.</param>
         /// <param name="castResult">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayCastResult castResult)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, out RayCastResult castResult)
         {
             var castResults = PhysicsResources.GetRayCastResultList();
             bool didHit = ConvexCast(castShape, ref startingTransform, ref sweep, castResults);
@@ -715,7 +715,7 @@ namespace BEPUphysics
         /// <param name="filter">Delegate to prune out hit candidates before performing a cast against them. Return true from the filter to process an entry or false to ignore the entry.</param>
         /// <param name="castResult">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayCastResult castResult)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayCastResult castResult)
         {
             var castResults = PhysicsResources.GetRayCastResultList();
             bool didHit = ConvexCast(castShape, ref startingTransform, ref sweep, filter, castResults);
@@ -739,7 +739,7 @@ namespace BEPUphysics
         /// <param name="sweep">Sweep to apply to the shape. Avoid extremely long convex casts for better stability and performance.</param>
         /// <param name="outputCastResults">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, IList<RayCastResult> outputCastResults)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, IList<RayCastResult> outputCastResults)
         {
             var overlappedElements = PhysicsResources.GetBroadPhaseEntryList();
             BoundingBox boundingBox;
@@ -768,7 +768,7 @@ namespace BEPUphysics
         /// <param name="filter">Delegate to prune out hit candidates before performing a cast against them. Return true from the filter to process an entry or false to ignore the entry.</param>
         /// <param name="outputCastResults">Hit data, if any.</param>
         /// <returns>Whether or not the cast hit anything.</returns>
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, IList<RayCastResult> outputCastResults)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref BepuVector3 sweep, Func<BroadPhaseEntry, bool> filter, IList<RayCastResult> outputCastResults)
         {
             var overlappedElements = PhysicsResources.GetBroadPhaseEntryList();
             BoundingBox boundingBox;

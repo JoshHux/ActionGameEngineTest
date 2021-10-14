@@ -58,19 +58,19 @@ namespace BEPUphysics.Vehicle
         public override void UpdateWorldTransform()
         {
 #if !WINDOWS
-            Vector3 newPosition = new Vector3();
+            BepuVector3 newPosition = new BepuVector3();
 #else
-            Vector3 newPosition;
+            BepuVector3 newPosition;
 #endif
-            Vector3 worldAttachmentPoint;
-            Vector3 localAttach;
-            Vector3.Add(ref wheel.suspension.localAttachmentPoint, ref wheel.vehicle.Body.CollisionInformation.localPosition, out localAttach);
+            BepuVector3 worldAttachmentPoint;
+            BepuVector3 localAttach;
+            BepuVector3.Add(ref wheel.suspension.localAttachmentPoint, ref wheel.vehicle.Body.CollisionInformation.localPosition, out localAttach);
             worldTransform = Matrix3x3.ToMatrix4X4(wheel.vehicle.Body.BufferedStates.InterpolatedStates.OrientationMatrix);
 
             Matrix.TransformNormal(ref localAttach, ref worldTransform, out worldAttachmentPoint);
             worldAttachmentPoint += wheel.vehicle.Body.BufferedStates.InterpolatedStates.Position;
 
-            Vector3 worldDirection;
+            BepuVector3 worldDirection;
             Matrix.Transform(ref wheel.suspension.localDirection, ref worldTransform, out worldDirection);
 
             Fix64 length = wheel.suspension.currentLength - graphicalRadius;
@@ -80,8 +80,8 @@ namespace BEPUphysics.Vehicle
 
             Matrix spinTransform;
 
-            Vector3 localSpinAxis;
-            Vector3.Cross(ref wheel.localForwardDirection, ref wheel.suspension.localDirection, out localSpinAxis);
+            BepuVector3 localSpinAxis;
+            BepuVector3.Cross(ref wheel.localForwardDirection, ref wheel.suspension.localDirection, out localSpinAxis);
             Matrix.CreateFromAxisAngle(ref localSpinAxis, spinAngle, out spinTransform);
 
 
@@ -103,7 +103,7 @@ namespace BEPUphysics.Vehicle
         /// <param name="entity">Supporting object.</param>
         /// <param name="material">Material of the wheel.</param>
         /// <returns>Whether or not any support was found.</returns>
-        protected internal override bool FindSupport(out Vector3 location, out Vector3 normal, out Fix64 suspensionLength, out Collidable supportingCollidable, out Entity entity, out Material material)
+        protected internal override bool FindSupport(out BepuVector3 location, out BepuVector3 normal, out Fix64 suspensionLength, out Collidable supportingCollidable, out Entity entity, out Material material)
         {
             suspensionLength = Fix64.MaxValue;
             location = Toolbox.NoVector;
@@ -153,7 +153,7 @@ namespace BEPUphysics.Vehicle
                 if (suspensionLength > F64.C0)
                     normal.Normalize();
                 else
-                    Vector3.Negate(ref wheel.suspension.worldDirection, out normal);
+                    BepuVector3.Negate(ref wheel.suspension.worldDirection, out normal);
                 return true;
             }
             return false;
@@ -166,11 +166,11 @@ namespace BEPUphysics.Vehicle
         protected internal override void Initialize()
         {
             //Setup the dimensions of the detector.
-            Vector3 startpoint = wheel.suspension.localAttachmentPoint;
-            Vector3 endpoint = startpoint + wheel.suspension.localDirection * wheel.suspension.restLength;
-            Vector3 min, max;
-            Vector3.Min(ref startpoint, ref endpoint, out min);
-            Vector3.Max(ref startpoint, ref endpoint, out max);
+            BepuVector3 startpoint = wheel.suspension.localAttachmentPoint;
+            BepuVector3 endpoint = startpoint + wheel.suspension.localDirection * wheel.suspension.restLength;
+            BepuVector3 min, max;
+            BepuVector3.Min(ref startpoint, ref endpoint, out min);
+            BepuVector3.Max(ref startpoint, ref endpoint, out max);
 
             detector.Width = max.X - min.X;
             detector.Height = max.Y - min.Y;
@@ -183,9 +183,9 @@ namespace BEPUphysics.Vehicle
         protected internal override void UpdateDetectorPosition()
         {
 #if !WINDOWS
-            Vector3 newPosition = new Vector3();
+            BepuVector3 newPosition = new BepuVector3();
 #else
-            Vector3 newPosition;
+            BepuVector3 newPosition;
 #endif
 
             newPosition.X = wheel.suspension.worldAttachmentPoint.X + wheel.suspension.worldDirection.X * wheel.suspension.restLength * F64.C0p5;
@@ -194,10 +194,10 @@ namespace BEPUphysics.Vehicle
 
             detector.Position = newPosition;
             detector.OrientationMatrix = wheel.Vehicle.Body.orientationMatrix;
-            Vector3 linearVelocity;
-            Vector3.Subtract(ref newPosition, ref wheel.vehicle.Body.position, out linearVelocity);
-            Vector3.Cross(ref linearVelocity, ref wheel.vehicle.Body.angularVelocity, out linearVelocity);
-            Vector3.Add(ref linearVelocity, ref wheel.vehicle.Body.linearVelocity, out linearVelocity);
+            BepuVector3 linearVelocity;
+            BepuVector3.Subtract(ref newPosition, ref wheel.vehicle.Body.position, out linearVelocity);
+            BepuVector3.Cross(ref linearVelocity, ref wheel.vehicle.Body.angularVelocity, out linearVelocity);
+            BepuVector3.Add(ref linearVelocity, ref wheel.vehicle.Body.linearVelocity, out linearVelocity);
             detector.LinearVelocity = linearVelocity;
             detector.AngularVelocity = wheel.vehicle.Body.angularVelocity;
         }

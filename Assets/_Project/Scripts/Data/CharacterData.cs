@@ -287,7 +287,7 @@ namespace Spax
                 Transition curTrans = srcState._transitions[i];
 
                 //target state for the transition
-                int potenState = curTrans.Target;
+                int potenState = curTrans.TargetStateID;
                 //the required transition condition
                 TransitionCondition compare = curTrans.Condition;
                 //input requirements for the transition

@@ -59,14 +59,14 @@ namespace BEPUphysics.CollisionTests.Manifolds
 
             //Now, generate a contact between the two shapes.
             Fix64 distance;
-            Vector3 axis;
+            BepuVector3 axis;
             BoxContactDataCache manifold;
             if (BoxBoxCollider.AreBoxesColliding(boxA.Shape, boxB.Shape, ref boxA.worldTransform, ref boxB.worldTransform, out distance, out axis, out manifold))
             {
                 unsafe
                 {
                     BoxContactData* manifoldPointer = &manifold.D1;
-                    Vector3.Negate(ref axis, out axis);
+                    BepuVector3.Negate(ref axis, out axis);
                     var toRemove = new TinyList<int>();
                     for (int i = 0; i < contacts.Count; i++)
                     {
@@ -128,11 +128,11 @@ namespace BEPUphysics.CollisionTests.Manifolds
 
             //Now, generate a contact between the two shapes.
             Fix64 distance;
-            Vector3 axis;
+            BepuVector3 axis;
             var manifold = new TinyStructList<BoxContactData>();
             if (BoxBoxCollider.AreBoxesColliding(boxA.Shape, boxB.Shape, ref boxA.worldTransform, ref boxB.worldTransform, out distance, out axis, out manifold))
             {
-                Vector3.Negate(ref axis, out axis);
+                BepuVector3.Negate(ref axis, out axis);
                 TinyList<int> toRemove = new TinyList<int>();
                 BoxContactData data;
                 for (int i = 0; i < contacts.Count; i++)

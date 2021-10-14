@@ -58,7 +58,7 @@ namespace BEPUphysics.Character
         /// Computes representative support information based on the character's current traction contacts, support contacts, and ray contacts.
         /// </summary>
         /// <param name="down">Down direction of the character.</param>
-        private void UpdateSupportData(ref Vector3 down)
+        private void UpdateSupportData(ref BepuVector3 down)
         {
             //Choose which set of contacts to use.
             RawList<CharacterContact> contacts;
@@ -80,7 +80,7 @@ namespace BEPUphysics.Character
                     {
                         Position = SupportRayData.Value.HitData.Location,
                         Normal = SupportRayData.Value.HitData.Normal,
-                        Depth = Vector3.Dot(down, SupportRayData.Value.HitData.Normal) * (BottomDistance - SupportRayData.Value.HitData.T),
+                        Depth = BepuVector3.Dot(down, SupportRayData.Value.HitData.Normal) * (BottomDistance - SupportRayData.Value.HitData.T),
                         SupportObject = SupportRayData.Value.HitObject
                     };
                 }
@@ -98,12 +98,12 @@ namespace BEPUphysics.Character
 
             for (int i = 1; i < contacts.Count; i++)
             {
-                Vector3.Add(ref supportData.Position, ref contacts.Elements[i].Contact.Position, out supportData.Position);
-                Vector3.Add(ref supportData.Normal, ref contacts.Elements[i].Contact.Normal, out supportData.Normal);
+                BepuVector3.Add(ref supportData.Position, ref contacts.Elements[i].Contact.Position, out supportData.Position);
+                BepuVector3.Add(ref supportData.Normal, ref contacts.Elements[i].Contact.Normal, out supportData.Normal);
             }
             if (contacts.Count > 1)
             {
-                Vector3.Divide(ref supportData.Position, contacts.Count, out supportData.Position);
+                BepuVector3.Divide(ref supportData.Position, contacts.Count, out supportData.Position);
                 Fix64 length = supportData.Normal.LengthSquared();
                 if (length < Toolbox.Epsilon)
                 {
@@ -113,7 +113,7 @@ namespace BEPUphysics.Character
                 }
                 else
                 {
-                    Vector3.Multiply(ref supportData.Normal, F64.C1 / Fix64.Sqrt(length), out supportData.Normal);
+                    BepuVector3.Multiply(ref supportData.Normal, F64.C1 / Fix64.Sqrt(length), out supportData.Normal);
                 }
             }
             //Now that we have the normal, cycle through all the contacts again and find the deepest projected depth.
@@ -123,7 +123,7 @@ namespace BEPUphysics.Character
             for (int i = 0; i < contacts.Count; i++)
             {
                 Fix64 dot;
-                Vector3.Dot(ref contacts.Elements[i].Contact.Normal, ref supportData.Normal, out dot);
+                BepuVector3.Dot(ref contacts.Elements[i].Contact.Normal, ref supportData.Normal, out dot);
                 dot = dot * contacts.Elements[i].Contact.PenetrationDepth;
                 if (dot > depth)
                 {
@@ -151,7 +151,7 @@ namespace BEPUphysics.Character
         /// </summary>
         /// <param name="down">Down direction of the character.</param>
         /// <param name="movementDirection">Movement direction of the character.</param>
-        private void UpdateVerticalSupportData(ref Vector3 down, ref Vector3 movementDirection)
+        private void UpdateVerticalSupportData(ref BepuVector3 down, ref BepuVector3 movementDirection)
         {
             if (HasTraction)
             {
@@ -163,7 +163,7 @@ namespace BEPUphysics.Character
                     for (int i = 0; i < tractionContacts.Count; i++)
                     {
                         Fix64 dot;
-                        Vector3.Dot(ref movementDirection, ref tractionContacts.Elements[i].Contact.Normal, out dot);
+                        BepuVector3.Dot(ref movementDirection, ref tractionContacts.Elements[i].Contact.Normal, out dot);
                         if (dot > greatestDot)
                         {
                             greatestDot = dot;
@@ -181,7 +181,7 @@ namespace BEPUphysics.Character
                     for (int i = 0; i < tractionContacts.Count; i++)
                     {
                         Fix64 dot;
-                        Vector3.Dot(ref tractionContacts.Elements[i].Contact.Normal, ref verticalSupportData.Normal, out dot);
+                        BepuVector3.Dot(ref tractionContacts.Elements[i].Contact.Normal, ref verticalSupportData.Normal, out dot);
                         dot = dot * tractionContacts.Elements[i].Contact.PenetrationDepth;
                         if (dot > depth)
                         {
@@ -196,7 +196,7 @@ namespace BEPUphysics.Character
                 Debug.Assert(SupportRayData != null, "If the character has traction but there are no contacts, there must be a ray cast with traction.");
                 verticalSupportData.Position = SupportRayData.Value.HitData.Location;
                 verticalSupportData.Normal = SupportRayData.Value.HitData.Normal;
-                verticalSupportData.Depth = Vector3.Dot(down, SupportRayData.Value.HitData.Normal) * (BottomDistance - SupportRayData.Value.HitData.T);
+                verticalSupportData.Depth = BepuVector3.Dot(down, SupportRayData.Value.HitData.Normal) * (BottomDistance - SupportRayData.Value.HitData.T);
                 verticalSupportData.SupportObject = SupportRayData.Value.HitObject;
                 return;
             }
@@ -287,7 +287,7 @@ namespace BEPUphysics.Character
         /// <summary>
         /// Updates the collection of supporting contacts.
         /// </summary>
-        public void UpdateSupports(ref Vector3 movementDirection)
+        public void UpdateSupports(ref BepuVector3 movementDirection)
         {
             bool hadTraction = HasTraction;
 
@@ -295,12 +295,12 @@ namespace BEPUphysics.Character
             HasTraction = false;
             HasSupport = false;
 
-            Vector3 downDirection = characterBody.orientationMatrix.Down;
-            Vector3 bodyPosition = characterBody.position;
+            BepuVector3 downDirection = characterBody.orientationMatrix.Down;
+            BepuVector3 bodyPosition = characterBody.position;
 
             //Compute the character's radius, minus a little margin. We want the rays to originate safely within the character's body.
             //Assume vertical rotational invariance. Spheres, cylinders, and capsules don't have varying horizontal radii.
-            Vector3 extremePoint;
+            BepuVector3 extremePoint;
             var convexShape = characterBody.CollisionInformation.Shape as ConvexShape;
             Debug.Assert(convexShape != null, "Character bodies must be convex.");
 
@@ -398,9 +398,9 @@ namespace BEPUphysics.Character
                 if (!HasTraction && tryingToMove)
                 {
                     //Compute the horizontal offset direction.  Down direction and the movement direction are normalized and perpendicular, so the result is too.
-                    Vector3 horizontalOffset;
-                    Vector3.Cross(ref movementDirection, ref downDirection, out horizontalOffset);
-                    Vector3.Multiply(ref horizontalOffset, rayCastInnerRadius, out horizontalOffset);
+                    BepuVector3 horizontalOffset;
+                    BepuVector3.Cross(ref movementDirection, ref downDirection, out horizontalOffset);
+                    BepuVector3.Multiply(ref horizontalOffset, rayCastInnerRadius, out horizontalOffset);
                     Ray ray = new Ray(bodyPosition + horizontalOffset, downDirection);
 
                     //Have to test to make sure the ray doesn't get obstructed.  This could happen if the character is deeply embedded in a wall; we wouldn't want it detecting things inside the wall as a support!
@@ -435,9 +435,9 @@ namespace BEPUphysics.Character
                 if (!HasTraction && tryingToMove)
                 {
                     //Compute the horizontal offset direction.  Down direction and the movement direction are normalized and perpendicular, so the result is too.
-                    Vector3 horizontalOffset;
-                    Vector3.Cross(ref downDirection, ref movementDirection, out horizontalOffset);
-                    Vector3.Multiply(ref horizontalOffset, rayCastInnerRadius, out horizontalOffset);
+                    BepuVector3 horizontalOffset;
+                    BepuVector3.Cross(ref downDirection, ref movementDirection, out horizontalOffset);
+                    BepuVector3.Multiply(ref horizontalOffset, rayCastInnerRadius, out horizontalOffset);
                     Ray ray = new Ray(bodyPosition + horizontalOffset, downDirection);
 
                     //Have to test to make sure the ray doesn't get obstructed.  This could happen if the character is deeply embedded in a wall; we wouldn't want it detecting things inside the wall as a support!
@@ -488,15 +488,15 @@ namespace BEPUphysics.Character
                     //Don't try to continue if the support ray is stuck in something.
                     return false;
                 }
-                Vector3.Divide(ref earliestHit.Normal, Fix64.Sqrt(lengthSquared), out earliestHit.Normal);
+                BepuVector3.Divide(ref earliestHit.Normal, Fix64.Sqrt(lengthSquared), out earliestHit.Normal);
                 //A collidable was hit!  It's a support, but does it provide traction?
                 earliestHit.Normal.Normalize();
                 Fix64 dot;
-                Vector3.Dot(ref ray.Direction, ref earliestHit.Normal, out dot);
+                BepuVector3.Dot(ref ray.Direction, ref earliestHit.Normal, out dot);
                 if (dot < F64.C0)
                 {
                     //Calibrate the normal so it always faces the same direction relative to the body.
-                    Vector3.Negate(ref earliestHit.Normal, out earliestHit.Normal);
+                    BepuVector3.Negate(ref earliestHit.Normal, out earliestHit.Normal);
                     dot = -dot;
                 }
                 //This down cast is only used for finding supports and traction, not for finding side contacts.
@@ -530,7 +530,7 @@ namespace BEPUphysics.Character
             foreach (var c in SideContacts)
             {
                 //An existing contact is considered 'deeper' if its normal-adjusted depth is greater than the new contact.
-                Fix64 dot = Vector3.Dot(contact.Normal, c.Contact.Normal);
+                Fix64 dot = BepuVector3.Dot(contact.Normal, c.Contact.Normal);
                 Fix64 depth = dot * c.Contact.PenetrationDepth + Toolbox.BigEpsilon;
                 if (depth >= contact.PenetrationDepth)
                     return false;
@@ -602,11 +602,11 @@ namespace BEPUphysics.Character
         /// <summary>
         /// Position of the support.
         /// </summary>
-        public Vector3 Position;
+        public BepuVector3 Position;
         /// <summary>
         /// Normal of the support.
         /// </summary>
-        public Vector3 Normal;
+        public BepuVector3 Normal;
         /// <summary>
         /// Depth of the supporting location.
         /// Can be negative in the case of raycast supports.

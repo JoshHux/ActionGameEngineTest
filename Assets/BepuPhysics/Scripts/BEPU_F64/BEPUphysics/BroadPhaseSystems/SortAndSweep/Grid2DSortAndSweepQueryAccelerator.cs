@@ -42,7 +42,7 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
             //Test against each bounding box up until the exit value is reached.
             Fix64 length = F64.C0;
             Int2 cellIndex;
-            Vector3 currentPosition = ray.Position;
+            BepuVector3 currentPosition = ray.Position;
             Grid2DSortAndSweep.ComputeCell(ref currentPosition, out cellIndex);
             while (true)
             {
@@ -100,9 +100,9 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
                 length += nextT;
                 if (length > maximumLength) //Note that this catches the case in which the ray is pointing right down the middle of a row (resulting in a nextT of 10e10f).
                     break;
-                Vector3 offset;
-                Vector3.Multiply(ref ray.Direction, nextT, out offset);
-                Vector3.Add(ref offset, ref currentPosition, out currentPosition);
+                BepuVector3 offset;
+                BepuVector3.Multiply(ref ray.Direction, nextT, out offset);
+                BepuVector3.Add(ref offset, ref currentPosition, out currentPosition);
                 if (yIsMinimum)
                     if (ray.Direction.Y < F64.C0)
                         cellIndex.Y -= 1;
@@ -164,16 +164,16 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
             //Compute the min and max of the bounding box.
             //Loop through the cells and select bounding boxes which overlap the x axis.
 #if !WINDOWS
-            Vector3 offset = new Vector3();
+            BepuVector3 offset = new BepuVector3();
 #else
-            Vector3 offset;
+            BepuVector3 offset;
 #endif
             offset.X = boundingShape.Radius;
             offset.Y = offset.X;
             offset.Z = offset.Y;
             BoundingBox box;
-            Vector3.Add(ref boundingShape.Center, ref offset, out box.Max);
-            Vector3.Subtract(ref boundingShape.Center, ref offset, out box.Min);
+            BepuVector3.Add(ref boundingShape.Center, ref offset, out box.Max);
+            BepuVector3.Subtract(ref boundingShape.Center, ref offset, out box.Min);
 
             Int2 min, max;
             Grid2DSortAndSweep.ComputeCell(ref box.Min, out min);

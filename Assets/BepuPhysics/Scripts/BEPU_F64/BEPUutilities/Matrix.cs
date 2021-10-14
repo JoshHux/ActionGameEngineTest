@@ -136,11 +136,11 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the translation component of the transform.
         /// </summary>
-        public Vector3 Translation
+        public BepuVector3 Translation
         {
             get
             {
-                return new Vector3()
+                return new BepuVector3()
                 {
                     X = M41,
                     Y = M42,
@@ -158,14 +158,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the backward vector of the matrix.
         /// </summary>
-        public Vector3 Backward
+        public BepuVector3 Backward
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = M31;
                 vector.Y = M32;
@@ -183,14 +183,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the down vector of the matrix.
         /// </summary>
-        public Vector3 Down
+        public BepuVector3 Down
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = -M21;
                 vector.Y = -M22;
@@ -208,14 +208,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the forward vector of the matrix.
         /// </summary>
-        public Vector3 Forward
+        public BepuVector3 Forward
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = -M31;
                 vector.Y = -M32;
@@ -233,14 +233,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the left vector of the matrix.
         /// </summary>
-        public Vector3 Left
+        public BepuVector3 Left
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = -M11;
                 vector.Y = -M12;
@@ -258,14 +258,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the right vector of the matrix.
         /// </summary>
-        public Vector3 Right
+        public BepuVector3 Right
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = M11;
                 vector.Y = M12;
@@ -283,14 +283,14 @@ namespace BEPUutilities
         /// <summary>
         /// Gets or sets the up vector of the matrix.
         /// </summary>
-        public Vector3 Up
+        public BepuVector3 Up
         {
             get
             {
 #if !WINDOWS
-                Vector3 vector = new Vector3();
+                BepuVector3 vector = new BepuVector3();
 #else
-                Vector3 vector;
+                BepuVector3 vector;
 #endif
                 vector.X = M21;
                 vector.Y = M22;
@@ -362,7 +362,7 @@ namespace BEPUutilities
         /// <param name="axis">Axis around which to rotate.</param>
         /// <param name="angle">Angle to rotate around the axis.</param>
         /// <returns>Matrix created from the axis and angle.</returns>
-        public static Matrix CreateFromAxisAngle(Vector3 axis, Fix64 angle)
+        public static Matrix CreateFromAxisAngle(BepuVector3 axis, Fix64 angle)
         {
             Matrix toReturn;
             CreateFromAxisAngle(ref axis, angle, out toReturn);
@@ -375,7 +375,7 @@ namespace BEPUutilities
         /// <param name="axis">Axis around which to rotate.</param>
         /// <param name="angle">Angle to rotate around the axis.</param>
         /// <param name="result">Matrix created from the axis and angle.</param>
-        public static void CreateFromAxisAngle(ref Vector3 axis, Fix64 angle, out Matrix result)
+        public static void CreateFromAxisAngle(ref BepuVector3 axis, Fix64 angle, out Matrix result)
         {
             Fix64 xx = axis.X * axis.X;
             Fix64 yy = axis.Y * axis.Y;
@@ -409,24 +409,24 @@ namespace BEPUutilities
         }
 
         /// <summary>
-        /// Creates a rotation matrix from a quaternion.
+        /// Creates a rotation matrix from a BepuQuaternion.
         /// </summary>
-        /// <param name="quaternion">Quaternion to convert.</param>
-        /// <param name="result">Rotation matrix created from the quaternion.</param>
-        public static void CreateFromQuaternion(ref Quaternion quaternion, out Matrix result)
+        /// <param name="BepuQuaternion">BepuQuaternion to convert.</param>
+        /// <param name="result">Rotation matrix created from the BepuQuaternion.</param>
+        public static void CreateFromBepuQuaternion(ref BepuQuaternion BepuQuaternion, out Matrix result)
         {
-            Fix64 qX2 = quaternion.X + quaternion.X;
-            Fix64 qY2 = quaternion.Y + quaternion.Y;
-            Fix64 qZ2 = quaternion.Z + quaternion.Z;
-            Fix64 XX = qX2 * quaternion.X;
-            Fix64 YY = qY2 * quaternion.Y;
-            Fix64 ZZ = qZ2 * quaternion.Z;
-            Fix64 XY = qX2 * quaternion.Y;
-            Fix64 XZ = qX2 * quaternion.Z;
-            Fix64 XW = qX2 * quaternion.W;
-            Fix64 YZ = qY2 * quaternion.Z;
-            Fix64 YW = qY2 * quaternion.W;
-            Fix64 ZW = qZ2 * quaternion.W;
+            Fix64 qX2 = BepuQuaternion.X + BepuQuaternion.X;
+            Fix64 qY2 = BepuQuaternion.Y + BepuQuaternion.Y;
+            Fix64 qZ2 = BepuQuaternion.Z + BepuQuaternion.Z;
+            Fix64 XX = qX2 * BepuQuaternion.X;
+            Fix64 YY = qY2 * BepuQuaternion.Y;
+            Fix64 ZZ = qZ2 * BepuQuaternion.Z;
+            Fix64 XY = qX2 * BepuQuaternion.Y;
+            Fix64 XZ = qX2 * BepuQuaternion.Z;
+            Fix64 XW = qX2 * BepuQuaternion.W;
+            Fix64 YZ = qY2 * BepuQuaternion.Z;
+            Fix64 YW = qY2 * BepuQuaternion.W;
+            Fix64 ZW = qZ2 * BepuQuaternion.W;
 
             result.M11 = F64.C1 - YY - ZZ;
             result.M21 = XY - ZW;
@@ -450,14 +450,14 @@ namespace BEPUutilities
         }
 
         /// <summary>
-        /// Creates a rotation matrix from a quaternion.
+        /// Creates a rotation matrix from a BepuQuaternion.
         /// </summary>
-        /// <param name="quaternion">Quaternion to convert.</param>
-        /// <returns>Rotation matrix created from the quaternion.</returns>
-        public static Matrix CreateFromQuaternion(Quaternion quaternion)
+        /// <param name="BepuQuaternion">BepuQuaternion to convert.</param>
+        /// <returns>Rotation matrix created from the BepuQuaternion.</returns>
+        public static Matrix CreateFromBepuQuaternion(BepuQuaternion BepuQuaternion)
         {
             Matrix toReturn;
-            CreateFromQuaternion(ref quaternion, out toReturn);
+            CreateFromBepuQuaternion(ref BepuQuaternion, out toReturn);
             return toReturn;
         }
 
@@ -599,7 +599,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void Transform(ref Vector4 v, ref Matrix matrix, out Vector4 result)
+        public static void Transform(ref BepuVector4 v, ref Matrix matrix, out BepuVector4 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
@@ -617,9 +617,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to apply to the vector.</param>
         /// <returns>Transformed vector.</returns>
-        public static Vector4 Transform(Vector4 v, Matrix matrix)
+        public static BepuVector4 Transform(BepuVector4 v, Matrix matrix)
         {
-            Vector4 toReturn;
+            BepuVector4 toReturn;
             Transform(ref v, ref matrix, out toReturn);
             return toReturn;
         }
@@ -630,7 +630,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void TransformTranspose(ref Vector4 v, ref Matrix matrix, out Vector4 result)
+        public static void TransformTranspose(ref BepuVector4 v, ref Matrix matrix, out BepuVector4 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
@@ -648,9 +648,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
         /// <returns>Transformed vector.</returns>
-        public static Vector4 TransformTranspose(Vector4 v, Matrix matrix)
+        public static BepuVector4 TransformTranspose(BepuVector4 v, Matrix matrix)
         {
-            Vector4 toReturn;
+            BepuVector4 toReturn;
             TransformTranspose(ref v, ref matrix, out toReturn);
             return toReturn;
         }
@@ -661,7 +661,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void Transform(ref Vector3 v, ref Matrix matrix, out Vector4 result)
+        public static void Transform(ref BepuVector3 v, ref Matrix matrix, out BepuVector4 result)
         {
             result.X = v.X * matrix.M11 + v.Y * matrix.M21 + v.Z * matrix.M31 + matrix.M41;
             result.Y = v.X * matrix.M12 + v.Y * matrix.M22 + v.Z * matrix.M32 + matrix.M42;
@@ -675,9 +675,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to apply to the vector.</param>
         /// <returns>Transformed vector.</returns>
-        public static Vector4 Transform(Vector3 v, Matrix matrix)
+        public static BepuVector4 Transform(BepuVector3 v, Matrix matrix)
         {
-            Vector4 toReturn;
+            BepuVector4 toReturn;
             Transform(ref v, ref matrix, out toReturn);
             return toReturn;
         }
@@ -688,7 +688,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void TransformTranspose(ref Vector3 v, ref Matrix matrix, out Vector4 result)
+        public static void TransformTranspose(ref BepuVector3 v, ref Matrix matrix, out BepuVector4 result)
         {
             result.X = v.X * matrix.M11 + v.Y * matrix.M12 + v.Z * matrix.M13 + matrix.M14;
             result.Y = v.X * matrix.M21 + v.Y * matrix.M22 + v.Z * matrix.M23 + matrix.M24;
@@ -702,9 +702,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
         /// <returns>Transformed vector.</returns>
-        public static Vector4 TransformTranspose(Vector3 v, Matrix matrix)
+        public static BepuVector4 TransformTranspose(BepuVector3 v, Matrix matrix)
         {
-            Vector4 toReturn;
+            BepuVector4 toReturn;
             TransformTranspose(ref v, ref matrix, out toReturn);
             return toReturn;
         }
@@ -715,7 +715,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void Transform(ref Vector3 v, ref Matrix matrix, out Vector3 result)
+        public static void Transform(ref BepuVector3 v, ref Matrix matrix, out BepuVector3 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
@@ -731,7 +731,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void TransformTranspose(ref Vector3 v, ref Matrix matrix, out Vector3 result)
+        public static void TransformTranspose(ref BepuVector3 v, ref Matrix matrix, out BepuVector3 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
@@ -747,7 +747,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void TransformNormal(ref Vector3 v, ref Matrix matrix, out Vector3 result)
+        public static void TransformNormal(ref BepuVector3 v, ref Matrix matrix, out BepuVector3 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
@@ -763,9 +763,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to apply to the vector.</param>
         /// <returns>Transformed vector.</returns>
-        public static Vector3 TransformNormal(Vector3 v, Matrix matrix)
+        public static BepuVector3 TransformNormal(BepuVector3 v, Matrix matrix)
         {
-            Vector3 toReturn;
+            BepuVector3 toReturn;
             TransformNormal(ref v, ref matrix, out toReturn);
             return toReturn;
         }
@@ -776,7 +776,7 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
         /// <param name="result">Transformed vector.</param>
-        public static void TransformNormalTranspose(ref Vector3 v, ref Matrix matrix, out Vector3 result)
+        public static void TransformNormalTranspose(ref BepuVector3 v, ref Matrix matrix, out BepuVector3 result)
         {
             Fix64 vX = v.X;
             Fix64 vY = v.Y;
@@ -792,9 +792,9 @@ namespace BEPUutilities
         /// <param name="v">Vector to transform.</param>
         /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
         /// <returns>Transformed vector.</returns>
-        public static Vector3 TransformNormalTranspose(Vector3 v, Matrix matrix)
+        public static BepuVector3 TransformNormalTranspose(BepuVector3 v, Matrix matrix)
         {
-            Vector3 toReturn;
+            BepuVector3 toReturn;
             TransformNormalTranspose(ref v, ref matrix, out toReturn);
             return toReturn;
         }
@@ -1034,10 +1034,10 @@ namespace BEPUutilities
         /// <param name="target">Target of the camera.</param>
         /// <param name="upVector">Up vector of the camera.</param>
         /// <param name="viewMatrix">Look at matrix.</param>
-        public static void CreateLookAtRH(ref Vector3 position, ref Vector3 target, ref Vector3 upVector, out Matrix viewMatrix)
+        public static void CreateLookAtRH(ref BepuVector3 position, ref BepuVector3 target, ref BepuVector3 upVector, out Matrix viewMatrix)
         {
-            Vector3 forward;
-            Vector3.Subtract(ref target, ref position, out forward);
+            BepuVector3 forward;
+            BepuVector3.Subtract(ref target, ref position, out forward);
             CreateViewRH(ref position, ref forward, ref upVector, out viewMatrix);
         }
 
@@ -1048,11 +1048,11 @@ namespace BEPUutilities
         /// <param name="target">Target of the camera.</param>
         /// <param name="upVector">Up vector of the camera.</param>
         /// <returns>Look at matrix.</returns>
-        public static Matrix CreateLookAtRH(Vector3 position, Vector3 target, Vector3 upVector)
+        public static Matrix CreateLookAtRH(BepuVector3 position, BepuVector3 target, BepuVector3 upVector)
         {
             Matrix lookAt;
-            Vector3 forward;
-            Vector3.Subtract(ref target, ref position, out forward);
+            BepuVector3 forward;
+            BepuVector3.Subtract(ref target, ref position, out forward);
             CreateViewRH(ref position, ref forward, ref upVector, out lookAt);
             return lookAt;
         }
@@ -1065,16 +1065,16 @@ namespace BEPUutilities
         /// <param name="forward">Forward direction of the camera.</param>
         /// <param name="upVector">Up vector of the camera.</param>
         /// <param name="viewMatrix">Look at matrix.</param>
-        public static void CreateViewRH(ref Vector3 position, ref Vector3 forward, ref Vector3 upVector, out Matrix viewMatrix)
+        public static void CreateViewRH(ref BepuVector3 position, ref BepuVector3 forward, ref BepuVector3 upVector, out Matrix viewMatrix)
         {
-            Vector3 z;
+            BepuVector3 z;
             Fix64 length = forward.Length();
-            Vector3.Divide(ref forward, -length, out z);
-            Vector3 x;
-            Vector3.Cross(ref upVector, ref z, out x);
+            BepuVector3.Divide(ref forward, -length, out z);
+            BepuVector3 x;
+            BepuVector3.Cross(ref upVector, ref z, out x);
             x.Normalize();
-            Vector3 y;
-            Vector3.Cross(ref z, ref x, out y);
+            BepuVector3 y;
+            BepuVector3.Cross(ref z, ref x, out y);
 
             viewMatrix.M11 = x.X;
             viewMatrix.M12 = y.X;
@@ -1088,9 +1088,9 @@ namespace BEPUutilities
             viewMatrix.M32 = y.Z;
             viewMatrix.M33 = z.Z;
             viewMatrix.M34 = F64.C0;
-            Vector3.Dot(ref x, ref position, out viewMatrix.M41);
-            Vector3.Dot(ref y, ref position, out viewMatrix.M42);
-            Vector3.Dot(ref z, ref position, out viewMatrix.M43);
+            BepuVector3.Dot(ref x, ref position, out viewMatrix.M41);
+            BepuVector3.Dot(ref y, ref position, out viewMatrix.M42);
+            BepuVector3.Dot(ref z, ref position, out viewMatrix.M43);
             viewMatrix.M41 = -viewMatrix.M41;
             viewMatrix.M42 = -viewMatrix.M42;
             viewMatrix.M43 = -viewMatrix.M43;
@@ -1105,7 +1105,7 @@ namespace BEPUutilities
         /// <param name="forward">Forward direction of the camera.</param>
         /// <param name="upVector">Up vector of the camera.</param>
         /// <returns>Look at matrix.</returns>
-        public static Matrix CreateViewRH(Vector3 position, Vector3 forward, Vector3 upVector)
+        public static Matrix CreateViewRH(BepuVector3 position, BepuVector3 forward, BepuVector3 upVector)
         {
             Matrix lookat;
             CreateViewRH(ref position, ref forward, ref upVector, out lookat);
@@ -1121,16 +1121,16 @@ namespace BEPUutilities
         /// <param name="forward">Forward direction of the transformation.</param>
         /// <param name="upVector">Up vector which is crossed against the forward vector to compute the transform's basis.</param>
         /// <param name="worldMatrix">World matrix.</param>
-        public static void CreateWorldRH(ref Vector3 position, ref Vector3 forward, ref Vector3 upVector, out Matrix worldMatrix)
+        public static void CreateWorldRH(ref BepuVector3 position, ref BepuVector3 forward, ref BepuVector3 upVector, out Matrix worldMatrix)
         {
-            Vector3 z;
+            BepuVector3 z;
             Fix64 length = forward.Length();
-            Vector3.Divide(ref forward, -length, out z);
-            Vector3 x;
-            Vector3.Cross(ref upVector, ref z, out x);
+            BepuVector3.Divide(ref forward, -length, out z);
+            BepuVector3 x;
+            BepuVector3.Cross(ref upVector, ref z, out x);
             x.Normalize();
-            Vector3 y;
-            Vector3.Cross(ref z, ref x, out y);
+            BepuVector3 y;
+            BepuVector3.Cross(ref z, ref x, out y);
 
             worldMatrix.M11 = x.X;
             worldMatrix.M12 = x.Y;
@@ -1160,7 +1160,7 @@ namespace BEPUutilities
         /// <param name="forward">Forward direction of the transformation.</param>
         /// <param name="upVector">Up vector which is crossed against the forward vector to compute the transform's basis.</param>
         /// <returns>World matrix.</returns>
-        public static Matrix CreateWorldRH(Vector3 position, Vector3 forward, Vector3 upVector)
+        public static Matrix CreateWorldRH(BepuVector3 position, BepuVector3 forward, BepuVector3 upVector)
         {
             Matrix lookat;
             CreateWorldRH(ref position, ref forward, ref upVector, out lookat);
@@ -1174,7 +1174,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="translation">Translation to be represented by the matrix.</param>
         /// <param name="translationMatrix">Matrix representing the given translation.</param>
-        public static void CreateTranslation(ref Vector3 translation, out Matrix translationMatrix)
+        public static void CreateTranslation(ref BepuVector3 translation, out Matrix translationMatrix)
         {
             translationMatrix = new Matrix
             {
@@ -1193,7 +1193,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="translation">Translation to be represented by the matrix.</param>
         /// <returns>Matrix representing the given translation.</returns>
-        public static Matrix CreateTranslation(Vector3 translation)
+        public static Matrix CreateTranslation(BepuVector3 translation)
         {
             Matrix translationMatrix;
             CreateTranslation(ref translation, out translationMatrix);
@@ -1205,7 +1205,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="scale">Scale to be represented by the matrix.</param>
         /// <param name="scaleMatrix">Matrix representing the given scale.</param>
-        public static void CreateScale(ref Vector3 scale, out Matrix scaleMatrix)
+        public static void CreateScale(ref BepuVector3 scale, out Matrix scaleMatrix)
         {
             scaleMatrix = new Matrix
                 {
@@ -1221,7 +1221,7 @@ namespace BEPUutilities
         /// </summary>
         /// <param name="scale">Scale to be represented by the matrix.</param>
         /// <returns>Matrix representing the given scale.</returns>
-        public static Matrix CreateScale(Vector3 scale)
+        public static Matrix CreateScale(BepuVector3 scale)
         {
             Matrix scaleMatrix;
             CreateScale(ref scale, out scaleMatrix);
