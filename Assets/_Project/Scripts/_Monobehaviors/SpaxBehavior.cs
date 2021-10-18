@@ -24,10 +24,10 @@ namespace Spax
                     manager.StateCleanUpdate += (() => StateCleanUpdate());
                     manager.PreUpdate += (() => PreUpdate());
                     manager.SpaxUpdate += (() => SpaxUpdate());
-                    manager.PostUpdate += (() => PostUpdate());
                     manager.HitQueryUpdate += (() => HitboxQueryUpdate());
                     manager.HurtQueryUpdate += (() => HurtboxQueryUpdate());
                     manager.RenderUpdate += (() => RenderUpdate());
+                    manager.PostUpdate += (() => PostUpdate());
                     //Debug.Log("starting: " + gameObject.name);
                 }
                 this.OnStart();
@@ -45,8 +45,9 @@ namespace Spax
         protected virtual void HitboxQueryUpdate() { }
 
         protected virtual void HurtboxQueryUpdate() { }
-
         protected virtual void PostUpdate() { }
+
+
         protected virtual void RenderUpdate() { }
     }
 }

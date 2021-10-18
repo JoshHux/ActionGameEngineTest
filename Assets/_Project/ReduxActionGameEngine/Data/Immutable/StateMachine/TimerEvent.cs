@@ -10,7 +10,7 @@ namespace ActionGameEngine.Data
         //how long the timer lasts
         public int TimerDuration;
 
-        //what conditions to add while timer is running
+        //conditions to toggle when the state ends
         public StateCondition conditions;
 
         //whether or not to have timer last beyond the state,

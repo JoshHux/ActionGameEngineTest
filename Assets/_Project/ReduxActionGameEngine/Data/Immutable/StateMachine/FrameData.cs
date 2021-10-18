@@ -17,11 +17,5 @@ namespace ActionGameEngine.Data
         public FrameEventFlag flags;
 
         public BepuVector3 frameVelocity;
-
-        //call to check if there's a timer event event to check or not
-        public bool HasTimerEvent()
-        {
-            return timerEvent.TimerDuration > 0;
-        }
     }
 }

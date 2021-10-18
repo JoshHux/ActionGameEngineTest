@@ -17,6 +17,14 @@ namespace ActionGameEngine.Enum
         E = 1 << 12,
         F = 1 << 13,
         G = 1 << 14,
-        H = 1 << 15
+        H = 1 << 15,
+        X_NONZERO = _1 | _4 | _7 | _3 | _6 | _9,
+        Y_NONZERO = _1 | _2 | _3 | _7 | _8 | _9,
+        X_POSITIVE = _3 | _6 | _9,
+        Y_POSITIVE = _7 | _8 | _9,
+        X_NEGATIVE = _1 | _4 | _7,
+        Y_NEGATIVE = _1 | _2 | _3,
+        X_ZERO = _2 | _8,
+        Y_ZERO = _4 | _6,
     }
 }

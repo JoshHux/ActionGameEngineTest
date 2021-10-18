@@ -5,8 +5,6 @@ namespace ActionGameEngine.Input
     //4+3*x bytes
     public struct Command
     {
-        //state to transition to is the command input is met
-        public int state;
         public InputFragment[] commandInput;
 
         public bool Check(InputFragment[] playerInputs)

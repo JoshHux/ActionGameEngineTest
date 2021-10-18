@@ -19,14 +19,41 @@ namespace ActionGameEngine.Input
         //1<<11 btn F
         //1<<12 btn G
         //1<<13 btn H
-        //1<<14 btn I
-        //1<<15 btn J
+        //1<<14 btn start
+        //1<<15 btn select
         public short input;
 
+        //for reading from json, so making commands can be more user-readable
         public InputItem(DigitalInput npt)
         {
-            if (EnumHelper.HasEnum((int)npt, (int)(DigitalInput._1 | DigitalInput._4 | DigitalInput._7 | DigitalInput._3 | DigitalInput._6 | DigitalInput._9))) { }
             input = 0;
+
+            //if has a nonzero x value
+            if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.X_NONZERO))
+            {
+                input |= 1 << 1;
+                //if x value is negative
+                //don't need else since we only change the bit when it's negative
+                if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.X_NEGATIVE))
+                {
+                    input |= 1 << 0;
+                }
+            }
+
+            //if has a nonzero y value
+            if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.Y_NONZERO))
+            {
+                input |= 1 << 3;
+                //if y value is negative
+                //don't need else since we only change the bit when it's negative
+                if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.Y_NEGATIVE))
+                {
+                    input |= 1 << 2;
+                }
+            }
         }
+
+        //TODO: add method to convert the information in the short to DigitalInput
+
     }
 }

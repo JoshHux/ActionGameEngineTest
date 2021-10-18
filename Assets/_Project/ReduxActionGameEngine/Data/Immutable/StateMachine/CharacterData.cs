@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using FixMath.NET;
-using UnityEngine;
 
 namespace ActionGameEngine.Data
 {
@@ -14,5 +11,6 @@ namespace ActionGameEngine.Data
         public Fix64 mass;
 
         public StateData[] stateList;
+        public CommandList moveList;
     }
 }

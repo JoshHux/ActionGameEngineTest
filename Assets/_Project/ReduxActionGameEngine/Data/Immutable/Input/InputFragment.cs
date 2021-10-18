@@ -5,12 +5,12 @@ namespace ActionGameEngine.Input
     //3 bytes
     public struct InputFragment
     {
-        public InputItem input;
+        public InputItem inputItem;
         public InputFlags flags;
 
         public bool Check(InputFragment frag)
         {
-            return EnumHelper.HasEnum((int)frag.input.input, (int)this.input.input, true) && EnumHelper.HasEnum((int)frag.flags, (int)this.flags, true);
+            return EnumHelper.HasEnum((int)frag.inputItem.input, (int)this.inputItem.input, true) && EnumHelper.HasEnum((int)frag.flags, (int)this.flags, true);
         }
     }
 }

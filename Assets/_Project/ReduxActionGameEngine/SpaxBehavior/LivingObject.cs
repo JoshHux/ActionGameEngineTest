@@ -44,7 +44,7 @@ namespace ActionGameEngine
             else
             {
                 Debug
-                    .LogError("Invalid HitType, must have GRAB or STRIKE tag at least");
+                    .LogError("Invalid HitType, must have GRAB or STRIKE tag");
             }
         }
     }

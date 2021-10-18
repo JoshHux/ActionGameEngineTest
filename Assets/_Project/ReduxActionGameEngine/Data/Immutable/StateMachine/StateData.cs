@@ -18,6 +18,9 @@ namespace ActionGameEngine.Data
         //characteristics of state
         public StateCondition conditions;
 
+        //possible transitions
+        public TransitionData[] transitions;
+
         //frames of state
         public FrameData[] frames;
     }
