@@ -11,7 +11,11 @@ namespace ActionGameEngine.Enum
         APPLY_GRAV = 1 << 2,
         APPLY_FRICTION = 1 << 3,
         STUNNED = 1 << 4,
-        TECHABLE = 1 << 5,
+        //for grabs, makes sure you're only hit by the hit that knocks you out of the grab
+        //can also be used for cinematic supers
+        STUNNED_SPECIAL = 1 << 4,
+        AIR_TECHABLE = 1 << 5,
+        GRAB_TECHABLE = 1 << 5,
         COUNTER_HIT = 1 << 6,
         INVULNERABLE_STRIKE = 1 << 7,
         INVULNERABLE_GRAB = 1 << 8,
