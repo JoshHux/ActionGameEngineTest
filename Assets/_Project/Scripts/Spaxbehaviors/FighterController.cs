@@ -3,6 +3,7 @@ using BEPUutilities;
 using FixMath.NET;
 using Spax.Input;
 using Spax.StateMachine;
+using Spax.Interfaces;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -108,7 +109,7 @@ public class FighterController : MovementObject, IDamageable, IDamager
                 {
                     Debug.Log("kljfa;dsjk;ldsfa");
                 }*/
-                TransitionNewState (exitCond, newState);
+                TransitionNewState(exitCond, newState);
                 timer.StartTimer(enemyTarget.GetTimeLeftInState());
             }
         }
@@ -128,7 +129,7 @@ public class FighterController : MovementObject, IDamageable, IDamager
             //if there is a frame to apply some stuff, do it
             if (data.GetState().FindFrame(timer.ElapsedTime(), ref refFrame))
             {
-                ApplyStateFrame (refFrame);
+                ApplyStateFrame(refFrame);
             }
 
             StateConditions curCond = data.GetStateConditions();
@@ -270,7 +271,7 @@ public class FighterController : MovementObject, IDamageable, IDamager
         if (opposingData.priority > -1)
         {
             //Debug.Log("reached");
-            this.Animator.SetInteger("Hittype", (int) opposingData.renderType);
+            this.Animator.SetInteger("Hittype", (int)opposingData.renderType);
         }
 
         //this.Animator.SetInteger
@@ -398,13 +399,13 @@ public class FighterController : MovementObject, IDamageable, IDamager
         }
 
         //exit block state
-        if ((cond & (int) ExitStateConditions.CAUSE_FOR_BLOCK) > 0)
+        if ((cond & (int)ExitStateConditions.CAUSE_FOR_BLOCK) > 0)
         {
             data.RemoveCancelCondition(CancelCondition.CAUSE_FOR_BLOCK);
         }
 
         //exit stun state
-        if ((cond & (int) ExitStateConditions.EXIT_STUN) > 0)
+        if ((cond & (int)ExitStateConditions.EXIT_STUN) > 0)
         {
             //Debug.Log("exit stun");
             data.RemoveTransitionCondition(TransitionCondition.GET_HIT);

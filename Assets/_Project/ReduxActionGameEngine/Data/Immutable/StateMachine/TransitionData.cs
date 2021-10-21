@@ -18,7 +18,7 @@ namespace ActionGameEngine.Data
         public TransitionEvent transitionEvent;
 
 
-        public bool Check(InputFragment[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond)
+        public bool Check(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond)
         {
             return EnumHelper.HasEnum((int)playerCond, (int)cancelConditions) && EnumHelper.HasEnum((int)playerFlags, (int)transitionFlag, true) && cmdMotion.Check(playerInputs);
         }

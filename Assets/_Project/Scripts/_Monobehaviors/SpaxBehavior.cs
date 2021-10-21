@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
-using Spax.Input;
 
 namespace Spax
 {
@@ -21,6 +19,7 @@ namespace Spax
                 if (manager != null)
                 {
                     manager.InputUpdate += (() => InputUpdate());
+                    manager.StateUpdate += (() => StateUpdate());
                     manager.StateCleanUpdate += (() => StateCleanUpdate());
                     manager.PreUpdate += (() => PreUpdate());
                     manager.SpaxUpdate += (() => SpaxUpdate());
@@ -37,6 +36,8 @@ namespace Spax
         protected virtual void OnStart() { }
         protected virtual void OnAwake() { }
         protected virtual void InputUpdate() { }
+
+        protected virtual void StateUpdate() { }
         //get it? It's a pun!...
         //this naming is gonna bite me later, I just know it...
         protected virtual void StateCleanUpdate() { }

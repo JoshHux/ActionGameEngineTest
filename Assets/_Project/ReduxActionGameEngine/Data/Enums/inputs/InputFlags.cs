@@ -1,6 +1,7 @@
 namespace ActionGameEngine.Enum
 {
     //represents specific events that the input occured with
+    //ONLY RELEVANT WHEN CHECKING INPUT FOR TRANSITION/COMMAND
     public enum InputFlags : byte
     {
         PRESSED = 1 << 0,
@@ -11,6 +12,9 @@ namespace ActionGameEngine.Enum
         NO_INTERRUPT = 1 << 4,
         HELD_10F = 1 << 5,
         HELD_20F = 1 << 6,
-        HELD_30F = 1 << 7
+        HELD_30F = 1 << 7,
+        HELD = HELD_10F | HELD_20F | HELD_30F,
+        NEED_PREV = HELD | BTN_SIMUL_PRESS | NO_INTERRUPT,
+
     }
 }

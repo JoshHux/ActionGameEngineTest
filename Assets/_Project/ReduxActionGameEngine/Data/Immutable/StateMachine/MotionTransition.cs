@@ -14,7 +14,7 @@ namespace ActionGameEngine.Data
         //motion required to transition to state
         public Command cmdMotion;
 
-        public bool Check(InputFragment[] playerInputs, CancelConditions playerCond)
+        public bool Check(RecorderElement[] playerInputs, CancelConditions playerCond)
         {
             return EnumHelper.HasEnum((int)playerCond, (int)cancelConditions) && cmdMotion.Check(playerInputs);
         }

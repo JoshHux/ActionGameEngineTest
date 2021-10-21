@@ -1,5 +1,8 @@
 using Spax.StateMachine;
-public interface IDamager
+namespace Spax.Interfaces
 {
-    public void OnHitConnect(HitBoxData boxData, int hitType);
+    public interface IDamager
+    {
+        public void OnHitConnect(HitBoxData boxData, int hitType);
+    }
 }

@@ -43,7 +43,7 @@
     "MaxHealth": 0,
     "CurHealth": 0,
     "currentState": {
-        "stateName": "New State",
+        "animName": "New State",
         "stateID": 0,
         "parentID": 0,
         "enterStateConditions": 0,
@@ -55,7 +55,7 @@
         "Frames": []
     },
     "defaultState": {
-        "stateName": "New State",
+        "animName": "New State",
         "stateID": 0,
         "parentID": 0,
         "enterStateConditions": 0,

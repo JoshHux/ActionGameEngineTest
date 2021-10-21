@@ -4,6 +4,7 @@ using Spax;
 using Spax.StateMachine;
 using UnityEditor;
 using UnityEngine;
+using ActionGameEngine.Input;
 
 public class SpaxJSONSaver : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class SpaxJSONSaver : MonoBehaviour
     public CharacterData fromSave;
 
     public string json;
+    public LinkedList<RecorderElement> prevInputs;
 
+    public RecorderElement[] lst;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,12 +45,25 @@ public class SpaxJSONSaver : MonoBehaviour
 
 
         //System.IO.File.WriteAllText(Application.persistentDataPath + "/Assets/Resources/JSON/TestData/Test.json", json);
-        System.IO.File.WriteAllText (path, json);
+        System.IO.File.WriteAllText(path, json);
 
         TextAsset jsonData =
             Resources.Load<TextAsset>("JSON/TestData/Test");
         Debug.Log(jsonData);
         fromSave = JsonUtility.FromJson<CharacterData>(jsonData.text);
+
+        prevInputs = new LinkedList<RecorderElement>();
+        prevInputs.AddFirst(new RecorderElement());
+
+        RecorderElement first = prevInputs.First.Value;
+        first.framesHeld++;
+
+
+        prevInputs.RemoveFirst();
+        prevInputs.AddFirst(first);
+
+        lst = new RecorderElement[10];
+        prevInputs.CopyTo(lst, 0);
     }
 
     // Update is called once per frame

@@ -1,4 +1,5 @@
 using ActionGameEngine.Input;
+using ActionGameEngine.Enum;
 
 namespace ActionGameEngine.Data
 {
@@ -10,11 +11,13 @@ namespace ActionGameEngine.Data
         public MotionTransition[] command;
 
         //-1 if state is not found
-        public int Check(InputFragment[] playerInputs)
+        public int Check(RecorderElement[] playerInputs, CancelConditions cond)
         {
-            foreach (MotionTransition cmd in command)
+            int len = command.Length;
+            for (int i = 0; i < len; i++)
             {
-                bool found = cmd.Check(playerInputs);
+                MotionTransition cmd = command[i];
+                bool found = cmd.Check(playerInputs, cond);
                 if (found)
                 {
                     return cmd.targetState;

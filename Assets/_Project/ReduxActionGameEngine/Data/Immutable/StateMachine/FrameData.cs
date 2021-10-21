@@ -17,5 +17,7 @@ namespace ActionGameEngine.Data
         public FrameEventFlag flags;
 
         public BepuVector3 frameVelocity;
+        public HitboxData[] hitboxes;
+        public HurtboxData[] hurtboxes;
     }
 }

@@ -11,6 +11,7 @@ namespace Spax
     {
         public delegate void InputUpdateEventHandler();
         public delegate void PreUpdateEventHandler();
+        public delegate void StateUpdateEventHandler();
         public delegate void StateCleanUpdateEventHandler();
         public delegate void PostUpdateEventHandler();
         public delegate void HitQueryUpdateEventHandler();
@@ -18,6 +19,7 @@ namespace Spax
         public delegate void RenderUpdateEventHandler();
         public delegate void SpaxUpdateEventHandler();
         public event InputUpdateEventHandler InputUpdate;
+        public event StateUpdateEventHandler StateUpdate;
         public event StateCleanUpdateEventHandler StateCleanUpdate;
         public event PreUpdateEventHandler PreUpdate;
         public event HitQueryUpdateEventHandler HitQueryUpdate;
@@ -81,6 +83,7 @@ namespace Spax
         void FixedUpdate()
         {
             InputUpdate?.Invoke();
+            StateUpdate?.Invoke();
             StateCleanUpdate?.Invoke();
             PreUpdate?.Invoke();
             SpaxUpdate?.Invoke();

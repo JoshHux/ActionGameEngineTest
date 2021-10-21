@@ -1,6 +1,8 @@
 using Spax.StateMachine;
-
-public interface IDamageable
+namespace Spax.Interfaces
 {
-   public int GetHit(HitBoxData boxData);
+    public interface IDamageable
+    {
+        public int GetHit(HitBoxData boxData);
+    }
 }

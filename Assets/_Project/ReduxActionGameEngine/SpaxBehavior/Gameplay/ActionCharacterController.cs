@@ -1,20 +1,26 @@
+using ActionGameEngine.Data;
+using ActionGameEngine.Gameplay;
 using ActionGameEngine.Enum;
-using Spax;
 using UnityEngine;
-using BEPUutilities;
-using BEPUUnity;
 
 namespace ActionGameEngine
 {
-    //object that can move around and detect physics
-    public abstract class LivingObject : SpaxBehavior
+    public class ActionCharacterController : ControllableObject
     {
-        //rigidbody that we will use to move around and collide with the environment
-        protected ShapeBase rb;
-        //velocity calculated that we will apply to our rigidbody
-        protected BepuVector3 calcVel;
-        //for things such as setting velocity, makes sure that that velocity is always being applied
-        protected BepuVector4 storedVel;
+
+        //overall data about our character, stuff like all states and movelist
+        protected CharacterData data;
+
+        public override int GetHit(HitboxData boxData)
+        {
+            return OnHitConnect(boxData.type);
+        }
+
+        public override int ConnectedHit(HitboxData boxData)
+        {
+            return -1;
+        }
+
         public int OnHitConnect(HitType type)
         {
             //check to see if invuln matches
@@ -24,28 +30,27 @@ namespace ActionGameEngine
                 //checks to see if unblockable or not
                 if (EnumHelper.HasEnum((int)type, (int)HitType.UNBLOCKABLE))
                 {
-                    return 1;
-                }
-                //blockable hit
-                {
+                    //blockable hit
+
                     //replace with block operations like checking if they're blocking the right way
                     bool isBlocking = true;
 
                     if (isBlocking)
                     {
                         //set chip, blockstun, blockstop, etc.
-                        return 2; 
+                        return 2;
                     }
                     else
                     {
-                        //set damage, hitstun, hitstop, etc.
                         if (EnumHelper.HasEnum((int)type, (int)HitType.GRAB))
                         {
                             //this is where you would also put your operations for hitgrabs
                         }
-                        return 1;
                     }
                 }
+                //set damage, hitstun, hitstop, etc.
+                return 1;
+
             }
             else if (EnumHelper.HasEnum((int)type, (int)HitType.GRAB))
             {
@@ -54,9 +59,10 @@ namespace ActionGameEngine
             }
             else
             {
-                Debug
-                    .LogError("Invalid HitType, must have GRAB or STRIKE tag");
+                Debug.LogError("Invalid HitType, must have GRAB or STRIKE tag");
             }
+
+            return -1;
         }
     }
 }
