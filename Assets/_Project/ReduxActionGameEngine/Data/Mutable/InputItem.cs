@@ -168,15 +168,6 @@ namespace ActionGameEngine.Input
             return new InputItem(part);
         }
 
-        public static bool operator ==(InputItem x, InputItem y)
-        {
-            return x.m_rawValue == y.m_rawValue;
-        }
-
-        public static bool operator !=(InputItem x, InputItem y)
-        {
-            return x.m_rawValue != y.m_rawValue;
-        }
 
         //for inputs and checking commands
         public bool Check(InputItem other, bool read4way)
@@ -199,6 +190,40 @@ namespace ActionGameEngine.Input
             return dirCheck && btnCheck;
         }
 
+        public static bool operator ==(InputItem x, InputItem y)
+        {
+            return x.m_rawValue == y.m_rawValue;
+        }
+
+        public static bool operator !=(InputItem x, InputItem y)
+        {
+            return x.m_rawValue != y.m_rawValue;
+        }
+
+        public override bool Equals(object obj)
+        {
+            //
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+            
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+
+            return this.GetHashCode()==obj.GetHashCode();
+        }
+        
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            // TODO: write your implementation of GetHashCode() here
+            return m_rawValue;
+        }
 
         //TODO: add method to convert the information in the short to DigitalInput
 
