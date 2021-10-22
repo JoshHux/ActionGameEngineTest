@@ -11,7 +11,7 @@ using BEPUutilities;
 
 namespace Spax
 {
-    public class Hitbox : SpaxBehavior
+    public class Hitbox : FixedBehavior
     {
 
         //[SerializeField] public ShapeBase ShapeBase;

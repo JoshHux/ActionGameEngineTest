@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Spax
 {
-    public class Hurtbox : SpaxBehavior
+    public class Hurtbox : FixedBehavior
     {
         [SerializeField]
         private BEPUSphere rb;
@@ -81,13 +81,13 @@ namespace Spax
                 {
                     //Debug.Log("assigned");
                     renderer.localScale =
-                        new Vector3((float) rb.radius * 2,
-                            (float) rb.radius * 2,
-                            (float) rb.radius * 2);
+                        new Vector3((float)rb.radius * 2,
+                            (float)rb.radius * 2,
+                            (float)rb.radius * 2);
                     renderer.position =
-                        new Vector3((float) rb.position.X,
-                            (float) rb.position.Y,
-                            (float) rb.position.Z);
+                        new Vector3((float)rb.position.X,
+                            (float)rb.position.Y,
+                            (float)rb.position.Z);
                 }
             }
             //ShapeBase.size = new BepuVector3(data.size.X, data.size.Y, data.size.Z);

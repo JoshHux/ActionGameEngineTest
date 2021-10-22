@@ -10,7 +10,7 @@ namespace ActionGameEngine
 
         public override int GetHit(HitboxData boxData)
         {
-            return OnHitConnect(boxData.type);
+            return OnGetHit(boxData.type);
         }
 
         public override int ConnectedHit(HitboxData boxData)
@@ -18,7 +18,7 @@ namespace ActionGameEngine
             return -1;
         }
 
-        public int OnHitConnect(HitType type)
+        public int OnGetHit(HitType type)
         {
             //check to see if invuln matches
             //checks to see if hit is strike box

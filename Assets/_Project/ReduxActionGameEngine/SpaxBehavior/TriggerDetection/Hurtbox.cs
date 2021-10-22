@@ -3,7 +3,7 @@ using ActionGameEngine.Interfaces;
 using Spax;
 
 
-namespace ActionGameEngine
+namespace ActionGameEngine.Gameplay
 {
     public class Hurtbox : SpaxBehavior
     {

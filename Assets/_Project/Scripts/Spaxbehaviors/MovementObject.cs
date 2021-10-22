@@ -12,7 +12,7 @@ using Spax.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MovementObject : SpaxBehavior
+public class MovementObject : FixedBehavior
 {
     //input that is parsed at the beginning on the frame
     public string FighterName = "Aganju";

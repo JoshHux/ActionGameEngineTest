@@ -6,7 +6,7 @@ using BEPUUnity;
 namespace ActionGameEngine
 {
     //object that can move around and detect physics
-    public abstract class LivingObject : SpaxBehavior
+    public abstract class LivingObject : GameplayBehavior
     {
 
         //overall data about our character, stuff like all states and movelist
@@ -26,5 +26,10 @@ namespace ActionGameEngine
         //for things such as setting velocity, makes sure that that velocity is always being applied
         protected BepuVector4 storedVel;
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+            rb = this.GetComponent<ShapeBase>();
+        }
     }
 }

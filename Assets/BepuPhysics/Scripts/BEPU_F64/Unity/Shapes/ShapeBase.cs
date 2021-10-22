@@ -13,7 +13,7 @@ using UnityEngine;
 namespace BEPUUnity
 {
     [ExecuteInEditMode]
-    public abstract class ShapeBase : SpaxBehavior
+    public abstract class ShapeBase : FixedBehavior
     {
         [HideInInspector]
         public ShapeBase parent;
@@ -119,15 +119,15 @@ namespace BEPUUnity
             if (m_entity == null)
             {
                 //assigns world position
-                m_startPosition.X = (Fix64) transform.position.x;
-                m_startPosition.Y = (Fix64) transform.position.y;
-                m_startPosition.Z = (Fix64) transform.position.z;
+                m_startPosition.X = (Fix64)transform.position.x;
+                m_startPosition.Y = (Fix64)transform.position.y;
+                m_startPosition.Z = (Fix64)transform.position.z;
 
                 //assigns world rotation
-                m_startOrientation.X = (Fix64) transform.rotation.x;
-                m_startOrientation.Y = (Fix64) transform.rotation.y;
-                m_startOrientation.Z = (Fix64) transform.rotation.z;
-                m_startOrientation.W = (Fix64) transform.rotation.w;
+                m_startOrientation.X = (Fix64)transform.rotation.x;
+                m_startOrientation.Y = (Fix64)transform.rotation.y;
+                m_startOrientation.Z = (Fix64)transform.rotation.z;
+                m_startOrientation.W = (Fix64)transform.rotation.w;
 
                 //initializes whatever shape we make
                 OnBepuAwake();
@@ -239,14 +239,14 @@ namespace BEPUUnity
         protected override void RenderUpdate()
         {
             transform.position =
-                new Vector3((float) m_entity.position.X,
-                    (float) m_entity.position.Y,
-                    (float) m_entity.position.Z);
+                new Vector3((float)m_entity.position.X,
+                    (float)m_entity.position.Y,
+                    (float)m_entity.position.Z);
             transform.rotation =
-                new Quaternion((float) m_entity.orientation.X,
-                    (float) m_entity.orientation.Y,
-                    (float) m_entity.orientation.Z,
-                    (float) m_entity.orientation.W);
+                new Quaternion((float)m_entity.orientation.X,
+                    (float)m_entity.orientation.Y,
+                    (float)m_entity.orientation.Z,
+                    (float)m_entity.orientation.W);
         }
 
         protected override void PostUpdate()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ActionGameEngine
+namespace ActionGameEngine.Gameplay
 {
     public class Hitbox : TriggerDetector
     {

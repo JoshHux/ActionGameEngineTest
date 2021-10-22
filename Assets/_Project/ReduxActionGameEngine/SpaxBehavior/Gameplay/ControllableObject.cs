@@ -11,5 +11,11 @@ namespace ActionGameEngine.Gameplay
         {
             status.checkState = inputRecorder.BufferInput(fromPlayer);
         }
+
+        protected override void InputUpdate()
+        {
+            //so the input is recorded
+            BufferInput();
+        }
     }
 }
