@@ -14,24 +14,25 @@ namespace ActionGameEngine.Enum
         //for grabs, makes sure you're only hit by the hit that knocks you out of the grab
         //can also be used for cinematic supers
         STUNNED_SPECIAL = 1 << 5,
-        AIR_TECHABLE = 1 << 6,
-        GRAB_TECHABLE = 1 << 7,
-        COUNTER_HIT = 1 << 8,
-        INVULNERABLE_STRIKE = 1 << 9,
-        INVULNERABLE_GRAB = 1 << 10,
-        GUARD_POINT_LOW = 1 << 11,
-        GUARD_POINT_MID = 1 << 12,
-        GUARD_POINT_HIGH = 1 << 13,
-        BOUNCE_WALL = 1 << 14,
-        BOUNCE_GROUND = 1 << 15,
+        STUNNED_OTG = 1 << 6,
+        AIR_TECHABLE = 1 << 7,
+        GRAB_TECHABLE = 1 << 8,
+        COUNTER_HIT = 1 << 9,
+        INVULNERABLE_STRIKE = 1 << 10,
+        INVULNERABLE_GRAB = 1 << 11,
+        GUARD_POINT_LOW = 1 << 12,
+        GUARD_POINT_MID = 1 << 13,
+        GUARD_POINT_HIGH = 1 << 14,
+        BOUNCE_WALL = 1 << 15,
+        BOUNCE_GROUND = 1 << 16,
         //when you want a character to ignore collision and pass through another character
-        PASS_THROUGH = 1 << 14,
-        CAN_WALK = 1 << 15,
-        CAN_RUN = 1 << 16,
+        PASS_THROUGH = 1 << 17,
+        CAN_WALK = 1 << 18,
+        CAN_RUN = 1 << 19,
         //is able to rotate to change orientation
-        IS_ABLE_TO_TURN = 1 << 17,
+        IS_ABLE_TO_TURN = 1 << 20,
         //character will automatically turn to face pre-defined target
-        AUTO_TURN = IS_ABLE_TO_TURN | 1 << 16,
+        AUTO_TURN = IS_ABLE_TO_TURN | 1 << 20,
         CAN_TRANSITION_TO_SELF = 1 << 29,
         //don't look at parent transitions
         NO_PARENT_TRANS = 1 << 30,
@@ -41,5 +42,6 @@ namespace ActionGameEngine.Enum
         GUARD_POINT = GUARD_POINT_LOW | GUARD_POINT_MID | GUARD_POINT_HIGH,
         BOUNCE = BOUNCE_WALL | BOUNCE_GROUND,
         CAN_MOVE = CAN_WALK | CAN_RUN,
+        STUN_STATE=STUNNED|STUNNED_SPECIAL|STUNNED_OTG,
     }
 }

@@ -8,9 +8,6 @@ namespace ActionGameEngine
     public class ActionCharacterController : ControllableObject
     {
 
-        //overall data about our character, stuff like all states and movelist
-        protected CharacterData data;
-
         public override int GetHit(HitboxData boxData)
         {
             return OnHitConnect(boxData.type);

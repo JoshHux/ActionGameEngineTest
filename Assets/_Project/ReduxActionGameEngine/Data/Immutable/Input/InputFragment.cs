@@ -24,5 +24,7 @@ namespace ActionGameEngine.Input
         {
             return this.inputItem.Check(frag.inputItem, EnumHelper.HasEnum((int)this.flags, (int)InputFlags.DIR_AS_4WAY, true)) && EnumHelper.HasEnum((int)frag.flags, (int)this.flags, true);
         }
+
+        
     }
 }

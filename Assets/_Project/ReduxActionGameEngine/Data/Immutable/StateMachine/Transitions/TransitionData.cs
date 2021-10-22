@@ -1,17 +1,17 @@
 using ActionGameEngine.Enum;
 using ActionGameEngine.Input;
-
 namespace ActionGameEngine.Data
 {
     [System.Serializable]
     public struct TransitionData
     {
+        
         //target state to transition to once requirements are met
-        public int targetState;
+        int targetState;
         //motion required to transition to state
-        public Command cmdMotion;
+        Command cmdMotion;
         //conditions that must be met if we want it to transition to the target state
-        public CancelConditions cancelConditions;
+        CancelConditions cancelConditions;
         //required flags in order to transition to state
         public TransitionFlag transitionFlag;
         //events to influence the gamestate one the transition is ran

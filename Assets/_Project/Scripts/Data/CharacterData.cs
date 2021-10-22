@@ -3,7 +3,7 @@ using Spax.StateMachine;
 using Spax.Input;
 using FixMath.NET;
 
-namespace Spax
+namespace Spax.Data
 {
     [System.Serializable]
     //will contatin various things about the player, namely nonphysics conditions and stats

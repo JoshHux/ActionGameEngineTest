@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Spax;
-using Spax.StateMachine;
+using Spax.Data;
 using UnityEditor;
 using UnityEngine;
 using ActionGameEngine.Input;

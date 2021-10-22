@@ -8,6 +8,7 @@ using FixMath.NET;
 using Spax;
 using Spax.Input;
 using Spax.StateMachine;
+using Spax.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -190,7 +191,7 @@ public class MovementObject : SpaxBehavior
         //is true if new state is found
         if (newState != null)
         {
-            TransitionNewState (exitCond, newState);
+            TransitionNewState(exitCond, newState);
         }
 
         //moved resetting this data to here so its data can be used elsewhere
@@ -246,7 +247,7 @@ public class MovementObject : SpaxBehavior
         if (opposingData.priority > -1)
         {
             //Debug.Log("getting hit " + gameObject.name + " priority " + opposingData.priority);
-            ProcessHit (opposingData);
+            ProcessHit(opposingData);
 
             //resets the priority so the data doesn't stick around
             //commented out so it RenderUpdate can use the opposingData for different hit animations
@@ -277,10 +278,10 @@ public class MovementObject : SpaxBehavior
     protected void TransitionNewState(int exitCond, StateFrameData newState)
     {
         //the previous state's exit conditions are applied
-        ApplyExitCond (exitCond);
+        ApplyExitCond(exitCond);
 
         //the new state is assigned along with any enter conditions it may have
-        ApplyNewState (newState);
+        ApplyNewState(newState);
 
         //just force the transition to hitstun if hit
         if ((data.xtraCondition & TransitionCondition.GET_HIT) > 0)
@@ -312,7 +313,7 @@ public class MovementObject : SpaxBehavior
 
     protected virtual void ApplyExitCond(int cond)
     {
-        if ((cond & (int) ExitStateConditions.CLEAN_HITBOXES) > 0)
+        if ((cond & (int)ExitStateConditions.CLEAN_HITBOXES) > 0)
         {
             int len = HitboxObj.Length;
             for (int i = 0; i < len; i++)
@@ -329,7 +330,7 @@ public class MovementObject : SpaxBehavior
 
     protected void ApplyNewAnimationState(string stateName, Fix64 startTime)
     {
-        Animator.PlayInFixedTime(stateName, 0, (float) startTime);
+        Animator.PlayInFixedTime(stateName, 0, (float)startTime);
 
         //Debug.Log(data.GetState().stateName);
         setNewState = false;
@@ -352,7 +353,7 @@ public class MovementObject : SpaxBehavior
             {
                 Hitbox box = HitboxObj[i];
                 HitBoxData data = hitBoxData[i];
-                box.SetBoxData (data);
+                box.SetBoxData(data);
             }
         }
 
@@ -372,7 +373,7 @@ public class MovementObject : SpaxBehavior
                 HurtBoxData data = hurtBoxData[i];
 
                 //Debug.Log(len);
-                box.SetBoxData (data);
+                box.SetBoxData(data);
             }
         }
     }
@@ -388,11 +389,11 @@ public class MovementObject : SpaxBehavior
         //Debug.Log("called :: " + ctx);
         //ctx.x *= data.moveCondition.facing;
         int newDir = 1;
-        StickInput = new BepuVector2((Fix64) ctx.x, (Fix64) ctx.y);
+        StickInput = new BepuVector2((Fix64)ctx.x, (Fix64)ctx.y);
         StickAngle =
             (Fix64.Atan2(StickInput.X, StickInput.X)) *
             Fix64.PiInv *
-            (Fix64) 180f;
+            (Fix64)180f;
 
         if (ctx.y < 0)
         {
@@ -412,13 +413,13 @@ public class MovementObject : SpaxBehavior
             newDir = newDir << 1;
         }
 
-        AsyncInput.direction = (Direction) newDir;
+        AsyncInput.direction = (Direction)newDir;
 
         //theres the possibility that the a button is tapped before the controller state is registered in syncInput
         //this scenario will result in an eaten input
         //to mitigate this, we will always add the new input to the read sync input and then re-assign the current controller state
         //after the synchronized input is parsed
-        Input.direction = (Direction) newDir;
+        Input.direction = (Direction)newDir;
     }
 
     public void CallbackButtonInput(Button button)

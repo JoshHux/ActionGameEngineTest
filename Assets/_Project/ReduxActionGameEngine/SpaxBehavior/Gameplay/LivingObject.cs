@@ -1,7 +1,5 @@
-using ActionGameEngine.Enum;
 using ActionGameEngine.Data;
 using Spax;
-using UnityEngine;
 using BEPUutilities;
 using BEPUUnity;
 
@@ -10,6 +8,9 @@ namespace ActionGameEngine
     //object that can move around and detect physics
     public abstract class LivingObject : SpaxBehavior
     {
+
+        //overall data about our character, stuff like all states and movelist
+        protected CharacterData data;
         //rigidbody that we will use to move around and collide with the environment
         protected ShapeBase rb;
 
@@ -24,6 +25,6 @@ namespace ActionGameEngine
         protected BepuVector3 calcVel;
         //for things such as setting velocity, makes sure that that velocity is always being applied
         protected BepuVector4 storedVel;
-        
+
     }
 }
