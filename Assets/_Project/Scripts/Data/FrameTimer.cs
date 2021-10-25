@@ -2,86 +2,91 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class FrameTimer
+namespace Spax
 {
-    //maybe add event handler that is invoked every time it ticks
-    public event TimerEventHandler onEnd;
-
-    //tells whether or not we should be ticking
-    private bool isTicking = false;
 
 
-    [SerializeField]
-    private int endTime;
-
-    [SerializeField]
-    private int time;
-
-    public void StartTimer(int setTime)
+    [System.Serializable]
+    public class FrameTimer
     {
-        SetTimer (setTime);
-        PlayTimer();
-    }
+        //maybe add event handler that is invoked every time it ticks
+        public event TimerEventHandler onEnd;
 
-    public void SetTimer(int setTime)
-    {
-        endTime = setTime;
-        time = 0;
+        //tells whether or not we should be ticking
+        private bool isTicking = false;
 
-        isTicking = false;
-    }
 
-    public void PlayTimer()
-    {
-        isTicking = true;
-    }
+        [SerializeField]
+        private int endTime;
 
-    public bool TickTimer()
-    {
-        if (endTime > 0 && isTicking)
+        [SerializeField]
+        private int time;
+
+        public void StartTimer(int setTime)
         {
-            //if == instead, then it ends one frame early
-            if (++time > endTime)
-            {
-                EndTimer();
-            }
+            SetTimer(setTime);
+            PlayTimer();
         }
 
-        return isTicking;
-    }
+        public void SetTimer(int setTime)
+        {
+            endTime = setTime;
+            time = 0;
 
-    public int ElapsedTime()
-    {
-        return time;
-    }
+            isTicking = false;
+        }
 
-    public int TimeLeft()
-    {
-        return (endTime - time);
-    }
+        public void PlayTimer()
+        {
+            isTicking = true;
+        }
 
-    public bool IsTicking()
-    {
-        return isTicking;
-    }
+        public bool TickTimer()
+        {
+            if (endTime > 0 && isTicking)
+            {
+                //if == instead, then it ends one frame early
+                if (++time > endTime)
+                {
+                    EndTimer();
+                }
+            }
 
-    public void ForceTimerEnd()
-    {
-        EndTimer();
-    }
+            return isTicking;
+        }
 
-    private void EndTimer()
-    {
-        isTicking = false;
-        endTime = 0;
-        onEnd?.Invoke(this);
-    }
+        public int ElapsedTime()
+        {
+            return time;
+        }
 
-    public bool IsPaused()
-    {
-        return endTime > 0;
-    }
+        public int TimeLeft()
+        {
+            return (endTime - time);
+        }
 
-    public delegate void TimerEventHandler(object sender);
+        public bool IsTicking()
+        {
+            return isTicking;
+        }
+
+        public void ForceTimerEnd()
+        {
+            EndTimer();
+        }
+
+        private void EndTimer()
+        {
+            isTicking = false;
+            endTime = 0;
+            onEnd?.Invoke(this);
+        }
+
+        public bool IsPaused()
+        {
+            return endTime > 0;
+        }
+
+        public delegate void TimerEventHandler(object sender);
+    }
 }

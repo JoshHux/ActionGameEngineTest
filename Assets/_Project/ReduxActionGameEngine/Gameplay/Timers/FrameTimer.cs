@@ -9,6 +9,12 @@ namespace ActionGameEngine.Gameplay
         //true if we want to pause the timer
         private bool paused = true;
 
+        public FrameTimer()
+        {
+            timeRemaining = 0;
+            paused = true;
+        }
+
         //returns true if timer is able to and does tick
         public bool TickTimer()
         {
@@ -23,7 +29,7 @@ namespace ActionGameEngine.Gameplay
                 }
                 else
                 {
-                    OnTimerEnd();
+                    EndTimer();
                 }
             }
             return false;
@@ -37,6 +43,12 @@ namespace ActionGameEngine.Gameplay
         public bool IsPaused()
         {
             return paused;
+        }
+
+
+        public bool IsTicking()
+        {
+            return timeRemaining > 0;
         }
 
         //sets the time for the timer and automatically plays it
@@ -65,11 +77,23 @@ namespace ActionGameEngine.Gameplay
 
         public void StartTimer(int newTime)
         {
+            if (this.IsTicking()) { this.EndTimer(); }
+
             this.SetTime(newTime);
             this.PlayTimer();
         }
 
-        protected abstract void OnTimerEnd();
+        public virtual void EndTimer()
+        {
+            this.SetTime(0);
+            this.OnTimerEnd();
+        }
+
+        protected virtual void OnTimerEnd()
+        {
+            this.PauseTimer();
+            this.OnTimerEnd();
+        }
 
     }
 }

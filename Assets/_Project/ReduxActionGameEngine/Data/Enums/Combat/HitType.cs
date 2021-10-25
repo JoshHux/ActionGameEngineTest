@@ -21,7 +21,10 @@ namespace ActionGameEngine.Enum
         UNBLOCKABLE_TRUE = 1 << 6,
         PROJECTILE = 1 << 7,
         SUPER = 1 << 8,
-        ON_THE_GROUND=1<<9,
+        ON_THE_GROUND = 1 << 9,
+
+        FORCE_STANDING = 1 << 10,
+        FORCE_CROUCHING = 1 << 11,
         STRIKE = STRIKE_LOW | STRIKE_MIDDLE | STRIKE_HIGH,
         UNBLOCKABLE = UNBLOCKABLE_AIR | UNBLOCKABLE_GROUND | UNBLOCKABLE_TRUE,
     }

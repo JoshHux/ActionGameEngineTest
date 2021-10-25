@@ -183,11 +183,7 @@ namespace BEPUUnity
 
                     //get local rotation
                     BEPUutilities.BepuQuaternion hold = parent.rotation;
-                    BEPUutilities
-                        .BepuQuaternion
-                        .GetLocalRotation(ref this.m_entity.orientation,
-                        ref hold,
-                        out this.m_localRotation);
+                    BEPUutilities.BepuQuaternion.GetLocalRotation(ref this.m_entity.orientation, ref hold, out this.m_localRotation);
                     parentStartRot = hold;
                 }
             }

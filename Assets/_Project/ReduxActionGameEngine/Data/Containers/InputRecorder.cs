@@ -45,6 +45,13 @@ namespace ActionGameEngine.Input
             return ret;
         }
 
+        public RecorderElement[] GetInputArray()
+        {
+            RecorderElement[] ret = null;
+            inputChanges.CopyTo(ret, 0);
+            return ret;
+        }
+
         //only called if there is a change
         private void BufferChange(InputItem newItem)
         {

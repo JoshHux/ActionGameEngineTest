@@ -13,5 +13,6 @@ namespace ActionGameEngine.Enum
         CLEAN_HITBOXES = 1 << 4,
         //to flag enemy to block (if using something like proximity blocking)
         FLAG_BLOCK = 1 << 7,
+        KILL_VEL = KILL_X_VEL | KILL_Y_VEL | KILL_Z_VEL,
     }
 }

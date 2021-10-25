@@ -23,14 +23,16 @@ namespace ActionGameEngine.Enum
         GUARD_POINT_LOW = 1 << 12,
         GUARD_POINT_MID = 1 << 13,
         GUARD_POINT_HIGH = 1 << 14,
-        BOUNCE_WALL = 1 << 15,
-        BOUNCE_GROUND = 1 << 16,
+        PARRY = 1 << 15,
+        BOUNCE_WALL = 1 << 16,
+        BOUNCE_GROUND = 1 << 17,
         //when you want a character to ignore collision and pass through another character
-        PASS_THROUGH = 1 << 17,
-        CAN_WALK = 1 << 18,
-        CAN_RUN = 1 << 19,
+        PASS_THROUGH = 1 << 18,
+        CAN_WALK = 1 << 19,
+        CAN_RUN = 1 << 20,
         //is able to rotate to change orientation
-        IS_ABLE_TO_TURN = 1 << 20,
+        IS_ABLE_TO_TURN = 1 << 21,
+        CROUCHING = 1 << 22,
         //character will automatically turn to face pre-defined target
         AUTO_TURN = IS_ABLE_TO_TURN | 1 << 20,
         CAN_TRANSITION_TO_SELF = 1 << 29,
@@ -42,6 +44,6 @@ namespace ActionGameEngine.Enum
         GUARD_POINT = GUARD_POINT_LOW | GUARD_POINT_MID | GUARD_POINT_HIGH,
         BOUNCE = BOUNCE_WALL | BOUNCE_GROUND,
         CAN_MOVE = CAN_WALK | CAN_RUN,
-        STUN_STATE=STUNNED|STUNNED_SPECIAL|STUNNED_OTG,
+        STUN_STATE = STUNNED | STUNNED_SPECIAL | STUNNED_OTG,
     }
 }

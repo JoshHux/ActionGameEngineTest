@@ -1,8 +1,9 @@
 using ActionGameEngine.Data;
+using ActionGameEngine.Enum;
 namespace ActionGameEngine.Interfaces
 {
     public interface IDamageable
     {
-        int GetHit(HitboxData boxData);
+        HitIndicator GetHit(int attackerID, HitboxData boxData);
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using Spax;
-namespace ActionGameEngine
+namespace ActionGameEngine.Gameplay
 {
     public class GameplayBehavior : SpaxBehavior
     {

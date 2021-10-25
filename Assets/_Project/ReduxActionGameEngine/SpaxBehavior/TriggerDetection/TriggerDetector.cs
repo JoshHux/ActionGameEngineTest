@@ -11,9 +11,9 @@ namespace ActionGameEngine
     public abstract class TriggerDetector : SpaxBehavior
     {
 
-        private ShapeBase trigger;
+        protected ShapeBase trigger;
         //number of colliders the trigger is in, useful in OnTriggerExit2D
-        private int triggeredWith;
+        protected int triggeredWith;
 
         // Start is called before the first frame update
         protected override void OnStart()
