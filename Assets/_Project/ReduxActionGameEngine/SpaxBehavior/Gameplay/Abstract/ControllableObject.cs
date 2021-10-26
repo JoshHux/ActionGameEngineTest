@@ -17,6 +17,7 @@ namespace ActionGameEngine.Gameplay
 
         protected void BufferInput()
         {
+            //adds a new input, check if state can transition
             status.SetCheckState(inputRecorder.BufferInput(fromPlayer));
         }
 
@@ -26,27 +27,20 @@ namespace ActionGameEngine.Gameplay
             BufferInput();
         }
 
-        protected override void StateUpdate()
+        protected override void TryTransitionState()
         {
-            //call base to tick timers
-            base.StateUpdate();
-            if (status.GetCheckState())
+
+            //get a transition, valid if we found a new state to transition to
+            TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), inputRecorder.GetInputArray(), status.GetCancelConditions(), status.GetTransitionFlags());
+            if (transition.IsValid())
             {
-                TransitionData transition = data.TryTransitionState(status.GetCurrentStateID().stateID, inputRecorder.GetInputArray(), status.GetCancelConditions(), status.GetTransitionFlags());
-                if (transition.IsValid())
-                {
-                    int newStateID = transition.targetState;
-                    StateData newState = data.GetStateFromID(newStateID);
+                int newStateID = transition.targetState;
 
-                    //setting new state information to CharacterStatus
-                    status.SetNewState(newState);
-                    status.SetNewStateConditions(data.GetConditionsFromState(newStateID));
-                    status.SetNewCancelConditions(newState.cancelConditions);
-
-                    //process the TransitionEvent flags that are set
-                    ProcessTransitionEvents((int)transition.transitionEvent);
-                }
+                AssignNewState(newStateID);
+                //process the TransitionEvent flags that are set
+                ProcessTransitionEvents(transition.transitionEvent);
             }
+
         }
     }
 }

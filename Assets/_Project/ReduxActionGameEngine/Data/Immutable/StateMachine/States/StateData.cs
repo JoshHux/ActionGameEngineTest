@@ -27,9 +27,12 @@ namespace ActionGameEngine.Data
         //frames of state
         public FrameData[] frames;
 
+        public string animName;
+
         public FrameData GetFrameAt(int f)
         {
 
+            //check for out of bounds or invalid frames
             if (f >= duration || f < 0)
             {
                 //return invalid frame
@@ -74,8 +77,8 @@ namespace ActionGameEngine.Data
 
         //check if this is a node state
         //should not be assigned as a player state is true
-        //if there are no frames, then this is a transition state
-        public bool IsNodeState() { return frames.Length > 0; }
+        //if there are no frames, then this is a node state
+        public bool IsNodeState() { return frames.Length == 0; }
         public bool HasParent() { return stateID != parentID; }
         public TransitionData GetTransitionFromIndex(int ind) { return transitions[ind]; }
     }

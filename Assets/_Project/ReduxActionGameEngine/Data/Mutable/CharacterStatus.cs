@@ -33,7 +33,8 @@ namespace ActionGameEngine.Data
 
         public void SubtractCurrentHP(int change) { currentHp -= change; }
         public void AddCurrentHP(int change) { currentHp += change; }
-        public StateData GetCurrentStateID() { return currentState; }
+        public StateData GetCurrentState() { return currentState; }
+        public int GetCurrentStateID() { return currentState.stateID; }
         public bool GetCheckState() { return checkState; }
         public StateCondition GetStateConditions() { return currentStateCond | persistentCond; }
         public StateCondition GetPersistentConditions() { return persistentCond; }

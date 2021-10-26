@@ -18,12 +18,16 @@ namespace ActionGameEngine.Input
 
         public InputRecorder()
         {
+            prevItem = new InputItem();
             inputChanges = new LinkedList<RecorderElement>();
+            //add at least one item to make it play nice
+            inputChanges.AddLast(new RecorderElement());
         }
 
         //returns true if new element is added to vector or if the framesHeld on that element is <=leniencey
         public bool BufferInput(InputItem newInput)
         {
+
             bool ret = false;
 
             //do we need to buffer change?
@@ -38,6 +42,7 @@ namespace ActionGameEngine.Input
             //increment the frames held
             this.IncrementLast();
             //check leniency
+
             ret = (inputChanges.Last.Value.framesHeld <= leniency);
 
 
@@ -47,7 +52,7 @@ namespace ActionGameEngine.Input
 
         public RecorderElement[] GetInputArray()
         {
-            RecorderElement[] ret = null;
+            RecorderElement[] ret = new RecorderElement[inputChanges.Count];
             inputChanges.CopyTo(ret, 0);
             return ret;
         }
@@ -55,27 +60,30 @@ namespace ActionGameEngine.Input
         //only called if there is a change
         private void BufferChange(InputItem newItem)
         {
-            //remember the last whole item and compare that to the new item
-
-            //find the released inputs
-            RecorderElement released = new RecorderElement(InputItem.FindReleased(newItem, prevItem));
-            //if there is anything to buffer
-            if (!released.IsEmpty())
+            if (inputChanges.Count > 0)
             {
-                released.frag.flags |= InputFlags.RELEASED;
-                this.BufferElement(released);
-            }
-            //find the pressed elements
-            RecorderElement pressed = new RecorderElement(InputItem.FindPressed(newItem, prevItem));
-            //if there is anything to buffer
-            if (!pressed.IsEmpty())
-            {
-                pressed.frag.flags |= InputFlags.PRESSED;
-                this.BufferElement(pressed);
-            }
+                //remember the last whole item and compare that to the new item
 
-            //replace the last whole item
-            prevItem = newItem;
+                //find the released inputs
+                RecorderElement released = new RecorderElement(InputItem.FindReleased(newItem, prevItem));
+                //if there is anything to buffer
+                if (!released.IsEmpty())
+                {
+                    released.frag.flags |= InputFlags.RELEASED;
+                    this.BufferElement(released);
+                }
+                //find the pressed elements
+                RecorderElement pressed = new RecorderElement(InputItem.FindPressed(newItem, prevItem));
+                //if there is anything to buffer
+                if (!pressed.IsEmpty())
+                {
+                    pressed.frag.flags |= InputFlags.PRESSED;
+                    this.BufferElement(pressed);
+                }
+
+                //replace the last whole item
+                prevItem = newItem;
+            }
         }
 
         //responsible for buffering element
@@ -93,10 +101,13 @@ namespace ActionGameEngine.Input
         //I hate this, but I have to decapitate and reattatch the most recent value to increment it
         private void IncrementLast()
         {
-            RecorderElement last = inputChanges.Last.Value;
-            last.framesHeld++;
-            inputChanges.RemoveLast();
-            inputChanges.AddLast(last);
+            if (inputChanges.Count > 0)
+            {
+                RecorderElement last = inputChanges.Last.Value;
+                last.framesHeld++;
+                inputChanges.RemoveLast();
+                inputChanges.AddLast(last);
+            }
         }
 
 

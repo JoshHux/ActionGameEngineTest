@@ -25,7 +25,7 @@ namespace ActionGameEngine.Data
         public HurtboxData[] hurtboxes;
 
         public bool isValid() { return (atFrame > 0) || (flags > 0) || HasHitboxes() || HasHurtboxes(); }
-        public bool HasHitboxes() { return hitboxes.Length > 0; }
-        public bool HasHurtboxes() { return hurtboxes.Length > 0; }
+        public bool HasHitboxes() { return hitboxes != null; }
+        public bool HasHurtboxes() { return hurtboxes != null; }
     }
 }

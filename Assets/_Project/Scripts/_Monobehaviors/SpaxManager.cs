@@ -18,6 +18,7 @@ namespace Spax
         public delegate void HurtQueryUpdateEventHandler();
         public delegate void RenderUpdateEventHandler();
         public delegate void SpaxUpdateEventHandler();
+        public delegate void RenderPrepEventHandler();
         public event InputUpdateEventHandler InputUpdate;
         public event StateUpdateEventHandler StateUpdate;
         public event StateCleanUpdateEventHandler StateCleanUpdate;
@@ -27,6 +28,7 @@ namespace Spax
         public event HurtQueryUpdateEventHandler HurtQueryUpdate;
         public event PostUpdateEventHandler PostUpdate;
         public event RenderUpdateEventHandler RenderUpdate;
+        public event RenderPrepEventHandler PrepRender;
         public event SpaxUpdateEventHandler SpaxUpdate;
 
         //for initializing the physics and filtering collisions
@@ -82,6 +84,12 @@ namespace Spax
 
         void FixedUpdate()
         {
+            GameplayUpdate();
+            RendererUpdate();
+        }
+
+        private void GameplayUpdate()
+        {
             InputUpdate?.Invoke();
             StateUpdate?.Invoke();
             StateCleanUpdate?.Invoke();
@@ -91,6 +99,10 @@ namespace Spax
             HitQueryUpdate?.Invoke();
             HurtQueryUpdate?.Invoke();
             PostUpdate?.Invoke();
+        }
+        private void RendererUpdate()
+        {
+            PrepRender?.Invoke();
             RenderUpdate?.Invoke();
         }
 

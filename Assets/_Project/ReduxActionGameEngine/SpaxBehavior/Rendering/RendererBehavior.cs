@@ -1,10 +1,14 @@
-using Spax;
 using UnityEngine;
+using ActionGameEngine.Data;
+using Spax;
 
 namespace ActionGameEngine
 {
-    public class RendererBehavior : SpaxBehavior
+    public abstract class RendererBehavior : SpaxBehavior
     {
+
+        protected RendererHelper helper;
+
         protected override void OnStart()
         {
             SpaxManager[] managers = Object.FindObjectsOfType<SpaxManager>();
@@ -19,6 +23,13 @@ namespace ActionGameEngine
             }
         }
 
-        protected virtual void RenderUpdate() { }
+        public void AssignHelper(RendererHelper help)
+        {
+            help = helper;
+        }
+
+        protected abstract void PreRenderUpdate();
+        protected abstract void RenderUpdate();
+        protected abstract void PostRenderUpdate();
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using Spax;
 namespace ActionGameEngine.Gameplay
 {
-    public class GameplayBehavior : SpaxBehavior
+    public abstract class GameplayBehavior : SpaxBehavior
     {
 
         protected override void OnStart()
@@ -21,21 +21,21 @@ namespace ActionGameEngine.Gameplay
                     manager.HitQueryUpdate += (() => HitboxQueryUpdate());
                     manager.HurtQueryUpdate += (() => HurtboxQueryUpdate());
                     manager.PostUpdate += (() => PostUpdate());
+                    manager.PrepRender += (() => PrepRenderer());
                     //Debug.Log("starting: " + gameObject.name);
                 }
             }
         }
-        protected virtual void InputUpdate() { }
-
-        protected virtual void StateUpdate() { }
+        protected abstract void InputUpdate();
+        protected abstract void StateUpdate();
         //get it? It's a pun!...
         //this naming is gonna bite me later, I just know it...
-        protected virtual void StateCleanUpdate() { }
-        protected virtual void PreUpdate() { }
-        protected virtual void SpaxUpdate() { }
-        protected virtual void HitboxQueryUpdate() { }
-
-        protected virtual void HurtboxQueryUpdate() { }
-        protected virtual void PostUpdate() { }
+        protected abstract void StateCleanUpdate();
+        protected abstract void PreUpdate();
+        protected abstract void SpaxUpdate();
+        protected abstract void HitboxQueryUpdate();
+        protected abstract void HurtboxQueryUpdate();
+        protected abstract void PostUpdate();
+        protected abstract void PrepRenderer();
     }
 }

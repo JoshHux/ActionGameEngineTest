@@ -10,10 +10,8 @@ namespace ActionGameEngine.Data
 
         //how many frames the animator needs to update during the Render update, incremented in the PostUpdate
         //Animator.Update(Time.fixedDeltaTime*(animFrames=1))
-
         public int animFrames;
         public string animState;
-
         public bool newState;
     }
 }

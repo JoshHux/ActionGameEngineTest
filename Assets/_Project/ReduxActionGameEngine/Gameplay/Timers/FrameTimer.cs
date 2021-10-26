@@ -6,14 +6,33 @@ namespace ActionGameEngine.Gameplay
     {
         //timer ends when this hits 0
         private int timeRemaining = 0;
+        //timer ends when this hits 0
+        private int timeElapsed = 0;
         //true if we want to pause the timer
         private bool paused = true;
 
         public FrameTimer()
         {
             timeRemaining = 0;
+            timeElapsed = 0;
             paused = true;
         }
+
+        public int GetTimeRemaining() { return timeRemaining; }
+        public int GetTimeElapsed() { return timeElapsed; }
+        public bool IsPaused() { return paused; }
+        public bool IsTicking() { return timeRemaining > 0; }
+
+        //sets the new time without checking if it's paused, useful if you want to prep the time before letting it play
+        public void SetTime(int time)
+        {
+            timeRemaining = time;
+            timeElapsed = 0;
+        }
+
+        private void SetPaused(bool tf) { paused = tf; }
+        public void PauseTimer() { this.SetPaused(true); }
+        public void PlayTimer() { this.SetPaused(false); }
 
         //returns true if timer is able to and does tick
         public bool TickTimer()
@@ -24,7 +43,8 @@ namespace ActionGameEngine.Gameplay
                 //guarantees at least one tick if timer is set to 1
                 if (timeRemaining > 0)
                 {
-                    timeRemaining -= 1;
+                    timeRemaining--;
+                    timeElapsed++;
                     return true;
                 }
                 else
@@ -35,46 +55,7 @@ namespace ActionGameEngine.Gameplay
             return false;
         }
 
-        public int GetTimeRemaining()
-        {
-            return timeRemaining;
-        }
-
-        public bool IsPaused()
-        {
-            return paused;
-        }
-
-
-        public bool IsTicking()
-        {
-            return timeRemaining > 0;
-        }
-
-        //sets the time for the timer and automatically plays it
-
-
-        //sets the new time without checking if it's paused, useful if you want to prep the time before letting it play
-        public void SetTime(int time)
-        {
-            timeRemaining = time;
-        }
-
-        private void SetPaused(bool tf)
-        {
-            paused = tf;
-        }
-
-        public void PauseTimer()
-        {
-            this.SetPaused(true);
-        }
-
-        public void PlayTimer()
-        {
-            this.SetPaused(false);
-        }
-
+        //sets the time for the timer and automatically starts playing it
         public void StartTimer(int newTime)
         {
             if (this.IsTicking()) { this.EndTimer(); }

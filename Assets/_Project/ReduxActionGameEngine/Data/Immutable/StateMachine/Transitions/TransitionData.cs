@@ -17,8 +17,9 @@ namespace ActionGameEngine.Data
         //events to influence the gamestate one the transition is ran
         public TransitionEvent transitionEvent;
 
-        public bool IsValid(){
-            return targetState>-1;
+        public bool IsValid()
+        {
+            return targetState > -1;
         }
 
         public bool Check(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond)

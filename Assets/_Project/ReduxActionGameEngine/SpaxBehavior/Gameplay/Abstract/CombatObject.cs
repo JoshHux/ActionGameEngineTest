@@ -48,15 +48,14 @@ namespace ActionGameEngine.Gameplay
             }
         }
 
-        protected override void ProcessTransitionEvents(int transitionEvents)
+        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents)
         {
             base.ProcessTransitionEvents(transitionEvents);
 
             //deactivate our active hitboxes
-            if (EnumHelper.HasEnum(transitionEvents, (int)TransitionEvent.CLEAN_HITBOXES)) { this.DeactivateHitboxes(); }
-
+            if (EnumHelper.HasEnum((int)transitionEvents, (int)TransitionEvent.CLEAN_HITBOXES)) { this.DeactivateHitboxes(); }
             //we may want other enemy to block
-            if (EnumHelper.HasEnum(transitionEvents, (int)TransitionEvent.FLAG_BLOCK)) { this.FlagBlockToOthers(); }
+            if (EnumHelper.HasEnum((int)transitionEvents, (int)TransitionEvent.FLAG_BLOCK)) { this.FlagBlockToOthers(); }
         }
 
 

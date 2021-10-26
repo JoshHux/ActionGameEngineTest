@@ -1,6 +1,7 @@
 using UnityEngine;
 using ActionGameEngine.Data;
 using ActionGameEngine.Data.Helpers;
+using ActionGameEngine.Data.Helpers.Static;
 using ActionGameEngine.Gameplay;
 using ActionGameEngine.Enum;
 using BEPUUnity;
@@ -13,6 +14,9 @@ namespace ActionGameEngine
     {
         protected ShapeBase lockonTarget;
 
+        protected override void StateCleanUpdate() { }
+        protected override void PreUpdate() { }
+
         public override HitIndicator GetHit(int attackerID, HitboxData boxData)
         {
             return OnGetHit(attackerID, boxData);
@@ -21,6 +25,31 @@ namespace ActionGameEngine
         public override int ConnectedHit(HitboxData boxData)
         {
             return -1;
+        }
+
+        protected override void ProcessStateData(StateCondition curCond)
+        {
+            base.ProcessStateData(curCond);
+            //apply acceleration is given direction, clamps to max fall speed if exceeded
+            if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.CAN_MOVE))
+            {
+                //testing with 2d, only needs this for now
+                Fix64 accel = data.GetForwardsAccel() * fromPlayer.X();
+                Fix64 maxVel = data.GetMaxForwardsVel() * fromPlayer.X();
+                calcVel.X = GameplayHelper.ApplyAcceleration(calcVel.X, accel, maxVel);
+
+                //uncomment this section if working in 3d
+                /*
+                Fix64 accel = data.GetForwardsAccel() * fromPlayer.Y();
+                Fix64 maxVel = data.GetMaxForwardsVel() * fromPlayer.Y();
+                calcVel.X = GameplayHelper.ApplyAcceleration(calcVel.X, accel, maxVel);
+
+                accel = data.GetSideAccel() * fromPlayer.X();
+                maxVel = data.GetMaxSideVel() * fromPlayer.X();
+                calcVel.X = GameplayHelper.ApplyAcceleration(calcVel.Z, accel, maxVel);
+                */
+            }
+
         }
 
         public HitIndicator OnGetHit(int attackerID, HitboxData boxData)
@@ -78,12 +107,12 @@ namespace ActionGameEngine
             return HitIndicator.WHIFFED;
         }
 
-        protected override void ProcessTransitionEvents(int transitionEvents)
+        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents)
         {
             base.ProcessTransitionEvents(transitionEvents);
 
             //if we need to face target when happens
-            if (EnumHelper.HasEnum(transitionEvents, (int)TransitionEvent.FACE_ENEMY)) { this.FaceTargetY(lockonTarget); }
+            if (EnumHelper.HasEnum((int)transitionEvents, (int)TransitionEvent.FACE_ENEMY)) { this.FaceTargetY(lockonTarget); }
 
         }
 

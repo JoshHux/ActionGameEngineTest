@@ -35,7 +35,7 @@ namespace BEPUUnity
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            Gizmos.color = ((float) m_mass > 0) ? Color.green : Color.red;
+            Gizmos.color = ((float)m_mass > 0) ? Color.green : Color.red;
 
             // max/min
             /*BepuVector3 halfOffset = new BepuVector3((float)m_width / 2, (float)m_height / 2, (float)m_length / 2);
@@ -64,11 +64,13 @@ namespace BEPUUnity
             Gizmos.DrawLine(min + x + z, min + x + z + y);
             Gizmos.DrawLine(min + z, min + z + y);
 */
-            Vector3 hold =
-                new Vector3((float) scale.X, (float) scale.Y, (float) scale.Z);
-            Gizmos.DrawWireCube(transform.position, hold);
-            //Gizmos.matrix = Matrix4x4.TRS(transform.localPosition, BepuQuaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z), BepuVector3.one);
-            //Gizmos.matrix = transform.worldToLocalMatrix;
+            //Gizmos.matrix = Matrix4x4.TRS(transform.position, Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z), Vector3.one);
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+
+
+            Vector3 hold = new Vector3((float)scale.X, (float)scale.Y, (float)scale.Z);
+            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
+            Gizmos.DrawWireCube(Vector3.zero, hold);
         }
 #endif
     }

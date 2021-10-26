@@ -3,7 +3,7 @@ namespace ActionGameEngine.Interfaces
 {
     public interface ICollideable
     {
-        public void TriggerCollided(object sender);
-        public void TriggerExitCollided(object sender);
+        void TriggerCollided(object sender);
+        void TriggerExitCollided(object sender);
     }
 }

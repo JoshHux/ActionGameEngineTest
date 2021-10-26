@@ -18,6 +18,7 @@ namespace ActionGameEngine
         // Start is called before the first frame update
         protected override void OnStart()
         {
+            trigger = this.GetComponent<ShapeBase>();
             triggeredWith = 0;
             trigger.GetEntity().CollisionInformation.Events.ContactCreated += OnBepuTriggerEnter;
             trigger.GetEntity().CollisionInformation.Events.RemovingContact += OnBepuTriggerExit;
