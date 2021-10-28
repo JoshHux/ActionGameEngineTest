@@ -152,939 +152,111 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39e2b8b7e977c2a439770d43340b0f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test:
+    m_rawValue: -3951369984
   toSave:
-    moveStats:
-      mass:
+    maxHp: 100
+    mass:
+      m_rawValue: 4294967296
+    friction:
+      m_rawValue: -75376672768
+    maxVelocity:
+      X:
         m_rawValue: 0
-      maxGroundSpeed:
+      Y:
         m_rawValue: 0
-      maxWalkSpeed:
+      Z:
         m_rawValue: 0
-      maxAirSpeed:
+    acceleration:
+      X:
         m_rawValue: 0
-      maxFallSpeed:
+      Y:
         m_rawValue: 0
-      groundAcceleration:
+      Z:
         m_rawValue: 0
-      walkAcceleration:
-        m_rawValue: 0
-      airAcceleration:
-        m_rawValue: 0
-      groundFriction:
-        m_rawValue: 0
-      airFriction:
-        m_rawValue: 0
-      jumpForce:
-        m_rawValue: 0
-      maxAirJumps: 0
-    moveCondition:
-      curAirJumps: 0
-      facingRight: 0
-      isGrounded: 0
-    MaxHealth: 0
-    CurHealth: 0
-    currentState:
-      stateName: New State
-      stateID: 0
-      parentID: 0
-      enterStateConditions: 0
-      exitStateConditions: 0
-      stateConditions: 0
-      cancelCondition: 2147483647
-      _transitions: []
-      duration: 0
-      Frames: []
-    defaultState:
-      stateName: New State
-      stateID: 0
-      parentID: 0
-      enterStateConditions: 0
-      exitStateConditions: 0
-      stateConditions: 0
-      cancelCondition: 2147483647
-      _transitions: []
-      duration: 0
-      Frames: []
-    allStates: []
-    inputRecorder:
-      prevInput:
-        prevInputs:
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        prevInputsCode:
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        arrayPos: 0
-        codeArrayPos: 0
-    commandList:
-      moveList: []
-    cancelCondition: 0
-    stateCondition: 0
-    xtraCondition: 0
+    stateList:
+      stateList:
+      - stateID: 0
+        parentID: 0
+        duration: 0
+        stateConditions: 13
+        cancelConditions: 0
+        transitions: []
+        frames:
+        - atFrame: 0
+          toggleStateConditions: 0
+          toggleCancelConditions: 0
+          timerEvent:
+            TimerDuration: 0
+            conditions: 0
+            isPersistent: 0
+          flags: 0
+          frameVelocity:
+            X:
+              m_rawValue: 0
+            Y:
+              m_rawValue: 0
+            Z:
+              m_rawValue: 0
+          hitboxes: []
+          hurtboxes:
+          - localPos:
+              X:
+                m_rawValue: 0
+              Y:
+                m_rawValue: 0
+              Z:
+                m_rawValue: 0
+            localRot:
+              X:
+                m_rawValue: 0
+              Y:
+                m_rawValue: 0
+              Z:
+                m_rawValue: 0
+            localDim:
+              X:
+                m_rawValue: 4294967296
+              Y:
+                m_rawValue: 4294967296
+              Z:
+                m_rawValue: 4294967296
+        animName: Idle
+    moveList:
+      command:
+      - targetState: 0
+        cancelConditions: 0
+        cmdMotion:
+          commandInput:
+          - inputItem:
+              m_rawValue: 2
+            flags: 3
   fromSave:
-    moveStats:
-      mass:
+    maxHp: 0
+    mass:
+      m_rawValue: 0
+    friction:
+      m_rawValue: 0
+    maxVelocity:
+      X:
         m_rawValue: 0
-      maxGroundSpeed:
+      Y:
         m_rawValue: 0
-      maxWalkSpeed:
+      Z:
         m_rawValue: 0
-      maxAirSpeed:
+    acceleration:
+      X:
         m_rawValue: 0
-      maxFallSpeed:
+      Y:
         m_rawValue: 0
-      groundAcceleration:
+      Z:
         m_rawValue: 0
-      walkAcceleration:
-        m_rawValue: 0
-      airAcceleration:
-        m_rawValue: 0
-      groundFriction:
-        m_rawValue: 0
-      airFriction:
-        m_rawValue: 0
-      jumpForce:
-        m_rawValue: 0
-      maxAirJumps: 0
-    moveCondition:
-      curAirJumps: 0
-      facingRight: 0
-      isGrounded: 0
-    MaxHealth: 0
-    CurHealth: 0
-    currentState:
-      stateName: New State
-      stateID: 0
-      parentID: 0
-      enterStateConditions: 0
-      exitStateConditions: 0
-      stateConditions: 0
-      cancelCondition: 2147483647
-      _transitions: []
-      duration: 0
-      Frames: []
-    defaultState:
-      stateName: New State
-      stateID: 0
-      parentID: 0
-      enterStateConditions: 0
-      exitStateConditions: 0
-      stateConditions: 0
-      cancelCondition: 2147483647
-      _transitions: []
-      duration: 0
-      Frames: []
-    allStates: []
-    inputRecorder:
-      prevInput:
-        prevInputs:
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        - direction: 0
-          buttons: 0
-        prevInputsCode:
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        - framesHeld: 0
-          code: 
-          inputCode: 0
-        arrayPos: 0
-        codeArrayPos: 0
-    commandList:
-      moveList: []
-    cancelCondition: 0
-    stateCondition: 0
-    xtraCondition: 0
+    stateList:
+      stateList: []
+    moveList:
+      command: []
   json: 
+  lst: []
 --- !u!4 &229946327
 Transform:
   m_ObjectHideFlags: 0
@@ -1110,6 +282,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1125,6 +298,38 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

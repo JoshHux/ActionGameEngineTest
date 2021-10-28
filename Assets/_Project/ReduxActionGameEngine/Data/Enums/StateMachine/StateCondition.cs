@@ -1,9 +1,12 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
     //hopefully self-explainatory, these are the overall characteristics that the state has
     //these will tell the character what to do or what happends while in that state
     //2 bytes
     [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum StateCondition : int
     {
         GROUNDED = 1 << 0,

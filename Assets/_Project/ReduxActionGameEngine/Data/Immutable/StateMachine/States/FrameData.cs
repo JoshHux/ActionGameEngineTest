@@ -24,6 +24,18 @@ namespace ActionGameEngine.Data
         public HitboxData[] hitboxes;
         public HurtboxData[] hurtboxes;
 
+        public FrameData(int f, StateCondition sc, CancelConditions cc, TimerEvent te, FrameEventFlag ff, BepuVector3 fv, HitboxData[] hib, HurtboxData[] hub)
+        {
+            atFrame = f;
+            toggleStateConditions = sc;
+            toggleCancelConditions = cc;
+            timerEvent = te;
+            flags = ff;
+            frameVelocity = fv;
+            hitboxes = hib;
+            hurtboxes = hub;
+        }
+
         public bool isValid() { return (atFrame > 0) || (flags > 0) || HasHitboxes() || HasHurtboxes(); }
         public bool HasHitboxes() { return hitboxes != null; }
         public bool HasHurtboxes() { return hurtboxes != null; }

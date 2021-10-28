@@ -29,6 +29,18 @@ namespace ActionGameEngine.Data
 
         public string animName;
 
+        public StateData(int sID, int pID, int d, StateCondition sc, CancelConditions cc, TransitionData[] td, FrameData[] fd, string an)
+        {
+            stateID = sID;
+            parentID = pID;
+            duration = d;
+            stateConditions = sc;
+            cancelConditions = cc;
+            transitions = td;
+            frames = new FrameData[0];
+            animName = an;
+        }
+
         public FrameData GetFrameAt(int f)
         {
 

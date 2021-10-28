@@ -10,6 +10,11 @@ namespace ActionGameEngine.Data
     {
         public MotionTransition[] command;
 
+        public CommandList(MotionTransition[] mt)
+        {
+            command = mt;
+        }
+
         //-1 if state is not found
         public int Check(RecorderElement[] playerInputs, CancelConditions cond)
         {

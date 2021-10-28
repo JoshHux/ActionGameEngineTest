@@ -9,13 +9,22 @@ namespace ActionGameEngine.Data
         //target state to transition to once requirements are met
         public int targetState;
         //motion required to transition to state
-        Command cmdMotion;
+        public Command cmdMotion;
         //conditions that must be met if we want it to transition to the target state
-        CancelConditions cancelConditions;
+        public CancelConditions cancelConditions;
         //required flags in order to transition to state
         public TransitionFlag transitionFlag;
         //events to influence the gamestate one the transition is ran
         public TransitionEvent transitionEvent;
+
+        public TransitionData(int ts, Command cm, CancelConditions cc, TransitionFlag tf, TransitionEvent te)
+        {
+            targetState = ts;
+            cmdMotion = cm;
+            cancelConditions = cc;
+            transitionFlag = tf;
+            transitionEvent = te;
+        }
 
         public bool IsValid()
         {

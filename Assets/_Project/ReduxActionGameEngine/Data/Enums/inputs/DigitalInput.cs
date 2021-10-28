@@ -1,5 +1,9 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
+    [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DigitalInput : ushort
     {
         _1 = 1 << 0,

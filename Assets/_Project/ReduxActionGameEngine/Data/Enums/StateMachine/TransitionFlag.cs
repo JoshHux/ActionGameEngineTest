@@ -1,8 +1,11 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
+    [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     //for any events in gameplay that might warrant a state to transition
     //these conditions are for information coming from gameplay to the statemachine
-    [System.Flags]
     public enum TransitionFlag : short
     {
         //When character's grounded trigger detects that the character is on the ground

@@ -1,5 +1,6 @@
 using ActionGameEngine.Enum;
 using ActionGameEngine.Input;
+using ActionGameEngine.Data.Helpers.Wrappers;
 using BEPUutilities;
 using FixMath.NET;
 
@@ -12,13 +13,19 @@ namespace ActionGameEngine.Data
         public int maxHp;
 
         public Fix64 mass;
-
+        [Newtonsoft.Json.JsonProperty]
+        [UnityEngine.SerializeField]
         private Fix64 friction;
-
+        [Newtonsoft.Json.JsonProperty]
+        [UnityEngine.SerializeField]
         private BepuVector3 maxVelocity;
+        [Newtonsoft.Json.JsonProperty]
+        [UnityEngine.SerializeField]
         private BepuVector3 acceleration;
-[UnityEngine.SerializeField]
-        private StateData[] stateList;
+
+        [Newtonsoft.Json.JsonProperty]
+        [UnityEngine.SerializeField]
+        private StateListWrapper stateList;
         public CommandList moveList;
 
         public Fix64 GetFriction() { return friction; }
@@ -28,6 +35,17 @@ namespace ActionGameEngine.Data
         public Fix64 GetMaxForwardsVel() { return maxVelocity.X; }
         public Fix64 GetMaxSideVel() { return maxVelocity.Y; }
         public Fix64 GetMaxBackVel() { return maxVelocity.Z; }
+
+        public CharacterData(int mhp, Fix64 m, Fix64 f, BepuVector3 mv, BepuVector3 a, StateListWrapper sl, CommandList cl)
+        {
+            maxHp = mhp;
+            mass = m;
+            friction = f;
+            maxVelocity = mv;
+            acceleration = a;
+            stateList = sl;
+            moveList = cl;
+        }
 
         public StateData GetStateFromID(int stateID)
         {
@@ -54,7 +72,6 @@ namespace ActionGameEngine.Data
         public TransitionData TryTransitionState(int fromState, CancelConditions playerCond, TransitionFlag playerFlags)
         {
             RecorderElement[] playerInputs = new RecorderElement[1];
-            StateData state = stateList[fromState];
             return TryTransitionState(fromState, playerInputs, playerCond, playerFlags);
         }
 

@@ -9,6 +9,11 @@ namespace ActionGameEngine.Input
     {
         public InputFragment[] commandInput;
 
+        public Command(InputFragment[] inf)
+        {
+            commandInput = inf;
+        }
+
         public bool Check(RecorderElement[] playerInputs)
         {
             int len = commandInput.Length;

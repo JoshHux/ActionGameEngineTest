@@ -1,14 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
-using Spax;
-using Spax.Data;
-using UnityEditor;
+using FixMath.NET;
 using UnityEngine;
 using ActionGameEngine.Input;
+using ActionGameEngine.Data;
+using Newtonsoft.Json;
 
 public class SpaxJSONSaver : MonoBehaviour
 {
-    public CharacterData toSave;
+    public Fix64 test;
+    [SerializeField]
+    private CharacterData toSave;
 
     public CharacterData fromSave;
 
@@ -19,7 +20,9 @@ public class SpaxJSONSaver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         string path = null;
+
 
         //if in editor
 #if UNITY_EDITOR
@@ -36,7 +39,8 @@ public class SpaxJSONSaver : MonoBehaviour
 #endif
 
 
-        json = JsonUtility.ToJson(toSave, true);
+        //json = JsonUtility.ToJson(toSave, true);
+        json = JsonConvert.SerializeObject(toSave, Formatting.Indented);
 
         //refresh to correctly see the changes to json
 #if UNITY_EDITOR
@@ -47,10 +51,9 @@ public class SpaxJSONSaver : MonoBehaviour
         //System.IO.File.WriteAllText(Application.persistentDataPath + "/Assets/Resources/JSON/TestData/Test.json", json);
         System.IO.File.WriteAllText(path, json);
 
-        TextAsset jsonData =
-            Resources.Load<TextAsset>("JSON/TestData/Test");
+        TextAsset jsonData = Resources.Load<TextAsset>("JSON/TestData/Test");
         Debug.Log(jsonData);
-        fromSave = JsonUtility.FromJson<CharacterData>(jsonData.text);
+        fromSave = JsonConvert.DeserializeObject<CharacterData>(jsonData.text);
 
         prevInputs = new LinkedList<RecorderElement>();
         prevInputs.AddFirst(new RecorderElement());

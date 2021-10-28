@@ -12,7 +12,6 @@ namespace FixMath.NET
     public partial struct Fix64 : IEquatable<Fix64>, IComparable<Fix64>
     {
         public const MethodImplOptions AggressiveInlining = (MethodImplOptions)256;
-        [Fix64Float]
         public long m_rawValue;
 
         // Precision of this type is 2^-32, that is 2,3283064365386962890625E-10
@@ -1146,6 +1145,7 @@ namespace FixMath.NET
         /// <summary>
         /// The underlying integer representation
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public long RawValue => m_rawValue;
 
         /// <summary>

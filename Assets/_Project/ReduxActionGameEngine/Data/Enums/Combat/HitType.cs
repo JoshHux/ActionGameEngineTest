@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
     [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     //type of hit hitbox is, IE. unblockable, grab, strike, low, etc.
     //1 byte
     public enum HitType : ushort

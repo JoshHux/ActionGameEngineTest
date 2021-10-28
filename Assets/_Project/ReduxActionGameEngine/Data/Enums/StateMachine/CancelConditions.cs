@@ -1,7 +1,11 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
     //only really used in the movelist, it tells what the character can cancel into
     //labels are arbitrary, you can make them mean anything you want
+    [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum CancelConditions : int
     {
 

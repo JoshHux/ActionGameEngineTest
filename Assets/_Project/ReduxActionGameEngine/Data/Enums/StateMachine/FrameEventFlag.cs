@@ -1,8 +1,10 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
     //flag for any events that a frame might have, like setting or applying velocity
-    //1 byte
     [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum FrameEventFlag : byte
     {
         APPLY_VEL = 1 << 0,

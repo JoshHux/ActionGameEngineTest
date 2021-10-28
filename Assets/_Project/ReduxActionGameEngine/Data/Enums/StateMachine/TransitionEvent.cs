@@ -1,7 +1,10 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
-    //for any events to influence gamestate once transitioned to
     [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
+    //for any events to influence gamestate once transitioned to
     public enum TransitionEvent : byte
     {
         KILL_X_VEL = 1 << 0,

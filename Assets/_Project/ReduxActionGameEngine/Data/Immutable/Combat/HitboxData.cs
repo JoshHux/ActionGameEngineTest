@@ -19,16 +19,16 @@ namespace ActionGameEngine.Data
         //higher priority means that it'll override hitboxes from the same entity with lower priority
         public int priority;
 
-        private int attackLv;
+        public int attackLv;
 
         //when you hit a move, what to apply to the hit entity
-        private StateCondition hitCause;
+        public StateCondition hitCause;
         //when you hit a move, what to apply to the counter-hit entity
-        private StateCondition counterHitCause;
+        public StateCondition counterHitCause;
         //what we can cancel into when we land a hit
-        private CancelConditions hitCancel;
+        public CancelConditions hitCancel;
         //what we can cancel into when we land a counter-hit
-        private CancelConditions counterHitCancel;
+        public CancelConditions counterHitCancel;
 
         public HitType type;
 

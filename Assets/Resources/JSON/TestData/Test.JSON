@@ -1,761 +1,124 @@
 {
-    "moveStats": {
-        "mass": {
-            "m_rawValue": 0
-        },
-        "maxGroundSpeed": {
-            "m_rawValue": 0
-        },
-        "maxWalkSpeed": {
-            "m_rawValue": 0
-        },
-        "maxAirSpeed": {
-            "m_rawValue": 0
-        },
-        "maxFallSpeed": {
-            "m_rawValue": 0
-        },
-        "groundAcceleration": {
-            "m_rawValue": 0
-        },
-        "walkAcceleration": {
-            "m_rawValue": 0
-        },
-        "airAcceleration": {
-            "m_rawValue": 0
-        },
-        "groundFriction": {
-            "m_rawValue": 0
-        },
-        "airFriction": {
-            "m_rawValue": 0
-        },
-        "jumpForce": {
-            "m_rawValue": 0
-        },
-        "maxAirJumps": 0
+  "maxHp": 100,
+  "mass": {
+    "m_rawValue": 4294967296
+  },
+  "friction": {
+    "m_rawValue": -75376672768
+  },
+  "maxVelocity": {
+    "X": {
+      "m_rawValue": 0
     },
-    "moveCondition": {
-        "curAirJumps": 0,
-        "facingRight": false,
-        "isGrounded": false
+    "Y": {
+      "m_rawValue": 0
     },
-    "MaxHealth": 0,
-    "CurHealth": 0,
-    "currentState": {
-        "animName": "New State",
+    "Z": {
+      "m_rawValue": 0
+    }
+  },
+  "acceleration": {
+    "X": {
+      "m_rawValue": 0
+    },
+    "Y": {
+      "m_rawValue": 0
+    },
+    "Z": {
+      "m_rawValue": 0
+    }
+  },
+  "stateList": {
+    "stateList": [
+      {
         "stateID": 0,
         "parentID": 0,
-        "enterStateConditions": 0,
-        "exitStateConditions": 0,
-        "stateConditions": 0,
-        "cancelCondition": 2147483647,
-        "_transitions": [],
         "duration": 0,
-        "Frames": []
-    },
-    "defaultState": {
-        "animName": "New State",
-        "stateID": 0,
-        "parentID": 0,
-        "enterStateConditions": 0,
-        "exitStateConditions": 0,
-        "stateConditions": 0,
-        "cancelCondition": 2147483647,
-        "_transitions": [],
-        "duration": 0,
-        "Frames": []
-    },
-    "allStates": [],
-    "inputRecorder": {
-        "prevInput": {
-            "prevInputs": [
-                {
-                    "direction": 0,
-                    "buttons": 0
+        "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION",
+        "cancelConditions": 0,
+        "transitions": [],
+        "frames": [
+          {
+            "atFrame": 0,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": 0,
+            "frameVelocity": {
+              "X": {
+                "m_rawValue": 0
+              },
+              "Y": {
+                "m_rawValue": 0
+              },
+              "Z": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [],
+            "hurtboxes": [
+              {
+                "localPos": {
+                  "X": {
+                    "m_rawValue": 0
+                  },
+                  "Y": {
+                    "m_rawValue": 0
+                  },
+                  "Z": {
+                    "m_rawValue": 0
+                  }
                 },
-                {
-                    "direction": 0,
-                    "buttons": 0
+                "localRot": {
+                  "X": {
+                    "m_rawValue": 0
+                  },
+                  "Y": {
+                    "m_rawValue": 0
+                  },
+                  "Z": {
+                    "m_rawValue": 0
+                  }
                 },
-                {
-                    "direction": 0,
-                    "buttons": 0
-                },
-                {
-                    "direction": 0,
-                    "buttons": 0
-                },
-                {
-                    "direction": 0,
-                    "buttons": 0
-                },
-                {
-                    "direction": 0,
-                    "buttons": 0
-                },
-                {
-                    "direction": 0,
-                    "buttons": 0
-                },
-                {
-                    "direction": 0,
-                    "buttons": 0
-                },
-                {
-                    "direction": 0,
-                    "buttons": 0
-                },
-                {
-                    "direction": 0,
-                    "buttons": 0
+                "localDim": {
+                  "X": {
+                    "m_rawValue": 4294967296
+                  },
+                  "Y": {
+                    "m_rawValue": 4294967296
+                  },
+                  "Z": {
+                    "m_rawValue": 4294967296
+                  }
                 }
-            ],
-            "prevInputsCode": [
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                },
-                {
-                    "framesHeld": 0,
-                    "code": "",
-                    "inputCode": 0
-                }
-            ],
-            "arrayPos": 0,
-            "codeArrayPos": 0
+              }
+            ]
+          }
+        ],
+        "animName": "Idle"
+      }
+    ]
+  },
+  "moveList": {
+    "command": [
+      {
+        "targetState": 0,
+        "cancelConditions": 0,
+        "cmdMotion": {
+          "commandInput": [
+            {
+              "inputItem": {
+                "m_rawValue": 2
+              },
+              "flags": "PRESSED, RELEASED"
+            }
+          ]
         }
-    },
-    "commandList": {
-        "moveList": []
-    },
-    "cancelCondition": 0,
-    "stateCondition": 0,
-    "xtraCondition": 0
+      }
+    ]
+  }
 }

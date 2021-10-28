@@ -168,6 +168,87 @@ namespace ActionGameEngine.Input
             return new InputItem(part);
         }
 
+        public static DigitalInput ToDigInp(short rawVal)
+        {
+            Fix64 x = 0;
+            Fix64 y = 0;
+            DigitalInput ret = 0;
+
+
+            //x is nonzero
+            if ((rawVal & (1 << 3)) > 0)
+            {
+                x = Fix64.One;
+                //halve y?
+                if ((rawVal & (1 << 5)) > 0)
+                {
+                    x *= BEPUutilities.F64.Half;
+                }
+                //negative?
+                if ((rawVal & (1 << 0)) > 0)
+                {
+                    x *= -1;
+                }
+
+            }
+
+            //y is nonzero
+            if ((rawVal & (1 << 3)) > 0)
+            {
+                y = Fix64.One;
+                //halve y?
+                if ((rawVal & (1 << 4)) > 0)
+                {
+                    y *= BEPUutilities.F64.Half;
+                }
+                //negative?
+                if ((rawVal & (1 << 2)) > 0)
+                {
+                    y *= -1;
+                }
+
+            }
+
+            //x is nonzero
+            if (x != 0)
+            {
+                ret = DigitalInput.X_NONZERO;
+                //x is positive
+                if (x > 0)
+                {
+                    ret &= DigitalInput.X_POSITIVE;
+                }
+                else
+                {
+                    ret &= DigitalInput.X_NEGATIVE;
+                }
+            }
+            else
+            {
+                ret = DigitalInput.X_ZERO;
+            }
+
+            //y is nonzero
+            if (x != 0)
+            {
+                ret |= DigitalInput.Y_NONZERO;
+                //y is positive
+                if (x > 0)
+                {
+                    ret &= DigitalInput.Y_POSITIVE;
+                }
+                else
+                {
+                    ret &= DigitalInput.Y_NEGATIVE;
+                }
+            }
+            else
+            {
+                ret &= DigitalInput.Y_ZERO;
+            }
+            return ret;
+        }
+
 
         //for inputs and checking commands
         public bool Check(InputItem other, bool read4way)
@@ -208,16 +289,16 @@ namespace ActionGameEngine.Input
             // and also the guidance for operator== at
             //   http://go.microsoft.com/fwlink/?LinkId=85238
             //
-            
+
             if (obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
 
 
-            return this.GetHashCode()==obj.GetHashCode();
+            return this.GetHashCode() == obj.GetHashCode();
         }
-        
+
         // override object.GetHashCode
         public override int GetHashCode()
         {

@@ -1,5 +1,9 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
+    [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     //used for gameplay to tell what gameplay modifiers to use when hit
     public enum HitIndicator : byte
     {

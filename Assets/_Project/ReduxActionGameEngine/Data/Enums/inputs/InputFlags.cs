@@ -1,7 +1,12 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 namespace ActionGameEngine.Enum
 {
     //represents specific events that the input occured with
     //ONLY RELEVANT WHEN CHECKING INPUT FOR TRANSITION/COMMAND
+    [System.Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
+
     public enum InputFlags : byte
     {
         PRESSED = 1 << 0,
