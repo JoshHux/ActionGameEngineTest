@@ -40,7 +40,7 @@ public class SpaxJSONSaver : MonoBehaviour
 
 
         //json = JsonUtility.ToJson(toSave, true);
-        json = JsonConvert.SerializeObject(toSave, Formatting.Indented);
+        //json = JsonConvert.SerializeObject(toSave, Formatting.Indented);
 
         //refresh to correctly see the changes to json
 #if UNITY_EDITOR

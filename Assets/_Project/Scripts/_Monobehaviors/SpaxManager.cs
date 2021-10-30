@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Spax.Input;
 using System;
-using BEPUphysics.CollisionRuleManagement;
 
 namespace Spax
 {
     public class SpaxManager : MonoBehaviour
     {
+        private static SpaxManager SpaxInstance;
+
         public delegate void InputUpdateEventHandler();
         public delegate void PreUpdateEventHandler();
         public delegate void StateUpdateEventHandler();
@@ -32,53 +32,12 @@ namespace Spax
         public event SpaxUpdateEventHandler SpaxUpdate;
 
         //for initializing the physics and filtering collisions
-        private CollisionGroup[] groups;
+        //private CollisionGroup[] groups;
 
-        private BEPUphysics.Space m_space;
         void Awake()
         {
-            instance = this;
-
-            m_space = new BEPUphysics.Space();
-
-
-            PhysicsCollisionMatrixLayerMasks2.SaveCollisionMatrix(true);
-
-            int xLen = PhysicsCollisionMatrixLayerMasks2.CollisionMatrix.GetLength(0);
-            int yLen = PhysicsCollisionMatrixLayerMasks2.CollisionMatrix.GetLength(0);
-            groups = new CollisionGroup[xLen];
-            for (int i = 0; i < xLen; i++)
-            {
-                CollisionGroup newGroup = new CollisionGroup();
-
-                groups[i] = newGroup;
-            }
-
-
-            for (int i = 0; i < xLen; i++)
-            {
-                for (int j = i; j < yLen; j++)
-                {
-
-                    bool hold = PhysicsCollisionMatrixLayerMasks2.CollisionMatrix[i, j];
-                    if (!hold && groups[j] != null)
-                    {
-                        //Debug.Log(i + " " + j);
-                        CollisionGroup.DefineCollisionRule(groups[i], groups[j], CollisionRule.NoBroadPhase);
-                    }
-                }
-            }
-
-
+            SpaxInstance = this;
             Application.targetFrameRate = 60;
-
-            var shapeList = Resources.FindObjectsOfTypeAll<BEPUUnity.ShapeBase>();
-            for (int i = 0; i < shapeList.Length; i++)
-            {
-                shapeList[i].Initialize();
-                shapeList[i].SetCollisionGroup(groups[shapeList[i].gameObject.layer]);
-                m_space.Add(shapeList[i].GetEntity());
-            }
 
         }
 
@@ -95,7 +54,8 @@ namespace Spax
             StateCleanUpdate?.Invoke();
             PreUpdate?.Invoke();
             SpaxUpdate?.Invoke();
-            m_space.Update();
+            //m_space.Update();
+            //UpdatePhysics();
             HitQueryUpdate?.Invoke();
             HurtQueryUpdate?.Invoke();
             PostUpdate?.Invoke();
@@ -106,18 +66,5 @@ namespace Spax
             RenderUpdate?.Invoke();
         }
 
-
-        public void Add(BEPUphysics.Constraints.TwoEntity.Joints.Joint joint)
-        {
-            m_space.Add(joint);
-        }
-
-        public void Add(BEPUphysics.Constraints.TwoEntity.JointLimits.JointLimit joint)
-        {
-            m_space.Add(joint);
-        }
-
-
-        private static SpaxManager instance;
     }
 }
