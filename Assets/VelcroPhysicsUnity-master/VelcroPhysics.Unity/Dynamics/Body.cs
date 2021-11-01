@@ -54,6 +54,9 @@ namespace VelcroPhysics.Dynamics
         internal World _world;
         public VTransform _xf; // the body origin VTransform
 
+        //Spax's addition
+        public ParentConstraint constraint;
+
         internal Body(World world, BodyTemplate template)
         {
             FixtureList = new List<Fixture>(1);

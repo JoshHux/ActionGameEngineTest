@@ -516,7 +516,7 @@ namespace VelcroPhysics.Dynamics
             }
 
             // Find TOI events and solve them.
-            for (;;)
+            for (; ; )
             {
                 // Find the first TOI.
                 Contact minContact = null;
@@ -664,7 +664,7 @@ namespace VelcroPhysics.Dynamics
                 minContact._flags &= ~ContactFlags.IslandFlag;
 
                 // Get contacts on bodyA and bodyB.
-                Body[] bodies = {bA0, bB0};
+                Body[] bodies = { bA0, bB0 };
                 for (var i = 0; i < 2; ++i)
                 {
                     var body = bodies[i];
@@ -931,7 +931,8 @@ namespace VelcroPhysics.Dynamics
             step.dtRatio = _invDt0 * dt;
 
             //Update controllers
-            for (var i = 0; i < ControllerList.Count; i++) ControllerList[i].Update(dt);
+            int len = ControllerList.Count;
+            for (var i = 0; i < len; i++) ControllerList[i].Update(dt);
 
             if (Settings.EnableDiagnostics)
                 ControllersUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime);
@@ -960,7 +961,16 @@ namespace VelcroPhysics.Dynamics
             if (Settings.AutoClearForces)
                 ClearForces();
 
-            for (var i = 0; i < BreakableBodyList.Count; i++) BreakableBodyList[i].Update();
+            len = BreakableBodyList.Count;
+            for (var i = 0; i < len; i++) BreakableBodyList[i].Update();
+            len = BodyList.Count;
+            for (var i = 0; i < len; i++)
+            {
+                Body hold = BodyList[i];
+                ParentConstraint constraint = hold.constraint;
+
+                if (constraint != null) { constraint.ParentUpdate(); }
+            }
 
             _invDt0 = step.inv_dt;
 

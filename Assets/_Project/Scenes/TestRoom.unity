@@ -197,9 +197,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 203000867}
-  - component: {fileID: 203000868}
   - component: {fileID: 203000870}
   - component: {fileID: 203000869}
+  - component: {fileID: 203000868}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Player
@@ -234,25 +234,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 203000866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5faf35e642ed1fc46a44ad309df96329, type: 3}
+  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 0}
-  offset:
-    X:
-      m_rawValue: 0
-    Y:
-      m_rawValue: 0
-    Z:
-      m_rawValue: 0
-  m_mass:
-    m_rawValue: 4294967296
-  isTrigger: 0
-  lockXRot: 1
-  lockYRot: 1
-  lockZRot: 1
-  m_radius:
-    m_rawValue: 4294967296
+  _mass: 0
+  IsTrigger: 0
+  IsKinematic: 0
+  IsStatic: 0
+  lockRotation: 0
+  _height: 0
+  _width: 0
 --- !u!114 &203000869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,28 +272,10 @@ MonoBehaviour:
     maxHp: 0
     mass:
       m_rawValue: 4294967296
+    friction:
+      m_rawValue: 0
     stateList:
-    - stateID: 0
-      parentID: 0
-      duration: 1
-      stateConditions: 4
-      cancelConditions: 0
-      transitions: []
-      frames:
-      - atFrame: 0
-        toggleStateConditions: 0
-        toggleCancelConditions: 0
-        flags: 0
-        frameVelocity:
-          X:
-            m_rawValue: 0
-          Y:
-            m_rawValue: 0
-          Z:
-            m_rawValue: 0
-        hitboxes: []
-        hurtboxes: []
-      animName: Idle
+      stateList: []
     moveList:
       command: []
 --- !u!1 &224830393
@@ -350,9 +323,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curCollidingGo: []
-  curColliding: []
-  wasColliding: []
-  diffbepuColliders: []
 --- !u!114 &224830396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,7 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5b950062804a548825c9b8cdde776e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 203000868}
+  parent: {fileID: 0}
   offset:
     X:
       m_rawValue: 0
@@ -899,7 +869,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5b950062804a548825c9b8cdde776e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 203000868}
+  parent: {fileID: 0}
   offset:
     X:
       m_rawValue: 0
@@ -1056,7 +1026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5faf35e642ed1fc46a44ad309df96329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 203000868}
+  parent: {fileID: 0}
   offset:
     X:
       m_rawValue: 0

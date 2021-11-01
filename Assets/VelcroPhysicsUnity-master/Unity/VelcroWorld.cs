@@ -12,7 +12,7 @@ public class VelcroWorld : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-
+        manager = new VelcroWorldManager2D();
         manager.Initialize();
 
         instance = this;

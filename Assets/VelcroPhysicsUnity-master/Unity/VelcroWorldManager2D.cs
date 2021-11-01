@@ -13,7 +13,7 @@ public class VelcroWorldManager2D
 
     public void Initialize()
     {
-
+        instance = this;
         if (world == null)
         {
             world = new World(new Vector2(0f, -1f));
@@ -39,8 +39,16 @@ public class VelcroWorldManager2D
         if (body != null) { return; }
 
         newBody.Initialize(world);
+        body = newBody.GetBody();
         goBodDict.Add(body, newBody.gameObject);
+        if (newBody.transform.transform.parent != null && newBody.transform.parent.GetComponentInParent<VelcroBody>() != null)
+        {
+            VelcroBody parentGo = newBody.transform.parent.GetComponentInParent<VelcroBody>();
+            Body parent = parentGo.Body;
+            newBody.parent = parent;
 
+            body.constraint = new ParentConstraint(parent, body, (newBody.transform.position - parentGo.transform.position), (body.Rotation - parent.Rotation));
+        }
         world.ProcessChanges();
     }
     public void RemoveBody(VelcroBody newBody)
@@ -103,7 +111,7 @@ public class VelcroWorldManager2D
 
     private VelcroCollision GetCollisionInfo(Body other, Contact contact)
     {
-        VelcroCollision ret = null;
+        VelcroCollision ret = new VelcroCollision();
 
         ret.gameObject = goBodDict[other];
         ret.collider = ret.gameObject.GetComponent<VelcroBody>();
