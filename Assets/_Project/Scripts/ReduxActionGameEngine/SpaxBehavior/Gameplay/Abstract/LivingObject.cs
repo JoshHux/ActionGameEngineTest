@@ -63,8 +63,10 @@ namespace ActionGameEngine
         {
             //recordthe vlocity to do
             //calcVel = rb.velocity;
+            status.SetInHitstop(stopTimer.TickTimer());
+
             //if not in Hitstop, tick the gameplay state timers
-            if (!stopTimer.TickTimer())
+            if (!status.GetInHitstop())
             {
                 stateTimer.TickTimer();
                 persistentTimer.TickTimer();
@@ -85,6 +87,7 @@ namespace ActionGameEngine
 
         protected override void SpaxUpdate()
         {
+            if (status.GetInHitstop()) { return; }
             //get the current state conditions
             StateCondition curCond = status.GetStateConditions();
             ProcessStateData(curCond);
@@ -94,6 +97,7 @@ namespace ActionGameEngine
 
         protected override void PostUpdate()
         {
+            if (status.GetInHitstop()) { return; }
             //incerment the number of frames we need to render
             helper.renderFrames++;
         }

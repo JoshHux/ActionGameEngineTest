@@ -12,8 +12,8 @@ namespace ActionGameEngine
     {
         //protected ShapeBase lockonTarget;
 
-        protected override void StateCleanUpdate() { }
-        protected override void PreUpdate() { }
+        protected override void StateCleanUpdate() { if (status.GetInHitstop()) { return; } }
+        protected override void PreUpdate() { if (status.GetInHitstop()) { return; } }
 
         public override HitIndicator GetHit(int attackerID, HitboxData boxData)
         {
@@ -97,10 +97,8 @@ namespace ActionGameEngine
                 AddPotentialHitbox(attackerID, boxData, indicator);
                 return indicator;
             }
-            else
-            {
-                Debug.LogError("Invalid HitType, must have GRAB or STRIKE tag");
-            }
+
+            Debug.LogError("Invalid HitType, must have GRAB or STRIKE tag");
 
             return HitIndicator.WHIFFED;
         }

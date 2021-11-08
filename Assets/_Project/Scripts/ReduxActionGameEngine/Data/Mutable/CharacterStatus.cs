@@ -18,6 +18,7 @@ namespace ActionGameEngine.Data
         private StateCondition persistentCond;
         //if we need to check for a new state because of a new input
         private bool checkState;
+        private bool inHitstop;
         public void SetNewState(StateData newState) { currentState = newState; }
         public void SetNewStateConditions(StateCondition newCond) { currentStateCond = newCond; }
         public void ToggleStateConditions(StateCondition newCond) { currentStateCond ^= newCond; }
@@ -28,6 +29,7 @@ namespace ActionGameEngine.Data
         public void SetNewTransitionFlags(TransitionFlag newFlags) { currentTransitionFlags = newFlags; }
         public void AddTransitionFlags(TransitionFlag newFlags) { currentTransitionFlags |= newFlags; }
         public void SetCheckState(bool newInput) { checkState = newInput; }
+        public void SetInHitstop(bool hitstop) { inHitstop = hitstop; }
         public void SetCurrentHP(int newHP) { currentHp = newHP; }
 
 
@@ -35,7 +37,9 @@ namespace ActionGameEngine.Data
         public void AddCurrentHP(int change) { currentHp += change; }
         public StateData GetCurrentState() { return currentState; }
         public int GetCurrentStateID() { return currentState.stateID; }
+        public int GetCurrentHp() { return currentHp; }
         public bool GetCheckState() { return checkState; }
+        public bool GetInHitstop() { return inHitstop; }
         public StateCondition GetStateConditions() { return currentStateCond | persistentCond; }
         public StateCondition GetPersistentConditions() { return persistentCond; }
         public CancelConditions GetCancelConditions() { return currentCancelCond; }
