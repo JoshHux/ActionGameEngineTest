@@ -20,6 +20,7 @@
 
 namespace FixMath.NET
 {
+    [System.Serializable]
     public struct FVector2
     {
         public static FVector2 zero { get { return new FVector2(Fix64.Zero, Fix64.Zero); } }

@@ -162,7 +162,6 @@ namespace ActionGameEngine
         //assigns new state
         protected void AssignNewState(int newStateID)
         {
-
             StateData newState = data.GetStateFromID(newStateID);
             //setting new state information to CharacterStatus
             status.SetNewState(newState);

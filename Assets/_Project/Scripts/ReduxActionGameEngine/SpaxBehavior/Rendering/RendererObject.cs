@@ -18,11 +18,11 @@ namespace ActionGameEngine.Rendering
         {
             if (helper.newState && (helper.animState != "NewState"))
             {
-                AssignAnimationState(helper.animState);
+                //AssignAnimationState(helper.animState);
             }
 
             //step animation forwards by how many gameplay frames elapsed
-            StepAnimator(helper.renderFrames);
+            //StepAnimator(helper.renderFrames);
         }
 
         protected override void PostRenderUpdate() { }
