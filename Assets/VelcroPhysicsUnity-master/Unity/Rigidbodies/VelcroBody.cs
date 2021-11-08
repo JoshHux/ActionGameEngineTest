@@ -1,6 +1,6 @@
 using UnityEngine;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Factories;
+using VelcroPhysics.Collision.Filtering;
 
 public abstract class VelcroBody : MonoBehaviour
 {
@@ -52,6 +52,7 @@ public abstract class VelcroBody : MonoBehaviour
     void Start()
     {
         VelcroWorld.instance.AddBody(this);
+
     }
 
     private void StartPhysics()
@@ -82,6 +83,11 @@ public abstract class VelcroBody : MonoBehaviour
             _rb._invI = 0f;
         }
         _rb.IsSensor = IsTrigger;
+
+        //set the collision layer
+        Category layer = (Category)(1 << (this.gameObject.layer));
+        _rb.CollisionCategories = layer;
+        _rb.IgnoreCCDWith = (Category)VelcroWorld.instance.GetCollisions(this.gameObject.layer);
     }
 
     void Update()

@@ -178,7 +178,6 @@ GameObject:
   - component: {fileID: 203000867}
   - component: {fileID: 203000870}
   - component: {fileID: 203000869}
-  - component: {fileID: 203000868}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Player
@@ -204,25 +203,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &203000868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 203000866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mass: 0
-  IsTrigger: 0
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 0
-  _height: 0
-  _width: 0
 --- !u!114 &203000869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1274,8 +1254,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 9100000, guid: d17b7b144aa18604ea1c3f8d9cb80e9f, type: 2}
   allPositions: []
+  allScales: []
   allRotations: []
   fixedAnimations: []
+  play: 0
 --- !u!95 &1407055057
 Animator:
   serializedVersion: 3
@@ -3021,6 +3003,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1766093060}
   - component: {fileID: 1766093059}
+  - component: {fileID: 1766093061}
   m_Layer: 0
   m_Name: TestManager
   m_TagString: Untagged
@@ -3054,3 +3037,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1766093061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766093058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0667e26524628448966dad5af6d052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

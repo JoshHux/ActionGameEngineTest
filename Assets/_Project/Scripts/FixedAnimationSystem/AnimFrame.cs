@@ -7,11 +7,13 @@ namespace FixedAnimationSystem
     public class AnimFrame
     {
         public FVector3[] deltaPos;
+
+        public FVector3[] deltaScale;
         //FVector4 being used as a ghetto Quaternion
         //essentially used as a container for the rotation of all bones
         public FVector4[] deltaRot;
 
-        public AnimFrame(UnityEngine.Vector3[] deltaPos, UnityEngine.Quaternion[] deltaRot)
+        public AnimFrame(UnityEngine.Vector3[] deltaPos, UnityEngine.Vector3[] deltaScale, UnityEngine.Quaternion[] deltaRot)
         {
 
             int len = deltaPos.Length;
@@ -26,6 +28,17 @@ namespace FixedAnimationSystem
                 holdPos.Add(toAdd);
             }
 
+            len = deltaScale.Length;
+            List<FVector3> holdScale = new List<FVector3>();
+
+            for (int i = 0; i < len; i++)
+            {
+                UnityEngine.Vector3 hold = deltaScale[i];
+
+                FVector3 toAdd = new FVector3((Fix64)hold.x, (Fix64)hold.y, (Fix64)hold.z);
+
+                holdScale.Add(toAdd);
+            }
 
 
             len = deltaRot.Length;
@@ -41,6 +54,7 @@ namespace FixedAnimationSystem
             }
 
             this.deltaPos = holdPos.ToArray();
+            this.deltaScale = holdScale.ToArray();
             this.deltaRot = holdRot.ToArray();
         }
     }

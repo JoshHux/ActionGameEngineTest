@@ -34,6 +34,6 @@ public class VelcroCircle : VelcroBody
 
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-        Gizmos.DrawWireSphere(Vector3.zero, _radius);
+        Gizmos.DrawWireSphere(Vector2.zero, _radius);
     }
 }

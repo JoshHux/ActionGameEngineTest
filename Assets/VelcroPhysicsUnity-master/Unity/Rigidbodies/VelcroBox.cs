@@ -32,7 +32,7 @@ public class VelcroBox : VelcroBody
     protected override void InstantiateBody(BodyType type, World world)
     {
 
-        _rb = BodyFactory.CreateRectangle(world, _width, _height, _mass, new Vector2(transform.position.x, transform.position.y), transform.rotation.eulerAngles.z, type);
+        _rb = BodyFactory.CreateRectangle(world, _width, _height, _mass, new Vector2(transform.position.x, transform.position.y), transform.rotation.eulerAngles.z * Mathf.Deg2Rad, type);
         //VelcroWorld.instance.world.AddBody(rb);
     }
 

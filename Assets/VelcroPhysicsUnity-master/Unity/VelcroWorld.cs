@@ -8,6 +8,7 @@ public class VelcroWorld : MonoBehaviour
     public static VelcroWorld instance;
 
     private VelcroWorldManager2D manager;
+    private int[] collisionMatrix;
 
     // Start is called before the first frame update
     void Awake()
@@ -15,6 +16,20 @@ public class VelcroWorld : MonoBehaviour
         manager = new VelcroWorldManager2D();
         manager.Initialize();
 
+        collisionMatrix = new int[32];
+        int len = 32;
+        for (int i = 0; i < len; i++)
+        {
+            for (int j = 0; j < len; j++)
+            {
+                bool collides = Physics2D.GetIgnoreLayerCollision(i, j);
+
+                if (collides)
+                {
+                    collisionMatrix[i] |= 1 << j;
+                }
+            }
+        }
         instance = this;
     }
 
@@ -36,4 +51,5 @@ public class VelcroWorld : MonoBehaviour
     }
 
     public World GetWorld() { return manager.GetWorld(); }
+    public int GetCollisions(int layer) { return collisionMatrix[layer]; }
 }
