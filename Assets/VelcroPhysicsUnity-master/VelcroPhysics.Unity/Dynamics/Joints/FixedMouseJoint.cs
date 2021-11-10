@@ -20,10 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using UnityEngine;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
@@ -46,25 +46,25 @@ namespace VelcroPhysics.Dynamics.VJoints
     /// </summary>
     public class FixedMouseVJoint : VJoint
     {
-        private float _beta;
-        private Vector2 _C;
-        private float _dampingRatio;
-        private float _frequency;
-        private float _gamma;
+        private Fix64 _beta;
+        private FVector2 _C;
+        private Fix64 _dampingRatio;
+        private Fix64 _frequency;
+        private Fix64 _gamma;
 
         // Solver shared
-        private Vector2 _impulse;
+        private FVector2 _impulse;
 
         // Solver temp
         private int _indexA;
 
-        private float _invIA;
-        private float _invMassA;
-        private Vector2 _localCenterA;
+        private Fix64 _invIA;
+        private Fix64 _invMassA;
+        private FVector2 _localCenterA;
         private Mat22 _mass;
-        private float _maxForce;
-        private Vector2 _rA;
-        private Vector2 _worldAnchor;
+        private Fix64 _maxForce;
+        private FVector2 _rA;
+        private FVector2 _worldAnchor;
 
         /// <summary>
         /// This requires a world target point,
@@ -72,7 +72,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="worldAnchor">The target.</param>
-        public FixedMouseVJoint(Body body, Vector2 worldAnchor)
+        public FixedMouseVJoint(Body body, FVector2 worldAnchor)
             : base(body)
         {
             VJointType = VJointType.FixedMouse;
@@ -89,15 +89,15 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
-        public override Vector2 WorldAnchorA
+        public override FVector2 WorldAnchorA
         {
             get => BodyA.GetWorldPoint(LocalAnchorA);
             set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
-        public override Vector2 WorldAnchorB
+        public override FVector2 WorldAnchorB
         {
             get => _worldAnchor;
             set
@@ -112,12 +112,12 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// to move the candidate body. Usually you will express
         /// as some multiple of the weight (multiplier * mass * gravity).
         /// </summary>
-        public float MaxForce
+        public Fix64 MaxForce
         {
             get => _maxForce;
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
+                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
                 _maxForce = value;
             }
         }
@@ -125,12 +125,12 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The response speed.
         /// </summary>
-        public float Frequency
+        public Fix64 Frequency
         {
             get => _frequency;
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
+                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
                 _frequency = value;
             }
         }
@@ -138,24 +138,24 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The damping ratio. 0 = no damping, 1 = critical damping.
         /// </summary>
-        public float DampingRatio
+        public Fix64 DampingRatio
         {
             get => _dampingRatio;
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
+                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
                 _dampingRatio = value;
             }
         }
 
-        public override Vector2 GetReactionForce(float invDt)
+        public override FVector2 GetReactionForce(Fix64 invDt)
         {
             return invDt * _impulse;
         }
 
-        public override float GetReactionTorque(float invDt)
+        public override Fix64 GetReactionTorque(Fix64 invDt)
         {
-            return invDt * 0.0f;
+            return invDt *Fix64.Zero;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
@@ -175,7 +175,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             var mass = BodyA.Mass;
 
             // Frequency
-            var omega = 2.0f * Settings.Pi * Frequency;
+            var omega = 2.0f * Fix64.Pi * Frequency;
 
             // Damping coefficient
             var d = 2.0f * mass * DampingRatio * omega;
@@ -189,7 +189,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             var h = data.Step.dt;
             Debug.Assert(d + h * k > Settings.Epsilon);
             _gamma = h * (d + h * k);
-            if (_gamma != 0.0f) _gamma = 1.0f / _gamma;
+            if (_gamma !=Fix64.Zero) _gamma =Fix64.One / _gamma;
 
             _beta = h * k * _gamma;
 
@@ -221,7 +221,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = Vector2.zero;
+                _impulse = FVector2.zero;
             }
 
             data.Velocities[_indexA].V = vA;

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.PathGenerator
 {
@@ -24,8 +24,8 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// another way: it makes the rope less bouncy.
         /// </param>
         /// <returns></returns>
-        public static Path CreateChain(World world, Vector2 start, Vector2 end, float linkWidth, float linkHeight,
-            int numberOfLinks, float linkDensity, bool attachRopeVJoint)
+        public static Path CreateChain(World world, FVector2 start, FVector2 end, Fix64 linkWidth, Fix64 linkHeight,
+            int numberOfLinks, Fix64 linkDensity, bool attachRopeVJoint)
         {
             Debug.Assert(numberOfLinks >= 2);
 
@@ -45,7 +45,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             //if (fixStart)
             //{
             //    //Fix the first chainlink to the world
-            //    VJointFactory.CreateFixedRevoluteVJoint(world, chainLinks[0], new Vector2(0, -(linkHeight / 2)),
+            //    VJointFactory.CreateFixedRevoluteVJoint(world, chainLinks[0], new FVector2(0, -(linkHeight / 2)),
             //                                          chainLinks[0].Position);
             //}
 
@@ -53,17 +53,17 @@ namespace VelcroPhysics.Tools.PathGenerator
             //{
             //    //Fix the last chainlink to the world
             //    VJointFactory.CreateFixedRevoluteVJoint(world, chainLinks[chainLinks.Count - 1],
-            //                                          new Vector2(0, (linkHeight / 2)),
+            //                                          new FVector2(0, (linkHeight / 2)),
             //                                          chainLinks[chainLinks.Count - 1].Position);
             //}
 
             //Attach all the chainlinks together with a revolute VJoint
-            PathManager.AttachBodiesWithRevoluteVJoint(world, chainLinks, new Vector2(0, -linkHeight),
-                new Vector2(0, linkHeight), false, false);
+            PathManager.AttachBodiesWithRevoluteVJoint(world, chainLinks, new FVector2(0, -linkHeight),
+                new FVector2(0, linkHeight), false, false);
 
             if (attachRopeVJoint)
-                VJointFactory.CreateRopeVJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], Vector2.zero,
-                    Vector2.zero);
+                VJointFactory.CreateRopeVJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], FVector2.zero,
+                    FVector2.zero);
 
             return path;
         }

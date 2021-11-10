@@ -1,5 +1,6 @@
 ﻿using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
+using FixMath.NET;
 
 namespace VelcroPhysics.Extensions.Controllers.ControllerBase
 {
@@ -22,6 +23,6 @@ namespace VelcroPhysics.Extensions.Controllers.ControllerBase
             return base.IsActiveOn(body);
         }
 
-        public abstract void Update(float dt);
+        public abstract void Update(Fix64 dt);
     }
 }

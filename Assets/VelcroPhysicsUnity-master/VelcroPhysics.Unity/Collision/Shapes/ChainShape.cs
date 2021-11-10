@@ -24,6 +24,7 @@ using UnityEngine;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -37,7 +38,7 @@ namespace VelcroPhysics.Collision.Shapes
     public class ChainShape : Shape
     {
         private bool _hasPrevVertex, _hasNextVertex;
-        private Vector2 _prevVertex, _nextVertex;
+        private FVector2 _prevVertex, _nextVertex;
 
         /// <summary>
         /// Create a new ChainShape from the vertices.
@@ -57,7 +58,7 @@ namespace VelcroPhysics.Collision.Shapes
 
             for (var i = 1; i < vertices.Count; ++i)
                 // If the code crashes here, it means your vertices are too close together.
-                Debug.Assert(Mathf.Sqrt(Vector2.Distance(vertices[i - 1], vertices[i])) >
+                Debug.Assert(Fix64.Sqrt(FVector2.Distance(vertices[i - 1], vertices[i])) >
                              Settings.LinearSlop * Settings.LinearSlop);
 
             Vertices = new Vertices(vertices);
@@ -95,7 +96,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// Establish connectivity to a vertex that precedes the first vertex.
         /// Don't call this for loops.
         /// </summary>
-        public Vector2 PrevVertex
+        public FVector2 PrevVertex
         {
             get => _prevVertex;
             set
@@ -109,7 +110,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// Establish connectivity to a vertex that follows the last vertex.
         /// Don't call this for loops.
         /// </summary>
-        public Vector2 NextVertex
+        public FVector2 NextVertex
         {
             get => _nextVertex;
             set
@@ -160,7 +161,7 @@ namespace VelcroPhysics.Collision.Shapes
             return edgeShape;
         }
 
-        public override bool TestPoint(ref VTransform VTransform, ref Vector2 point)
+        public override bool TestPoint(ref VTransform VTransform, ref FVector2 point)
         {
             return false;
         }

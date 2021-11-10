@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Seidel
 {
@@ -94,7 +95,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
             return verts;
         }
 
-        private Point LineIntersect(Edge edge, float x)
+        private Point LineIntersect(Edge edge, Fix64 x)
         {
             var y = edge.Slope * x + edge.B;
             return new Point(x, y);

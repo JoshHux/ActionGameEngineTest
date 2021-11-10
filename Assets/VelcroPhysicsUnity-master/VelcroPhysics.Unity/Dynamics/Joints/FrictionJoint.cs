@@ -24,6 +24,7 @@ using UnityEngine;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
@@ -45,27 +46,27 @@ namespace VelcroPhysics.Dynamics.VJoints
     /// </summary>
     public class FrictionVJoint : VJoint
     {
-        private float _angularImpulse;
-        private float _angularMass;
+        private Fix64 _angularImpulse;
+        private Fix64 _angularMass;
 
         // Solver temp
         private int _indexA;
 
         private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
+        private Fix64 _invIA;
+        private Fix64 _invIB;
+        private Fix64 _invMassA;
 
-        private float _invMassB;
+        private Fix64 _invMassB;
 
         // Solver shared
-        private Vector2 _linearImpulse;
+        private FVector2 _linearImpulse;
 
         private Mat22 _linearMass;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private Vector2 _rA;
-        private Vector2 _rB;
+        private FVector2 _localCenterA;
+        private FVector2 _localCenterB;
+        private FVector2 _rA;
+        private FVector2 _rB;
 
         internal FrictionVJoint()
         {
@@ -79,7 +80,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public FrictionVJoint(Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
+        public FrictionVJoint(Body bodyA, Body bodyB, FVector2 anchor, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             VJointType = VJointType.Friction;
@@ -99,20 +100,20 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
-        public override Vector2 WorldAnchorA
+        public override FVector2 WorldAnchorA
         {
             get => BodyA.GetWorldPoint(LocalAnchorA);
             set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
-        public override Vector2 WorldAnchorB
+        public override FVector2 WorldAnchorB
         {
             get => BodyB.GetWorldPoint(LocalAnchorB);
             set => LocalAnchorB = BodyB.GetLocalPoint(value);
@@ -121,19 +122,19 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The maximum friction force in N.
         /// </summary>
-        public float MaxForce { get; set; }
+        public Fix64 MaxForce { get; set; }
 
         /// <summary>
         /// The maximum friction torque in N-m.
         /// </summary>
-        public float MaxTorque { get; set; }
+        public Fix64 MaxTorque { get; set; }
 
-        public override Vector2 GetReactionForce(float invDt)
+        public override FVector2 GetReactionForce(Fix64 invDt)
         {
             return invDt * _linearImpulse;
         }
 
-        public override float GetReactionTorque(float invDt)
+        public override Fix64 GetReactionTorque(Fix64 invDt)
         {
             return invDt * _angularImpulse;
         }
@@ -172,8 +173,8 @@ namespace VelcroPhysics.Dynamics.VJoints
             //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
             //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
 
-            float mA = _invMassA, mB = _invMassB;
-            float iA = _invIA, iB = _invIB;
+            Fix64 mA = _invMassA, mB = _invMassB;
+            Fix64 iA = _invIA, iB = _invIB;
 
             var K = new Mat22();
             K.ex.x = mA + mB + iA * _rA.y * _rA.y + iB * _rB.y * _rB.y;
@@ -184,7 +185,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             _linearMass = K.Inverse;
 
             _angularMass = iA + iB;
-            if (_angularMass > 0.0f) _angularMass = 1.0f / _angularMass;
+            if (_angularMass >Fix64.Zero) _angularMass =Fix64.One / _angularMass;
 
             if (Settings.EnableWarmstarting)
             {
@@ -192,7 +193,7 @@ namespace VelcroPhysics.Dynamics.VJoints
                 _linearImpulse *= data.Step.dtRatio;
                 _angularImpulse *= data.Step.dtRatio;
 
-                var P = new Vector2(_linearImpulse.x, _linearImpulse.y);
+                var P = new FVector2(_linearImpulse.x, _linearImpulse.y);
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(_rA, P) + _angularImpulse);
                 vB += mB * P;
@@ -200,8 +201,8 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _linearImpulse = Vector2.zero;
-                _angularImpulse = 0.0f;
+                _linearImpulse = FVector2.zero;
+                _angularImpulse =Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -217,8 +218,8 @@ namespace VelcroPhysics.Dynamics.VJoints
             var vB = data.Velocities[_indexB].V;
             var wB = data.Velocities[_indexB].W;
 
-            float mA = _invMassA, mB = _invMassB;
-            float iA = _invIA, iB = _invIB;
+            Fix64 mA = _invMassA, mB = _invMassB;
+            Fix64 iA = _invIA, iB = _invIB;
 
             var h = data.Step.dt;
 

@@ -8,6 +8,7 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 {
@@ -38,7 +39,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
         /// <summary>
         /// Two degrees: maximum angle from edges to first ray tested
         /// </summary>
-        private const float MaxEdgeOffset = Mathf.PI / 90;
+        private static Fix64 MaxEdgeOffset = Fix64.PI / 90;
 
         private List<ShapeData> _data = new List<ShapeData>();
         private RayDataComparer _rdc;
@@ -47,7 +48,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
         /// Ratio of arc length to angle from edges to first ray tested.
         /// Defaults to 1/40.
         /// </summary>
-        public float EdgeRatio = 1.0f / 40.0f;
+        public Fix64 EdgeRatio =Fix64.One / 40.0f;
 
         /// <summary>
         /// Ignore Explosion if it happens inside a shape.
@@ -59,7 +60,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
         /// Max angle between rays (used when segment is large).
         /// Defaults to 15 degrees
         /// </summary>
-        public float MaxAngle = Mathf.PI / 15;
+        public Fix64 MaxAngle = Fix64.Pi / 15;
 
         /// <summary>
         /// Maximum number of shapes involved in the explosion.
@@ -90,11 +91,11 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
         /// distance)
         /// </param>
         /// <returns>A list of bodies and the amount of force that was applied to them.</returns>
-        public Dictionary<Fixture, Vector2> Activate(Vector2 pos, float radius, float maxForce)
+        public Dictionary<Fixture, FVector2> Activate(FVector2 pos, Fix64 radius, Fix64 maxForce)
         {
             AABB aabb;
-            aabb.LowerBound = pos + new Vector2(-radius, -radius);
-            aabb.UpperBound = pos + new Vector2(radius, radius);
+            aabb.LowerBound = pos + new FVector2(-radius, -radius);
+            aabb.UpperBound = pos + new FVector2(radius, radius);
             var shapes = new Fixture[MaxShapes];
 
             // More than 5 shapes in an explosion could be possible, but still strange.
@@ -128,12 +129,12 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                 }, ref aabb);
 
             if (exit)
-                return new Dictionary<Fixture, Vector2>();
+                return new Dictionary<Fixture, FVector2>();
 
-            var exploded = new Dictionary<Fixture, Vector2>(shapeCount + containedShapeCount);
+            var exploded = new Dictionary<Fixture, FVector2>(shapeCount + containedShapeCount);
 
             // Per shape max/min angles for now.
-            var vals = new float[shapeCount * 2];
+            var vals = new Fix64[shapeCount * 2];
             var valIndex = 0;
             for (var i = 0; i < shapeCount; ++i)
             {
@@ -143,13 +144,13 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                 {
                     // We create a "diamond" approximation of the circle
                     var v = new Vertices();
-                    var vec = Vector2.zero + new Vector2(cs.Radius, 0);
+                    var vec = FVector2.zero + new FVector2(cs.Radius, 0);
                     v.Add(vec);
-                    vec = Vector2.zero + new Vector2(0, cs.Radius);
+                    vec = FVector2.zero + new FVector2(0, cs.Radius);
                     v.Add(vec);
-                    vec = Vector2.zero + new Vector2(-cs.Radius, cs.Radius);
+                    vec = FVector2.zero + new FVector2(-cs.Radius, cs.Radius);
                     v.Add(vec);
-                    vec = Vector2.zero + new Vector2(0, -cs.Radius);
+                    vec = FVector2.zero + new FVector2(0, -cs.Radius);
                     v.Add(vec);
                     ps = new PolygonShape(v, 0);
                 }
@@ -161,28 +162,28 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                 if (shapes[i].Body.BodyType == BodyType.Dynamic && ps != null)
                 {
                     var toCentroid = shapes[i].Body.GetWorldPoint(ps.MassData.Centroid) - pos;
-                    var angleToCentroid = Mathf.Atan2(toCentroid.y, toCentroid.x);
-                    var min = float.MaxValue;
-                    var max = float.MinValue;
-                    var minAbsolute = 0.0f;
-                    var maxAbsolute = 0.0f;
+                    var angleToCentroid = Fix64.Atan2(toCentroid.y, toCentroid.x);
+                    var min = Fix64.MaxValue;
+                    var max = Fix64.MinValue;
+                    var minAbsolute =Fix64.Zero;
+                    var maxAbsolute =Fix64.Zero;
 
                     for (var j = 0; j < ps.Vertices.Count; ++j)
                     {
                         var toVertex = shapes[i].Body.GetWorldPoint(ps.Vertices[j]) - pos;
-                        var newAngle = Mathf.Atan2(toVertex.y, toVertex.x);
+                        var newAngle = Fix64.Atan2(toVertex.y, toVertex.x);
                         var diff = newAngle - angleToCentroid;
 
-                        diff = (diff - Mathf.PI) % (2 * Mathf.PI);
+                        diff = (diff - Fix64.PI) % (2 * Fix64.PI);
 
                         // the minus pi is important. It means cutoff for going other direction is at 180 deg where it needs to be
 
-                        if (diff < 0.0f)
-                            diff += 2 * Mathf.PI; // correction for not handling negs
+                        if (diff <Fix64.Zero)
+                            diff += 2 * Fix64.PI; // correction for not handling negs
 
-                        diff -= Mathf.PI;
+                        diff -= Fix64.PI;
 
-                        if (Mathf.Abs(diff) > Mathf.PI)
+                        if (Fix64.Abs(diff) > Fix64.PI)
                             continue; // Something's wrong, point not in shape but exists angle diff > 180
 
                         if (diff > max)
@@ -212,7 +213,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
             for (var i = 0; i < valIndex; ++i)
             {
                 Fixture fixture = null;
-                float midpt;
+                Fix64 midpt;
 
                 var iplus = i == valIndex - 1 ? 0 : i + 1;
                 if (vals[i] == vals[iplus])
@@ -220,14 +221,14 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 
                 if (i == valIndex - 1)
                     // the single edgecase
-                    midpt = vals[0] + Mathf.PI * 2 + vals[i];
+                    midpt = vals[0] + Fix64.PI * 2 + vals[i];
                 else
                     midpt = vals[i + 1] + vals[i];
 
                 midpt = midpt / 2;
 
                 var p1 = pos;
-                var p2 = radius * new Vector2(Mathf.Cos(midpt), Mathf.Sin(midpt)) + pos;
+                var p2 = radius * new FVector2(Fix64.Cos(midpt), Fix64.Sin(midpt)) + pos;
 
                 // RaycastOne
                 var hitClosest = false;
@@ -274,7 +275,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                         _data[0] = fi;
                         while (_data.First().Min >= _data.First().Max)
                         {
-                            fi.Min -= Mathf.PI * 2;
+                            fi.Min -= Fix64.PI * 2;
                             _data[0] = fi;
                         }
                     }
@@ -284,7 +285,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                     while (_data.Count > 0
                            && _data.Last().Min >= _data.Last().Max) // just making sure min<max
                     {
-                        last.Min = _data.Last().Min - 2 * Mathf.PI;
+                        last.Min = _data.Last().Min - 2 * Fix64.PI;
                         _data[lastPos] = last;
                     }
 
@@ -303,24 +304,24 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 
                 var arclen = _data[i].Max - _data[i].Min;
 
-                var first = Mathf.Min(MaxEdgeOffset, EdgeRatio * arclen);
-                var insertedRays = (int) Mathf.Ceil((arclen - 2.0f * first - (MinRays - 1) * MaxAngle) / MaxAngle);
+                var first = Fix64.Min(MaxEdgeOffset, EdgeRatio * arclen);
+                var insertedRays = (int) Fix64.Ceil((arclen - 2.0f * first - (MinRays - 1) * MaxAngle) / MaxAngle);
 
                 if (insertedRays < 0)
                     insertedRays = 0;
 
-                var offset = (arclen - first * 2.0f) / ((float) MinRays + insertedRays - 1);
+                var offset = (arclen - first * 2.0f) / ((Fix64) MinRays + insertedRays - 1);
 
-                //Note: This loop can go into infinite as it operates on floats.
-                //Added FloatEquals with a large epsilon.
+                //Note: This loop can go into infinite as it operates on Fix64s.
+                //Added Fix64Equals with a large epsilon.
                 for (var j = _data[i].Min + first;
-                    j < _data[i].Max || MathUtils.FloatEquals(j, _data[i].Max, 0.0001f);
+                    j < _data[i].Max || MathUtils.Fix64Equals(j, _data[i].Max, 0.0001f);
                     j += offset)
                 {
                     var p1 = pos;
-                    var p2 = pos + radius * new Vector2(Mathf.Cos(j), Mathf.Sin(j));
-                    var hitpoint = Vector2.zero;
-                    var minlambda = float.MaxValue;
+                    var p2 = pos + radius * new FVector2(Fix64.Cos(j), Fix64.Sin(j));
+                    var hitpoint = FVector2.zero;
+                    var minlambda = Fix64.MaxValue;
 
                     var fl = _data[i].Body.FixtureList;
                     for (var x = 0; x < fl.Count; x++)
@@ -341,13 +342,13 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 
                         // the force that is to be applied for this particular ray.
                         // offset is angular coverage. lambda*length of segment is distance.
-                        var impulse = arclen / (MinRays + insertedRays) * maxForce * 180.0f / Mathf.PI *
-                                      (1.0f - Mathf.Min(1.0f, minlambda));
+                        var impulse = arclen / (MinRays + insertedRays) * maxForce * 180.0f / Fix64.PI *
+                                      (FixMath.One - Fix64.Min(1.0f, minlambda));
 
                         // We Apply the impulse!!!
                         var vectImp =
-                            Vector2.Dot(impulse * new Vector2(Mathf.Cos(j), Mathf.Sin(j)), -ro.Normal) *
-                            new Vector2(Mathf.Cos(j), Mathf.Sin(j));
+                            FVector2.Dot(impulse * new FVector2(Fix64.Cos(j), Fix64.Sin(j)), -ro.Normal) *
+                            new FVector2(Fix64.Cos(j), Fix64.Sin(j));
                         _data[i].Body.ApplyLinearImpulse(ref vectImp, ref hitpoint);
 
                         // We gather the fixtures for returning them
@@ -356,7 +357,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                         else
                             exploded.Add(f, vectImp);
 
-                        if (minlambda > 1.0f)
+                        if (minlambda >Fix64.One)
                             hitpoint = p2;
                     }
                 }
@@ -370,8 +371,8 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                 if (!IsActiveOn(fix.Body))
                     continue;
 
-                var impulse = MinRays * maxForce * 180.0f / Mathf.PI;
-                Vector2 hitPoint;
+                var impulse = MinRays * maxForce * 180.0f / Fix64.PI;
+                FVector2 hitPoint;
 
                 var circShape = fix.Shape as CircleShape;
                 if (circShape != null)

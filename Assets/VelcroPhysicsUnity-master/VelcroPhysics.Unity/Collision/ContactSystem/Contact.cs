@@ -29,6 +29,7 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.ContactSystem
 {
@@ -81,7 +82,7 @@ namespace VelcroPhysics.Collision.ContactSystem
         internal ContactEdge _nodeA = new ContactEdge();
         internal ContactEdge _nodeB = new ContactEdge();
 
-        internal float _toi;
+        internal Fix64 _toi;
         internal int _toiCount;
         private ContactType _type;
 
@@ -99,13 +100,13 @@ namespace VelcroPhysics.Collision.ContactSystem
             Reset(fA, indexA, fB, indexB);
         }
 
-        public float Friction { get; set; }
-        public float Restitution { get; set; }
+        public Fix64 Friction { get; set; }
+        public Fix64 Restitution { get; set; }
 
         /// <summary>
         /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
         /// </summary>
-        public float TangentSpeed { get; set; }
+        public Fix64 TangentSpeed { get; set; }
 
 
         /// <summary>
@@ -156,7 +157,7 @@ namespace VelcroPhysics.Collision.ContactSystem
         /// <summary>
         /// Gets the world manifold.
         /// </summary>
-        public void GetWorldManifold(out Vector2 normal, out FixedArray2<Vector2> points)
+        public void GetWorldManifold(out FVector2 normal, out FixedArray2<FVector2> points)
         {
             var bodyA = FixtureA.Body;
             var bodyB = FixtureB.Body;
@@ -245,8 +246,8 @@ namespace VelcroPhysics.Collision.ContactSystem
                 for (var i = 0; i < Manifold.PointCount; ++i)
                 {
                     var mp2 = Manifold.Points[i];
-                    mp2.NormalImpulse = 0.0f;
-                    mp2.TangentImpulse = 0.0f;
+                    mp2.NormalImpulse = Fix64.Zero;
+                    mp2.TangentImpulse = Fix64.Zero;
                     var id2 = mp2.Id;
 
                     for (var j = 0; j < oldManifold.PointCount; ++j)
@@ -313,36 +314,36 @@ namespace VelcroPhysics.Collision.ContactSystem
             switch (_type)
             {
                 case ContactType.Polygon:
-                    CollidePolygon.CollidePolygons(ref manifold, (PolygonShape) FixtureA.Shape, ref VTransformA,
-                        (PolygonShape) FixtureB.Shape, ref VTransformB);
+                    CollidePolygon.CollidePolygons(ref manifold, (PolygonShape)FixtureA.Shape, ref VTransformA,
+                        (PolygonShape)FixtureB.Shape, ref VTransformB);
                     break;
                 case ContactType.PolygonAndCircle:
-                    CollideCircle.CollidePolygonAndCircle(ref manifold, (PolygonShape) FixtureA.Shape, ref VTransformA,
-                        (CircleShape) FixtureB.Shape, ref VTransformB);
+                    CollideCircle.CollidePolygonAndCircle(ref manifold, (PolygonShape)FixtureA.Shape, ref VTransformA,
+                        (CircleShape)FixtureB.Shape, ref VTransformB);
                     break;
                 case ContactType.EdgeAndCircle:
-                    CollideEdge.CollideEdgeAndCircle(ref manifold, (EdgeShape) FixtureA.Shape, ref VTransformA,
-                        (CircleShape) FixtureB.Shape, ref VTransformB);
+                    CollideEdge.CollideEdgeAndCircle(ref manifold, (EdgeShape)FixtureA.Shape, ref VTransformA,
+                        (CircleShape)FixtureB.Shape, ref VTransformB);
                     break;
                 case ContactType.EdgeAndPolygon:
-                    CollideEdge.CollideEdgeAndPolygon(ref manifold, (EdgeShape) FixtureA.Shape, ref VTransformA,
-                        (PolygonShape) FixtureB.Shape, ref VTransformB);
+                    CollideEdge.CollideEdgeAndPolygon(ref manifold, (EdgeShape)FixtureA.Shape, ref VTransformA,
+                        (PolygonShape)FixtureB.Shape, ref VTransformB);
                     break;
                 case ContactType.ChainAndCircle:
-                    var chain = (ChainShape) FixtureA.Shape;
+                    var chain = (ChainShape)FixtureA.Shape;
                     chain.GetChildEdge(_edge, ChildIndexA);
-                    CollideEdge.CollideEdgeAndCircle(ref manifold, _edge, ref VTransformA, (CircleShape) FixtureB.Shape,
+                    CollideEdge.CollideEdgeAndCircle(ref manifold, _edge, ref VTransformA, (CircleShape)FixtureB.Shape,
                         ref VTransformB);
                     break;
                 case ContactType.ChainAndPolygon:
-                    var loop2 = (ChainShape) FixtureA.Shape;
+                    var loop2 = (ChainShape)FixtureA.Shape;
                     loop2.GetChildEdge(_edge, ChildIndexA);
                     CollideEdge.CollideEdgeAndPolygon(ref manifold, _edge, ref VTransformA,
-                        (PolygonShape) FixtureB.Shape, ref VTransformB);
+                        (PolygonShape)FixtureB.Shape, ref VTransformB);
                     break;
                 case ContactType.Circle:
-                    CollideCircle.CollideCircles(ref manifold, (CircleShape) FixtureA.Shape, ref VTransformA,
-                        (CircleShape) FixtureB.Shape, ref VTransformB);
+                    CollideCircle.CollideCircles(ref manifold, (CircleShape)FixtureA.Shape, ref VTransformA,
+                        (CircleShape)FixtureB.Shape, ref VTransformB);
                     break;
                 default:
                     throw new ArgumentException("You are using an unsupported contact type.");
@@ -378,7 +379,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                     c = new Contact(fixtureB, indexB, fixtureA, indexA);
             }
 
-            c._type = _registers[(int) type1, (int) type2];
+            c._type = _registers[(int)type1, (int)type2];
 
             return c;
         }

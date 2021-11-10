@@ -1,5 +1,5 @@
-using UnityEngine;
 using VelcroPhysics.Dynamics.VJoints;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.VJoints
 {
@@ -17,23 +17,23 @@ namespace VelcroPhysics.Templates.VJoints
         /// <summary>
         /// The local anchor point relative to bodyA's origin.
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point relative to bodyB's origin.
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// The maximum length of the rope.
         /// <remarks>This must be larger than Settings.LinearSlop or the VJoint will have no effect.</remarks>
         /// </summary>
-        public float MaxLength { get; set; }
+        public Fix64 MaxLength { get; set; }
 
         public override void SetDefaults()
         {
-            LocalAnchorA = new Vector2(-1.0f, 0.0f);
-            LocalAnchorB = new Vector2(1.0f, 0.0f);
+            LocalAnchorA = new FVector2(-1.0f,Fix64.Zero);
+            LocalAnchorB = new FVector2(1.0f,Fix64.Zero);
         }
     }
 }

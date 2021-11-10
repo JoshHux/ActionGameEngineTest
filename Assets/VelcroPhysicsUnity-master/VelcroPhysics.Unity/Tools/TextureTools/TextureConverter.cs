@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.TextureTools
 {
@@ -25,7 +25,7 @@ namespace VelcroPhysics.Tools.TextureTools
         private int _height;
 
         private bool _holeDetection;
-        private float _hullTolerance;
+        private Fix64 _hullTolerance;
         private bool _multipartDetection;
         private bool _pixelOffsetOptimization;
 
@@ -37,7 +37,7 @@ namespace VelcroPhysics.Tools.TextureTools
         #region Initialization
 
         private void Initialize(uint[] data, int? width, byte? alphaTolerance,
-            float? hullTolerance, bool? holeDetection, bool? multipartDetection,
+            Fix64? hullTolerance, bool? holeDetection, bool? multipartDetection,
             bool? pixelOffsetOptimization, Matrix4x4? VTransform)
         {
             if (data != null && !width.HasValue)
@@ -148,7 +148,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="alphaTolerance">The alpha tolerance.</param>
         /// <param name="multiPartDetection">if set to <c>true</c> it will perform multi part detection.</param>
         /// <returns></returns>
-        public static List<Vertices> DetectVertices(uint[] data, int width, float hullTolerance, byte alphaTolerance,
+        public static List<Vertices> DetectVertices(uint[] data, int width, Fix64 hullTolerance, byte alphaTolerance,
             bool multiPartDetection, bool holeDetection)
         {
             var tc =
@@ -194,10 +194,10 @@ namespace VelcroPhysics.Tools.TextureTools
 
             var detectedPolygons = new List<Vertices>();
 
-            Vector2? holeEntrance = null;
-            Vector2? polygonEntrance = null;
+            FVector2? holeEntrance = null;
+            FVector2? polygonEntrance = null;
 
-            var blackList = new List<Vector2>();
+            var blackList = new List<FVector2>();
 
             bool searchOn;
             do
@@ -206,7 +206,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 if (detectedPolygons.Count == 0)
                 {
                     // First pass / single polygon
-                    polygon = new Vertices(CreateSimplePolygon(Vector2.zero, Vector2.zero));
+                    polygon = new Vertices(CreateSimplePolygon(FVector2.zero, FVector2.zero));
 
                     if (polygon.Count > 2)
                         polygonEntrance = GetTopMostVertex(polygon);
@@ -215,7 +215,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 {
                     // Multi pass / multiple polygons
                     polygon = new Vertices(CreateSimplePolygon(polygonEntrance.Value,
-                        new Vector2(polygonEntrance.Value.x - 1f, polygonEntrance.Value.y)));
+                        new FVector2(polygonEntrance.Value.x - 1f, polygonEntrance.Value.y)));
                 }
                 else
                 {
@@ -237,7 +237,7 @@ namespace VelcroPhysics.Tools.TextureTools
                                 {
                                     blackList.Add(holeEntrance.Value);
                                     var holePolygon = CreateSimplePolygon(holeEntrance.Value,
-                                        new Vector2(holeEntrance.Value.x + 1, holeEntrance.Value.y));
+                                        new FVector2(holeEntrance.Value.x + 1, holeEntrance.Value.y));
 
                                     if (holePolygon != null && holePolygon.Count > 2)
                                         switch (_polygonDetectionType)
@@ -320,7 +320,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="polygon">The polygon to search in.</param>
         /// <param name="lastHoleEntrance">The last entrance point.</param>
         /// <returns>The next holes entrance point. Null if there are no holes.</returns>
-        private Vector2? SearchHoleEntrance(Vertices polygon, Vector2? lastHoleEntrance)
+        private FVector2? SearchHoleEntrance(Vertices polygon, FVector2? lastHoleEntrance)
         {
             if (polygon == null)
                 throw new ArgumentNullException("'polygon' can't be null.");
@@ -328,8 +328,8 @@ namespace VelcroPhysics.Tools.TextureTools
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
 
-            List<float> xCoords;
-            Vector2? entrance;
+            List<Fix64> xCoords;
+            FVector2? entrance;
 
             int startY;
             int endY;
@@ -394,7 +394,7 @@ namespace VelcroPhysics.Tools.TextureTools
 
                                     if (foundSolid && foundTransparent)
                                     {
-                                        entrance = new Vector2(lastSolid, y);
+                                        entrance = new FVector2(lastSolid, y);
 
                                         if (DistanceToHullAcceptable(polygon, entrance.Value, true))
                                             return entrance;
@@ -420,7 +420,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return null;
         }
 
-        private bool DistanceToHullAcceptableHoles(Vertices polygon, Vector2 point, bool higherDetail)
+        private bool DistanceToHullAcceptableHoles(Vertices polygon, FVector2 point, bool higherDetail)
         {
             if (polygon == null)
                 throw new ArgumentNullException(nameof(polygon), "'polygon' can't be null.");
@@ -445,7 +445,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return false;
         }
 
-        private bool DistanceToHullAcceptable(Vertices polygon, Vector2 point, bool higherDetail)
+        private bool DistanceToHullAcceptable(Vertices polygon, FVector2 point, bool higherDetail)
         {
             if (polygon == null)
                 throw new ArgumentNullException(nameof(polygon), "'polygon' can't be null.");
@@ -454,7 +454,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 throw new ArgumentException("'polygon.Count' can't be less then 3.");
 
             var edgeVertex2 = polygon[polygon.Count - 1];
-            Vector2 edgeVertex1;
+            FVector2 edgeVertex1;
 
             if (higherDetail)
             {
@@ -463,7 +463,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     edgeVertex1 = polygon[i];
 
                     if (LineUtils.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <=
-                        _hullTolerance || Vector2.Distance(point, edgeVertex1) <= _hullTolerance)
+                        _hullTolerance || FVector2.Distance(point, edgeVertex1) <= _hullTolerance)
                         return false;
 
                     edgeVertex2 = polygon[i];
@@ -488,7 +488,7 @@ namespace VelcroPhysics.Tools.TextureTools
             }
         }
 
-        private bool InPolygon(Vertices polygon, Vector2 point)
+        private bool InPolygon(Vertices polygon, FVector2 point)
         {
             var inPolygon = !DistanceToHullAcceptableHoles(polygon, point, true);
 
@@ -507,10 +507,10 @@ namespace VelcroPhysics.Tools.TextureTools
             return true;
         }
 
-        private Vector2? GetTopMostVertex(Vertices vertices)
+        private FVector2? GetTopMostVertex(Vertices vertices)
         {
-            var topMostValue = float.MaxValue;
-            Vector2? topMost = null;
+            var topMostValue = Fix64.MaxValue;
+            FVector2? topMost = null;
 
             for (var i = 0; i < vertices.Count; i++)
                 if (topMostValue > vertices[i].y)
@@ -522,9 +522,9 @@ namespace VelcroPhysics.Tools.TextureTools
             return topMost;
         }
 
-        private float GetTopMostCoord(Vertices vertices)
+        private Fix64 GetTopMostCoord(Vertices vertices)
         {
-            var returnValue = float.MaxValue;
+            var returnValue = Fix64.MaxValue;
 
             for (var i = 0; i < vertices.Count; i++)
                 if (returnValue > vertices[i].y)
@@ -533,9 +533,9 @@ namespace VelcroPhysics.Tools.TextureTools
             return returnValue;
         }
 
-        private float GetBottomMostCoord(Vertices vertices)
+        private Fix64 GetBottomMostCoord(Vertices vertices)
         {
-            var returnValue = float.MinValue;
+            var returnValue = Fix64.MinValue;
 
             for (var i = 0; i < vertices.Count; i++)
                 if (returnValue < vertices[i].y)
@@ -544,7 +544,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return returnValue;
         }
 
-        private List<float> SearchCrossingEdgesHoles(Vertices polygon, int y)
+        private List<Fix64> SearchCrossingEdgesHoles(Vertices polygon, int y)
         {
             if (polygon == null)
                 throw new ArgumentNullException(nameof(polygon), "'polygon' can't be null.");
@@ -568,22 +568,22 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="polygon">Polygon to search in.</param>
         /// <param name="y">Y coordinate to check for edges.</param>
         /// <returns>Descending sorted list of x coordinates of edges that cross the specified y coordinate.</returns>
-        private List<float> SearchCrossingEdges(Vertices polygon, int y)
+        private List<Fix64> SearchCrossingEdges(Vertices polygon, int y)
         {
             // sick-o-note:
             // Used to search the x coordinates of edges in the polygon for a specific y coordinate.
-            // (Usualy comming from the texture data, that's why it's an int and not a float.)
+            // (Usualy comming from the texture data, that's why it's an int and not a Fix64.)
 
-            var edges = new List<float>();
+            var edges = new List<Fix64>();
 
             // current edge
-            Vector2 slope;
-            Vector2 vertex1; // i
-            Vector2 vertex2; // i - 1
+            FVector2 slope;
+            FVector2 vertex1; // i
+            FVector2 vertex2; // i - 1
 
             // next edge
-            Vector2 nextSlope;
-            Vector2 nextVertex; // i + 1
+            FVector2 nextSlope;
+            FVector2 nextVertex; // i + 1
 
             bool addFind;
 
@@ -638,18 +638,18 @@ namespace VelcroPhysics.Tools.TextureTools
             return edges;
         }
 
-        private bool SplitPolygonEdge(Vertices polygon, Vector2 coordInsideThePolygon, out int vertex1Index,
+        private bool SplitPolygonEdge(Vertices polygon, FVector2 coordInsideThePolygon, out int vertex1Index,
             out int vertex2Index)
         {
-            Vector2 slope;
+            FVector2 slope;
             var nearestEdgeVertex1Index = 0;
             var nearestEdgeVertex2Index = 0;
             var edgeFound = false;
 
-            var shortestDistance = float.MaxValue;
+            var shortestDistance = Fix64.MaxValue;
 
             var edgeCoordFound = false;
-            var foundEdgeCoord = Vector2.zero;
+            var foundEdgeCoord = FVector2.zero;
 
             var xCoords = SearchCrossingEdges(polygon, (int) coordInsideThePolygon.y);
 
@@ -660,7 +660,7 @@ namespace VelcroPhysics.Tools.TextureTools
 
             if (xCoords != null && xCoords.Count > 1 && xCoords.Count % 2 == 0)
             {
-                float distance;
+                Fix64 distance;
                 for (var i = 0; i < xCoords.Count; i++)
                     if (xCoords[i] < coordInsideThePolygon.x)
                     {
@@ -677,7 +677,7 @@ namespace VelcroPhysics.Tools.TextureTools
 
                 if (edgeCoordFound)
                 {
-                    shortestDistance = float.MaxValue;
+                    shortestDistance = Fix64.MaxValue;
 
                     var edgeVertex2Index = polygon.Count - 1;
 
@@ -685,9 +685,9 @@ namespace VelcroPhysics.Tools.TextureTools
                     for (edgeVertex1Index = 0; edgeVertex1Index < polygon.Count; edgeVertex1Index++)
                     {
                         var tempVector1 = polygon[edgeVertex1Index];
-                        var tempVector2 = polygon[edgeVertex2Index];
+                        var tempFVector2 = polygon[edgeVertex2Index];
                         distance = LineUtils.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord,
-                            ref tempVector1, ref tempVector2);
+                            ref tempVector1, ref tempFVector2);
                         if (distance < shortestDistance)
                         {
                             shortestDistance = distance;
@@ -707,7 +707,7 @@ namespace VelcroPhysics.Tools.TextureTools
                         slope.Normalize();
 
                         var tempVector = polygon[nearestEdgeVertex1Index];
-                        distance = Vector2.Distance(tempVector, foundEdgeCoord);
+                        distance = FVector2.Distance(tempVector, foundEdgeCoord);
 
                         vertex1Index = nearestEdgeVertex1Index;
                         vertex2Index = nearestEdgeVertex1Index + 1;
@@ -728,7 +728,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="entrance"></param>
         /// <param name="last"></param>
         /// <returns></returns>
-        private Vertices CreateSimplePolygon(Vector2 entrance, Vector2 last)
+        private Vertices CreateSimplePolygon(FVector2 entrance, FVector2 last)
         {
             var entranceFound = false;
             var endOfHull = false;
@@ -737,16 +737,16 @@ namespace VelcroPhysics.Tools.TextureTools
             var hullArea = new Vertices(32);
             var endOfHullArea = new Vertices(32);
 
-            var current = Vector2.zero;
+            var current = FVector2.zero;
 
             #region Entrance check
 
             // Get the entrance point. //todo: alle möglichkeiten testen
-            if (entrance == Vector2.zero || !InBounds(ref entrance))
+            if (entrance == FVector2.zero || !InBounds(ref entrance))
             {
                 entranceFound = SearchHullEntrance(out entrance);
 
-                if (entranceFound) current = new Vector2(entrance.x - 1f, entrance.y);
+                if (entranceFound) current = new FVector2(entrance.x - 1f, entrance.y);
             }
             else
             {
@@ -759,7 +759,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     }
                     else
                     {
-                        Vector2 temp;
+                        FVector2 temp;
                         if (SearchNearPixels(false, ref entrance, out temp))
                         {
                             current = temp;
@@ -785,7 +785,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 do
                 {
                     // Search in the pre vision list for an outstanding point.
-                    Vector2 outstanding;
+                    FVector2 outstanding;
                     if (SearchForOutstandingVertex(hullArea, out outstanding))
                     {
                         if (endOfHull)
@@ -833,7 +833,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return polygon;
         }
 
-        private bool SearchNearPixels(bool searchingForSolidPixel, ref Vector2 current, out Vector2 foundPixel)
+        private bool SearchNearPixels(bool searchingForSolidPixel, ref FVector2 current, out FVector2 foundPixel)
         {
             for (var i = 0; i < ClosepixelsLength; i++)
             {
@@ -842,17 +842,17 @@ namespace VelcroPhysics.Tools.TextureTools
 
                 if (!searchingForSolidPixel ^ IsSolid(ref x, ref y))
                 {
-                    foundPixel = new Vector2(x, y);
+                    foundPixel = new FVector2(x, y);
                     return true;
                 }
             }
 
             // Nothing found.
-            foundPixel = Vector2.zero;
+            foundPixel = FVector2.zero;
             return false;
         }
 
-        private bool IsNearPixel(ref Vector2 current, ref Vector2 near)
+        private bool IsNearPixel(ref FVector2 current, ref FVector2 near)
         {
             for (var i = 0; i < ClosepixelsLength; i++)
             {
@@ -867,19 +867,19 @@ namespace VelcroPhysics.Tools.TextureTools
             return false;
         }
 
-        private bool SearchHullEntrance(out Vector2 entrance)
+        private bool SearchHullEntrance(out FVector2 entrance)
         {
             // Search for first solid pixel.
             for (var y = 0; y <= _height; y++)
             for (var x = 0; x <= _width; x++)
                 if (IsSolid(ref x, ref y))
                 {
-                    entrance = new Vector2(x, y);
+                    entrance = new FVector2(x, y);
                     return true;
                 }
 
             // If there are no solid pixels.
-            entrance = Vector2.zero;
+            entrance = FVector2.zero;
             return false;
         }
 
@@ -890,7 +890,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="start">Search start coordinate.</param>
         /// <param name="entrance">Returns the found entrance coordinate. Null if no other shapes found.</param>
         /// <returns>True if a new shape was found.</returns>
-        private bool SearchNextHullEntrance(List<Vertices> detectedPolygons, Vector2 start, out Vector2? entrance)
+        private bool SearchNextHullEntrance(List<Vertices> detectedPolygons, FVector2 start, out FVector2? entrance)
         {
             int x;
 
@@ -903,7 +903,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     if (foundTransparent)
                     {
                         x = i % _width;
-                        entrance = new Vector2(x, (i - x) / (float) _width);
+                        entrance = new FVector2(x, (i - x) / (Fix64) _width);
 
                         inPolygon = false;
                         for (var polygonIdx = 0; polygonIdx < detectedPolygons.Count; polygonIdx++)
@@ -928,7 +928,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return false;
         }
 
-        private bool GetNextHullPoint(ref Vector2 last, ref Vector2 current, out Vector2 next)
+        private bool GetNextHullPoint(ref FVector2 last, ref FVector2 current, out FVector2 next)
         {
             int x;
             int y;
@@ -946,26 +946,26 @@ namespace VelcroPhysics.Tools.TextureTools
                 if (x >= 0 && x < _width && y >= 0 && y <= _height)
                     if (IsSolid(ref x, ref y))
                     {
-                        next = new Vector2(x, y);
+                        next = new FVector2(x, y);
                         return true;
                     }
             }
 
-            next = Vector2.zero;
+            next = FVector2.zero;
             return false;
         }
 
-        private bool SearchForOutstandingVertex(Vertices hullArea, out Vector2 outstanding)
+        private bool SearchForOutstandingVertex(Vertices hullArea, out FVector2 outstanding)
         {
-            var outstandingResult = Vector2.zero;
+            var outstandingResult = FVector2.zero;
             var found = false;
 
             if (hullArea.Count > 2)
             {
                 var hullAreaLastPoint = hullArea.Count - 1;
 
-                Vector2 tempVector1;
-                var tempVector2 = hullArea[0];
+                FVector2 tempVector1;
+                var tempFVector2 = hullArea[0];
                 var tempVector3 = hullArea[hullAreaLastPoint];
 
                 // Search between the first and last hull point.
@@ -974,7 +974,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     tempVector1 = hullArea[i];
 
                     // Check if the distance is over the one that's tolerable.
-                    if (LineUtils.DistanceBetweenPointAndLineSegment(ref tempVector1, ref tempVector2,
+                    if (LineUtils.DistanceBetweenPointAndLineSegment(ref tempVector1, ref tempFVector2,
                         ref tempVector3) >= _hullTolerance)
                     {
                         outstandingResult = hullArea[i];
@@ -988,7 +988,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return found;
         }
 
-        private int GetIndexOfFirstPixelToCheck(ref Vector2 last, ref Vector2 current)
+        private int GetIndexOfFirstPixelToCheck(ref FVector2 last, ref FVector2 current)
         {
             // .: pixel
             // l: last position
@@ -1109,7 +1109,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <summary>
         /// Default is 1.5f.
         /// </summary>
-        public float HullTolerance
+        public Fix64 HullTolerance
         {
             get => _hullTolerance;
             set
@@ -1132,7 +1132,7 @@ namespace VelcroPhysics.Tools.TextureTools
             Initialize(null, null, null, null, null, null, null, null);
         }
 
-        public TextureConverter(byte? alphaTolerance, float? hullTolerance,
+        public TextureConverter(byte? alphaTolerance, Fix64? hullTolerance,
             bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization, Matrix4x4? VTransform)
         {
             Initialize(null, null, alphaTolerance, hullTolerance, holeDetection,
@@ -1145,7 +1145,7 @@ namespace VelcroPhysics.Tools.TextureTools
         }
 
         public TextureConverter(uint[] data, int width, byte? alphaTolerance,
-            float? hullTolerance, bool? holeDetection, bool? multipartDetection,
+            Fix64? hullTolerance, bool? holeDetection, bool? multipartDetection,
             bool? pixelOffsetOptimization, Matrix4x4? VTransform)
         {
             Initialize(data, width, alphaTolerance, hullTolerance, holeDetection,
@@ -1159,7 +1159,7 @@ namespace VelcroPhysics.Tools.TextureTools
         private int _tempIsSolidX;
         private int _tempIsSolidY;
 
-        public bool IsSolid(ref Vector2 v)
+        public bool IsSolid(ref FVector2 v)
         {
             _tempIsSolidX = (int) v.x;
             _tempIsSolidY = (int) v.y;
@@ -1192,7 +1192,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return false;
         }
 
-        public bool InBounds(ref Vector2 coord)
+        public bool InBounds(ref FVector2 coord)
         {
             return coord.x >= 0f && coord.x < _width && coord.y >= 0f && coord.y < _height;
         }

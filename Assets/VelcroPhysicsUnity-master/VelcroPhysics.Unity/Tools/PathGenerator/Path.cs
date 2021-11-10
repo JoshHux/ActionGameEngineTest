@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Unity.Utilities;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.PathGenerator
 {
@@ -19,28 +19,28 @@ namespace VelcroPhysics.Tools.PathGenerator
     /// </summary>
     public class Path
     {
-        private float _deltaT;
+        private Fix64 _deltaT;
 
         /// <summary>
         /// All the points that makes up the curve
         /// </summary>
-        public List<Vector2> ControlPoints;
+        public List<FVector2> ControlPoints;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Path" /> class.
         /// </summary>
         public Path()
         {
-            ControlPoints = new List<Vector2>();
+            ControlPoints = new List<FVector2>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Path" /> class.
         /// </summary>
         /// <param name="vertices">The vertices to created the path from.</param>
-        public Path(Vector2[] vertices)
+        public Path(FVector2[] vertices)
         {
-            ControlPoints = new List<Vector2>(vertices.Length);
+            ControlPoints = new List<FVector2>(vertices.Length);
 
             for (var i = 0; i < vertices.Length; i++) Add(vertices[i]);
         }
@@ -49,9 +49,9 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// Initializes a new instance of the <see cref="Path" /> class.
         /// </summary>
         /// <param name="vertices">The vertices to created the path from.</param>
-        public Path(IList<Vector2> vertices)
+        public Path(IList<FVector2> vertices)
         {
-            ControlPoints = new List<Vector2>(vertices.Count);
+            ControlPoints = new List<FVector2>(vertices.Count);
             for (var i = 0; i < vertices.Count; i++) Add(vertices[i]);
         }
 
@@ -87,7 +87,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// Translates the control points by the specified vector.
         /// </summary>
         /// <param name="vector">The vector.</param>
-        public void Translate(ref Vector2 vector)
+        public void Translate(ref FVector2 vector)
         {
             for (var i = 0; i < ControlPoints.Count; i++)
                 ControlPoints[i] = ControlPoints[i] + vector;
@@ -97,7 +97,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// Scales the control points by the specified vector.
         /// </summary>
         /// <param name="value">The Value.</param>
-        public void Scale(ref Vector2 value)
+        public void Scale(ref FVector2 value)
         {
             for (var i = 0; i < ControlPoints.Count; i++)
                 ControlPoints[i] = ControlPoints[i] * value;
@@ -107,7 +107,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// Rotate the control points by the defined value in radians.
         /// </summary>
         /// <param name="value">The amount to rotate by in radians.</param>
-        public void Rotate(float value)
+        public void Rotate(Fix64 value)
         {
             var rotationMatrix = Matrix4x4.identity;
 
@@ -142,14 +142,14 @@ namespace VelcroPhysics.Tools.PathGenerator
 
             var timeStep = 1f / divisions;
 
-            for (float i = 0; i < 1f; i += timeStep) verts.Add(GetPosition(i));
+            for (Fix64 i = 0; i < 1f; i += timeStep) verts.Add(GetPosition(i));
 
             return verts;
         }
 
-        public Vector2 GetPosition(float time)
+        public FVector2 GetPosition(Fix64 time)
         {
-            Vector2 temp;
+            FVector2 temp;
 
             if (ControlPoints.Count < 2)
                 throw new Exception("You need at least 2 control points to calculate a position.");
@@ -160,7 +160,7 @@ namespace VelcroPhysics.Tools.PathGenerator
 
                 _deltaT = 1f / (ControlPoints.Count - 1);
 
-                var p = (int) (time / _deltaT);
+                var p = (int)(time / _deltaT);
 
                 // use a circular indexing system
                 var p0 = p - 1;
@@ -186,7 +186,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             }
             else
             {
-                var p = (int) (time / _deltaT);
+                var p = (int)(time / _deltaT);
 
                 // 
                 var p0 = p - 1;
@@ -217,19 +217,19 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// </summary>
         /// <param name="time">The time</param>
         /// <returns>The normal.</returns>
-        public Vector2 GetPositionNormal(float time)
+        public FVector2 GetPositionNormal(Fix64 time)
         {
             var offsetTime = time + 0.0001f;
 
             var a = GetPosition(time);
             var b = GetPosition(offsetTime);
 
-            Vector2 output, temp;
+            FVector2 output, temp;
 
             temp = a - b;
 
 #if (XBOX360 || WINDOWS_PHONE)
-output = new Vector2();
+output = new FVector2();
 #endif
             output.x = -temp.y;
             output.y = temp.x;
@@ -239,13 +239,13 @@ output = new Vector2();
             return output;
         }
 
-        public void Add(Vector2 point)
+        public void Add(FVector2 point)
         {
             ControlPoints.Add(point);
             _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
-        public void Remove(Vector2 point)
+        public void Remove(FVector2 point)
         {
             ControlPoints.Remove(point);
             _deltaT = 1f / (ControlPoints.Count - 1);
@@ -257,15 +257,15 @@ output = new Vector2();
             _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
-        public float GetLength()
+        public Fix64 GetLength()
         {
-            List<Vector2> verts = GetVertices(ControlPoints.Count * 25);
-            float length = 0;
+            List<FVector2> verts = GetVertices(ControlPoints.Count * 25);
+            Fix64 length = 0;
 
-            for (var i = 1; i < verts.Count; i++) length += Vector2.Distance(verts[i - 1], verts[i]);
+            for (var i = 1; i < verts.Count; i++) length += FVector2.Distance(verts[i - 1], verts[i]);
 
             if (Closed)
-                length += Vector2.Distance(verts[ControlPoints.Count - 1], verts[0]);
+                length += FVector2.Distance(verts[ControlPoints.Count - 1], verts[0]);
 
             return length;
         }
@@ -284,7 +284,7 @@ output = new Vector2();
             var end = GetPosition(t);
 
             // increment t until we are at half the distance
-            while (deltaLength * 0.5f >= Vector2.Distance(start, end))
+            while (deltaLength * 0.5f >= FVector2.Distance(start, end))
             {
                 end = GetPosition(t);
                 t += 0.0001f;
@@ -299,12 +299,12 @@ output = new Vector2();
             for (var i = 1; i < divisions; i++)
             {
                 var normal = GetPositionNormal(t);
-                var angle = Mathf.Atan2(normal.y, normal.x);
+                var angle = Fix64.Atan2(normal.y, normal.x);
 
                 verts.Add(new Vector3(end.x, end.y, angle));
 
                 // until we reach the correct distance down the curve
-                while (deltaLength >= Vector2.Distance(start, end))
+                while (deltaLength >= FVector2.Distance(start, end))
                 {
                     end = GetPosition(t);
                     t += 0.00001f;

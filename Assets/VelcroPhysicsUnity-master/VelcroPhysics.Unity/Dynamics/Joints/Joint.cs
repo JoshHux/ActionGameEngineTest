@@ -21,15 +21,15 @@
 */
 
 using System;
-using UnityEngine;
 using VelcroPhysics.Dynamics.Solver;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
     public abstract class VJoint
     {
-        private float _breakpoint;
-        private float _breakpointSquared;
+        private Fix64 _breakpoint;
+        private Fix64 _breakpointSquared;
 
         internal VJointEdge EdgeA = new VJointEdge();
         internal VJointEdge EdgeB = new VJointEdge();
@@ -44,7 +44,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         protected VJoint()
         {
-            Breakpoint = float.MaxValue;
+            Breakpoint = Fix64.MaxValue;
 
             //Connected bodies should not collide by default
             CollideConnected = false;
@@ -87,13 +87,13 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// Get the anchor point on bodyA in world coordinates.
         /// On some VJoints, this value indicate the anchor point within the world.
         /// </summary>
-        public abstract Vector2 WorldAnchorA { get; set; }
+        public abstract FVector2 WorldAnchorA { get; set; }
 
         /// <summary>
         /// Get the anchor point on bodyB in world coordinates.
         /// On some VJoints, this value indicate the anchor point within the world.
         /// </summary>
-        public abstract Vector2 WorldAnchorB { get; set; }
+        public abstract FVector2 WorldAnchorB { get; set; }
 
         /// <summary>
         /// Set the user data pointer.
@@ -108,9 +108,9 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the VJointError can be before it breaks.
-        /// The default value is float.MaxValue, which means it never breaks.
+        /// The default value is Fix64.MaxValue, which means it never breaks.
         /// </summary>
-        public float Breakpoint
+        public Fix64 Breakpoint
         {
             get => _breakpoint;
             set
@@ -123,19 +123,19 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// Fires when the VJoint is broken.
         /// </summary>
-        public event Action<VJoint, float> Broke;
+        public event Action<VJoint, Fix64> Broke;
 
         /// <summary>
         /// Get the reaction force on body at the VJoint anchor in Newtons.
         /// </summary>
         /// <param name="invDt">The inverse delta time.</param>
-        public abstract Vector2 GetReactionForce(float invDt);
+        public abstract FVector2 GetReactionForce(Fix64 invDt);
 
         /// <summary>
         /// Get the reaction torque on the body at the VJoint anchor in N*m.
         /// </summary>
         /// <param name="invDt">The inverse delta time.</param>
-        public abstract float GetReactionTorque(float invDt);
+        public abstract Fix64 GetReactionTorque(Fix64 invDt);
 
         protected void WakeBodies()
         {
@@ -162,19 +162,19 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         internal abstract void InitVelocityConstraints(ref SolverData data);
 
-        internal void Validate(float invDt)
+        internal void Validate(Fix64 invDt)
         {
             if (!Enabled)
                 return;
 
             var VJointErrorSquared = GetReactionForce(invDt).sqrMagnitude;
 
-            if (Mathf.Abs(VJointErrorSquared) <= _breakpointSquared)
+            if (Fix64.Abs(VJointErrorSquared) <= _breakpointSquared)
                 return;
 
             Enabled = false;
 
-            Broke?.Invoke(this, Mathf.Sqrt(VJointErrorSquared));
+            Broke?.Invoke(this, Fix64.Sqrt(VJointErrorSquared));
         }
 
         internal abstract void SolveVelocityConstraints(ref SolverData data);

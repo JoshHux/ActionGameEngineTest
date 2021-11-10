@@ -1,29 +1,29 @@
-using UnityEngine;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Earclip
 {
     public class Triangle : Vertices
     {
         //Constructor automatically fixes orientation to ccw
-        public Triangle(float x1, float y1, float x2, float y2, float x3, float y3)
+        public Triangle(Fix64 x1, Fix64 y1, Fix64 x2, Fix64 y2, Fix64 x3, Fix64 y3)
         {
             var cross = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1);
             if (cross > 0)
             {
-                Add(new Vector2(x1, y1));
-                Add(new Vector2(x2, y2));
-                Add(new Vector2(x3, y3));
+                Add(new FVector2(x1, y1));
+                Add(new FVector2(x2, y2));
+                Add(new FVector2(x3, y3));
             }
             else
             {
-                Add(new Vector2(x1, y1));
-                Add(new Vector2(x3, y3));
-                Add(new Vector2(x2, y2));
+                Add(new FVector2(x1, y1));
+                Add(new FVector2(x3, y3));
+                Add(new FVector2(x2, y2));
             }
         }
 
-        public bool IsInside(float x, float y)
+        public bool IsInside(Fix64 x, Fix64 y)
         {
             var a = this[0];
             var b = this[1];
@@ -46,7 +46,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
             var dot02 = vx0 * vx2 + vy0 * vy2;
             var dot11 = vx1 * vx1 + vy1 * vy1;
             var dot12 = vx1 * vx2 + vy1 * vy2;
-            var invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+            var invDenom = Fix64.One / (dot00 * dot11 - dot01 * dot01);
             var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
             var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.ConvexHull.GiftWrap;
 using VelcroPhysics.Tools.Triangulation.Bayazit;
@@ -8,16 +7,17 @@ using VelcroPhysics.Tools.Triangulation.Delaunay;
 using VelcroPhysics.Tools.Triangulation.Earclip;
 using VelcroPhysics.Tools.Triangulation.FlipCode;
 using VelcroPhysics.Tools.Triangulation.Seidel;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
 {
     public static class Triangulate
     {
         public static List<Vertices> ConvexPartition(Vertices vertices, TriangulationAlgorithm algorithm,
-            bool discardAndFixInvalid = true, float tolerance = 0.001f)
+            bool discardAndFixInvalid = true, Fix64 tolerance = 0.001f)
         {
             if (vertices.Count <= 3)
-                return new List<Vertices> {vertices};
+                return new List<Vertices> { vertices };
 
             List<Vertices> results;
 

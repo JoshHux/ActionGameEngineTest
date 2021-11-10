@@ -3,13 +3,14 @@ using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.TOI
 {
     public static class SeparationFunction
     {
         public static void Initialize(ref SimplexCache cache, DistanceProxy proxyA, ref Sweep sweepA,
-            DistanceProxy proxyB, ref Sweep sweepB, float t1, out Vector2 axis, out Vector2 localPoint,
+            DistanceProxy proxyB, ref Sweep sweepB, Fix64 t1, out FVector2 axis, out FVector2 localPoint,
             out SeparationFunctionType type)
         {
             int count = cache.Count;
@@ -21,7 +22,7 @@ namespace VelcroPhysics.Collision.TOI
 
             if (count == 1)
             {
-                localPoint = Vector2.zero;
+                localPoint = FVector2.zero;
                 type = SeparationFunctionType.Points;
                 var localPointA = proxyA.Vertices[cache.IndexA[0]];
                 var localPointB = proxyB.Vertices[cache.IndexB[0]];
@@ -38,7 +39,7 @@ namespace VelcroPhysics.Collision.TOI
                 var localPointB2 = proxyB.Vertices[cache.IndexB[1]];
 
                 var a = localPointB2 - localPointB1;
-                axis = new Vector2(a.y, -a.x);
+                axis = new FVector2(a.y, -a.x);
                 axis.Normalize();
                 var normal = MathUtils.Mul(ref xfB.q, axis);
 
@@ -48,8 +49,8 @@ namespace VelcroPhysics.Collision.TOI
                 var localPointA = proxyA.Vertices[cache.IndexA[0]];
                 var pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                var s = Vector2.Dot(pointA - pointB, normal);
-                if (s < 0.0f) axis = -axis;
+                var s = FVector2.Dot(pointA - pointB, normal);
+                if (s <Fix64.Zero) axis = -axis;
             }
             else
             {
@@ -59,7 +60,7 @@ namespace VelcroPhysics.Collision.TOI
                 var localPointA2 = proxyA.Vertices[cache.IndexA[1]];
 
                 var a = localPointA2 - localPointA1;
-                axis = new Vector2(a.y, -a.x);
+                axis = new FVector2(a.y, -a.x);
                 axis.Normalize();
                 var normal = MathUtils.Mul(ref xfA.q, axis);
 
@@ -69,15 +70,15 @@ namespace VelcroPhysics.Collision.TOI
                 var localPointB = proxyB.Vertices[cache.IndexB[0]];
                 var pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                var s = Vector2.Dot(pointB - pointA, normal);
-                if (s < 0.0f) axis = -axis;
+                var s = FVector2.Dot(pointB - pointA, normal);
+                if (s <Fix64.Zero) axis = -axis;
             }
 
             //Velcro note: the returned value that used to be here has been removed, as it was not used.
         }
 
-        public static float FindMinSeparation(out int indexA, out int indexB, float t, DistanceProxy proxyA,
-            ref Sweep sweepA, DistanceProxy proxyB, ref Sweep sweepB, ref Vector2 axis, ref Vector2 localPoint,
+        public static Fix64 FindMinSeparation(out int indexA, out int indexB, Fix64 t, DistanceProxy proxyA,
+            ref Sweep sweepA, DistanceProxy proxyB, ref Sweep sweepB, ref FVector2 axis, ref FVector2 localPoint,
             SeparationFunctionType type)
         {
             VTransform xfA, xfB;
@@ -100,7 +101,7 @@ namespace VelcroPhysics.Collision.TOI
                     var pointA = MathUtils.Mul(ref xfA, localPointA);
                     var pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                    var separation = Vector2.Dot(pointB - pointA, axis);
+                    var separation = FVector2.Dot(pointB - pointA, axis);
                     return separation;
                 }
 
@@ -117,7 +118,7 @@ namespace VelcroPhysics.Collision.TOI
                     var localPointB = proxyB.Vertices[indexB];
                     var pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                    var separation = Vector2.Dot(pointB - pointA, normal);
+                    var separation = FVector2.Dot(pointB - pointA, normal);
                     return separation;
                 }
 
@@ -134,7 +135,7 @@ namespace VelcroPhysics.Collision.TOI
                     var localPointA = proxyA.Vertices[indexA];
                     var pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                    var separation = Vector2.Dot(pointA - pointB, normal);
+                    var separation = FVector2.Dot(pointA - pointB, normal);
                     return separation;
                 }
 
@@ -142,12 +143,12 @@ namespace VelcroPhysics.Collision.TOI
                     Debug.Assert(false);
                     indexA = -1;
                     indexB = -1;
-                    return 0.0f;
+                    returnFix64.Zero;
             }
         }
 
-        public static float Evaluate(int indexA, int indexB, float t, DistanceProxy proxyA, ref Sweep sweepA,
-            DistanceProxy proxyB, ref Sweep sweepB, ref Vector2 axis, ref Vector2 localPoint,
+        public static Fix64 Evaluate(int indexA, int indexB, Fix64 t, DistanceProxy proxyA, ref Sweep sweepA,
+            DistanceProxy proxyB, ref Sweep sweepB, ref FVector2 axis, ref FVector2 localPoint,
             SeparationFunctionType type)
         {
             VTransform xfA, xfB;
@@ -163,7 +164,7 @@ namespace VelcroPhysics.Collision.TOI
 
                     var pointA = MathUtils.Mul(ref xfA, localPointA);
                     var pointB = MathUtils.Mul(ref xfB, localPointB);
-                    var separation = Vector2.Dot(pointB - pointA, axis);
+                    var separation = FVector2.Dot(pointB - pointA, axis);
 
                     return separation;
                 }
@@ -175,7 +176,7 @@ namespace VelcroPhysics.Collision.TOI
                     var localPointB = proxyB.Vertices[indexB];
                     var pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                    var separation = Vector2.Dot(pointB - pointA, normal);
+                    var separation = FVector2.Dot(pointB - pointA, normal);
                     return separation;
                 }
                 case SeparationFunctionType.FaceB:
@@ -186,12 +187,12 @@ namespace VelcroPhysics.Collision.TOI
                     var localPointA = proxyA.Vertices[indexA];
                     var pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                    var separation = Vector2.Dot(pointA - pointB, normal);
+                    var separation = FVector2.Dot(pointA - pointB, normal);
                     return separation;
                 }
                 default:
                     Debug.Assert(false);
-                    return 0.0f;
+                    returnFix64.Zero;
             }
         }
     }

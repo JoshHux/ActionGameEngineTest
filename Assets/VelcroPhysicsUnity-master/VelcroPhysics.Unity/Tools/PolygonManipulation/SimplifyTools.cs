@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.PolygonManipulation
 {
@@ -17,7 +17,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// <param name="vertices">The polygon that needs simplification.</param>
         /// <param name="collinearityTolerance">The collinearity tolerance.</param>
         /// <returns>A simplified polygon.</returns>
-        public static Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance = 0)
+        public static Vertices CollinearSimplify(Vertices vertices, Fix64 collinearityTolerance = 0)
         {
             if (vertices.Count <= 3)
                 return vertices;
@@ -46,7 +46,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// If you pass in 0, it will remove all collinear points.
         /// </summary>
         /// <returns>The simplified polygon</returns>
-        public static Vertices DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance)
+        public static Vertices DouglasPeuckerSimplify(Vertices vertices, Fix64 distanceTolerance)
         {
             if (vertices.Count <= 3)
                 return vertices;
@@ -67,7 +67,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             return simplified;
         }
 
-        private static void SimplifySection(Vertices vertices, int i, int j, bool[] usePoint, float distanceTolerance)
+        private static void SimplifySection(Vertices vertices, int i, int j, bool[] usePoint, Fix64 distanceTolerance)
         {
             if (i + 1 == j)
                 return;
@@ -106,7 +106,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="tolerance">The tolerance.</param>
-        public static Vertices MergeParallelEdges(Vertices vertices, float tolerance)
+        public static Vertices MergeParallelEdges(Vertices vertices, Fix64 tolerance)
         {
             //From Eric Jordan's convex decomposition library
 
@@ -127,10 +127,10 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                 var dy0 = vertices[middle].y - vertices[lower].y;
                 var dx1 = vertices[upper].x - vertices[middle].x;
                 var dy1 = vertices[upper].y - vertices[middle].y;
-                var norm0 = Mathf.Sqrt(dx0 * dx0 + dy0 * dy0);
-                var norm1 = Mathf.Sqrt(dx1 * dx1 + dy1 * dy1);
+                var norm0 = Fix64.Sqrt(dx0 * dx0 + dy0 * dy0);
+                var norm1 = Fix64.Sqrt(dx1 * dx1 + dy1 * dy1);
 
-                if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3)
+                if (!(norm0 >Fix64.Zero && norm1 >Fix64.Zero) && newNVertices > 3)
                 {
                     //Merge identical points
                     mergeMe[i] = true;
@@ -144,7 +144,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                 var cross = dx0 * dy1 - dx1 * dy0;
                 var dot = dx0 * dx1 + dy0 * dy1;
 
-                if (Mathf.Abs(cross) < tolerance && dot > 0 && newNVertices > 3)
+                if (Fix64.Abs(cross) < tolerance && dot > 0 && newNVertices > 3)
                 {
                     mergeMe[i] = true;
                     --newNVertices;
@@ -183,7 +183,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// <param name="vertices">The vertices.</param>
         public static Vertices MergeIdenticalPoints(Vertices vertices)
         {
-            var unique = new HashSet<Vector2>();
+            var unique = new HashSet<FVector2>();
 
             foreach (var vertex in vertices) unique.Add(vertex);
 
@@ -195,7 +195,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="distance">The distance between points. Points closer than this will be removed.</param>
-        public static Vertices ReduceByDistance(Vertices vertices, float distance)
+        public static Vertices ReduceByDistance(Vertices vertices, Fix64 distance)
         {
             if (vertices.Count <= 3)
                 return vertices;
@@ -253,7 +253,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// <param name="vertices"></param>
         /// <param name="areaTolerance"></param>
         /// <returns></returns>
-        public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
+        public static Vertices ReduceByArea(Vertices vertices, Fix64 areaTolerance)
         {
             //From physics2d.net
 
@@ -264,7 +264,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                 throw new ArgumentOutOfRangeException(nameof(areaTolerance), "must be equal to or greater than zero.");
 
             var simplified = new Vertices(vertices.Count);
-            Vector2 v3;
+            FVector2 v3;
             var v1 = vertices[vertices.Count - 2];
             var v2 = vertices[vertices.Count - 1];
             areaTolerance *= 2;
@@ -273,16 +273,16 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             {
                 v3 = i == vertices.Count - 1 ? simplified[0] : vertices[i];
 
-                float old1;
+                Fix64 old1;
                 MathUtils.Cross(ref v1, ref v2, out old1);
 
-                float old2;
+                Fix64 old2;
                 MathUtils.Cross(ref v2, ref v3, out old2);
 
-                float new1;
+                Fix64 new1;
                 MathUtils.Cross(ref v1, ref v3, out new1);
 
-                if (Mathf.Abs(new1 - (old1 + old2)) > areaTolerance)
+                if (Fix64.Abs(new1 - (old1 + old2)) > areaTolerance)
                 {
                     simplified.Add(v2);
                     v1 = v2;

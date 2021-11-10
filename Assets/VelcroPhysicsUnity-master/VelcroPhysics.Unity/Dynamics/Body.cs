@@ -21,7 +21,6 @@
 */
 
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Filtering;
@@ -33,6 +32,7 @@ using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 using VTransform = VelcroPhysics.Shared.VTransform;
 
 namespace VelcroPhysics.Dynamics
@@ -40,17 +40,17 @@ namespace VelcroPhysics.Dynamics
     public class Body
     {
         private BodyType _type;
-        private float _inertia;
-        private float _mass;
+        private Fix64 _inertia;
+        private Fix64 _mass;
 
         internal BodyFlags _flags;
-        internal float _invI;
-        internal float _invMass;
-        internal Vector2 _force;
-        internal Vector2 _linearVelocity;
-        internal float _angularVelocity;
+        internal Fix64 _invI;
+        internal Fix64 _invMass;
+        internal FVector2 _force;
+        internal FVector2 _linearVelocity;
+        internal Fix64 _angularVelocity;
         internal Sweep _sweep; // the swept motion for CCD
-        internal float _torque;
+        internal Fix64 _torque;
         internal World _world;
         public VTransform _xf; // the body origin VTransform
 
@@ -87,19 +87,19 @@ namespace VelcroPhysics.Dynamics
 
             LinearDamping = template.LinearDamping;
             AngularDamping = template.AngularDamping;
-            GravityScale = 1.0f;
+            GravityScale = Fix64.One;
 
             _type = template.Type;
 
             if (_type == BodyType.Dynamic)
             {
-                _mass = 1.0f;
-                _invMass = 1.0f;
+                _mass = Fix64.One;
+                _invMass = Fix64.One;
             }
             else
             {
-                _mass = 0.0f;
-                _invMass = 0.0f;
+                _mass = Fix64.Zero;
+                _invMass = Fix64.Zero;
             }
 
             UserData = template.UserData;
@@ -114,15 +114,15 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         public int BodyId { get; internal set; }
 
-        public float SleepTime { get; set; }
+        public Fix64 SleepTime { get; set; }
 
         public int IslandIndex { get; set; }
 
         /// <summary>
         /// Scale the gravity applied to this body.
-        /// Defaults to 1. A value of 2 means float the gravity is applied to this body.
+        /// Defaults to 1. A value of 2 means Fix64 the gravity is applied to this body.
         /// </summary>
-        public float GravityScale { get; set; }
+        public Fix64 GravityScale { get; set; }
 
         /// <summary>
         /// Set the user data. Use this to store your application specific data.
@@ -134,7 +134,7 @@ namespace VelcroPhysics.Dynamics
         /// Gets the total number revolutions the body has made.
         /// </summary>
         /// <value>The revolutions.</value>
-        public float Revolutions => Rotation / Mathf.PI;
+        public Fix64 Revolutions => Rotation / Fix64.PI;
 
         /// <summary>
         /// Gets or sets the body type.
@@ -155,8 +155,8 @@ namespace VelcroPhysics.Dynamics
 
                 if (_type == BodyType.Static)
                 {
-                    _linearVelocity = Vector2.zero;
-                    _angularVelocity = 0.0f;
+                    _linearVelocity = FVector2.zero;
+                    _angularVelocity = Fix64.Zero;
                     _sweep.A0 = _sweep.A;
                     _sweep.C0 = _sweep.C;
                     SynchronizeFixtures();
@@ -164,8 +164,8 @@ namespace VelcroPhysics.Dynamics
 
                 Awake = true;
 
-                _force = Vector2.zero;
-                _torque = 0.0f;
+                _force = FVector2.zero;
+                _torque = Fix64.Zero;
 
                 // Delete the attached contacts.
                 var ce = ContactList;
@@ -192,17 +192,17 @@ namespace VelcroPhysics.Dynamics
         /// Get or sets the linear velocity of the center of mass.
         /// </summary>
         /// <value>The linear velocity.</value>
-        public Vector2 LinearVelocity
+        public FVector2 LinearVelocity
         {
             get => _linearVelocity;
             set
             {
-                Debug.Assert(!float.IsNaN(value.x) && !float.IsNaN(value.y));
+                Debug.Assert(!Fix64.IsNaN(value.x) && !Fix64.IsNaN(value.y));
 
                 if (_type == BodyType.Static)
                     return;
 
-                if (Vector2.Dot(value, value) > 0.0f)
+                if (FVector2.Dot(value, value) > Fix64.Zero)
                     Awake = true;
 
                 _linearVelocity = value;
@@ -213,17 +213,17 @@ namespace VelcroPhysics.Dynamics
         /// Gets or sets the angular velocity. Radians/second.
         /// </summary>
         /// <value>The angular velocity.</value>
-        public float AngularVelocity
+        public Fix64 AngularVelocity
         {
             get => _angularVelocity;
             set
             {
-                Debug.Assert(!float.IsNaN(value));
+                Debug.Assert(!Fix64.IsNaN(value));
 
                 if (_type == BodyType.Static)
                     return;
 
-                if (value * value > 0.0f)
+                if (value * value > Fix64.Zero)
                     Awake = true;
 
                 _angularVelocity = value;
@@ -234,13 +234,13 @@ namespace VelcroPhysics.Dynamics
         /// Gets or sets the linear damping.
         /// </summary>
         /// <value>The linear damping.</value>
-        public float LinearDamping { get; set; }
+        public Fix64 LinearDamping { get; set; }
 
         /// <summary>
         /// Gets or sets the angular damping.
         /// </summary>
         /// <value>The angular damping.</value>
-        public float AngularDamping { get; set; }
+        public Fix64 AngularDamping { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this body should be included in the CCD solver.
@@ -293,13 +293,13 @@ namespace VelcroPhysics.Dynamics
                 if (value)
                 {
                     _flags |= BodyFlags.AwakeFlag;
-                    SleepTime = 0.0f;
+                    SleepTime = Fix64.Zero;
                 }
                 else
                 {
                     _flags &= ~BodyFlags.AwakeFlag;
                     ResetDynamics();
-                    SleepTime = 0.0f;
+                    SleepTime = Fix64.Zero;
                 }
             }
         }
@@ -409,12 +409,12 @@ namespace VelcroPhysics.Dynamics
         /// Get the world body origin position.
         /// </summary>
         /// <returns>Return the world position of the body's origin.</returns>
-        public Vector2 Position
+        public FVector2 Position
         {
             get => _xf.p;
             set
             {
-                Debug.Assert(!float.IsNaN(value.x) && !float.IsNaN(value.y));
+                Debug.Assert(!Fix64.IsNaN(value.x) && !Fix64.IsNaN(value.y));
 
                 SetVTransform(ref value, Rotation);
             }
@@ -424,12 +424,12 @@ namespace VelcroPhysics.Dynamics
         /// Get the angle in radians.
         /// </summary>
         /// <returns>Return the current world rotation angle in radians.</returns>
-        public float Rotation
+        public Fix64 Rotation
         {
             get => _sweep.A;
             set
             {
-                Debug.Assert(!float.IsNaN(value));
+                Debug.Assert(!Fix64.IsNaN(value));
 
                 SetVTransform(ref _xf.p, value);
             }
@@ -464,13 +464,13 @@ namespace VelcroPhysics.Dynamics
         /// Get the world position of the center of mass.
         /// </summary>
         /// <value>The world position.</value>
-        public Vector2 WorldCenter => _sweep.C;
+        public FVector2 WorldCenter => _sweep.C;
 
         /// <summary>
         /// Get the local position of the center of mass.
         /// </summary>
         /// <value>The local position.</value>
-        public Vector2 LocalCenter
+        public FVector2 LocalCenter
         {
             get => _sweep.LocalCenter;
             set
@@ -487,7 +487,7 @@ namespace VelcroPhysics.Dynamics
 
                 // Update center of mass velocity.
                 var a = _sweep.C - oldCenter;
-                _linearVelocity += new Vector2(-_angularVelocity * a.y, _angularVelocity * a.x);
+                _linearVelocity += new FVector2(-_angularVelocity * a.y, _angularVelocity * a.x);
             }
         }
 
@@ -495,12 +495,12 @@ namespace VelcroPhysics.Dynamics
         /// Gets or sets the mass. Usually in kilograms (kg).
         /// </summary>
         /// <value>The mass.</value>
-        public float Mass
+        public Fix64 Mass
         {
             get => _mass;
             set
             {
-                Debug.Assert(!float.IsNaN(value));
+                Debug.Assert(!Fix64.IsNaN(value));
 
                 if (_type != BodyType.Dynamic)
                     return;
@@ -508,10 +508,10 @@ namespace VelcroPhysics.Dynamics
                 //Velcro: We support setting the mass independently
                 _mass = value;
 
-                if (_mass <= 0.0f)
-                    _mass = 1.0f;
+                if (_mass <= Fix64.Zero)
+                    _mass = Fix64.One;
 
-                _invMass = 1.0f / _mass;
+                _invMass = Fix64.One / _mass;
             }
         }
 
@@ -519,27 +519,27 @@ namespace VelcroPhysics.Dynamics
         /// Get or set the rotational inertia of the body about the local origin. usually in kg-m^2.
         /// </summary>
         /// <value>The inertia.</value>
-        public float Inertia
+        public Fix64 Inertia
         {
-            get => _inertia + _mass * Vector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
+            get => _inertia + _mass * FVector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
             set
             {
-                Debug.Assert(!float.IsNaN(value));
+                Debug.Assert(!Fix64.IsNaN(value));
 
                 if (_type != BodyType.Dynamic)
                     return;
 
                 //Velcro: We support setting the inertia independently
-                if (value > 0.0f && !FixedRotation)
+                if (value > Fix64.Zero && !FixedRotation)
                 {
-                    _inertia = value - _mass * Vector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
-                    Debug.Assert(_inertia > 0.0f);
-                    _invI = 1.0f / _inertia;
+                    _inertia = value - _mass * FVector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
+                    Debug.Assert(_inertia > Fix64.Zero);
+                    _invI = Fix64.One / _inertia;
                 }
             }
         }
 
-        public float Restitution
+        public Fix64 Restitution
         {
             set
             {
@@ -551,7 +551,7 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        public float Friction
+        public Fix64 Friction
         {
             set
             {
@@ -649,8 +649,8 @@ namespace VelcroPhysics.Dynamics
         {
             _torque = 0;
             _angularVelocity = 0;
-            _force = Vector2.zero;
-            _linearVelocity = Vector2.zero;
+            _force = FVector2.zero;
+            _linearVelocity = FVector2.zero;
         }
 
         /// <summary>
@@ -733,7 +733,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetVTransform(ref Vector2 position, float rotation)
+        public void SetVTransform(ref FVector2 position, Fix64 rotation)
         {
             SetVTransformIgnoreContacts(ref position, rotation);
 
@@ -748,7 +748,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetVTransform(Vector2 position, float rotation)
+        public void SetVTransform(FVector2 position, Fix64 rotation)
         {
             SetVTransform(ref position, rotation);
         }
@@ -758,7 +758,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="angle">The angle.</param>
-        public void SetVTransformIgnoreContacts(ref Vector2 position, float angle)
+        public void SetVTransformIgnoreContacts(ref FVector2 position, Fix64 angle)
         {
             _xf.q.Set(angle);
             _xf.p = position;
@@ -789,7 +789,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="force">The world force vector, usually in Newtons (N).</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyForce(Vector2 force, Vector2 point)
+        public void ApplyForce(FVector2 force, FVector2 point)
         {
             ApplyForce(ref force, ref point);
         }
@@ -798,7 +798,7 @@ namespace VelcroPhysics.Dynamics
         /// Applies a force at the center of mass.
         /// </summary>
         /// <param name="force">The force.</param>
-        public void ApplyForce(ref Vector2 force)
+        public void ApplyForce(ref FVector2 force)
         {
             ApplyForce(ref force, ref _xf.p);
         }
@@ -807,7 +807,7 @@ namespace VelcroPhysics.Dynamics
         /// Applies a force at the center of mass.
         /// </summary>
         /// <param name="force">The force.</param>
-        public void ApplyForce(Vector2 force)
+        public void ApplyForce(FVector2 force)
         {
             ApplyForce(ref force, ref _xf.p);
         }
@@ -819,12 +819,12 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="force">The world force vector, usually in Newtons (N).</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyForce(ref Vector2 force, ref Vector2 point)
+        public void ApplyForce(ref FVector2 force, ref FVector2 point)
         {
-            Debug.Assert(!float.IsNaN(force.x));
-            Debug.Assert(!float.IsNaN(force.y));
-            Debug.Assert(!float.IsNaN(point.x));
-            Debug.Assert(!float.IsNaN(point.y));
+            Debug.Assert(!Fix64.IsNaN(force.x));
+            Debug.Assert(!Fix64.IsNaN(force.y));
+            Debug.Assert(!Fix64.IsNaN(point.x));
+            Debug.Assert(!Fix64.IsNaN(point.y));
 
             if (_type != BodyType.Dynamic)
                 return;
@@ -842,9 +842,9 @@ namespace VelcroPhysics.Dynamics
         /// without affecting the linear velocity of the center of mass.
         /// </summary>
         /// <param name="torque">The torque about the z-axis (out of the screen), usually in N-m.</param>
-        public void ApplyTorque(float torque)
+        public void ApplyTorque(Fix64 torque)
         {
-            Debug.Assert(!float.IsNaN(torque));
+            Debug.Assert(!Fix64.IsNaN(torque));
 
             if (BodyType != BodyType.Dynamic)
                 return;
@@ -861,7 +861,7 @@ namespace VelcroPhysics.Dynamics
         /// This wakes up the body.
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
-        public void ApplyLinearImpulse(Vector2 impulse)
+        public void ApplyLinearImpulse(FVector2 impulse)
         {
             ApplyLinearImpulse(ref impulse);
         }
@@ -874,7 +874,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyLinearImpulse(Vector2 impulse, Vector2 point)
+        public void ApplyLinearImpulse(FVector2 impulse, FVector2 point)
         {
             ApplyLinearImpulse(ref impulse, ref point);
         }
@@ -884,7 +884,7 @@ namespace VelcroPhysics.Dynamics
         /// This wakes up the body.
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
-        public void ApplyLinearImpulse(ref Vector2 impulse)
+        public void ApplyLinearImpulse(ref FVector2 impulse)
         {
             if (_type != BodyType.Dynamic)
                 return;
@@ -904,7 +904,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyLinearImpulse(ref Vector2 impulse, ref Vector2 point)
+        public void ApplyLinearImpulse(ref FVector2 impulse, ref FVector2 point)
         {
             if (_type != BodyType.Dynamic)
                 return;
@@ -921,7 +921,7 @@ namespace VelcroPhysics.Dynamics
         /// Apply an angular impulse.
         /// </summary>
         /// <param name="impulse">The angular impulse in units of kg*m*m/s.</param>
-        public void ApplyAngularImpulse(float impulse)
+        public void ApplyAngularImpulse(Fix64 impulse)
         {
             if (_type != BodyType.Dynamic)
                 return;
@@ -941,11 +941,11 @@ namespace VelcroPhysics.Dynamics
         public void ResetMassData()
         {
             // Compute mass data from shapes. Each shape has its own density.
-            _mass = 0.0f;
-            _invMass = 0.0f;
-            _inertia = 0.0f;
-            _invI = 0.0f;
-            _sweep.LocalCenter = Vector2.zero;
+            _mass = Fix64.Zero;
+            _invMass = Fix64.Zero;
+            _inertia = Fix64.Zero;
+            _invI = Fix64.Zero;
+            _sweep.LocalCenter = FVector2.zero;
 
             //Velcro: We have mass on static bodies to support attaching VJoints to them
             // Kinematic bodies have zero mass.
@@ -960,10 +960,10 @@ namespace VelcroPhysics.Dynamics
             Debug.Assert(BodyType == BodyType.Dynamic || BodyType == BodyType.Static);
 
             // Accumulate mass over all fixtures.
-            var localCenter = Vector2.zero;
+            var localCenter = FVector2.zero;
             foreach (var f in FixtureList)
             {
-                if (f.Shape._density == 0.0f)
+                if (f.Shape._density == Fix64.Zero)
                     continue;
 
                 var massData = f.Shape.MassData;
@@ -980,30 +980,30 @@ namespace VelcroPhysics.Dynamics
             }
 
             // Compute center of mass.
-            if (_mass > 0.0f)
+            if (_mass > Fix64.Zero)
             {
-                _invMass = 1.0f / _mass;
+                _invMass = Fix64.One / _mass;
                 localCenter *= _invMass;
             }
             else
             {
                 // Force all bodies to have a positive mass.
-                _mass = 1.0f;
-                _invMass = 1.0f;
+                _mass = Fix64.One;
+                _invMass = Fix64.One;
             }
 
-            if (_inertia > 0.0f && (_flags & BodyFlags.FixedRotationFlag) == 0)
+            if (_inertia > Fix64.Zero && (_flags & BodyFlags.FixedRotationFlag) == 0)
             {
                 // Center the inertia about the center of mass.
-                _inertia -= _mass * Vector2.Dot(localCenter, localCenter);
+                _inertia -= _mass * FVector2.Dot(localCenter, localCenter);
 
-                Debug.Assert(_inertia > 0.0f);
-                _invI = 1.0f / _inertia;
+                Debug.Assert(_inertia > Fix64.Zero);
+                _invI = Fix64.One / _inertia;
             }
             else
             {
-                _inertia = 0.0f;
-                _invI = 0.0f;
+                _inertia = Fix64.Zero;
+                _invI = Fix64.Zero;
             }
 
             // Move center of mass.
@@ -1013,7 +1013,7 @@ namespace VelcroPhysics.Dynamics
 
             // Update center of mass velocity.
             var a = _sweep.C - oldCenter;
-            _linearVelocity += new Vector2(-_angularVelocity * a.y, _angularVelocity * a.x);
+            _linearVelocity += new FVector2(-_angularVelocity * a.y, _angularVelocity * a.x);
         }
 
         /// <summary>
@@ -1021,7 +1021,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="localPoint">A point on the body measured relative the body's origin.</param>
         /// <returns>The same point expressed in world coordinates.</returns>
-        public Vector2 GetWorldPoint(ref Vector2 localPoint)
+        public FVector2 GetWorldPoint(ref FVector2 localPoint)
         {
             return MathUtils.Mul(ref _xf, ref localPoint);
         }
@@ -1031,7 +1031,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="localPoint">A point on the body measured relative the body's origin.</param>
         /// <returns>The same point expressed in world coordinates.</returns>
-        public Vector2 GetWorldPoint(Vector2 localPoint)
+        public FVector2 GetWorldPoint(FVector2 localPoint)
         {
             return GetWorldPoint(ref localPoint);
         }
@@ -1042,7 +1042,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="localVector">A vector fixed in the body.</param>
         /// <returns>The same vector expressed in world coordinates.</returns>
-        public Vector2 GetWorldVector(ref Vector2 localVector)
+        public FVector2 GetWorldVector(ref FVector2 localVector)
         {
             return MathUtils.Mul(ref _xf.q, localVector);
         }
@@ -1052,7 +1052,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="localVector">A vector fixed in the body.</param>
         /// <returns>The same vector expressed in world coordinates.</returns>
-        public Vector2 GetWorldVector(Vector2 localVector)
+        public FVector2 GetWorldVector(FVector2 localVector)
         {
             return GetWorldVector(ref localVector);
         }
@@ -1063,7 +1063,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The corresponding local point relative to the body's origin.</returns>
-        public Vector2 GetLocalPoint(ref Vector2 worldPoint)
+        public FVector2 GetLocalPoint(ref FVector2 worldPoint)
         {
             return MathUtils.MulT(ref _xf, worldPoint);
         }
@@ -1073,7 +1073,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The corresponding local point relative to the body's origin.</returns>
-        public Vector2 GetLocalPoint(Vector2 worldPoint)
+        public FVector2 GetLocalPoint(FVector2 worldPoint)
         {
             return GetLocalPoint(ref worldPoint);
         }
@@ -1084,7 +1084,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="worldVector">A vector in world coordinates.</param>
         /// <returns>The corresponding local vector.</returns>
-        public Vector2 GetLocalVector(ref Vector2 worldVector)
+        public FVector2 GetLocalVector(ref FVector2 worldVector)
         {
             return MathUtils.MulT(_xf.q, worldVector);
         }
@@ -1095,7 +1095,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="worldVector">A vector in world coordinates.</param>
         /// <returns>The corresponding local vector.</returns>
-        public Vector2 GetLocalVector(Vector2 worldVector)
+        public FVector2 GetLocalVector(FVector2 worldVector)
         {
             return GetLocalVector(ref worldVector);
         }
@@ -1105,7 +1105,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public Vector2 GetLinearVelocityFromWorldPoint(Vector2 worldPoint)
+        public FVector2 GetLinearVelocityFromWorldPoint(FVector2 worldPoint)
         {
             return GetLinearVelocityFromWorldPoint(ref worldPoint);
         }
@@ -1115,7 +1115,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public Vector2 GetLinearVelocityFromWorldPoint(ref Vector2 worldPoint)
+        public FVector2 GetLinearVelocityFromWorldPoint(ref FVector2 worldPoint)
         {
             return _linearVelocity + MathUtils.Cross(_angularVelocity, worldPoint - _sweep.C);
         }
@@ -1125,7 +1125,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="localPoint">A point in local coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public Vector2 GetLinearVelocityFromLocalPoint(Vector2 localPoint)
+        public FVector2 GetLinearVelocityFromLocalPoint(FVector2 localPoint)
         {
             return GetLinearVelocityFromLocalPoint(ref localPoint);
         }
@@ -1135,7 +1135,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="localPoint">A point in local coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public Vector2 GetLinearVelocityFromLocalPoint(ref Vector2 localPoint)
+        public FVector2 GetLinearVelocityFromLocalPoint(ref FVector2 localPoint)
         {
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(ref localPoint));
         }
@@ -1175,7 +1175,7 @@ namespace VelcroPhysics.Dynamics
             return true;
         }
 
-        internal void Advance(float alpha)
+        internal void Advance(Fix64 alpha)
         {
             // Advance to the new safe time. This doesn't sync the broad-phase.
             _sweep.Advance(alpha);

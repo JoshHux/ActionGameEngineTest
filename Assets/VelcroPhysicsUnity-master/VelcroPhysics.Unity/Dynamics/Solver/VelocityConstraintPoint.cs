@@ -1,15 +1,15 @@
-using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.Solver
 {
     public sealed class VelocityConstraintPoint
     {
-        public float NormalImpulse;
-        public float NormalMass;
-        public Vector2 rA;
-        public Vector2 rB;
-        public float TangentImpulse;
-        public float TangentMass;
-        public float VelocityBias;
+        public Fix64 NormalImpulse;
+        public Fix64 NormalMass;
+        public FVector2 rA;
+        public FVector2 rB;
+        public Fix64 TangentImpulse;
+        public Fix64 TangentMass;
+        public Fix64 VelocityBias;
     }
 }

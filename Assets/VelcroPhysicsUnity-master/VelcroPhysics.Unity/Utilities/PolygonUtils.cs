@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.TextureTools;
+using FixMath.NET;
 using VTransform = VelcroPhysics.Shared.VTransform;
 
 namespace VelcroPhysics.Utilities
@@ -14,13 +14,13 @@ namespace VelcroPhysics.Utilities
         /// </summary>
         /// <param name="hx">the half-width.</param>
         /// <param name="hy">the half-height.</param>
-        public static Vertices CreateRectangle(float hx, float hy)
+        public static Vertices CreateRectangle(Fix64 hx, Fix64 hy)
         {
             var vertices = new Vertices(4);
-            vertices.Add(new Vector2(-hx, -hy));
-            vertices.Add(new Vector2(hx, -hy));
-            vertices.Add(new Vector2(hx, hy));
-            vertices.Add(new Vector2(-hx, hy));
+            vertices.Add(new FVector2(-hx, -hy));
+            vertices.Add(new FVector2(hx, -hy));
+            vertices.Add(new FVector2(hx, hy));
+            vertices.Add(new FVector2(-hx, hy));
 
             return vertices;
         }
@@ -32,7 +32,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="hy">the half-height.</param>
         /// <param name="center">the center of the box in local coordinates.</param>
         /// <param name="angle">the rotation of the box in local coordinates.</param>
-        public static Vertices CreateRectangle(float hx, float hy, Vector2 center, float angle)
+        public static Vertices CreateRectangle(Fix64 hx, Fix64 hy, FVector2 center, Fix64 angle)
         {
             var vertices = CreateRectangle(hx, hy);
 
@@ -57,7 +57,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="yRadius">The rounding Y radius.</param>
         /// <param name="segments">The number of segments to subdivide the edges.</param>
         /// <returns></returns>
-        public static Vertices CreateRoundedRectangle(float width, float height, float xRadius, float yRadius,
+        public static Vertices CreateRoundedRectangle(Fix64 width, Fix64 height, Fix64 xRadius, Fix64 yRadius,
             int segments)
         {
             if (yRadius > height / 2 || xRadius > width / 2)
@@ -72,27 +72,27 @@ namespace VelcroPhysics.Utilities
             var vertices = new Vertices();
             if (segments == 0)
             {
-                vertices.Add(new Vector2(width * .5f - xRadius, -height * .5f));
-                vertices.Add(new Vector2(width * .5f, -height * .5f + yRadius));
+                vertices.Add(new FVector2(width * .5f - xRadius, -height * .5f));
+                vertices.Add(new FVector2(width * .5f, -height * .5f + yRadius));
 
-                vertices.Add(new Vector2(width * .5f, height * .5f - yRadius));
-                vertices.Add(new Vector2(width * .5f - xRadius, height * .5f));
+                vertices.Add(new FVector2(width * .5f, height * .5f - yRadius));
+                vertices.Add(new FVector2(width * .5f - xRadius, height * .5f));
 
-                vertices.Add(new Vector2(-width * .5f + xRadius, height * .5f));
-                vertices.Add(new Vector2(-width * .5f, height * .5f - yRadius));
+                vertices.Add(new FVector2(-width * .5f + xRadius, height * .5f));
+                vertices.Add(new FVector2(-width * .5f, height * .5f - yRadius));
 
-                vertices.Add(new Vector2(-width * .5f, -height * .5f + yRadius));
-                vertices.Add(new Vector2(-width * .5f + xRadius, -height * .5f));
+                vertices.Add(new FVector2(-width * .5f, -height * .5f + yRadius));
+                vertices.Add(new FVector2(-width * .5f + xRadius, -height * .5f));
             }
             else
             {
                 var numberOfEdges = segments * 4 + 8;
 
-                var stepSize = Mathf.PI * 2f / (numberOfEdges - 4);
+                var stepSize = Fix64.PI * 2f / (numberOfEdges - 4);
                 var perPhase = numberOfEdges / 4;
 
-                var posOffset = new Vector2(width / 2 - xRadius, height / 2 - yRadius);
-                vertices.Add(posOffset + new Vector2(xRadius, -yRadius + yRadius));
+                var posOffset = new FVector2(width / 2 - xRadius, height / 2 - yRadius);
+                vertices.Add(posOffset + new FVector2(xRadius, -yRadius + yRadius));
                 short phase = 0;
                 for (var i = 1; i < numberOfEdges; i++)
                 {
@@ -107,8 +107,8 @@ namespace VelcroPhysics.Utilities
                         phase--;
                     }
 
-                    vertices.Add(posOffset + new Vector2(xRadius * Mathf.Cos(stepSize * -(i + phase)),
-                        -yRadius * Mathf.Sin(stepSize * -(i + phase))));
+                    vertices.Add(posOffset + new FVector2(xRadius * Fix64.Cos(stepSize * -(i + phase)),
+                        -yRadius * Fix64.Sin(stepSize * -(i + phase))));
                 }
             }
 
@@ -120,7 +120,7 @@ namespace VelcroPhysics.Utilities
         /// </summary>
         /// <param name="start">The first point.</param>
         /// <param name="end">The second point.</param>
-        public static Vertices CreateLine(Vector2 start, Vector2 end)
+        public static Vertices CreateLine(FVector2 start, FVector2 end)
         {
             var vertices = new Vertices(2);
             vertices.Add(start);
@@ -135,7 +135,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="radius">The radius.</param>
         /// <param name="numberOfEdges">The number of edges. The more edges, the more it resembles a circle</param>
         /// <returns></returns>
-        public static Vertices CreateCircle(float radius, int numberOfEdges)
+        public static Vertices CreateCircle(Fix64 radius, int numberOfEdges)
         {
             return CreateEllipse(radius, radius, numberOfEdges);
         }
@@ -147,21 +147,21 @@ namespace VelcroPhysics.Utilities
         /// <param name="yRadius">Height of the ellipse.</param>
         /// <param name="numberOfEdges">The number of edges. The more edges, the more it resembles an ellipse</param>
         /// <returns></returns>
-        public static Vertices CreateEllipse(float xRadius, float yRadius, int numberOfEdges)
+        public static Vertices CreateEllipse(Fix64 xRadius, Fix64 yRadius, int numberOfEdges)
         {
             var vertices = new Vertices();
 
-            var stepSize = Mathf.PI * 2f / numberOfEdges;
+            var stepSize = Fix64.PI * 2f / numberOfEdges;
 
-            vertices.Add(new Vector2(xRadius, 0));
+            vertices.Add(new FVector2(xRadius, 0));
             for (var i = numberOfEdges - 1; i > 0; --i)
-                vertices.Add(new Vector2(xRadius * Mathf.Cos(stepSize * i),
-                    -yRadius * Mathf.Sin(stepSize * i)));
+                vertices.Add(new FVector2(xRadius * Fix64.Cos(stepSize * i),
+                    -yRadius * Fix64.Sin(stepSize * i)));
 
             return vertices;
         }
 
-        public static Vertices CreateArc(float radians, int sides, float radius)
+        public static Vertices CreateArc(Fix64 radians, int sides, Fix64 radius)
         {
             Debug.Assert(radians > 0, "The arc needs to be larger than 0");
             Debug.Assert(sides > 1, "The arc needs to have more than 1 sides");
@@ -171,8 +171,8 @@ namespace VelcroPhysics.Utilities
 
             var stepSize = radians / sides;
             for (var i = sides - 1; i > 0; i--)
-                vertices.Add(new Vector2(radius * Mathf.Cos(stepSize * i),
-                    radius * Mathf.Sin(stepSize * i)));
+                vertices.Add(new FVector2(radius * Fix64.Cos(stepSize * i),
+                    radius * Fix64.Sin(stepSize * i)));
 
             return vertices;
         }
@@ -187,7 +187,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="endRadius">Radius of the capsule ends.</param>
         /// <param name="edges">The number of edges of the capsule ends. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float height, float endRadius, int edges)
+        public static Vertices CreateCapsule(Fix64 height, Fix64 endRadius, int edges)
         {
             if (endRadius >= height / 2)
                 throw new ArgumentException(
@@ -207,7 +207,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="bottomRadius">Radius of bottom.</param>
         /// <param name="bottomEdges">The number of edges of the bottom. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius,
+        public static Vertices CreateCapsule(Fix64 height, Fix64 topRadius, int topEdges, Fix64 bottomRadius,
             int bottomEdges)
         {
             if (height <= 0)
@@ -240,24 +240,24 @@ namespace VelcroPhysics.Utilities
             var newHeight = (height - topRadius - bottomRadius) * 0.5f;
 
             // top
-            vertices.Add(new Vector2(topRadius, newHeight));
+            vertices.Add(new FVector2(topRadius, newHeight));
 
-            var stepSize = Mathf.PI / topEdges;
+            var stepSize = Fix64.PI / topEdges;
             for (var i = 1; i < topEdges; i++)
-                vertices.Add(new Vector2(topRadius * Mathf.Cos(stepSize * i),
-                    topRadius * Mathf.Sin(stepSize * i) + newHeight));
+                vertices.Add(new FVector2(topRadius * Fix64.Cos(stepSize * i),
+                    topRadius * Fix64.Sin(stepSize * i) + newHeight));
 
-            vertices.Add(new Vector2(-topRadius, newHeight));
+            vertices.Add(new FVector2(-topRadius, newHeight));
 
             // bottom
-            vertices.Add(new Vector2(-bottomRadius, -newHeight));
+            vertices.Add(new FVector2(-bottomRadius, -newHeight));
 
-            stepSize = Mathf.PI / bottomEdges;
+            stepSize = Fix64.PI / bottomEdges;
             for (var i = 1; i < bottomEdges; i++)
-                vertices.Add(new Vector2(-bottomRadius * Mathf.Cos(stepSize * i),
-                    -bottomRadius * Mathf.Sin(stepSize * i) - newHeight));
+                vertices.Add(new FVector2(-bottomRadius * Fix64.Cos(stepSize * i),
+                    -bottomRadius * Fix64.Sin(stepSize * i) - newHeight));
 
-            vertices.Add(new Vector2(bottomRadius, -newHeight));
+            vertices.Add(new FVector2(bottomRadius, -newHeight));
 
             return vertices;
         }
@@ -270,13 +270,13 @@ namespace VelcroPhysics.Utilities
         /// <param name="tipPercentage">The tip percentage.</param>
         /// <param name="toothHeight">Height of the tooth.</param>
         /// <returns></returns>
-        public static Vertices CreateGear(float radius, int numberOfTeeth, float tipPercentage, float toothHeight)
+        public static Vertices CreateGear(Fix64 radius, int numberOfTeeth, Fix64 tipPercentage, Fix64 toothHeight)
         {
             var vertices = new Vertices();
 
-            var stepSize = Mathf.PI * 2f / numberOfTeeth;
+            var stepSize = Fix64.PI * 2f / numberOfTeeth;
             tipPercentage /= 100f;
-            Mathf.Clamp(tipPercentage, 0f, 1f);
+            Fix64.Clamp(tipPercentage, 0f, 1f);
             var toothTipStepSize = stepSize / 2f * tipPercentage;
 
             var toothAngleStepSize = (stepSize - toothTipStepSize * 2f) / 2f;
@@ -286,25 +286,25 @@ namespace VelcroPhysics.Utilities
                 if (toothTipStepSize > 0f)
                 {
                     vertices.Add(
-                        new Vector2(radius *
-                                    Mathf.Cos(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize),
+                        new FVector2(radius *
+                                    Fix64.Cos(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize),
                             -radius *
-                            Mathf.Sin(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize)));
+                            Fix64.Sin(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize)));
 
                     vertices.Add(
-                        new Vector2((radius + toothHeight) *
-                                    Mathf.Cos(stepSize * i + toothAngleStepSize + toothTipStepSize),
+                        new FVector2((radius + toothHeight) *
+                                    Fix64.Cos(stepSize * i + toothAngleStepSize + toothTipStepSize),
                             -(radius + toothHeight) *
-                            Mathf.Sin(stepSize * i + toothAngleStepSize + toothTipStepSize)));
+                            Fix64.Sin(stepSize * i + toothAngleStepSize + toothTipStepSize)));
                 }
 
-                vertices.Add(new Vector2((radius + toothHeight) *
-                                         Mathf.Cos(stepSize * i + toothAngleStepSize),
+                vertices.Add(new FVector2((radius + toothHeight) *
+                                         Fix64.Cos(stepSize * i + toothAngleStepSize),
                     -(radius + toothHeight) *
-                    Mathf.Sin(stepSize * i + toothAngleStepSize)));
+                    Fix64.Sin(stepSize * i + toothAngleStepSize)));
 
-                vertices.Add(new Vector2(radius * Mathf.Cos(stepSize * i),
-                    -radius * Mathf.Sin(stepSize * i)));
+                vertices.Add(new FVector2(radius * Fix64.Cos(stepSize * i),
+                    -radius * Fix64.Sin(stepSize * i)));
             }
 
             return vertices;
@@ -343,7 +343,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="multiPartDetection">if set to <c>true</c> it will perform multi part detection.</param>
         /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
         /// <returns></returns>
-        public static List<Vertices> CreatePolygon(uint[] data, int width, float hullTolerance,
+        public static List<Vertices> CreatePolygon(uint[] data, int width, Fix64 hullTolerance,
             byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
             return TextureConverter.DetectVertices(data, width, hullTolerance, alphaTolerance,

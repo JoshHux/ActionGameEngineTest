@@ -3,6 +3,7 @@ using UnityEngine;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 {
@@ -21,7 +22,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
         /// This is the power used in the power function. A value of 1 means the force
         /// applied to bodies in the explosion is linear. A value of 2 means it is exponential.
         /// </summary>
-        public float Power { get; set; }
+        public Fix64 Power { get; set; }
 
         /// <summary>
         /// Activate the explosion at the specified position.
@@ -31,19 +32,21 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
         /// <param name="force">The force applied</param>
         /// <param name="maxForce">A maximum amount of force. When force gets over this value, it will be equal to maxForce</param>
         /// <returns>A list of bodies and the amount of force that was applied to them.</returns>
-        public Dictionary<Body, Vector2> Activate(Vector2 pos, float radius, float force,
-            float maxForce = float.MaxValue)
+        public Dictionary<Body, FVector2> Activate(FVector2 pos, Fix64 radius, Fix64 force,
+            Fix64? holdMaxForce = null)
         {
+
+            Fix64 maxForce = holdMaxForce ?? Fix64.MaxValue;
             var affectedBodies = new HashSet<Body>();
 
             AABB aabb;
-            aabb.LowerBound = pos - new Vector2(radius, radius);
-            aabb.UpperBound = pos + new Vector2(radius, radius);
+            aabb.LowerBound = pos - new FVector2(radius, radius);
+            aabb.UpperBound = pos + new FVector2(radius, radius);
 
             // Query the world for bodies within the radius.
             World.QueryAABB(fixture =>
             {
-                if (Vector2.Distance(fixture.Body.Position, pos) <= radius)
+                if (FVector2.Distance(fixture.Body.Position, pos) <= radius)
                     if (!affectedBodies.Contains(fixture.Body))
                         affectedBodies.Add(fixture.Body);
 
@@ -53,21 +56,21 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
             return ApplyImpulse(pos, radius, force, maxForce, affectedBodies);
         }
 
-        private Dictionary<Body, Vector2> ApplyImpulse(Vector2 pos, float radius, float force, float maxForce,
+        private Dictionary<Body, FVector2> ApplyImpulse(FVector2 pos, Fix64 radius, Fix64 force, Fix64 maxForce,
             HashSet<Body> overlappingBodies)
         {
-            var forces = new Dictionary<Body, Vector2>(overlappingBodies.Count);
+            var forces = new Dictionary<Body, FVector2>(overlappingBodies.Count);
 
             foreach (var overlappingBody in overlappingBodies)
                 if (IsActiveOn(overlappingBody))
                 {
-                    var distance = Vector2.Distance(pos, overlappingBody.Position);
+                    var distance = FVector2.Distance(pos, overlappingBody.Position);
                     var forcePercent = GetPercent(distance, radius);
 
                     var forceVector = pos - overlappingBody.Position;
                     forceVector *=
-                        1f / Mathf.Sqrt(forceVector.x * forceVector.x + forceVector.y * forceVector.y);
-                    forceVector *= Mathf.Min(force * forcePercent, maxForce);
+                        1f / Fix64.Sqrt(forceVector.x * forceVector.x + forceVector.y * forceVector.y);
+                    forceVector *= Fix64.Min(force * forcePercent, maxForce);
                     forceVector *= -1;
 
                     overlappingBody.ApplyLinearImpulse(forceVector);
@@ -77,15 +80,15 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
             return forces;
         }
 
-        private float GetPercent(float distance, float radius)
+        private Fix64 GetPercent(Fix64 distance, Fix64 radius)
         {
             //(1-(distance/radius))^power-1
-            var percent = Mathf.Pow(1 - (distance - radius) / radius, Power) - 1;
+            var percent = Fix64.Pow(1 - (distance - radius) / radius, Power) - 1;
 
-            if (float.IsNaN(percent))
+            if (Fix64.IsNaN(percent))
                 return 0f;
 
-            return Mathf.Clamp(percent, 0f, 1f);
+            return Fix64.Clamp(percent, 0f, 1f);
         }
     }
 }

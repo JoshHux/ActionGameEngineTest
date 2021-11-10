@@ -1,8 +1,10 @@
+using FixMath.NET;
+
 namespace VelcroPhysics.Collision.TOI
 {
     public struct TOIOutput
     {
         public TOIOutputState State;
-        public float T;
+        public Fix64 T;
     }
 }

@@ -1,14 +1,13 @@
-using UnityEngine;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Utilities;
-using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.Solver
 {
     public static class PositionSolverManifold
     {
         public static void Initialize(ContactPositionConstraint pc, VTransform xfA, VTransform xfB, int index,
-            out Vector2 normal, out Vector2 point, out float separation)
+            out FVector2 normal, out FVector2 point, out Fix64 separation)
         {
             Debug.Assert(pc.PointCount > 0);
 
@@ -21,11 +20,11 @@ namespace VelcroPhysics.Dynamics.Solver
                     normal = pointB - pointA;
 
                     //Velcro: Fix to handle zero normalization
-                    if (normal != Vector2.zero)
+                    if (normal != FVector2.zero)
                         normal.Normalize();
 
                     point = 0.5f * (pointA + pointB);
-                    separation = Vector2.Dot(pointB - pointA, normal) - pc.RadiusA - pc.RadiusB;
+                    separation = FVector2.Dot(pointB - pointA, normal) - pc.RadiusA - pc.RadiusB;
                 }
                     break;
 
@@ -35,7 +34,7 @@ namespace VelcroPhysics.Dynamics.Solver
                     var planePoint = MathUtils.Mul(ref xfA, pc.LocalPoint);
 
                     var clipPoint = MathUtils.Mul(ref xfB, pc.LocalPoints[index]);
-                    separation = Vector2.Dot(clipPoint - planePoint, normal) - pc.RadiusA - pc.RadiusB;
+                    separation = FVector2.Dot(clipPoint - planePoint, normal) - pc.RadiusA - pc.RadiusB;
                     point = clipPoint;
                 }
                     break;
@@ -46,7 +45,7 @@ namespace VelcroPhysics.Dynamics.Solver
                     var planePoint = MathUtils.Mul(ref xfB, pc.LocalPoint);
 
                     var clipPoint = MathUtils.Mul(ref xfA, pc.LocalPoints[index]);
-                    separation = Vector2.Dot(clipPoint - planePoint, normal) - pc.RadiusA - pc.RadiusB;
+                    separation = FVector2.Dot(clipPoint - planePoint, normal) - pc.RadiusA - pc.RadiusB;
                     point = clipPoint;
 
                     // Ensure normal points from A to B
@@ -54,8 +53,8 @@ namespace VelcroPhysics.Dynamics.Solver
                 }
                     break;
                 default:
-                    normal = Vector2.zero;
-                    point = Vector2.zero;
+                    normal = FVector2.zero;
+                    point = FVector2.zero;
                     separation = 0;
                     break;
             }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FixMath.NET;
 
 namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 {
@@ -6,11 +7,11 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
     /// This is a comparer used for
     /// detecting angle difference between rays
     /// </summary>
-    internal class RayDataComparer : IComparer<float>
+    internal class RayDataComparer : IComparer<Fix64>
     {
-        #region IComparer<float> Members
+        #region IComparer<Fix64> Members
 
-        int IComparer<float>.Compare(float a, float b)
+        int IComparer<Fix64>.Compare(Fix64 a, Fix64 b)
         {
             var diff = a - b;
             if (diff > 0)

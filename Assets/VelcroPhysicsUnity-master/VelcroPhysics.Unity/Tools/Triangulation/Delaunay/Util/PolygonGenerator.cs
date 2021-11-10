@@ -30,15 +30,16 @@
  */
 
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Polygon;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
 {
     internal class PolygonGenerator
     {
-        private static float PI_2 = 2.0f * Mathf.PI;
+        private static Fix64 PI_2 = 2.0f * Fix64.PI;
 
-        public static Polygon.Polygon RandomCircleSweep(float scale, int vertexCount)
+        public static Polygon.Polygon RandomCircleSweep(Fix64 scale, int vertexCount)
         {
             PolygonPoint point;
             PolygonPoint[] points;
@@ -59,15 +60,15 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);
 
-                point = new PolygonPoint(radius * Mathf.Cos(PI_2 * i / vertexCount),
-                    radius * Mathf.Sin(PI_2 * i / vertexCount));
+                point = new PolygonPoint(radius * Fix64.Cos(PI_2 * i / vertexCount),
+                    radius * Fix64.Sin(PI_2 * i / vertexCount));
                 points[i] = point;
             }
 
             return new Polygon.Polygon(points);
         }
 
-        public static Polygon.Polygon RandomCircleSweep2(float scale, int vertexCount)
+        public static Polygon.Polygon RandomCircleSweep2(Fix64 scale, int vertexCount)
         {
             PolygonPoint point;
             PolygonPoint[] points;
@@ -83,8 +84,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);
 
-                point = new PolygonPoint(radius * Mathf.Cos(PI_2 * i / vertexCount),
-                    radius * Mathf.Sin(PI_2 * i / vertexCount));
+                point = new PolygonPoint(radius * Fix64.Cos(PI_2 * i / vertexCount),
+                    radius * Fix64.Sin(PI_2 * i / vertexCount));
                 points[i] = point;
             }
 

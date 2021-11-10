@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared.Contracts
 {

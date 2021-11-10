@@ -29,6 +29,7 @@ using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
+using FixMath.NET;
 using Debug = UnityEngine.Debug;
 using VTransform = VelcroPhysics.Shared.VTransform;
 
@@ -46,9 +47,9 @@ namespace VelcroPhysics.Dynamics
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
-        private float _friction;
+        private Fix64 _friction;
         private bool _isSensor;
-        private float _restitution;
+        private Fix64 _restitution;
 
         /// <summary>
         /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
@@ -204,12 +205,12 @@ namespace VelcroPhysics.Dynamics
         /// existing contacts.
         /// </summary>
         /// <value>The friction.</value>
-        public float Friction
+        public Fix64 Friction
         {
             get => _friction;
             set
             {
-                Debug.Assert(!float.IsNaN(value));
+                Debug.Assert(!Fix64.IsNaN(value));
 
                 _friction = value;
             }
@@ -220,12 +221,12 @@ namespace VelcroPhysics.Dynamics
         /// existing contacts.
         /// </summary>
         /// <value>The restitution.</value>
-        public float Restitution
+        public Fix64 Restitution
         {
             get => _restitution;
             set
             {
-                Debug.Assert(!float.IsNaN(value));
+                Debug.Assert(!Fix64.IsNaN(value));
 
                 _restitution = value;
             }
@@ -280,7 +281,7 @@ namespace VelcroPhysics.Dynamics
             Body.FixtureList.Add(this);
 
             // Adjust mass properties if needed.
-            if (Shape._density > 0.0f) Body.ResetMassData();
+            if (Shape._density >Fix64.Zero) Body.ResetMassData();
 
             // Let the world know we have a new fixture. This will cause new contacts
             // to be created at the beginning of the next time step.
@@ -295,7 +296,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="point">A point in world coordinates.</param>
         /// <returns></returns>
-        public bool TestPoint(ref Vector2 point)
+        public bool TestPoint(ref FVector2 point)
         {
             return Shape.TestPoint(ref Body._xf, ref point);
         }

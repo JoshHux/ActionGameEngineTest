@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 
@@ -12,10 +13,10 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
     public class VelocityLimitController : Controller
     {
         private List<Body> _bodies = new List<Body>();
-        private float _maxAngularSqared;
-        private float _maxAngularVelocity;
-        private float _maxLinearSqared;
-        private float _maxLinearVelocity;
+        private Fix64 _maxAngularSqared;
+        private Fix64 _maxAngularVelocity;
+        private Fix64 _maxLinearSqared;
+        private Fix64 _maxLinearVelocity;
         public bool LimitAngularVelocity = true;
         public bool LimitLinearVelocity = true;
 
@@ -33,18 +34,18 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VelocityLimitController" /> class.
-        /// Pass in 0 or float.MaxValue to disable the limit.
+        /// Pass in 0 or Fix64.MaxValue to disable the limit.
         /// maxAngularVelocity = 0 will disable the angular velocity limit.
         /// </summary>
         /// <param name="maxLinearVelocity">The max linear velocity.</param>
         /// <param name="maxAngularVelocity">The max angular velocity.</param>
-        public VelocityLimitController(float maxLinearVelocity, float maxAngularVelocity)
+        public VelocityLimitController(Fix64 maxLinearVelocity, Fix64 maxAngularVelocity)
             : base(ControllerType.VelocityLimitController)
         {
-            if (maxLinearVelocity == 0 || maxLinearVelocity == float.MaxValue)
+            if (maxLinearVelocity == 0 || maxLinearVelocity == Fix64.MaxValue)
                 LimitLinearVelocity = false;
 
-            if (maxAngularVelocity == 0 || maxAngularVelocity == float.MaxValue)
+            if (maxAngularVelocity == 0 || maxAngularVelocity == Fix64.MaxValue)
                 LimitAngularVelocity = false;
 
             MaxLinearVelocity = maxLinearVelocity;
@@ -55,7 +56,7 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
         /// Gets or sets the max angular velocity.
         /// </summary>
         /// <value>The max angular velocity.</value>
-        public float MaxAngularVelocity
+        public Fix64 MaxAngularVelocity
         {
             get => _maxAngularVelocity;
             set
@@ -69,7 +70,7 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
         /// Gets or sets the max linear velocity.
         /// </summary>
         /// <value>The max linear velocity.</value>
-        public float MaxLinearVelocity
+        public Fix64 MaxLinearVelocity
         {
             get => _maxLinearVelocity;
             set
@@ -79,7 +80,7 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
             }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             foreach (var body in _bodies)
             {
@@ -96,7 +97,7 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
 
                     if (result > dt * _maxLinearSqared)
                     {
-                        var sq = Mathf.Sqrt(result);
+                        var sq = Fix64.Sqrt(result);
 
                         var ratio = _maxLinearVelocity / sq;
                         body._linearVelocity.x *= ratio;
@@ -110,7 +111,7 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
                     var rotation = dt * body._angularVelocity;
                     if (rotation * rotation > _maxAngularSqared)
                     {
-                        var ratio = _maxAngularVelocity / Mathf.Abs(rotation);
+                        var ratio = _maxAngularVelocity / Fix64.Abs(rotation);
                         body._angularVelocity *= ratio;
                     }
                 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using VelcroPhysics.Shared.Optimization;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {

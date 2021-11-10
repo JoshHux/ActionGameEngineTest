@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Seidel
 {
@@ -10,7 +11,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
 
         private List<Edge> _edgeList;
         private QueryGraph _queryGraph;
-        private float _sheer = 0.001f;
+        private Fix64 _sheer = FixedMath.C0p001;
         private TrapezoidalMap _trapezoidalMap;
 
         private List<MonotoneMountain> _xMonoPoly;
@@ -20,7 +21,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
 
         public List<List<Point>> Triangles;
 
-        public Triangulator(List<Point> polyLine, float sheer)
+        public Triangulator(List<Point> polyLine, Fix64 sheer)
         {
             _sheer = sheer;
             Triangles = new List<List<Point>>();

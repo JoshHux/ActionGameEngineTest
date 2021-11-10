@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using FixMath.NET;
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Dynamics;
 
@@ -16,7 +18,7 @@ public class VelcroWorldManager2D
         instance = this;
         if (world == null)
         {
-            world = new World(new Vector2(0f, -1f));
+            world = new World(new FVector2(0f, 0f));
         }
         else
         {

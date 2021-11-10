@@ -33,6 +33,8 @@ SOFTWARE.
 #endregion License
 
 using System;
+using FixMath.NET;
+
 
 namespace Microsoft.Xna.Framework
 {
@@ -41,10 +43,10 @@ namespace Microsoft.Xna.Framework
         #region Private Fields
 
         private CurveContinuity continuity;
-        private float position;
-        private float tangentIn;
-        private float tangentOut;
-        private float value;
+        private Fix64 position;
+        private Fix64 tangentIn;
+        private Fix64 tangentOut;
+        private Fix64 value;
 
         #endregion Private Fields
 
@@ -56,21 +58,21 @@ namespace Microsoft.Xna.Framework
             set => continuity = value;
         }
 
-        public float Position => position;
+        public Fix64 Position => position;
 
-        public float TangentIn
+        public Fix64 TangentIn
         {
             get => tangentIn;
             set => tangentIn = value;
         }
 
-        public float TangentOut
+        public Fix64 TangentOut
         {
             get => tangentOut;
             set => tangentOut = value;
         }
 
-        public float Value
+        public Fix64 Value
         {
             get => value;
             set => this.value = value;
@@ -80,17 +82,17 @@ namespace Microsoft.Xna.Framework
 
         #region Constructors
 
-        public CurveKey(float position, float value)
+        public CurveKey(Fix64 position, Fix64 value)
             : this(position, value, 0, 0, CurveContinuity.Smooth)
         {
         }
 
-        public CurveKey(float position, float value, float tangentIn, float tangentOut)
+        public CurveKey(Fix64 position, Fix64 value, Fix64 tangentIn, Fix64 tangentOut)
             : this(position, value, tangentIn, tangentOut, CurveContinuity.Smooth)
         {
         }
 
-        public CurveKey(float position, float value, float tangentIn, float tangentOut, CurveContinuity continuity)
+        public CurveKey(Fix64 position, Fix64 value, Fix64 tangentIn, Fix64 tangentOut, CurveContinuity continuity)
         {
             this.position = position;
             this.value = value;

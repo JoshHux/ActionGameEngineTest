@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 
@@ -7,37 +8,37 @@ namespace VelcroPhysics.Extensions.Controllers.Gravity
 {
     public class GravityController : Controller
     {
-        public GravityController(float strength)
+        public GravityController(Fix64 strength)
             : base(ControllerType.GravityController)
         {
             Strength = strength;
-            MaxRadius = float.MaxValue;
+            MaxRadius = Fix64.MaxValue;
             GravityType = GravityType.DistanceSquared;
-            Points = new List<Vector2>();
+            Points = new List<FVector2>();
             Bodies = new List<Body>();
         }
 
-        public GravityController(float strength, float maxRadius, float minRadius)
+        public GravityController(Fix64 strength, Fix64 maxRadius, Fix64 minRadius)
             : base(ControllerType.GravityController)
         {
             MinRadius = minRadius;
             MaxRadius = maxRadius;
             Strength = strength;
             GravityType = GravityType.DistanceSquared;
-            Points = new List<Vector2>();
+            Points = new List<FVector2>();
             Bodies = new List<Body>();
         }
 
-        public float MinRadius { get; set; }
-        public float MaxRadius { get; set; }
-        public float Strength { get; set; }
+        public Fix64 MinRadius { get; set; }
+        public Fix64 MaxRadius { get; set; }
+        public Fix64 Strength { get; set; }
         public GravityType GravityType { get; set; }
         public List<Body> Bodies { get; set; }
-        public List<Vector2> Points { get; set; }
+        public List<FVector2> Points { get; set; }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
-            var f = Vector2.zero;
+            var f = FVector2.zero;
 
             foreach (var worldBody in World.BodyList)
             {
@@ -62,7 +63,7 @@ namespace VelcroPhysics.Extensions.Controllers.Gravity
                             f = Strength / r2 * worldBody.Mass * controllerBody.Mass * d;
                             break;
                         case GravityType.Linear:
-                            f = Strength / Mathf.Sqrt(r2) * worldBody.Mass * controllerBody.Mass * d;
+                            f = Strength / Fix64.Sqrt(r2) * worldBody.Mass * controllerBody.Mass * d;
                             break;
                     }
 
@@ -83,7 +84,7 @@ namespace VelcroPhysics.Extensions.Controllers.Gravity
                             f = Strength / r2 * worldBody.Mass * d;
                             break;
                         case GravityType.Linear:
-                            f = Strength / Mathf.Sqrt(r2) * worldBody.Mass * d;
+                            f = Strength / Fix64.Sqrt(r2) * worldBody.Mass * d;
                             break;
                     }
 
@@ -97,7 +98,7 @@ namespace VelcroPhysics.Extensions.Controllers.Gravity
             Bodies.Add(body);
         }
 
-        public void AddPoint(Vector2 point)
+        public void AddPoint(FVector2 point)
         {
             Points.Add(point);
         }

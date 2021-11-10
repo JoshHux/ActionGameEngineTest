@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using VelcroPhysics.Dynamics;
+﻿using VelcroPhysics.Dynamics;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates
 {
@@ -42,41 +42,41 @@ namespace VelcroPhysics.Templates
         /// <summary>
         /// The world angle of the body in radians.
         /// </summary>
-        public float Angle { get; set; }
+        public Fix64 Angle { get; set; }
 
         /// <summary>
         /// Angular damping is use to reduce the angular velocity. The damping parameter
-        /// can be larger than 1.0f but the damping effect becomes sensitive to the
+        /// can be larger thanFix64.One but the damping effect becomes sensitive to the
         /// time step when the damping parameter is large.
         /// </summary>
-        public float AngularDamping { get; set; }
+        public Fix64 AngularDamping { get; set; }
 
         /// <summary>
         /// The angular velocity of the body.
         /// </summary>
-        public float AngularVelocity { get; set; }
+        public Fix64 AngularVelocity { get; set; }
 
         /// <summary>
         /// Scale the gravity applied to this body.
         /// </summary>
-        public float GravityScale { get; set; }
+        public Fix64 GravityScale { get; set; }
 
         /// <summary>
         /// Linear damping is use to reduce the linear velocity. The damping parameter
-        /// can be larger than 1.0f but the damping effect becomes sensitive to the
+        /// can be larger thanFix64.One but the damping effect becomes sensitive to the
         /// time step when the damping parameter is large.
         /// </summary>
-        public float LinearDamping { get; set; }
+        public Fix64 LinearDamping { get; set; }
 
         /// <summary>
         /// The linear velocity of the body's origin in world co-ordinates.
         /// </summary>
-        public Vector2 LinearVelocity { get; set; }
+        public FVector2 LinearVelocity { get; set; }
 
         /// <summary>
         /// The world position of the body.
         /// </summary>
-        public Vector2 Position { get; set; }
+        public FVector2 Position { get; set; }
 
         /// <summary>
         /// Set the type of body
@@ -95,7 +95,7 @@ namespace VelcroPhysics.Templates
             Awake = true;
             Type = BodyType.Static;
             Active = true;
-            GravityScale = 1.0f;
+            GravityScale =Fix64.One;
         }
     }
 }

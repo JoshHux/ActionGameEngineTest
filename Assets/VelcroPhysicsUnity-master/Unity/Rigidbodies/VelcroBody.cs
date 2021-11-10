@@ -1,4 +1,5 @@
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Collision.Filtering;
 
@@ -22,16 +23,16 @@ public abstract class VelcroBody : MonoBehaviour
             return _rb;
         }
     }
-    [SerializeField] protected float _mass = 0f;
+    [SerializeField] protected Fix64 _mass = 0f;
     [SerializeField] protected bool IsTrigger = false;
     [SerializeField] protected bool IsKinematic = false;
     [SerializeField] protected bool IsStatic = false;
     [SerializeField] protected bool lockRotation = false;
     public Body parent;
 
-    public Vector2 Velocity { get { return _rb.LinearVelocity; } set { _rb.LinearVelocity = value; } }
-    public Vector2 Position { get { return _rb.Position; } set { _rb.SetVTransformIgnoreContacts(ref value, 0f); } }
-    public Vector2 LocalPosition
+    public FVector2 Velocity { get { return _rb.LinearVelocity; } set { _rb.LinearVelocity = value; } }
+    public FVector2 Position { get { return _rb.Position; } set { _rb.SetVTransformIgnoreContacts(ref value, 0f); } }
+    public FVector2 LocalPosition
     {
         get
         {
@@ -39,7 +40,7 @@ public abstract class VelcroBody : MonoBehaviour
             {
                 return _rb.constraint.childOffset;
             }
-            return Vector2.zero;
+            return FVector2.zero;
         }
         set
         {
@@ -47,7 +48,7 @@ public abstract class VelcroBody : MonoBehaviour
         }
     }
 
-    public float Mass { get { return _mass; } set { _mass = value; } }
+    public Fix64 Mass { get { return _mass; } set { _mass = value; } }
 
     void Start()
     {
@@ -96,14 +97,14 @@ public abstract class VelcroBody : MonoBehaviour
         {
             //this.transform.localPosition = this.LocalPosition;
             this.transform.position = _rb.Position;
-            this.transform.rotation = Quaternion.Euler(0f, 0f, _rb.Rotation * Mathf.Rad2Deg);
+            this.transform.rotation = Quaternion.Euler(0f, 0f, _rb.Rotation * Fix64.Rad2Deg);
         }
     }
 
     public Body GetBody() { return _rb; }
 
     protected abstract void InstantiateBody(BodyType type, World world);
-    protected abstract void AssignTransform(Vector2 size);
+    protected abstract void AssignTransform(FVector2 size);
 
 
 

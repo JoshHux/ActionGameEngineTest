@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Seidel
 {
@@ -7,7 +8,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         // Pointers used for building trapezoidal map
         public Trapezoid Above;
 
-        public float B;
+        public Fix64 B;
         public Trapezoid Below;
 
         // Montone mountain points
@@ -17,7 +18,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         public Point Q;
 
         // Slope of the line (m)
-        public float Slope;
+        public Fix64 Slope;
 
         public Edge(Point p, Point q)
         {

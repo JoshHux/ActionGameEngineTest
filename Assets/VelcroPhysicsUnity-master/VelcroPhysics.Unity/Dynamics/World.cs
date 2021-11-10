@@ -35,6 +35,7 @@ using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
+using FixMath.NET;
 using Debug = UnityEngine.Debug;
 
 namespace VelcroPhysics.Dynamics
@@ -45,7 +46,7 @@ namespace VelcroPhysics.Dynamics
     /// </summary>
     public class World
     {
-        private float _invDt0;
+        private Fix64 _invDt0;
         private Body[] _stack = new Body[64];
         private bool _stepComplete;
         private HashSet<Body> _bodyAddList = new HashSet<Body>();
@@ -55,12 +56,12 @@ namespace VelcroPhysics.Dynamics
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
         private Fixture _myFixture;
-        private Vector2 _point1;
-        private Vector2 _point2;
+        private FVector2 _point1;
+        private FVector2 _point2;
         private List<Fixture> _testPointAllFixtures;
         private Stopwatch _watch = new Stopwatch();
-        private Func<Fixture, Vector2, Vector2, float, float> _rayCastCallback;
-        private Func<RayCastInput, int, float> _rayCastCallbackWrapper;
+        private Func<Fixture, FVector2, FVector2, Fix64, Fix64> _rayCastCallback;
+        private Func<RayCastInput, int, Fix64> _rayCastCallbackWrapper;
 
         internal Queue<Contact> _contactPool = new Queue<Contact>(256);
         internal bool _worldHasNewFixture;
@@ -111,7 +112,7 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// Initializes a new instance of the <see cref="World" /> class.
         /// </summary>
-        public World(Vector2 gravity)
+        public World(FVector2 gravity)
         {
             Island = new Island();
             Enabled = true;
@@ -331,7 +332,7 @@ namespace VelcroPhysics.Dynamics
             return _queryAABBCallback(proxy.Fixture);
         }
 
-        private float RayCastCallbackWrapper(RayCastInput rayCastInput, int proxyId)
+        private Fix64 RayCastCallbackWrapper(RayCastInput rayCastInput, int proxyId)
         {
             var proxy = ContactManager.BroadPhase.GetProxy(proxyId);
             var fixture = proxy.Fixture;
@@ -342,7 +343,7 @@ namespace VelcroPhysics.Dynamics
             if (hit)
             {
                 var fraction = output.Fraction;
-                var point = (1.0f - fraction) * rayCastInput.Point1 + fraction * rayCastInput.Point2;
+                var point = (FixMath.One - fraction) * rayCastInput.Point1 + fraction * rayCastInput.Point2;
                 return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
@@ -367,7 +368,7 @@ namespace VelcroPhysics.Dynamics
             // Build and simulate all awake islands.
             var stackSize = BodyList.Count;
             if (stackSize > _stack.Length)
-                _stack = new Body[Mathf.Max(_stack.Length * 2, stackSize)];
+                _stack = new Body[Fix64.Max(_stack.Length * 2, stackSize)];
 
             for (var index = BodyList.Count - 1; index >= 0; index--)
             {
@@ -500,7 +501,7 @@ namespace VelcroPhysics.Dynamics
                 for (var i = 0; i < BodyList.Count; i++)
                 {
                     BodyList[i]._flags &= ~BodyFlags.IslandFlag;
-                    BodyList[i]._sweep.Alpha0 = 0.0f;
+                    BodyList[i]._sweep.Alpha0 = Fix64.Zero;
                 }
 
                 for (var i = 0; i < ContactManager.ContactList.Count; i++)
@@ -511,7 +512,7 @@ namespace VelcroPhysics.Dynamics
                     c._flags &= ~ContactFlags.IslandFlag;
                     c._flags &= ~ContactFlags.TOIFlag;
                     c._toiCount = 0;
-                    c._toi = 1.0f;
+                    c._toi = Fix64.One;
                 }
             }
 
@@ -520,7 +521,7 @@ namespace VelcroPhysics.Dynamics
             {
                 // Find the first TOI.
                 Contact minContact = null;
-                var minAlpha = 1.0f;
+                var minAlpha = Fix64.One;
 
                 for (var i = 0; i < ContactManager.ContactList.Count; i++)
                 {
@@ -532,7 +533,7 @@ namespace VelcroPhysics.Dynamics
                     // Prevent excessive sub-stepping.
                     if (c._toiCount > Settings.MaxSubSteps) continue;
 
-                    float alpha;
+                    Fix64 alpha;
                     if (c.TOIFlag)
                     {
                         // This contact has a valid cached TOI.
@@ -582,7 +583,7 @@ namespace VelcroPhysics.Dynamics
                             bB._sweep.Advance(alpha0);
                         }
 
-                        Debug.Assert(alpha0 < 1.0f);
+                        Debug.Assert(alpha0 < Fix64.One);
 
                         // Compute the time of impact in interval [0, minTOI]
                         var input = new TOIInput();
@@ -590,7 +591,7 @@ namespace VelcroPhysics.Dynamics
                         input.ProxyB = new DistanceProxy(fB.Shape, c.ChildIndexB);
                         input.SweepA = bA._sweep;
                         input.SweepB = bB._sweep;
-                        input.TMax = 1.0f;
+                        input.TMax = Fix64.One;
 
                         TOIOutput output;
                         TimeOfImpact.CalculateTimeOfImpact(ref input, out output);
@@ -598,9 +599,9 @@ namespace VelcroPhysics.Dynamics
                         // Beta is the fraction of the remaining portion of the .
                         var beta = output.T;
                         if (output.State == TOIOutputState.Touching)
-                            alpha = Mathf.Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
+                            alpha = Fix64.Min(alpha0 + (FixMath.One - alpha0) * beta, Fix64.One);
                         else
-                            alpha = 1.0f;
+                            alpha = Fix64.One;
 
                         c._toi = alpha;
                         c._flags &= ~ContactFlags.TOIFlag;
@@ -614,7 +615,7 @@ namespace VelcroPhysics.Dynamics
                     }
                 }
 
-                if (minContact == null || 1.0f - 10.0f * Settings.Epsilon < minAlpha)
+                if (minContact == null || Fix64.One - 10.0f * Settings.Epsilon < minAlpha)
                 {
                     // No more TOI events. Done!
                     _stepComplete = true;
@@ -729,9 +730,9 @@ namespace VelcroPhysics.Dynamics
                 }
 
                 TimeStep subStep;
-                subStep.dt = (1.0f - minAlpha) * step.dt;
-                subStep.inv_dt = 1.0f / subStep.dt;
-                subStep.dtRatio = 1.0f;
+                subStep.dt = (FixMath.One - minAlpha) * step.dt;
+                subStep.inv_dt = Fix64.One / subStep.dt;
+                subStep.dtRatio = Fix64.One;
                 Island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
 
                 // Reset island flags and synchronize broad-phase proxies.
@@ -768,19 +769,19 @@ namespace VelcroPhysics.Dynamics
 
         public List<BreakableBody> BreakableBodyList { get; private set; }
 
-        public float UpdateTime { get; private set; }
+        public Fix64 UpdateTime { get; private set; }
 
-        public float ContinuousPhysicsTime { get; private set; }
+        public Fix64 ContinuousPhysicsTime { get; private set; }
 
-        public float ControllersUpdateTime { get; private set; }
+        public Fix64 ControllersUpdateTime { get; private set; }
 
-        public float AddRemoveTime { get; private set; }
+        public Fix64 AddRemoveTime { get; private set; }
 
-        public float NewContactsTime { get; private set; }
+        public Fix64 NewContactsTime { get; private set; }
 
-        public float ContactsUpdateTime { get; private set; }
+        public Fix64 ContactsUpdateTime { get; private set; }
 
-        public float SolveUpdateTime { get; private set; }
+        public Fix64 SolveUpdateTime { get; private set; }
 
         /// <summary>
         /// Get the number of broad-phase proxies.
@@ -792,7 +793,7 @@ namespace VelcroPhysics.Dynamics
         /// Change the global gravity vector.
         /// </summary>
         /// <value>The gravity.</value>
-        public Vector2 Gravity;
+        public FVector2 Gravity;
 
         /// <summary>
         /// Get the contact manager for testing.
@@ -901,7 +902,7 @@ namespace VelcroPhysics.Dynamics
         /// and constraint solution.
         /// </summary>
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
-        public void Step(float dt)
+        public void Step(Fix64 dt)
         {
             if (!Enabled)
                 return;
@@ -926,7 +927,7 @@ namespace VelcroPhysics.Dynamics
 
             //Velcro only: moved position and velocity iterations into Settings.cs
             TimeStep step;
-            step.inv_dt = dt > 0.0f ? 1.0f / dt : 0.0f;
+            step.inv_dt = dt > Fix64.Zero ? Fix64.One / dt : Fix64.Zero;
             step.dt = dt;
             step.dtRatio = _invDt0 * dt;
 
@@ -992,8 +993,8 @@ namespace VelcroPhysics.Dynamics
             for (var i = 0; i < BodyList.Count; i++)
             {
                 var body = BodyList[i];
-                body._force = Vector2.zero;
-                body._torque = 0.0f;
+                body._force = FVector2.zero;
+                body._torque = Fix64.Zero;
             }
         }
 
@@ -1044,10 +1045,10 @@ namespace VelcroPhysics.Dynamics
         /// <param name="callback">A user implemented callback class.</param>
         /// <param name="point1">The ray starting point.</param>
         /// <param name="point2">The ray ending point.</param>
-        public void RayCast(Func<Fixture, Vector2, Vector2, float, float> callback, Vector2 point1, Vector2 point2)
+        public void RayCast(Func<Fixture, FVector2, FVector2, Fix64, Fix64> callback, FVector2 point1, FVector2 point2)
         {
             var input = new RayCastInput();
-            input.MaxFraction = 1.0f;
+            input.MaxFraction = Fix64.One;
             input.Point1 = point1;
             input.Point2 = point2;
 
@@ -1056,7 +1057,7 @@ namespace VelcroPhysics.Dynamics
             _rayCastCallback = null;
         }
 
-        public List<Fixture> RayCast(Vector2 point1, Vector2 point2)
+        public List<Fixture> RayCast(FVector2 point1, FVector2 point2)
         {
             var affected = new List<Fixture>();
 
@@ -1105,10 +1106,10 @@ namespace VelcroPhysics.Dynamics
             BreakableBodyList.Remove(breakableBody);
         }
 
-        public Fixture TestPoint(Vector2 point)
+        public Fixture TestPoint(FVector2 point)
         {
             AABB aabb;
-            var d = new Vector2(Settings.Epsilon, Settings.Epsilon);
+            var d = new FVector2(Settings.Epsilon, Settings.Epsilon);
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 
@@ -1139,10 +1140,10 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns></returns>
-        public List<Fixture> TestPointAll(Vector2 point)
+        public List<Fixture> TestPointAll(FVector2 point)
         {
             AABB aabb;
-            var d = new Vector2(Settings.Epsilon, Settings.Epsilon);
+            var d = new FVector2(Settings.Epsilon, Settings.Epsilon);
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 
@@ -1169,7 +1170,7 @@ namespace VelcroPhysics.Dynamics
         /// The body shift formula is: position -= newOrigin
         /// @param newOrigin the new origin with respect to the old origin
         /// Warning: Calling this method mid-update might cause a crash.
-        public void ShiftOrigin(Vector2 newOrigin)
+        public void ShiftOrigin(FVector2 newOrigin)
         {
             foreach (var b in BodyList)
             {

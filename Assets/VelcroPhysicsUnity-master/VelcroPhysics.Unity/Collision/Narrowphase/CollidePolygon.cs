@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using VelcroPhysics.Collision.ContactSystem;
+﻿using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 using VTransform = VelcroPhysics.Shared.VTransform;
 
 namespace VelcroPhysics.Collision.Narrowphase
@@ -40,7 +40,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             VTransform xf1, xf2;
             int edge1; // reference edge
             bool flip;
-            const float k_tol = 0.1f * Settings.LinearSlop;
+            const Fix64 k_tol = 0.1f * Settings.LinearSlop;
 
             if (separationB > separationA + k_tol)
             {
@@ -78,21 +78,21 @@ namespace VelcroPhysics.Collision.Narrowphase
             var localTangent = v12 - v11;
             localTangent.Normalize();
 
-            var localNormal = MathUtils.Cross(localTangent, 1.0f);
+            var localNormal = MathUtils.Cross(localTangent, Fix64.One);
             var planePoint = 0.5f * (v11 + v12);
 
             var tangent = MathUtils.Mul(ref xf1.q, localTangent);
-            var normal = MathUtils.Cross(tangent, 1.0f);
+            var normal = MathUtils.Cross(tangent, Fix64.One);
 
             v11 = MathUtils.Mul(ref xf1, v11);
             v12 = MathUtils.Mul(ref xf1, v12);
 
             // Face offset.
-            var frontOffset = Vector2.Dot(normal, v11);
+            var frontOffset = FVector2.Dot(normal, v11);
 
             // Side offsets, extended by polytope skin thickness.
-            var sideOffset1 = -Vector2.Dot(tangent, v11) + totalRadius;
-            var sideOffset2 = Vector2.Dot(tangent, v12) + totalRadius;
+            var sideOffset1 = -FVector2.Dot(tangent, v11) + totalRadius;
+            var sideOffset2 = FVector2.Dot(tangent, v12) + totalRadius;
 
             // Clip incident edge against extruded edge1 side edges.
             FixedArray2<ClipVertex> clipPoints1;
@@ -116,7 +116,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             var pointCount = 0;
             for (var i = 0; i < Settings.MaxManifoldPoints; ++i)
             {
-                var separation = Vector2.Dot(normal, clipPoints2[i].V) - frontOffset;
+                var separation = FVector2.Dot(normal, clipPoints2[i].V) - frontOffset;
 
                 if (separation <= totalRadius)
                 {
@@ -146,7 +146,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <summary>
         /// Find the max separation between poly1 and poly2 using edge normals from poly1.
         /// </summary>
-        private static float FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref VTransform xf1,
+        private static Fix64 FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref VTransform xf1,
             PolygonShape poly2, ref VTransform xf2)
         {
             var count1 = poly1.Vertices.Count;
@@ -157,7 +157,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             var xf = MathUtils.MulT(xf2, xf1);
 
             var bestIndex = 0;
-            var maxSeparation = -Settings.MaxFloat;
+            var maxSeparation = -Settings.MaxFix64;
             for (var i = 0; i < count1; ++i)
             {
                 // Get poly1 normal in frame2.
@@ -165,10 +165,10 @@ namespace VelcroPhysics.Collision.Narrowphase
                 var v1 = MathUtils.Mul(ref xf, v1s[i]);
 
                 // Find deepest point for normal i.
-                var si = Settings.MaxFloat;
+                var si = Settings.MaxFix64;
                 for (var j = 0; j < count2; ++j)
                 {
-                    var sij = Vector2.Dot(n, v2s[j] - v1);
+                    var sij = FVector2.Dot(n, v2s[j] - v1);
                     if (sij < si) si = sij;
                 }
 
@@ -199,10 +199,10 @@ namespace VelcroPhysics.Collision.Narrowphase
 
             // Find the incident edge on poly2.
             var index = 0;
-            var minDot = Settings.MaxFloat;
+            var minDot = Settings.MaxFix64;
             for (var i = 0; i < count2; ++i)
             {
-                var dot = Vector2.Dot(normal1, normals2[i]);
+                var dot = FVector2.Dot(normal1, normals2[i]);
                 if (dot < minDot)
                 {
                     minDot = dot;
@@ -216,14 +216,14 @@ namespace VelcroPhysics.Collision.Narrowphase
 
             c = new FixedArray2<ClipVertex>();
             c.Value0.V = MathUtils.Mul(ref xf2, vertices2[i1]);
-            c.Value0.ID.ContactFeature.IndexA = (byte) edge1;
-            c.Value0.ID.ContactFeature.IndexB = (byte) i1;
+            c.Value0.ID.ContactFeature.IndexA = (byte)edge1;
+            c.Value0.ID.ContactFeature.IndexB = (byte)i1;
             c.Value0.ID.ContactFeature.TypeA = ContactFeatureType.Face;
             c.Value0.ID.ContactFeature.TypeB = ContactFeatureType.Vertex;
 
             c.Value1.V = MathUtils.Mul(ref xf2, vertices2[i2]);
-            c.Value1.ID.ContactFeature.IndexA = (byte) edge1;
-            c.Value1.ID.ContactFeature.IndexB = (byte) i2;
+            c.Value1.ID.ContactFeature.IndexA = (byte)edge1;
+            c.Value1.ID.ContactFeature.IndexB = (byte)i2;
             c.Value1.ID.ContactFeature.TypeA = ContactFeatureType.Face;
             c.Value1.ID.ContactFeature.TypeB = ContactFeatureType.Vertex;
         }

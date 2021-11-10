@@ -1,4 +1,5 @@
 using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {
@@ -8,7 +9,7 @@ namespace VelcroPhysics.Shared
     /// </summary>
     public struct VTransform
     {
-        public Vector2 p;
+        public FVector2 p;
         public Rot q;
 
         /// <summary>
@@ -16,7 +17,7 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="rotation">The r.</param>
-        public VTransform(ref Vector2 position, ref Rot rotation)
+        public VTransform(ref FVector2 position, ref Rot rotation)
         {
             p = position;
             q = rotation;
@@ -27,7 +28,7 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetIdentity()
         {
-            p = Vector2.zero;
+            p = FVector2.zero;
             q.SetIdentity();
         }
 
@@ -36,7 +37,7 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="angle">The angle.</param>
-        public void Set(Vector2 position, float angle)
+        public void Set(FVector2 position, Fix64 angle)
         {
             p = position;
             q.Set(angle);

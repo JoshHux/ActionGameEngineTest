@@ -19,8 +19,8 @@
 */
 
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.PolygonManipulation
 {
@@ -39,7 +39,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// <param name="maxPolys">The maximun number of polygons to return.</param>
         /// <param name="tolerance">The tolerance</param>
         public static List<Vertices> PolygonizeTriangles(List<Vertices> triangles, int maxPolys = int.MaxValue,
-            float tolerance = 0.001f)
+            Fix64 tolerance = 0.001f)
         {
             if (triangles.Count <= 0)
                 return triangles;

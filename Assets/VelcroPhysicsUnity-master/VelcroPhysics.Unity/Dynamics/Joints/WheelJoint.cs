@@ -20,11 +20,12 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using UnityEngine;
+
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
@@ -53,40 +54,40 @@ namespace VelcroPhysics.Dynamics.VJoints
     /// </summary>
     public class WheelVJoint : VJoint
     {
-        private Vector2 _ax, _ay;
-        private Vector2 _axis;
+        private FVector2 _ax, _ay;
+        private FVector2 _axis;
 
-        private float _bias;
+        private Fix64 _bias;
         private bool _enableMotor;
-        private float _gamma;
+        private Fix64 _gamma;
 
-        private float _impulse;
+        private Fix64 _impulse;
 
         // Solver temp
         private int _indexA;
 
         private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
-        private float _invMassB;
-        private Vector2 _localCenterA;
+        private Fix64 _invIA;
+        private Fix64 _invIB;
+        private Fix64 _invMassA;
+        private Fix64 _invMassB;
+        private FVector2 _localCenterA;
 
-        private Vector2 _localCenterB;
+        private FVector2 _localCenterB;
 
         // Solver shared
-        private Vector2 _localYAxis;
+        private FVector2 _localYAxis;
 
-        private float _mass;
+        private Fix64 _mass;
 
-        private float _maxMotorTorque;
-        private float _motorImpulse;
-        private float _motorMass;
-        private float _motorSpeed;
-        private float _sAx, _sBx;
-        private float _sAy, _sBy;
-        private float _springImpulse;
-        private float _springMass;
+        private Fix64 _maxMotorTorque;
+        private Fix64 _motorImpulse;
+        private Fix64 _motorMass;
+        private Fix64 _motorSpeed;
+        private Fix64 _sAx, _sBx;
+        private Fix64 _sAy, _sBy;
+        private Fix64 _springImpulse;
+        private Fix64 _springMass;
 
         internal WheelVJoint()
         {
@@ -101,7 +102,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <param name="anchor">The anchor point</param>
         /// <param name="axis">The axis</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public WheelVJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
+        public WheelVJoint(Body bodyA, Body bodyB, FVector2 anchor, FVector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             VJointType = VJointType.Wheel;
@@ -123,20 +124,20 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
-        public override Vector2 WorldAnchorA
+        public override FVector2 WorldAnchorA
         {
             get => BodyA.GetWorldPoint(LocalAnchorA);
             set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
-        public override Vector2 WorldAnchorB
+        public override FVector2 WorldAnchorB
         {
             get => BodyB.GetWorldPoint(LocalAnchorB);
             set => LocalAnchorB = BodyB.GetLocalPoint(value);
@@ -145,7 +146,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The axis at which the suspension moves.
         /// </summary>
-        public Vector2 Axis
+        public FVector2 Axis
         {
             get => _axis;
             set
@@ -159,12 +160,12 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The axis in local coordinates relative to BodyA
         /// </summary>
-        public Vector2 LocalXAxis { get; private set; }
+        public FVector2 LocalXAxis { get; private set; }
 
         /// <summary>
         /// The desired motor speed in radians per second.
         /// </summary>
-        public float MotorSpeed
+        public Fix64 MotorSpeed
         {
             get => _motorSpeed;
             set
@@ -180,7 +181,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The maximum motor torque, usually in N-m.
         /// </summary>
-        public float MaxMotorTorque
+        public Fix64 MaxMotorTorque
         {
             get => _maxMotorTorque;
             set
@@ -196,17 +197,17 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// Suspension frequency, zero indicates no suspension
         /// </summary>
-        public float Frequency { get; set; }
+        public Fix64 Frequency { get; set; }
 
         /// <summary>
         /// Suspension damping ratio, one indicates critical damping
         /// </summary>
-        public float DampingRatio { get; set; }
+        public Fix64 DampingRatio { get; set; }
 
         /// <summary>
         /// Gets the translation along the axis
         /// </summary>
-        public float VJointTranslation
+        public Fix64 VJointTranslation
         {
             get
             {
@@ -218,12 +219,12 @@ namespace VelcroPhysics.Dynamics.VJoints
                 var d = pB - pA;
                 var axis = bA.GetWorldVector(LocalXAxis);
 
-                var translation = Vector2.Dot(d, axis);
+                var translation = FVector2.Dot(d, axis);
                 return translation;
             }
         }
 
-        public float VJointLinearSpeed
+        public Fix64 VJointLinearSpeed
         {
             get
             {
@@ -248,13 +249,13 @@ namespace VelcroPhysics.Dynamics.VJoints
                 var wA = bA.AngularVelocity;
                 var wB = bB.AngularVelocity;
 
-                var speed = Vector2.Dot(d, MathUtils.Cross(wA, axis)) + Vector2.Dot(axis,
+                var speed = FVector2.Dot(d, MathUtils.Cross(wA, axis)) + FVector2.Dot(axis,
                     vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA));
                 return speed;
             }
         }
 
-        public float VJointAngle
+        public Fix64 VJointAngle
         {
             get
             {
@@ -267,7 +268,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// Gets the angular velocity of the VJoint
         /// </summary>
-        public float VJointAngularSpeed
+        public Fix64 VJointAngularSpeed
         {
             get
             {
@@ -297,17 +298,17 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// Gets the torque of the motor
         /// </summary>
         /// <param name="invDt">inverse delta time</param>
-        public float GetMotorTorque(float invDt)
+        public Fix64 GetMotorTorque(Fix64 invDt)
         {
             return invDt * _motorImpulse;
         }
 
-        public override Vector2 GetReactionForce(float invDt)
+        public override FVector2 GetReactionForce(Fix64 invDt)
         {
             return invDt * (_impulse * _ay + _springImpulse * _ax);
         }
 
-        public override float GetReactionTorque(float invDt)
+        public override Fix64 GetReactionTorque(Fix64 invDt)
         {
             return invDt * _motorImpulse;
         }
@@ -323,8 +324,8 @@ namespace VelcroPhysics.Dynamics.VJoints
             _invIA = BodyA._invI;
             _invIB = BodyB._invI;
 
-            float mA = _invMassA, mB = _invMassB;
-            float iA = _invIA, iB = _invIB;
+            Fix64 mA = _invMassA, mB = _invMassB;
+            Fix64 iA = _invIA, iB = _invIB;
 
             var cA = data.Positions[_indexA].C;
             var aA = data.Positions[_indexA].A;
@@ -351,14 +352,14 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 _mass = mA + mB + iA * _sAy * _sAy + iB * _sBy * _sBy;
 
-                if (_mass > 0.0f) _mass = 1.0f / _mass;
+                if (_mass >Fix64.Zero) _mass =Fix64.One / _mass;
             }
 
             // Spring constraint
-            _springMass = 0.0f;
-            _bias = 0.0f;
-            _gamma = 0.0f;
-            if (Frequency > 0.0f)
+            _springMass =Fix64.Zero;
+            _bias =Fix64.Zero;
+            _gamma =Fix64.Zero;
+            if (Frequency >Fix64.Zero)
             {
                 _ax = MathUtils.Mul(qA, LocalXAxis);
                 _sAx = MathUtils.Cross(d1 + rA, _ax);
@@ -366,14 +367,14 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 var invMass = mA + mB + iA * _sAx * _sAx + iB * _sBx * _sBx;
 
-                if (invMass > 0.0f)
+                if (invMass >Fix64.Zero)
                 {
-                    _springMass = 1.0f / invMass;
+                    _springMass =Fix64.One / invMass;
 
-                    var C = Vector2.Dot(d1, _ax);
+                    var C = FVector2.Dot(d1, _ax);
 
                     // Frequency
-                    var omega = 2.0f * Settings.Pi * Frequency;
+                    var omega = 2.0f * Fix64.Pi * Frequency;
 
                     // Damping coefficient
                     var d = 2.0f * _springMass * DampingRatio * omega;
@@ -384,29 +385,29 @@ namespace VelcroPhysics.Dynamics.VJoints
                     // magic formulas
                     var h = data.Step.dt;
                     _gamma = h * (d + h * k);
-                    if (_gamma > 0.0f) _gamma = 1.0f / _gamma;
+                    if (_gamma >Fix64.Zero) _gamma =Fix64.One / _gamma;
 
                     _bias = C * h * k * _gamma;
 
                     _springMass = invMass + _gamma;
-                    if (_springMass > 0.0f) _springMass = 1.0f / _springMass;
+                    if (_springMass >Fix64.Zero) _springMass =Fix64.One / _springMass;
                 }
             }
             else
             {
-                _springImpulse = 0.0f;
+                _springImpulse =Fix64.Zero;
             }
 
             // Rotational motor
             if (_enableMotor)
             {
                 _motorMass = iA + iB;
-                if (_motorMass > 0.0f) _motorMass = 1.0f / _motorMass;
+                if (_motorMass >Fix64.Zero) _motorMass =Fix64.One / _motorMass;
             }
             else
             {
-                _motorMass = 0.0f;
-                _motorImpulse = 0.0f;
+                _motorMass =Fix64.Zero;
+                _motorImpulse =Fix64.Zero;
             }
 
             if (Settings.EnableWarmstarting)
@@ -428,9 +429,9 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = 0.0f;
-                _springImpulse = 0.0f;
-                _motorImpulse = 0.0f;
+                _impulse =Fix64.Zero;
+                _springImpulse =Fix64.Zero;
+                _motorImpulse =Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -441,8 +442,8 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            float mA = _invMassA, mB = _invMassB;
-            float iA = _invIA, iB = _invIB;
+            Fix64 mA = _invMassA, mB = _invMassB;
+            Fix64 iA = _invIA, iB = _invIB;
 
             var vA = data.Velocities[_indexA].V;
             var wA = data.Velocities[_indexA].W;
@@ -451,7 +452,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             // Solve spring constraint
             {
-                var Cdot = Vector2.Dot(_ax, vB - vA) + _sBx * wB - _sAx * wA;
+                var Cdot = FVector2.Dot(_ax, vB - vA) + _sBx * wB - _sAx * wA;
                 var impulse = -_springMass * (Cdot + _bias + _gamma * _springImpulse);
                 _springImpulse += impulse;
 
@@ -482,7 +483,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             // Solve point to line constraint
             {
-                var Cdot = Vector2.Dot(_ay, vB - vA) + _sBy * wB - _sAy * wA;
+                var Cdot = FVector2.Dot(_ay, vB - vA) + _sBy * wB - _sAy * wA;
                 var impulse = -_mass * Cdot;
                 _impulse += impulse;
 
@@ -521,15 +522,15 @@ namespace VelcroPhysics.Dynamics.VJoints
             var sAy = MathUtils.Cross(d + rA, ay);
             var sBy = MathUtils.Cross(rB, ay);
 
-            var C = Vector2.Dot(d, ay);
+            var C = FVector2.Dot(d, ay);
 
             var k = _invMassA + _invMassB + _invIA * _sAy * _sAy + _invIB * _sBy * _sBy;
 
-            float impulse;
-            if (k != 0.0f)
+            Fix64 impulse;
+            if (k !=Fix64.Zero)
                 impulse = -C / k;
             else
-                impulse = 0.0f;
+                impulse =Fix64.Zero;
 
             var P = impulse * ay;
             var LA = impulse * sAy;
@@ -545,7 +546,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             data.Positions[_indexB].C = cB;
             data.Positions[_indexB].A = aB;
 
-            return Mathf.Abs(C) <= Settings.LinearSlop;
+            return Fix64.Abs(C) <= Settings.LinearSlop;
         }
     }
 }

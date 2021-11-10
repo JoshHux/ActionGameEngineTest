@@ -26,6 +26,7 @@ using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Handlers;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.ContactSystem
 {

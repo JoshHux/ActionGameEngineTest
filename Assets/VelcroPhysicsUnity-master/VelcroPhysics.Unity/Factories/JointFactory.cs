@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using VelcroPhysics.Dynamics;
+﻿using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.VJoints;
+using FixMath.NET;
 
 namespace VelcroPhysics.Factories
 {
@@ -22,7 +22,7 @@ namespace VelcroPhysics.Factories
 
         #region Rope VJoint
 
-        public static RopeVJoint CreateRopeVJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB,
+        public static RopeVJoint CreateRopeVJoint(World world, Body bodyA, Body bodyB, FVector2 anchorA, FVector2 anchorB,
             bool useWorldCoordinates = false)
         {
             var ropeVJoint = new RopeVJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
@@ -34,7 +34,7 @@ namespace VelcroPhysics.Factories
 
         #region Weld VJoint
 
-        public static WeldVJoint CreateWeldVJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB,
+        public static WeldVJoint CreateWeldVJoint(World world, Body bodyA, Body bodyB, FVector2 anchorA, FVector2 anchorB,
             bool useWorldCoordinates = false)
         {
             var weldVJoint = new WeldVJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
@@ -46,8 +46,8 @@ namespace VelcroPhysics.Factories
 
         #region Prismatic VJoint
 
-        public static PrismaticVJoint CreatePrismaticVJoint(World world, Body bodyA, Body bodyB, Vector2 anchor,
-            Vector2 axis, bool useWorldCoordinates = false)
+        public static PrismaticVJoint CreatePrismaticVJoint(World world, Body bodyA, Body bodyB, FVector2 anchor,
+            FVector2 axis, bool useWorldCoordinates = false)
         {
             var VJoint = new PrismaticVJoint(bodyA, bodyB, anchor, axis, useWorldCoordinates);
             world.AddVJoint(VJoint);
@@ -70,7 +70,7 @@ namespace VelcroPhysics.Factories
         #region Gear VJoint
 
         public static GearVJoint CreateGearVJoint(World world, Body bodyA, Body bodyB, VJoint VJointA, VJoint VJointB,
-            float ratio)
+            Fix64 ratio)
         {
             var gearVJoint = new GearVJoint(bodyA, bodyB, VJointA, VJointB, ratio);
             world.AddVJoint(gearVJoint);
@@ -81,8 +81,8 @@ namespace VelcroPhysics.Factories
 
         #region Pulley VJoint
 
-        public static PulleyVJoint CreatePulleyVJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
-            Vector2 anchorB, Vector2 worldAnchorA, Vector2 worldAnchorB, float ratio, bool useWorldCoordinates = false)
+        public static PulleyVJoint CreatePulleyVJoint(World world, Body bodyA, Body bodyB, FVector2 anchorA,
+            FVector2 anchorB, FVector2 worldAnchorA, FVector2 worldAnchorB, Fix64 ratio, bool useWorldCoordinates = false)
         {
             var pulleyVJoint = new PulleyVJoint(bodyA, bodyB, anchorA, anchorB, worldAnchorA, worldAnchorB, ratio,
                 useWorldCoordinates);
@@ -94,7 +94,7 @@ namespace VelcroPhysics.Factories
 
         #region MouseVJoint
 
-        public static FixedMouseVJoint CreateFixedMouseVJoint(World world, Body body, Vector2 worldAnchor)
+        public static FixedMouseVJoint CreateFixedMouseVJoint(World world, Body body, FVector2 worldAnchor)
         {
             var VJoint = new FixedMouseVJoint(body, worldAnchor);
             world.AddVJoint(VJoint);
@@ -105,15 +105,15 @@ namespace VelcroPhysics.Factories
 
         #region Revolute VJoint
 
-        public static RevoluteVJoint CreateRevoluteVJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
-            Vector2 anchorB, bool useWorldCoordinates = false)
+        public static RevoluteVJoint CreateRevoluteVJoint(World world, Body bodyA, Body bodyB, FVector2 anchorA,
+            FVector2 anchorB, bool useWorldCoordinates = false)
         {
             var VJoint = new RevoluteVJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
             world.AddVJoint(VJoint);
             return VJoint;
         }
 
-        public static RevoluteVJoint CreateRevoluteVJoint(World world, Body bodyA, Body bodyB, Vector2 anchor)
+        public static RevoluteVJoint CreateRevoluteVJoint(World world, Body bodyA, Body bodyB, FVector2 anchor)
         {
             var localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
             var VJoint = new RevoluteVJoint(bodyA, bodyB, localanchorA, anchor);
@@ -125,7 +125,7 @@ namespace VelcroPhysics.Factories
 
         #region Wheel VJoint
 
-        public static WheelVJoint CreateWheelVJoint(World world, Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis,
+        public static WheelVJoint CreateWheelVJoint(World world, Body bodyA, Body bodyB, FVector2 anchor, FVector2 axis,
             bool useWorldCoordinates = false)
         {
             var VJoint = new WheelVJoint(bodyA, bodyB, anchor, axis, useWorldCoordinates);
@@ -133,17 +133,17 @@ namespace VelcroPhysics.Factories
             return VJoint;
         }
 
-        public static WheelVJoint CreateWheelVJoint(World world, Body bodyA, Body bodyB, Vector2 axis)
+        public static WheelVJoint CreateWheelVJoint(World world, Body bodyA, Body bodyB, FVector2 axis)
         {
-            return CreateWheelVJoint(world, bodyA, bodyB, Vector2.zero, axis);
+            return CreateWheelVJoint(world, bodyA, bodyB, FVector2.zero, axis);
         }
 
         #endregion
 
         #region Distance VJoint
 
-        public static DistanceVJoint CreateDistanceVJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
-            Vector2 anchorB, bool useWorldCoordinates = false)
+        public static DistanceVJoint CreateDistanceVJoint(World world, Body bodyA, Body bodyB, FVector2 anchorA,
+            FVector2 anchorB, bool useWorldCoordinates = false)
         {
             var distanceVJoint = new DistanceVJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
             world.AddVJoint(distanceVJoint);
@@ -152,14 +152,14 @@ namespace VelcroPhysics.Factories
 
         public static DistanceVJoint CreateDistanceVJoint(World world, Body bodyA, Body bodyB)
         {
-            return CreateDistanceVJoint(world, bodyA, bodyB, Vector2.zero, Vector2.zero);
+            return CreateDistanceVJoint(world, bodyA, bodyB, FVector2.zero, FVector2.zero);
         }
 
         #endregion
 
         #region Friction VJoint
 
-        public static FrictionVJoint CreateFrictionVJoint(World world, Body bodyA, Body bodyB, Vector2 anchor,
+        public static FrictionVJoint CreateFrictionVJoint(World world, Body bodyA, Body bodyB, FVector2 anchor,
             bool useWorldCoordinates = false)
         {
             var frictionVJoint = new FrictionVJoint(bodyA, bodyB, anchor, useWorldCoordinates);
@@ -169,7 +169,7 @@ namespace VelcroPhysics.Factories
 
         public static FrictionVJoint CreateFrictionVJoint(World world, Body bodyA, Body bodyB)
         {
-            return CreateFrictionVJoint(world, bodyA, bodyB, Vector2.zero);
+            return CreateFrictionVJoint(world, bodyA, bodyB, FVector2.zero);
         }
 
         #endregion

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Cutting.Simple;
 using VelcroPhysics.Tools.PolygonManipulation;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 using Debug = System.Diagnostics.Debug;
 
 namespace VelcroPhysics.Tools.Cutting
@@ -12,7 +12,7 @@ namespace VelcroPhysics.Tools.Cutting
 
     public static class YuPengClipper
     {
-        private const float ClipperEpsilonSquared = 1.192092896e-07f;
+        private const Fix64 ClipperEpsilonSquared = 1.192092896e-07f;
 
         public static List<Vertices> Union(Vertices polygon1, Vertices polygon2, out PolyClipError error)
         {
@@ -68,10 +68,10 @@ namespace VelcroPhysics.Tools.Cutting
             // as the algorithm depends on it
             var lbSubject = subject.GetAABB().LowerBound;
             var lbClip = clip.GetAABB().LowerBound;
-            Vector2 translate;
-            translate = Vector2.Min(lbSubject, lbClip);
-            translate = Vector2.one - translate;
-            if (translate != Vector2.zero)
+            FVector2 translate;
+            translate = FVector2.Min(lbSubject, lbClip);
+            translate = FVector2.one - translate;
+            if (translate != FVector2.zero)
             {
                 slicedSubject.Translate(ref translate);
                 slicedClip.Translate(ref translate);
@@ -82,9 +82,9 @@ namespace VelcroPhysics.Tools.Cutting
             slicedClip.ForceCounterClockWise();
 
             List<Edge> subjectSimplices;
-            List<float> subjectCoeff;
+            List<Fix64> subjectCoeff;
             List<Edge> clipSimplices;
-            List<float> clipCoeff;
+            List<Fix64> clipCoeff;
 
             // Build simplical chains from the polygons and calculate the
             // the corresponding coefficients
@@ -142,13 +142,13 @@ namespace VelcroPhysics.Tools.Cutting
                     var c = polygon2[j];
                     var d = polygon2[polygon2.NextIndex(j)];
 
-                    Vector2 intersectionPoint;
+                    FVector2 intersectionPoint;
 
                     // Check if the edges intersect
                     if (LineUtils.LineIntersect(a, b, c, d, out intersectionPoint))
                     {
                         // calculate alpha values for sorting multiple intersections points on a edge
-                        float alpha;
+                        Fix64 alpha;
 
                         // Insert intersection point into first polygon
                         alpha = GetAlpha(a, b, intersectionPoint);
@@ -205,15 +205,15 @@ namespace VelcroPhysics.Tools.Cutting
         /// Calculates the simplical chain corresponding to the input polygon.
         /// </summary>
         /// <remarks>Used by method <c>Execute()</c>.</remarks>
-        private static void CalculateSimplicalChain(Vertices poly, out List<float> coeff,
+        private static void CalculateSimplicalChain(Vertices poly, out List<Fix64> coeff,
             out List<Edge> simplicies)
         {
             simplicies = new List<Edge>();
-            coeff = new List<float>();
+            coeff = new List<Fix64>();
             for (var i = 0; i < poly.Count; ++i)
             {
                 simplicies.Add(new Edge(poly[i], poly[poly.NextIndex(i)]));
-                coeff.Add(CalculateSimplexCoefficient(Vector2.zero, poly[i], poly[poly.NextIndex(i)]));
+                coeff.Add(CalculateSimplexCoefficient(FVector2.zero, poly[i], poly[poly.NextIndex(i)]));
             }
         }
 
@@ -222,15 +222,15 @@ namespace VelcroPhysics.Tools.Cutting
         /// the given simplical chains and builds the result chain.
         /// </summary>
         /// <remarks>Used by method <c>Execute()</c>.</remarks>
-        private static void CalculateResultChain(List<float> poly1Coeff, List<Edge> poly1Simplicies,
-            List<float> poly2Coeff, List<Edge> poly2Simplicies,
+        private static void CalculateResultChain(List<Fix64> poly1Coeff, List<Edge> poly1Simplicies,
+            List<Fix64> poly2Coeff, List<Edge> poly2Simplicies,
             PolyClipType clipType, out List<Edge> resultSimplices)
         {
             resultSimplices = new List<Edge>();
 
             for (var i = 0; i < poly1Simplicies.Count; ++i)
             {
-                float edgeCharacter = 0;
+                Fix64 edgeCharacter = 0;
                 if (poly2Simplicies.Contains(poly1Simplicies[i]))
                     edgeCharacter = 1f;
                 else if (poly2Simplicies.Contains(-poly1Simplicies[i]) && clipType == PolyClipType.Union)
@@ -351,12 +351,12 @@ namespace VelcroPhysics.Tools.Cutting
         /// Needed to calculate the characteristics function of a simplex.
         /// </summary>
         /// <remarks>Used by method <c>CalculateEdgeCharacter()</c>.</remarks>
-        private static float CalculateBeta(Vector2 point, Edge e, float coefficient)
+        private static Fix64 CalculateBeta(FVector2 point, Edge e, Fix64 coefficient)
         {
             var result = 0f;
             if (PointInSimplex(point, e)) result = coefficient;
-            if (PointOnLineSegment(Vector2.zero, e.EdgeStart, point) ||
-                PointOnLineSegment(Vector2.zero, e.EdgeEnd, point))
+            if (PointOnLineSegment(FVector2.zero, e.EdgeStart, point) ||
+                PointOnLineSegment(FVector2.zero, e.EdgeEnd, point))
                 result = .5f * coefficient;
             return result;
         }
@@ -365,7 +365,7 @@ namespace VelcroPhysics.Tools.Cutting
         /// Needed for sorting multiple intersections points on the same edge.
         /// </summary>
         /// <remarks>Used by method <c>CalculateIntersections()</c>.</remarks>
-        private static float GetAlpha(Vector2 start, Vector2 end, Vector2 point)
+        private static Fix64 GetAlpha(FVector2 start, FVector2 end, FVector2 point)
         {
             return (point - start).sqrMagnitude / (end - start).sqrMagnitude;
         }
@@ -374,7 +374,7 @@ namespace VelcroPhysics.Tools.Cutting
         /// Returns the coefficient of a simplex.
         /// </summary>
         /// <remarks>Used by method <c>CalculateSimplicalChain()</c>.</remarks>
-        private static float CalculateSimplexCoefficient(Vector2 a, Vector2 b, Vector2 c)
+        private static Fix64 CalculateSimplexCoefficient(FVector2 a, FVector2 b, FVector2 c)
         {
             var isLeft = MathUtils.Area(ref a, ref b, ref c);
             if (isLeft < 0f) return -1f;
@@ -393,10 +393,10 @@ namespace VelcroPhysics.Tools.Cutting
         /// False if the winding number is even and the point is outside
         /// the simplex and True otherwise.
         /// </returns>
-        private static bool PointInSimplex(Vector2 point, Edge edge)
+        private static bool PointInSimplex(FVector2 point, Edge edge)
         {
             var polygon = new Vertices();
-            polygon.Add(Vector2.zero);
+            polygon.Add(FVector2.zero);
             polygon.Add(edge.EdgeStart);
             polygon.Add(edge.EdgeEnd);
             return polygon.PointInPolygon(ref point) == 1;
@@ -406,15 +406,15 @@ namespace VelcroPhysics.Tools.Cutting
         /// Tests if a point lies on a line segment.
         /// </summary>
         /// <remarks>Used by method <c>CalculateBeta()</c>.</remarks>
-        private static bool PointOnLineSegment(Vector2 start, Vector2 end, Vector2 point)
+        private static bool PointOnLineSegment(FVector2 start, FVector2 end, FVector2 point)
         {
             var segment = end - start;
             return MathUtils.Area(ref start, ref end, ref point) == 0f &&
-                   Vector2.Dot(point - start, segment) >= 0f &&
-                   Vector2.Dot(point - end, segment) <= 0f;
+                   FVector2.Dot(point - start, segment) >= 0f &&
+                   FVector2.Dot(point - end, segment) <= 0f;
         }
 
-        private static bool VectorEqual(Vector2 vec1, Vector2 vec2)
+        private static bool VectorEqual(FVector2 vec1, FVector2 vec2)
         {
             return (vec2 - vec1).sqrMagnitude <= ClipperEpsilonSquared;
         }
@@ -424,16 +424,16 @@ namespace VelcroPhysics.Tools.Cutting
         /// <summary>Specifies an Edge. Edges are used to represent simplicies in simplical chains</summary>
         private sealed class Edge
         {
-            public Edge(Vector2 edgeStart, Vector2 edgeEnd)
+            public Edge(FVector2 edgeStart, FVector2 edgeEnd)
             {
                 EdgeStart = edgeStart;
                 EdgeEnd = edgeEnd;
             }
 
-            public Vector2 EdgeStart { get; private set; }
-            public Vector2 EdgeEnd { get; private set; }
+            public FVector2 EdgeStart { get; private set; }
+            public FVector2 EdgeEnd { get; private set; }
 
-            public Vector2 GetCenter()
+            public FVector2 GetCenter()
             {
                 return (EdgeStart + EdgeEnd) / 2f;
             }

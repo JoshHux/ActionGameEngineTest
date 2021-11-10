@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using VelcroPhysics.Collision.ContactSystem;
+﻿using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 using VTransform = VelcroPhysics.Shared.VTransform;
 
 namespace VelcroPhysics.Collision.Narrowphase
@@ -25,12 +25,12 @@ namespace VelcroPhysics.Collision.Narrowphase
             // Compute circle in frame of edge
             var Q = MathUtils.MulT(ref VTransformA, MathUtils.Mul(ref VTransformB, ref circleB._position));
 
-            Vector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
+            FVector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
             var e = B - A;
 
             // Barycentric coordinates
-            var u = Vector2.Dot(e, B - Q);
-            var v = Vector2.Dot(e, Q - A);
+            var u = FVector2.Dot(e, B - Q);
+            var v = FVector2.Dot(e, Q - A);
 
             var radius = edgeA.Radius + circleB.Radius;
 
@@ -39,11 +39,11 @@ namespace VelcroPhysics.Collision.Narrowphase
             cf.TypeB = ContactFeatureType.Vertex;
 
             // Region A
-            if (v <= 0.0f)
+            if (v <= Fix64.Zero)
             {
                 var P1 = A;
                 var d1 = Q - P1;
-                var dd1 = Vector2.Dot(d1, d1);
+                var dd1 = FVector2.Dot(d1, d1);
                 if (dd1 > radius * radius) return;
 
                 // Is there an edge connected to A?
@@ -52,17 +52,17 @@ namespace VelcroPhysics.Collision.Narrowphase
                     var A1 = edgeA.Vertex0;
                     var B1 = A;
                     var e1 = B1 - A1;
-                    var u1 = Vector2.Dot(e1, B1 - Q);
+                    var u1 = FVector2.Dot(e1, B1 - Q);
 
                     // Is the circle in Region AB of the previous edge?
-                    if (u1 > 0.0f) return;
+                    if (u1 > Fix64.Zero) return;
                 }
 
                 cf.IndexA = 0;
                 cf.TypeA = ContactFeatureType.Vertex;
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.Circles;
-                manifold.LocalNormal = Vector2.zero;
+                manifold.LocalNormal = FVector2.zero;
                 manifold.LocalPoint = P1;
                 manifold.Points.Value0.Id.Key = 0;
                 manifold.Points.Value0.Id.ContactFeature = cf;
@@ -71,11 +71,11 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
 
             // Region B
-            if (u <= 0.0f)
+            if (u <= Fix64.Zero)
             {
                 var P2 = B;
                 var d2 = Q - P2;
-                var dd2 = Vector2.Dot(d2, d2);
+                var dd2 = FVector2.Dot(d2, d2);
                 if (dd2 > radius * radius) return;
 
                 // Is there an edge connected to B?
@@ -84,17 +84,17 @@ namespace VelcroPhysics.Collision.Narrowphase
                     var B2 = edgeA.Vertex3;
                     var A2 = B;
                     var e2 = B2 - A2;
-                    var v2 = Vector2.Dot(e2, Q - A2);
+                    var v2 = FVector2.Dot(e2, Q - A2);
 
                     // Is the circle in Region AB of the next edge?
-                    if (v2 > 0.0f) return;
+                    if (v2 > Fix64.Zero) return;
                 }
 
                 cf.IndexA = 1;
-                cf.TypeA = (byte) ContactFeatureType.Vertex;
+                cf.TypeA = (byte)ContactFeatureType.Vertex;
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.Circles;
-                manifold.LocalNormal = Vector2.zero;
+                manifold.LocalNormal = FVector2.zero;
                 manifold.LocalPoint = P2;
                 manifold.Points.Value0.Id.Key = 0;
                 manifold.Points.Value0.Id.ContactFeature = cf;
@@ -103,15 +103,15 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
 
             // Region AB
-            var den = Vector2.Dot(e, e);
-            Debug.Assert(den > 0.0f);
-            var P = 1.0f / den * (u * A + v * B);
+            var den = FVector2.Dot(e, e);
+            Debug.Assert(den > Fix64.Zero);
+            var P = Fix64.One / den * (u * A + v * B);
             var d = Q - P;
-            var dd = Vector2.Dot(d, d);
+            var dd = FVector2.Dot(d, d);
             if (dd > radius * radius) return;
 
-            var n = new Vector2(-e.y, e.x);
-            if (Vector2.Dot(n, Q - A) < 0.0f) n = new Vector2(-n.x, -n.y);
+            var n = new FVector2(-e.y, e.x);
+            if (FVector2.Dot(n, Q - A) < Fix64.Zero) n = new FVector2(-n.x, -n.y);
             n.Normalize();
 
             cf.IndexA = 0;

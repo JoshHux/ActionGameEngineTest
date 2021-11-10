@@ -4,10 +4,10 @@
 */
 
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay
 {
@@ -58,7 +58,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
             foreach (var triangle in poly.Triangles)
             {
                 var v = new Vertices();
-                foreach (var p in triangle.Points) v.Add(new Vector2(p.X, p.Y));
+                foreach (var p in triangle.Points) v.Add(new FVector2(p.X, p.Y));
                 results.Add(v);
             }
 

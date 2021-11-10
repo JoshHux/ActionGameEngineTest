@@ -33,12 +33,13 @@
 //   Replaced get/set Next/Previous with attributes
 // Future possibilities
 //   Documentation!
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
 {
     internal class PolygonPoint : TriangulationPoint
     {
-        public PolygonPoint(float x, float y) : base(x, y)
+        public PolygonPoint(Fix64 x, Fix64 y) : base(x, y)
         {
         }
 

@@ -1,5 +1,5 @@
-using UnityEngine;
 using VelcroPhysics.Dynamics.VJoints;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.VJoints
 {
@@ -20,7 +20,7 @@ namespace VelcroPhysics.Templates.VJoints
         /// <summary>
         /// Suspension damping ratio, one indicates critical damping
         /// </summary>
-        public float DampingRatio { get; set; }
+        public Fix64 DampingRatio { get; set; }
 
         /// <summary>
         /// Enable/disable the VJoint motor.
@@ -30,35 +30,35 @@ namespace VelcroPhysics.Templates.VJoints
         /// <summary>
         /// Suspension frequency, zero indicates no suspension
         /// </summary>
-        public float FrequencyHz { get; set; }
+        public Fix64 FrequencyHz { get; set; }
 
         /// <summary>
         /// The local anchor point relative to bodyA's origin.
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point relative to bodyB's origin.
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// The local translation axis in bodyA.
         /// </summary>
-        public Vector2 LocalAxisA { get; set; }
+        public FVector2 LocalAxisA { get; set; }
 
         /// <summary>
         /// The maximum motor torque, usually in N-m.
-        public float MaxMotorTorque { get; set; }
+        public Fix64 MaxMotorTorque { get; set; }
 
         /// <summary>
         /// The desired motor speed in radians per second.
         /// </summary>
-        public float MotorSpeed { get; set; }
+        public Fix64 MotorSpeed { get; set; }
 
         public override void SetDefaults()
         {
-            LocalAxisA = new Vector2(1.0f, 0.0f);
+            LocalAxisA = new FVector2(1.0f,Fix64.Zero);
             FrequencyHz = 2.0f;
             DampingRatio = 0.7f;
         }

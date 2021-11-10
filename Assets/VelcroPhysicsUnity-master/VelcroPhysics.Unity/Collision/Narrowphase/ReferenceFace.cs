@@ -1,4 +1,5 @@
 using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -9,14 +10,14 @@ namespace VelcroPhysics.Collision.Narrowphase
     {
         public int i1, i2;
 
-        public Vector2 v1, v2;
+        public FVector2 v1, v2;
 
-        public Vector2 Normal;
+        public FVector2 Normal;
 
-        public Vector2 SideNormal1;
-        public float SideOffset1;
+        public FVector2 SideNormal1;
+        public Fix64 SideOffset1;
 
-        public Vector2 SideNormal2;
-        public float SideOffset2;
+        public FVector2 SideNormal2;
+        public Fix64 SideOffset2;
     }
 }

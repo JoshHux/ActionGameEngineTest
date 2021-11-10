@@ -26,6 +26,7 @@ using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Broadphase
 {
@@ -69,7 +70,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <summary>
         /// Get the tree quality based on the area of the tree.
         /// </summary>
-        public float TreeQuality => _tree.AreaRatio;
+        public Fix64 TreeQuality => _tree.AreaRatio;
 
         /// <summary>
         /// Gets the height of the tree.
@@ -111,7 +112,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// Call MoveProxy as many times as you like, then when you are done
         /// call UpdatePairs to finalized the proxy pairs (for your time step).
         /// </summary>
-        public void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
+        public void MoveProxy(int proxyId, ref AABB aabb, FVector2 displacement)
         {
             var buffer = _tree.MoveProxy(proxyId, ref aabb, displacement);
             if (buffer)
@@ -235,7 +236,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// </summary>
         /// <param name="callback">A callback class that is called for each proxy that is hit by the ray.</param>
         /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
-        public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
+        public void RayCast(Func<RayCastInput, int, Fix64> callback, ref RayCastInput input)
         {
             _tree.RayCast(callback, ref input);
         }
@@ -243,7 +244,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <summary>
         /// Shift the world origin. Useful for large worlds.
         /// </summary>
-        public void ShiftOrigin(Vector2 newOrigin)
+        public void ShiftOrigin(FVector2 newOrigin)
         {
             _tree.ShiftOrigin(newOrigin);
         }
@@ -287,8 +288,8 @@ namespace VelcroPhysics.Collision.Broadphase
                 Array.Copy(oldBuffer, _pairBuffer, _pairCount);
             }
 
-            _pairBuffer[_pairCount].ProxyIdA = Mathf.Min(proxyId, _queryProxyId);
-            _pairBuffer[_pairCount].ProxyIdB = Mathf.Max(proxyId, _queryProxyId);
+            _pairBuffer[_pairCount].ProxyIdA = Fix64.Min(proxyId, _queryProxyId);
+            _pairBuffer[_pairCount].ProxyIdB = Fix64.Max(proxyId, _queryProxyId);
             ++_pairCount;
 
             return true;

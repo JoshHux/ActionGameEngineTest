@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using FixMath.NET;
 using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
 {
     internal class PointGenerator
     {
-        public static List<TriangulationPoint> UniformDistribution(int n, float scale)
+        public static List<TriangulationPoint> UniformDistribution(int n, Fix64 scale)
         {
             var points = new List<TriangulationPoint>();
             for (var i = 0; i < n; i++)
@@ -13,9 +15,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
             return points;
         }
 
-        public static List<TriangulationPoint> UniformGrid(int n, float scale)
+        public static List<TriangulationPoint> UniformGrid(int n, Fix64 scale)
         {
-            float x = 0;
+            Fix64 x = 0;
             var size = scale / n;
             var halfScale = 0.5f * scale;
 

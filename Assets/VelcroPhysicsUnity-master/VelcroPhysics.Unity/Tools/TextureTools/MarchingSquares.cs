@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.TextureTools
 {
@@ -47,7 +47,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="lerpCount"></param>
         /// <param name="combine"></param>
         /// <returns></returns>
-        public static List<Vertices> DetectSquares(AABB domain, float cellWidth, float cellHeight, sbyte[,] f,
+        public static List<Vertices> DetectSquares(AABB domain, Fix64 cellWidth, Fix64 cellHeight, sbyte[,] f,
             int lerpCount, bool combine)
         {
             var ret = new CxFastList<GeomPoly>();
@@ -93,7 +93,7 @@ namespace VelcroPhysics.Tools.TextureTools
             for (var y = 0; y < yn; y++)
             {
                 var y0 = y * cellHeight + domain.LowerBound.y;
-                float y1;
+                Fix64 y1;
                 if (y == yn - 1)
                     y1 = domain.UpperBound.y;
                 else
@@ -102,7 +102,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 for (var x = 0; x < xn; x++)
                 {
                     var x0 = x * cellWidth + domain.LowerBound.x;
-                    float x1;
+                    Fix64 x1;
                     if (x == xn - 1)
                         x1 = domain.UpperBound.x;
                     else
@@ -199,7 +199,7 @@ namespace VelcroPhysics.Tools.TextureTools
                         bi = bi.Next();
 
                     //NOTE: Unused
-                    //Vector2 b0 = bi.elem();
+                    //FVector2 b0 = bi.elem();
                     var b1 = bi.Next().Elem();
                     if (Square(b1.y - ay) > Settings.Epsilon)
                     {
@@ -238,7 +238,7 @@ namespace VelcroPhysics.Tools.TextureTools
                         u.GeomP.Length++;
                     }
 
-                    //u.p.simplify(float.Epsilon,float.Epsilon);
+                    //u.p.simplify(Fix64.Epsilon,Fix64.Epsilon);
                     //
                     ax = x + 1;
                     while (ax < xn)
@@ -297,10 +297,10 @@ namespace VelcroPhysics.Tools.TextureTools
             0x6D, 0xB5, 0x55
         };
 
-        private static float Lerp(float x0, float x1, float v0, float v1)
+        private static Fix64 Lerp(Fix64 x0, Fix64 x1, Fix64 v0, Fix64 v1)
         {
             var dv = v0 - v1;
-            float t;
+            Fix64 t;
             if (dv * dv < Settings.Epsilon)
                 t = 0.5f;
             else
@@ -311,7 +311,7 @@ namespace VelcroPhysics.Tools.TextureTools
         //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
         /** Recursive linear interpolation for use in marching squares **/
-        private static float Xlerp(float x0, float x1, float y, float v0, float v1, sbyte[,] f, int c)
+        private static Fix64 Xlerp(Fix64 x0, Fix64 x1, Fix64 y, Fix64 v0, Fix64 v1, sbyte[,] f, int c)
         {
             var xm = Lerp(x0, x1, v0, v1);
             if (c == 0)
@@ -326,7 +326,7 @@ namespace VelcroPhysics.Tools.TextureTools
         }
 
         /** Recursive linear interpolation for use in marching squares **/
-        private static float Ylerp(float y0, float y1, float x, float v0, float v1, sbyte[,] f, int c)
+        private static Fix64 Ylerp(Fix64 y0, Fix64 y1, Fix64 x, Fix64 v0, Fix64 v1, sbyte[,] f, int c)
         {
             var ym = Lerp(y0, y1, v0, v1);
             if (c == 0)
@@ -341,18 +341,18 @@ namespace VelcroPhysics.Tools.TextureTools
         }
 
         /** Square value for use in marching squares **/
-        private static float Square(float x)
+        private static Fix64 Square(Fix64 x)
         {
             return x * x;
         }
 
-        private static float VecDsq(Vector2 a, Vector2 b)
+        private static Fix64 VecDsq(FVector2 a, FVector2 b)
         {
             var d = a - b;
             return d.x * d.x + d.y * d.y;
         }
 
-        private static float VecCross(Vector2 a, Vector2 b)
+        private static Fix64 VecCross(FVector2 a, FVector2 b)
         {
             return a.x * b.y - a.y * b.x;
         }
@@ -365,8 +365,8 @@ namespace VelcroPhysics.Tools.TextureTools
             the values of 'f' at cell vertices with the result to be stored in 'poly' given the actual
             coordinates of 'ax' 'ay' in the marching squares mesh.
         **/
-        private static int MarchSquare(sbyte[,] f, sbyte[,] fs, ref GeomPoly poly, int ax, int ay, float x0, float y0,
-            float x1, float y1, int bin)
+        private static int MarchSquare(sbyte[,] f, sbyte[,] fs, ref GeomPoly poly, int ax, int ay, Fix64 x0, Fix64 y0,
+            Fix64 x1, Fix64 y1, int bin)
         {
             //key lookup
             var key = 0;
@@ -386,36 +386,36 @@ namespace VelcroPhysics.Tools.TextureTools
             var val = _lookMarch[key];
             if (val != 0)
             {
-                CxFastListNode<Vector2> pi = null;
+                CxFastListNode<FVector2> pi = null;
                 for (var i = 0; i < 8; i++)
                 {
-                    Vector2 p;
+                    FVector2 p;
                     if ((val & (1 << i)) != 0)
                     {
                         if (i == 7 && (val & 1) == 0)
                         {
-                            poly.Points.Add(p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin)));
+                            poly.Points.Add(p = new FVector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin)));
                         }
                         else
                         {
                             if (i == 0)
-                                p = new Vector2(x0, y0);
+                                p = new FVector2(x0, y0);
                             else if (i == 2)
-                                p = new Vector2(x1, y0);
+                                p = new FVector2(x1, y0);
                             else if (i == 4)
-                                p = new Vector2(x1, y1);
+                                p = new FVector2(x1, y1);
                             else if (i == 6)
-                                p = new Vector2(x0, y1);
+                                p = new FVector2(x0, y1);
 
                             else if (i == 1)
-                                p = new Vector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
+                                p = new FVector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
                             else if (i == 5)
-                                p = new Vector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
+                                p = new FVector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
 
                             else if (i == 3)
-                                p = new Vector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
+                                p = new FVector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
                             else
-                                p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
+                                p = new FVector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
 
                             pi = poly.Points.Insert(pi, p);
                         }
@@ -424,7 +424,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     }
                 }
 
-                //poly.simplify(float.Epsilon,float.Epsilon);
+                //poly.simplify(Fix64.Epsilon,Fix64.Epsilon);
             }
 
             return key;
@@ -441,7 +441,7 @@ namespace VelcroPhysics.Tools.TextureTools
             var bi = bp.Begin();
 
             var b = bi.Elem();
-            CxFastListNode<Vector2> prea = null;
+            CxFastListNode<FVector2> prea = null;
             while (ai != ap.End())
             {
                 var a = ai.Elem();
@@ -470,7 +470,7 @@ namespace VelcroPhysics.Tools.TextureTools
 
                     //insert polyb into polya
                     var fst = true;
-                    CxFastListNode<Vector2> preb = null;
+                    CxFastListNode<FVector2> preb = null;
                     while (!bp.Empty())
                     {
                         var bb = bp.Front();
@@ -794,11 +794,11 @@ namespace VelcroPhysics.Tools.TextureTools
         internal class GeomPoly
         {
             public int Length;
-            public CxFastList<Vector2> Points;
+            public CxFastList<FVector2> Points;
 
             public GeomPoly()
             {
-                Points = new CxFastList<Vector2>();
+                Points = new CxFastList<FVector2>();
                 Length = 0;
             }
         }

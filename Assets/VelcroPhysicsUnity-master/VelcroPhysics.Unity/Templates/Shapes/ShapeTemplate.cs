@@ -1,4 +1,5 @@
 ﻿using VelcroPhysics.Collision.Shapes;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.Shapes
 {
@@ -12,12 +13,12 @@ namespace VelcroPhysics.Templates.Shapes
         /// <summary>
         /// Gets or sets the density.
         /// </summary>
-        public float Density { get; set; }
+        public Fix64 Density { get; set; }
 
         /// <summary>
         /// Radius of the Shape
         /// </summary>
-        public float Radius { get; set; }
+        public Fix64 Radius { get; set; }
 
         /// <summary>
         /// Get the type of this shape.

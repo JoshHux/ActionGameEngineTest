@@ -1,4 +1,5 @@
 using VelcroPhysics.Shared.Optimization;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -23,6 +24,6 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// </summary>
         public FixedArray3<byte> IndexB;
 
-        public float Metric;
+        public Fix64 Metric;
     }
 }

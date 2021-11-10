@@ -33,6 +33,8 @@ SOFTWARE.
 #endregion License
 
 using System;
+using FixMath.NET;
+
 
 namespace Microsoft.Xna.Framework
 {
@@ -108,7 +110,7 @@ namespace Microsoft.Xna.Framework
             return curve;
         }
 
-        public float Evaluate(float position)
+        public Fix64 Evaluate(Fix64 position)
         {
             var first = keys[0];
             var last = keys[keys.Count - 1];
@@ -196,7 +198,7 @@ namespace Microsoft.Xna.Framework
 
         #region Private Methods
 
-        private int GetNumberOfCycle(float position)
+        private int GetNumberOfCycle(Fix64 position)
         {
             var cycle = (position - keys[0].Position) / (keys[keys.Count - 1].Position - keys[0].Position);
             if (cycle < 0f)
@@ -204,7 +206,7 @@ namespace Microsoft.Xna.Framework
             return (int) cycle;
         }
 
-        private float GetCurvePosition(float position)
+        private Fix64 GetCurvePosition(Fix64 position)
         {
             //only for position in curve
             var prev = keys[0];

@@ -31,9 +31,9 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
+using FixMath.NET;
 using Debug = System.Diagnostics.Debug;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
@@ -293,7 +293,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
                 EdgeIsConstrained[i] = true;
         }
 
-        public float Area()
+        public Fix64 Area()
         {
             var b = Points[0].X - Points[1].X;
             var h = Points[2].Y - Points[1].Y;

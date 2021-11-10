@@ -5,6 +5,7 @@
 
 using UnityEngine;
 using VelcroPhysics.Dynamics.Solver;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
@@ -13,10 +14,10 @@ namespace VelcroPhysics.Dynamics.VJoints
     /// </summary>
     public class AngleVJoint : VJoint
     {
-        private float _bias;
-        private float _VJointError;
-        private float _massFactor;
-        private float _targetAngle;
+        private Fix64 _bias;
+        private Fix64 _VJointError;
+        private Fix64 _massFactor;
+        private Fix64 _targetAngle;
 
         internal AngleVJoint()
         {
@@ -33,16 +34,16 @@ namespace VelcroPhysics.Dynamics.VJoints
         {
             VJointType = VJointType.Angle;
             BiasFactor = .2f;
-            MaxImpulse = float.MaxValue;
+            MaxImpulse = Fix64.MaxValue;
         }
 
-        public override Vector2 WorldAnchorA
+        public override FVector2 WorldAnchorA
         {
             get => BodyA.Position;
             set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
-        public override Vector2 WorldAnchorB
+        public override FVector2 WorldAnchorB
         {
             get => BodyB.Position;
             set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
@@ -51,7 +52,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The desired angle between BodyA and BodyB
         /// </summary>
-        public float TargetAngle
+        public Fix64 TargetAngle
         {
             get => _targetAngle;
             set
@@ -68,28 +69,28 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// Gets or sets the bias factor.
         /// Defaults to 0.2
         /// </summary>
-        public float BiasFactor { get; set; }
+        public Fix64 BiasFactor { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum impulse
-        /// Defaults to float.MaxValue
+        /// Defaults to Fix64.MaxValue
         /// </summary>
-        public float MaxImpulse { get; set; }
+        public Fix64 MaxImpulse { get; set; }
 
         /// <summary>
         /// Gets or sets the softness of the VJoint
         /// Defaults to 0
         /// </summary>
-        public float Softness { get; set; }
+        public Fix64 Softness { get; set; }
 
-        public override Vector2 GetReactionForce(float invDt)
+        public override FVector2 GetReactionForce(Fix64 invDt)
         {
             //TODO
             //return _inv_dt * _impulse;
-            return Vector2.zero;
+            return FVector2.zero;
         }
 
-        public override float GetReactionTorque(float invDt)
+        public override Fix64 GetReactionTorque(Fix64 invDt)
         {
             return 0;
         }
@@ -114,8 +115,8 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             var p = (_bias - data.Velocities[indexB].W + data.Velocities[indexA].W) * _massFactor;
 
-            data.Velocities[indexA].W -= BodyA._invI * Mathf.Sign(p) * Mathf.Min(Mathf.Abs(p), MaxImpulse);
-            data.Velocities[indexB].W += BodyB._invI * Mathf.Sign(p) * Mathf.Min(Mathf.Abs(p), MaxImpulse);
+            data.Velocities[indexA].W -= BodyA._invI * Fix64.Sign(p) * Fix64.Min(Fix64.Abs(p), MaxImpulse);
+            data.Velocities[indexB].W += BodyB._invI * Fix64.Sign(p) * Fix64.Min(Fix64.Abs(p), MaxImpulse);
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

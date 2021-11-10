@@ -25,6 +25,7 @@ using UnityEngine;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Dynamics.VJoints;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 using Debug = UnityEngine.Debug;
 
 namespace VelcroPhysics.Dynamics.Solver
@@ -34,8 +35,8 @@ namespace VelcroPhysics.Dynamics.Solver
     /// </summary>
     public class Island
     {
-        private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
-        private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+        private static Fix64 LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
+        private static Fix64 AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
         private ContactManager _contactManager;
         private Contact[] _contacts;
         private ContactSolver _contactSolver = new ContactSolver();
@@ -51,7 +52,7 @@ namespace VelcroPhysics.Dynamics.Solver
         public int ContactCount;
         public int VJointCapacity;
         public int VJointCount;
-        public float VJointUpdateTime;
+        public Fix64 VJointUpdateTime;
 
         public void Reset(int bodyCapacity, int contactCapacity, int VJointCapacity, ContactManager contactManager)
         {
@@ -83,7 +84,7 @@ namespace VelcroPhysics.Dynamics.Solver
             VJointCount = 0;
         }
 
-        public void Solve(ref TimeStep step, ref Vector2 gravity)
+        public void Solve(ref TimeStep step, ref FVector2 gravity)
         {
             var h = step.dt;
 
@@ -119,9 +120,9 @@ namespace VelcroPhysics.Dynamics.Solver
                     // Time step: v(t + dt) = v0 * exp(-c * (t + dt)) = v0 * exp(-c * t) * exp(-c * dt) = v * exp(-c * dt)
                     // v2 = exp(-c * dt) * v1
                     // Taylor expansion:
-                    // v2 = (1.0f - c * dt) * v1
-                    v *= MathUtils.Clamp(1.0f - h * b.LinearDamping, 0.0f, 1.0f);
-                    w *= MathUtils.Clamp(1.0f - h * b.AngularDamping, 0.0f, 1.0f);
+                    // v2 = (FixMath.One - c * dt) * v1
+                    v *= MathUtils.Clamp(FixMath.One - h * b.LinearDamping, Fix64.Zero, Fix64.One);
+                    w *= MathUtils.Clamp(FixMath.One - h * b.AngularDamping, Fix64.Zero, Fix64.One);
                 }
 
                 Positions[i].C = c;
@@ -187,7 +188,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
                 // Check for large velocities
                 var translation = h * v;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                if (FVector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     var ratio = Settings.MaxTranslation / translation.magnitude;
                     v *= ratio;
@@ -196,7 +197,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 var rotation = h * w;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
-                    var ratio = Settings.MaxRotation / Mathf.Abs(rotation);
+                    var ratio = Settings.MaxRotation / Fix64.Abs(rotation);
                     w *= ratio;
                 }
 
@@ -264,7 +265,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
             if (Settings.AllowSleep)
             {
-                var minSleepTime = Settings.MaxFloat;
+                var minSleepTime = Settings.MaxFix64;
 
                 for (var i = 0; i < BodyCount; ++i)
                 {
@@ -274,15 +275,15 @@ namespace VelcroPhysics.Dynamics.Solver
                         continue;
 
                     if (!b.SleepingAllowed || b._angularVelocity * b._angularVelocity > AngTolSqr ||
-                        Vector2.Dot(b._linearVelocity, b._linearVelocity) > LinTolSqr)
+                        FVector2.Dot(b._linearVelocity, b._linearVelocity) > LinTolSqr)
                     {
-                        b.SleepTime = 0.0f;
-                        minSleepTime = 0.0f;
+                        b.SleepTime = Fix64.Zero;
+                        minSleepTime = Fix64.Zero;
                     }
                     else
                     {
                         b.SleepTime += h;
-                        minSleepTime = Mathf.Min(minSleepTime, b.SleepTime);
+                        minSleepTime = Fix64.Min(minSleepTime, b.SleepTime);
                     }
                 }
 
@@ -347,7 +348,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
                 // Check for large velocities
                 var translation = h * v;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                if (FVector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     var ratio = Settings.MaxTranslation / translation.magnitude;
                     v *= ratio;
@@ -356,7 +357,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 var rotation = h * w;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
-                    var ratio = Settings.MaxRotation / Mathf.Abs(rotation);
+                    var ratio = Settings.MaxRotation / Fix64.Abs(rotation);
                     w *= ratio;
                 }
 

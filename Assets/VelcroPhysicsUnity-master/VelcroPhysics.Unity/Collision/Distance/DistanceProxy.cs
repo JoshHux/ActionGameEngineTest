@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using VelcroPhysics.Collision.Shapes;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Distance
 {
@@ -10,8 +11,8 @@ namespace VelcroPhysics.Collision.Distance
     /// </summary>
     public struct DistanceProxy
     {
-        internal readonly float Radius;
-        internal readonly Vector2[] Vertices;
+        internal readonly Fix64 Radius;
+        internal readonly FVector2[] Vertices;
 
         public DistanceProxy(Shape shape, int index)
         {
@@ -20,7 +21,7 @@ namespace VelcroPhysics.Collision.Distance
                 case ShapeType.Circle:
                 {
                     var circle = (CircleShape) shape;
-                    Vertices = new Vector2[1];
+                    Vertices = new FVector2[1];
                     Vertices[0] = circle.Position;
                     Radius = circle.Radius;
                 }
@@ -29,7 +30,7 @@ namespace VelcroPhysics.Collision.Distance
                 case ShapeType.Polygon:
                 {
                     var polygon = (PolygonShape) shape;
-                    Vertices = new Vector2[polygon.Vertices.Count];
+                    Vertices = new FVector2[polygon.Vertices.Count];
 
                     for (var i = 0; i < polygon.Vertices.Count; i++) Vertices[i] = polygon.Vertices[i];
 
@@ -42,7 +43,7 @@ namespace VelcroPhysics.Collision.Distance
                     var chain = (ChainShape) shape;
                     Debug.Assert(0 <= index && index < chain.Vertices.Count);
 
-                    Vertices = new Vector2[2];
+                    Vertices = new FVector2[2];
                     Vertices[0] = chain.Vertices[index];
                     Vertices[1] = index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0];
 
@@ -53,7 +54,7 @@ namespace VelcroPhysics.Collision.Distance
                 case ShapeType.Edge:
                 {
                     var edge = (EdgeShape) shape;
-                    Vertices = new Vector2[2];
+                    Vertices = new FVector2[2];
                     Vertices[0] = edge.Vertex1;
                     Vertices[1] = edge.Vertex2;
                     Radius = edge.Radius;
@@ -69,13 +70,13 @@ namespace VelcroPhysics.Collision.Distance
         /// Get the supporting vertex index in the given direction.
         /// </summary>
         /// <param name="direction">The direction.</param>
-        public int GetSupport(Vector2 direction)
+        public int GetSupport(FVector2 direction)
         {
             var bestIndex = 0;
-            var bestValue = Vector2.Dot(Vertices[0], direction);
+            var bestValue = FVector2.Dot(Vertices[0], direction);
             for (var i = 1; i < Vertices.Length; ++i)
             {
-                var value = Vector2.Dot(Vertices[i], direction);
+                var value = FVector2.Dot(Vertices[i], direction);
                 if (value > bestValue)
                 {
                     bestIndex = i;

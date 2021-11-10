@@ -20,9 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Earclip
 {
@@ -44,7 +44,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="tolerance">The tolerance.</param>
-        public static List<Vertices> ConvexPartition(Vertices vertices, float tolerance = 0.001f)
+        public static List<Vertices> ConvexPartition(Vertices vertices, Fix64 tolerance = 0.001f)
         {
             Debug.Assert(vertices.Count > 3);
             Debug.Assert(!vertices.IsCounterClockWise());
@@ -68,7 +68,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         /// <remarks>
         /// Only works on simple polygons.
         /// </remarks>
-        private static List<Vertices> TriangulatePolygon(Vertices vertices, float tolerance)
+        private static List<Vertices> TriangulatePolygon(Vertices vertices, Fix64 tolerance)
         {
             //Velcro note: Check is needed as invalid triangles can be returned in recursive calls.
             if (vertices.Count < 3)
@@ -95,8 +95,8 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
 
             var buffer = new Vertices[vertices.Count - 2];
             var bufferSize = 0;
-            var xrem = new float[vertices.Count];
-            var yrem = new float[vertices.Count];
+            var xrem = new Fix64[vertices.Count];
+            var yrem = new Fix64[vertices.Count];
             for (var i = 0; i < vertices.Count; ++i)
             {
                 xrem[i] = vertices[i].x;
@@ -115,27 +115,27 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
                     {
                         var lower = Remainder(i - 1, vNum);
                         var upper = Remainder(i + 1, vNum);
-                        var d1 = new Vector2(xrem[upper] - xrem[i], yrem[upper] - yrem[i]);
-                        var d2 = new Vector2(xrem[i] - xrem[lower], yrem[i] - yrem[lower]);
-                        var d3 = new Vector2(xrem[lower] - xrem[upper], yrem[lower] - yrem[upper]);
+                        var d1 = new FVector2(xrem[upper] - xrem[i], yrem[upper] - yrem[i]);
+                        var d2 = new FVector2(xrem[i] - xrem[lower], yrem[i] - yrem[lower]);
+                        var d3 = new FVector2(xrem[lower] - xrem[upper], yrem[lower] - yrem[upper]);
 
                         d1.Normalize();
                         d2.Normalize();
                         d3.Normalize();
-                        float cross12;
+                        Fix64 cross12;
                         MathUtils.Cross(ref d1, ref d2, out cross12);
-                        cross12 = Mathf.Abs(cross12);
+                        cross12 = Fix64.Abs(cross12);
 
-                        float cross23;
+                        Fix64 cross23;
                         MathUtils.Cross(ref d2, ref d3, out cross23);
-                        cross23 = Mathf.Abs(cross23);
+                        cross23 = Fix64.Abs(cross23);
 
-                        float cross31;
+                        Fix64 cross31;
                         MathUtils.Cross(ref d3, ref d1, out cross31);
-                        cross31 = Mathf.Abs(cross31);
+                        cross31 = Fix64.Abs(cross31);
 
                         //Find the maximum minimum angle
-                        var minCross = Mathf.Min(cross12, Mathf.Min(cross23, cross31));
+                        var minCross = Fix64.Min(cross12, Fix64.Min(cross23, cross31));
                         if (minCross > earMaxMinCross)
                         {
                             earIndex = i;
@@ -158,8 +158,8 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
                 // - remove the ear tip from the list
 
                 --vNum;
-                var newx = new float[vNum];
-                var newy = new float[vNum];
+                var newx = new Fix64[vNum];
+                var newy = new Fix64[vNum];
                 var currDest = 0;
                 for (var i = 0; i < vNum; ++i)
                 {
@@ -204,7 +204,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         /// <param name="poutA">The pout A.</param>
         /// <param name="poutB">The pout B.</param>
         /// <param name="tolerance"></param>
-        private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB, float tolerance)
+        private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB, Fix64 tolerance)
         {
             poutA = new Vertices();
             poutB = new Vertices();
@@ -220,7 +220,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
                 for (var j = i + 1; j < pin.Count; ++j)
                     //Don't worry about pinch points where the points
                     //are actually just dupe neighbors
-                    if (Mathf.Abs(pin[i].x - pin[j].x) < tolerance && Mathf.Abs(pin[i].y - pin[j].y) < tolerance &&
+                    if (Fix64.Abs(pin[i].x - pin[j].x) < tolerance && Fix64.Abs(pin[i].y - pin[j].y) < tolerance &&
                         j != i + 1)
                     {
                         pinchIndexA = i;
@@ -281,9 +281,9 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         /// <returns>
         /// <c>true</c> if the specified i is ear; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsEar(int i, float[] xv, float[] yv, int xvLength)
+        private static bool IsEar(int i, Fix64[] xv, Fix64[] yv, int xvLength)
         {
-            float dx0, dy0, dx1, dy1;
+            Fix64 dx0, dy0, dx1, dy1;
             if (i >= xvLength || i < 0 || xvLength < 3) return false;
             var upper = i + 1;
             var lower = i - 1;

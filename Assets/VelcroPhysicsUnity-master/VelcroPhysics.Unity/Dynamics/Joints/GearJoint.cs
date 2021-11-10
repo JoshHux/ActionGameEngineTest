@@ -20,11 +20,11 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using UnityEngine;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
@@ -64,33 +64,33 @@ namespace VelcroPhysics.Dynamics.VJoints
         private Body _bodyC;
         private Body _bodyD;
 
-        private float _constant;
-        private float _iA, _iB, _iC, _iD;
+        private Fix64 _constant;
+        private Fix64 _iA, _iB, _iC, _iD;
 
-        private float _impulse;
+        private Fix64 _impulse;
 
         // Solver temp
         private int _indexA, _indexB, _indexC, _indexD;
 
-        private Vector2 _JvAC, _JvBD;
-        private float _JwA, _JwB, _JwC, _JwD;
-        private Vector2 _lcA, _lcB, _lcC, _lcD;
+        private FVector2 _JvAC, _JvBD;
+        private Fix64 _JwA, _JwB, _JwC, _JwD;
+        private FVector2 _lcA, _lcB, _lcC, _lcD;
 
         // Solver shared
-        private Vector2 _localAnchorA;
+        private FVector2 _localAnchorA;
 
-        private Vector2 _localAnchorB;
-        private Vector2 _localAnchorC;
-        private Vector2 _localAnchorD;
+        private FVector2 _localAnchorB;
+        private FVector2 _localAnchorC;
+        private FVector2 _localAnchorD;
 
-        private Vector2 _localAxisC;
-        private Vector2 _localAxisD;
-        private float _mA, _mB, _mC, _mD;
-        private float _mass;
-        private float _ratio;
+        private FVector2 _localAxisC;
+        private FVector2 _localAxisD;
+        private Fix64 _mA, _mB, _mC, _mD;
+        private Fix64 _mass;
+        private Fix64 _ratio;
 
-        private float _referenceAngleA;
-        private float _referenceAngleB;
+        private Fix64 _referenceAngleA;
+        private Fix64 _referenceAngleB;
         private VJointType _typeA;
         private VJointType _typeB;
 
@@ -103,8 +103,9 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <param name="ratio">The ratio.</param>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
-        public GearVJoint(Body bodyA, Body bodyB, VJoint VJointA, VJoint VJointB, float ratio = 1f)
+        public GearVJoint(Body bodyA, Body bodyB, VJoint VJointA, VJoint VJointB, Fix64? holdRatio = null)
         {
+            Fix64 ratio = holdRatio ?? Fix64.One;
             VJointType = VJointType.Gear;
             BodyA = bodyA;
             BodyB = bodyB;
@@ -120,7 +121,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             Debug.Assert(_typeB == VJointType.Revolute || _typeB == VJointType.Prismatic ||
                          _typeB == VJointType.FixedRevolute || _typeB == VJointType.FixedPrismatic);
 
-            float coordinateA, coordinateB;
+            Fix64 coordinateA, coordinateB;
 
             // TODO_ERIN there might be some problem with the VJoint edges in b2VJoint.
 
@@ -135,17 +136,17 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             if (_typeA == VJointType.Revolute)
             {
-                var revolute = (RevoluteVJoint) VJointA;
+                var revolute = (RevoluteVJoint)VJointA;
                 _localAnchorC = revolute.LocalAnchorA;
                 _localAnchorA = revolute.LocalAnchorB;
                 _referenceAngleA = revolute.ReferenceAngle;
-                _localAxisC = Vector2.zero;
+                _localAxisC = FVector2.zero;
 
                 coordinateA = aA - aC - _referenceAngleA;
             }
             else
             {
-                var prismatic = (PrismaticVJoint) VJointA;
+                var prismatic = (PrismaticVJoint)VJointA;
                 _localAnchorC = prismatic.LocalAnchorA;
                 _localAnchorA = prismatic.LocalAnchorB;
                 _referenceAngleA = prismatic.ReferenceAngle;
@@ -153,7 +154,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 var pC = _localAnchorC;
                 var pA = MathUtils.MulT(xfC.q, MathUtils.Mul(xfA.q, _localAnchorA) + (xfA.p - xfC.p));
-                coordinateA = Vector2.Dot(pA - pC, _localAxisC);
+                coordinateA = FVector2.Dot(pA - pC, _localAxisC);
             }
 
             _bodyD = VJointB.BodyA;
@@ -167,17 +168,17 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             if (_typeB == VJointType.Revolute)
             {
-                var revolute = (RevoluteVJoint) VJointB;
+                var revolute = (RevoluteVJoint)VJointB;
                 _localAnchorD = revolute.LocalAnchorA;
                 _localAnchorB = revolute.LocalAnchorB;
                 _referenceAngleB = revolute.ReferenceAngle;
-                _localAxisD = Vector2.zero;
+                _localAxisD = FVector2.zero;
 
                 coordinateB = aB - aD - _referenceAngleB;
             }
             else
             {
-                var prismatic = (PrismaticVJoint) VJointB;
+                var prismatic = (PrismaticVJoint)VJointB;
                 _localAnchorD = prismatic.LocalAnchorA;
                 _localAnchorB = prismatic.LocalAnchorB;
                 _referenceAngleB = prismatic.ReferenceAngle;
@@ -185,21 +186,21 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 var pD = _localAnchorD;
                 var pB = MathUtils.MulT(xfD.q, MathUtils.Mul(xfB.q, _localAnchorB) + (xfB.p - xfD.p));
-                coordinateB = Vector2.Dot(pB - pD, _localAxisD);
+                coordinateB = FVector2.Dot(pB - pD, _localAxisD);
             }
 
             _ratio = ratio;
             _constant = coordinateA + _ratio * coordinateB;
-            _impulse = 0.0f;
+            _impulse = Fix64.Zero;
         }
 
-        public override Vector2 WorldAnchorA
+        public override FVector2 WorldAnchorA
         {
             get => _bodyA.GetWorldPoint(_localAnchorA);
             set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
-        public override Vector2 WorldAnchorB
+        public override FVector2 WorldAnchorB
         {
             get => _bodyB.GetWorldPoint(_localAnchorB);
             set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
@@ -208,7 +209,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The gear ratio.
         /// </summary>
-        public float Ratio
+        public Fix64 Ratio
         {
             get => _ratio;
             set
@@ -228,13 +229,13 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// </summary>
         public VJoint VJointB { get; private set; }
 
-        public override Vector2 GetReactionForce(float invDt)
+        public override FVector2 GetReactionForce(Fix64 invDt)
         {
             var P = _impulse * _JvAC;
             return invDt * P;
         }
 
-        public override float GetReactionTorque(float invDt)
+        public override Fix64 GetReactionTorque(Fix64 invDt)
         {
             var L = _impulse * _JwA;
             return invDt * L;
@@ -277,13 +278,13 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             Rot qA = new Rot(aA), qB = new Rot(aB), qC = new Rot(aC), qD = new Rot(aD);
 
-            _mass = 0.0f;
+            _mass = Fix64.Zero;
 
             if (_typeA == VJointType.Revolute)
             {
-                _JvAC = Vector2.zero;
-                _JwA = 1.0f;
-                _JwC = 1.0f;
+                _JvAC = FVector2.zero;
+                _JwA = Fix64.One;
+                _JwC = Fix64.One;
                 _mass += _iA + _iC;
             }
             else
@@ -299,7 +300,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             if (_typeB == VJointType.Revolute)
             {
-                _JvBD = Vector2.zero;
+                _JvBD = FVector2.zero;
                 _JwB = _ratio;
                 _JwD = _ratio;
                 _mass += _ratio * _ratio * (_iB + _iD);
@@ -316,7 +317,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
 
             // Compute effective mass.
-            _mass = _mass > 0.0f ? 1.0f / _mass : 0.0f;
+            _mass = _mass > Fix64.Zero ? Fix64.One / _mass : Fix64.Zero;
 
             if (Settings.EnableWarmstarting)
             {
@@ -331,7 +332,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = 0.0f;
+                _impulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -355,7 +356,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             var vD = data.Velocities[_indexD].V;
             var wD = data.Velocities[_indexD].W;
 
-            var Cdot = Vector2.Dot(_JvAC, vA - vC) + Vector2.Dot(_JvBD, vB - vD);
+            var Cdot = FVector2.Dot(_JvAC, vA - vC) + FVector2.Dot(_JvBD, vB - vD);
             Cdot += _JwA * wA - _JwC * wC + (_JwB * wB - _JwD * wD);
 
             var impulse = -_mass * Cdot;
@@ -393,19 +394,19 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             Rot qA = new Rot(aA), qB = new Rot(aB), qC = new Rot(aC), qD = new Rot(aD);
 
-            const float linearError = 0.0f;
+            const Fix64 linearError = Fix64.Zero;
 
-            float coordinateA, coordinateB;
+            Fix64 coordinateA, coordinateB;
 
-            Vector2 JvAC, JvBD;
-            float JwA, JwB, JwC, JwD;
-            var mass = 0.0f;
+            FVector2 JvAC, JvBD;
+            Fix64 JwA, JwB, JwC, JwD;
+            var mass = Fix64.Zero;
 
             if (_typeA == VJointType.Revolute)
             {
-                JvAC = Vector2.zero;
-                JwA = 1.0f;
-                JwC = 1.0f;
+                JvAC = FVector2.zero;
+                JwA = Fix64.One;
+                JwC = Fix64.One;
                 mass += _iA + _iC;
 
                 coordinateA = aA - aC - _referenceAngleA;
@@ -422,12 +423,12 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 var pC = _localAnchorC - _lcC;
                 var pA = MathUtils.MulT(qC, rA + (cA - cC));
-                coordinateA = Vector2.Dot(pA - pC, _localAxisC);
+                coordinateA = FVector2.Dot(pA - pC, _localAxisC);
             }
 
             if (_typeB == VJointType.Revolute)
             {
-                JvBD = Vector2.zero;
+                JvBD = FVector2.zero;
                 JwB = _ratio;
                 JwD = _ratio;
                 mass += _ratio * _ratio * (_iB + _iD);
@@ -446,13 +447,13 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 var pD = _localAnchorD - _lcD;
                 var pB = MathUtils.MulT(qD, rB + (cB - cD));
-                coordinateB = Vector2.Dot(pB - pD, _localAxisD);
+                coordinateB = FVector2.Dot(pB - pD, _localAxisD);
             }
 
             var C = coordinateA + _ratio * coordinateB - _constant;
 
-            var impulse = 0.0f;
-            if (mass > 0.0f) impulse = -C / mass;
+            var impulse = Fix64.Zero;
+            if (mass > Fix64.Zero) impulse = -C / mass;
 
             cA += _mA * impulse * JvAC;
             aA += _iA * impulse * JwA;

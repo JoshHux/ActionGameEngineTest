@@ -7,6 +7,7 @@ namespace Spax
 {
     public class SpaxManager : MonoBehaviour
     {
+        public FixMath.NET.Fix64 test;
         private static SpaxManager SpaxInstance;
 
         public delegate void InputUpdateEventHandler();

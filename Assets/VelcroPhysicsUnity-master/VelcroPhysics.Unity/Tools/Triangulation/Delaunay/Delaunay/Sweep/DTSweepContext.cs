@@ -28,6 +28,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {
@@ -40,7 +41,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
     {
         // Inital triangle factor, seed triangle will extend 30% of 
         // PointSet width to both left and right.
-        private const float ALPHA = 0.3f;
+        private const Fix64 ALPHA = 0.3f;
 
         private DTSweepPointComparator _comparator = new DTSweepPointComparator();
         public AdvancingFront aFront;
@@ -157,8 +158,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         {
             base.PrepareTriangulation(t);
 
-            float xmax, xmin;
-            float ymax, ymin;
+            Fix64 xmax, xmin;
+            Fix64 ymax, ymin;
 
             xmax = xmin = Points[0].X;
             ymax = ymin = Points[0].Y;
@@ -210,7 +211,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             public bool leftHighest;
             public AdvancingFrontNode leftNode;
             public AdvancingFrontNode rightNode;
-            public float width;
+            public Fix64 width;
         }
 
         #endregion

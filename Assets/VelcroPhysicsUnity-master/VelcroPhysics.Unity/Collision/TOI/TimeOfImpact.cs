@@ -26,6 +26,7 @@ using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Shared;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.TOI
 {
@@ -70,11 +71,11 @@ namespace VelcroPhysics.Collision.TOI
             var tMax = input.TMax;
 
             var totalRadius = input.ProxyA.Radius + input.ProxyB.Radius;
-            var target = Mathf.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
-            const float tolerance = 0.25f * Settings.LinearSlop;
+            var target = Fix64.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
+            const Fix64 tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 
-            var t1 = 0.0f;
+            var t1 =Fix64.Zero;
             const int k_maxIterations = 20;
             var iter = 0;
 
@@ -101,11 +102,11 @@ namespace VelcroPhysics.Collision.TOI
                 DistanceGJK.ComputeDistance(ref distanceInput, out distanceOutput, out cache);
 
                 // If the shapes are overlapped, we give up on continuous collision.
-                if (distanceOutput.Distance <= 0.0f)
+                if (distanceOutput.Distance <=Fix64.Zero)
                 {
                     // Failure!
                     output.State = TOIOutputState.Overlapped;
-                    output.T = 0.0f;
+                    output.T =Fix64.Zero;
                     break;
                 }
 
@@ -176,11 +177,11 @@ namespace VelcroPhysics.Collision.TOI
 
                     // Compute 1D root of: f(x) - target = 0
                     var rootIterCount = 0;
-                    float a1 = t1, a2 = t2;
+                    Fix64 a1 = t1, a2 = t2;
                     for (;;)
                     {
                         // Use a mix of the secant rule and bisection.
-                        float t;
+                        Fix64 t;
                         if ((rootIterCount & 1) != 0)
                             // Secant rule to improve convergence.
                             t = a1 + (target - s1) * (a2 - a1) / (s2 - s1);
@@ -196,7 +197,7 @@ namespace VelcroPhysics.Collision.TOI
                         var s = SeparationFunction.Evaluate(indexA, indexB, t, input.ProxyA, ref sweepA, input.ProxyB,
                             ref sweepB, ref axis, ref localPoint, type);
 
-                        if (Mathf.Abs(s - target) < tolerance)
+                        if (Fix64.Abs(s - target) < tolerance)
                         {
                             // t2 holds a tentative value for t1
                             t2 = t;
@@ -219,7 +220,7 @@ namespace VelcroPhysics.Collision.TOI
                     }
 
                     if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                        TOIMaxRootIters = Mathf.Max(TOIMaxRootIters, rootIterCount);
+                        TOIMaxRootIters = Fix64.Max(TOIMaxRootIters, rootIterCount);
 
                     ++pushBackIter;
 
@@ -243,7 +244,7 @@ namespace VelcroPhysics.Collision.TOI
             }
 
             if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                TOIMaxIters = Mathf.Max(TOIMaxIters, iter);
+                TOIMaxIters = Fix64.Max(TOIMaxIters, iter);
         }
     }
 }
