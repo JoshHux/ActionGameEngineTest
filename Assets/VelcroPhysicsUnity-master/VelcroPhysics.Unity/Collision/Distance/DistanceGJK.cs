@@ -25,6 +25,7 @@ using UnityEngine;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Distance
 {
@@ -70,7 +71,7 @@ namespace VelcroPhysics.Collision.Distance
             var saveB = new FixedArray3<int>();
 
             //Velcro: This code was not used anyway.
-            //float distanceSqr1 = Settings.MaxFloat;
+            //Fix64 distanceSqr1 = Settings.MaxFix64;
 
             // Main iteration loop.
             var iter = 0;
@@ -95,7 +96,7 @@ namespace VelcroPhysics.Collision.Distance
                         simplex.Solve3();
                         break;
                     default:
-                        Debug.Assert(false);
+                        UnityEngine.Debug.Assert(false);
                         break;
                 }
 
@@ -148,7 +149,7 @@ namespace VelcroPhysics.Collision.Distance
             }
 
             if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                GJKMaxIters = Mathf.Max(GJKMaxIters, iter);
+                GJKMaxIters = (int) UnityEngine.Mathf.Max(GJKMaxIters, iter);
 
             // Prepare output.
             simplex.GetWitnessPoints(out output.PointA, out output.PointB);
@@ -178,10 +179,10 @@ namespace VelcroPhysics.Collision.Distance
                 {
                     // Shapes are overlapped when radii are considered.
                     // Move the witness points to the middle.
-                    var p = 0.5f * (output.PointA + output.PointB);
+                    var p = FixedMath.C0p5 * (output.PointA + output.PointB);
                     output.PointA = p;
                     output.PointB = p;
-                    output.Distance = 0.0f;
+                    output.Distance =Fix64.Zero;
                 }
             }
         }

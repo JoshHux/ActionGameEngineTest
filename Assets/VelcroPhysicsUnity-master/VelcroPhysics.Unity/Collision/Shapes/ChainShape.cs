@@ -24,6 +24,7 @@ using UnityEngine;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -37,7 +38,7 @@ namespace VelcroPhysics.Collision.Shapes
     public class ChainShape : Shape
     {
         private bool _hasPrevVertex, _hasNextVertex;
-        private Vector2 _prevVertex, _nextVertex;
+        private FVector2 _prevVertex, _nextVertex;
 
         /// <summary>
         /// Create a new ChainShape from the vertices.
@@ -49,15 +50,15 @@ namespace VelcroPhysics.Collision.Shapes
         /// </param>
         public ChainShape(Vertices vertices, bool createLoop = false) : base(ShapeType.Chain, Settings.PolygonRadius)
         {
-            Debug.Assert(vertices != null && vertices.Count >= 3);
-            Debug.Assert(vertices[0] !=
+            UnityEngine.Debug.Assert(vertices != null && vertices.Count >= 3);
+            UnityEngine.Debug.Assert(vertices[0] !=
                          vertices[
                              vertices.Count -
                              1]); //Velcro. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
 
             for (var i = 1; i < vertices.Count; ++i)
                 // If the code crashes here, it means your vertices are too close together.
-                Debug.Assert(Mathf.Sqrt(Vector2.Distance(vertices[i - 1], vertices[i])) >
+                UnityEngine.Debug.Assert(Fix64.Sqrt(FVector2.Distance(vertices[i - 1], vertices[i])) >
                              Settings.LinearSlop * Settings.LinearSlop);
 
             Vertices = new Vertices(vertices);
@@ -95,7 +96,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// Establish connectivity to a vertex that precedes the first vertex.
         /// Don't call this for loops.
         /// </summary>
-        public Vector2 PrevVertex
+        public FVector2 PrevVertex
         {
             get => _prevVertex;
             set
@@ -109,7 +110,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// Establish connectivity to a vertex that follows the last vertex.
         /// Don't call this for loops.
         /// </summary>
-        public Vector2 NextVertex
+        public FVector2 NextVertex
         {
             get => _nextVertex;
             set
@@ -121,8 +122,8 @@ namespace VelcroPhysics.Collision.Shapes
 
         internal void GetChildEdge(EdgeShape edge, int index)
         {
-            Debug.Assert(0 <= index && index < Vertices.Count - 1);
-            Debug.Assert(edge != null);
+            UnityEngine.Debug.Assert(0 <= index && index < Vertices.Count - 1);
+            UnityEngine.Debug.Assert(edge != null);
 
             edge.ShapeType = ShapeType.Edge;
             edge._radius = _radius;
@@ -160,7 +161,7 @@ namespace VelcroPhysics.Collision.Shapes
             return edgeShape;
         }
 
-        public override bool TestPoint(ref VTransform VTransform, ref Vector2 point)
+        public override bool TestPoint(ref VTransform VTransform, ref FVector2 point)
         {
             return false;
         }
@@ -168,7 +169,7 @@ namespace VelcroPhysics.Collision.Shapes
         public override bool RayCast(ref RayCastInput input, ref VTransform VTransform, int childIndex,
             out RayCastOutput output)
         {
-            Debug.Assert(childIndex < Vertices.Count);
+            UnityEngine.Debug.Assert(childIndex < Vertices.Count);
 
             var i1 = childIndex;
             var i2 = childIndex + 1;
@@ -184,7 +185,7 @@ namespace VelcroPhysics.Collision.Shapes
 
         public override void ComputeAABB(ref VTransform VTransform, int childIndex, out AABB aabb)
         {
-            Debug.Assert(childIndex < Vertices.Count);
+            UnityEngine.Debug.Assert(childIndex < Vertices.Count);
 
             var i1 = childIndex;
             var i2 = childIndex + 1;

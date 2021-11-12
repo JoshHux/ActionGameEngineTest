@@ -1,28 +1,29 @@
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 
 public class VelcroCircle : VelcroBody
 {
-    [SerializeField] private float _radius;
-    public float Radius
+    [SerializeField] private Fix64 _radius;
+    public Fix64 Radius
     {
         get { return _radius; }
         set
         {
             _radius = value;
-            this.AssignTransform(new Vector2(_radius, 0f));
+            this.AssignTransform(new FVector2(_radius, 0));
         }
     }
 
 
     protected override void InstantiateBody(BodyType type, World world)
     {
-        _rb = BodyFactory.CreateCircle(world, _radius, _mass, new Vector2(transform.position.x, transform.position.y), type);
+        _rb = BodyFactory.CreateCircle(world, _radius, _mass, new FVector2((Fix64)transform.position.x, (Fix64)transform.position.y), type);
         //VelcroWorld.instance.world.AddBody(rb);
     }
 
-    protected override void AssignTransform(Vector2 size)
+    protected override void AssignTransform(FVector2 size)
     {
         FixtureFactory.AttachCircle(size.x, _mass, _rb);
     }
@@ -34,6 +35,6 @@ public class VelcroCircle : VelcroBody
 
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-        Gizmos.DrawWireSphere(Vector2.zero, _radius);
+        Gizmos.DrawWireSphere(Vector2.zero, (float)_radius);
     }
 }

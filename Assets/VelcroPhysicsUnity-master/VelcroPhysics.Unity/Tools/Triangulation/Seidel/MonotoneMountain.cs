@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Seidel
 {
     internal class MonotoneMountain
     {
         // Almost Pi!
-        private const float PiSlop = 3.1f;
+        //private const Fix64 PiSlop = Fix64.One * 3 + FixedMath.C0p1;
+        private static Fix64 PiSlop = Fix64.One * 3 + FixedMath.C0p1;
 
         private HashSet<Point> _convexPoints;
         private Point _head;
@@ -88,7 +89,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
                 var a = Angle(p);
 
                 // If the point is almost colinear with it's neighbor, remove it!
-                if (a >= PiSlop || a <= -PiSlop || a == 0.0f)
+                if (a >= PiSlop || a <= -PiSlop || a == Fix64.Zero)
                     Remove(p);
                 else if (IsConvex(p))
                     _convexPoints.Add(p);
@@ -125,7 +126,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
                     _convexPoints.Add(c);
             }
 
-            Debug.Assert(_size <= 3, "Triangulation bug, please report");
+            UnityEngine.Debug.Assert(_size <= 3, "Triangulation bug, please report");
         }
 
         private bool Valid(Point p)
@@ -144,18 +145,18 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
             }
         }
 
-        private float Angle(Point p)
+        private Fix64 Angle(Point p)
         {
             var a = p.Next - p;
             var b = p.Prev - p;
-            return Mathf.Atan2(a.Cross(b), a.Dot(b));
+            return Fix64.Atan2(a.Cross(b), a.Dot(b));
         }
 
         private bool AngleSign()
         {
             var a = _head.Next - _head;
             var b = _tail - _head;
-            return Mathf.Atan2(a.Cross(b), a.Dot(b)) >= 0;
+            return Fix64.Atan2(a.Cross(b), a.Dot(b)) >= 0;
         }
 
         // Determines if the inslide angle is convex or reflex

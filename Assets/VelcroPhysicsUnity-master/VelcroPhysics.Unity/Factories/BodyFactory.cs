@@ -6,13 +6,13 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
-using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Factories
 {
     public static class BodyFactory
     {
-        public static Body CreateBody(World world, Vector2 position = new Vector2(), float rotation = 0,
+        public static Body CreateBody(World world, FVector2 position = new FVector2(), Fix64 rotation = new Fix64(),
             BodyType bodyType = BodyType.Static, object userData = null)
         {
             var template = new BodyTemplate();
@@ -24,7 +24,7 @@ namespace VelcroPhysics.Factories
             return world.CreateBody(template);
         }
 
-        public static Body CreateEdge(World world, Vector2 start, Vector2 end, object userData = null)
+        public static Body CreateEdge(World world, FVector2 start, FVector2 end, object userData = null)
         {
             var body = CreateBody(world);
             body.UserData = userData;
@@ -33,7 +33,7 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateChainShape(World world, Vertices vertices, Vector2 position = new Vector2(),
+        public static Body CreateChainShape(World world, Vertices vertices, FVector2 position = new FVector2(),
             object userData = null)
         {
             var body = CreateBody(world, position);
@@ -43,7 +43,7 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateLoopShape(World world, Vertices vertices, Vector2 position = new Vector2(),
+        public static Body CreateLoopShape(World world, Vertices vertices, FVector2 position = new FVector2(),
             object userData = null)
         {
             var body = CreateBody(world, position);
@@ -53,8 +53,8 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateRectangle(World world, float width, float height, float density,
-            Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static,
+        public static Body CreateRectangle(World world, Fix64 width, Fix64 height, Fix64 density,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64(), BodyType bodyType = BodyType.Static,
             object userData = null)
         {
             if (width <= 0)
@@ -71,7 +71,7 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateCircle(World world, float radius, float density, Vector2 position = new Vector2(),
+        public static Body CreateCircle(World world, Fix64 radius, Fix64 density, FVector2 position = new FVector2(),
             BodyType bodyType = BodyType.Static, object userData = null)
         {
             var body = CreateBody(world, position, 0, bodyType, userData);
@@ -79,8 +79,8 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateEllipse(World world, float xRadius, float yRadius, int edges, float density,
-            Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static,
+        public static Body CreateEllipse(World world, Fix64 xRadius, Fix64 yRadius, int edges, Fix64 density,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64(), BodyType bodyType = BodyType.Static,
             object userData = null)
         {
             var body = CreateBody(world, position, rotation, bodyType, userData);
@@ -88,8 +88,8 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreatePolygon(World world, Vertices vertices, float density,
-            Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static,
+        public static Body CreatePolygon(World world, Vertices vertices, Fix64 density,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64(), BodyType bodyType = BodyType.Static,
             object userData = null)
         {
             var body = CreateBody(world, position, rotation, bodyType, userData);
@@ -97,8 +97,8 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateCompoundPolygon(World world, List<Vertices> list, float density,
-            Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static,
+        public static Body CreateCompoundPolygon(World world, List<Vertices> list, Fix64 density,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64(), BodyType bodyType = BodyType.Static,
             object userData = null)
         {
             //We create a single body
@@ -107,8 +107,8 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateGear(World world, float radius, int numberOfTeeth, float tipPercentage,
-            float toothHeight, float density, Vector2 position = new Vector2(), float rotation = 0,
+        public static Body CreateGear(World world, Fix64 radius, int numberOfTeeth, Fix64 tipPercentage,
+            Fix64 toothHeight, Fix64 density, FVector2 position = new FVector2(), Fix64 rotation = new Fix64(),
             BodyType bodyType = BodyType.Static, object userData = null)
         {
             var gearPolygon = PolygonUtils.CreateGear(radius, numberOfTeeth, tipPercentage, toothHeight);
@@ -125,8 +125,8 @@ namespace VelcroPhysics.Factories
             return CreatePolygon(world, gearPolygon, density, position, rotation, bodyType, userData);
         }
 
-        public static Body CreateCapsule(World world, float height, float topRadius, int topEdges, float bottomRadius,
-            int bottomEdges, float density, Vector2 position = new Vector2(), float rotation = 0,
+        public static Body CreateCapsule(World world, Fix64 height, Fix64 topRadius, int topEdges, Fix64 bottomRadius,
+            int bottomEdges, Fix64 density, FVector2 position = new FVector2(), Fix64 rotation = new Fix64(),
             BodyType bodyType = BodyType.Static, object userData = null)
         {
             var verts = PolygonUtils.CreateCapsule(height, topRadius, topEdges, bottomRadius, bottomEdges);
@@ -141,8 +141,8 @@ namespace VelcroPhysics.Factories
             return CreatePolygon(world, verts, density, position, rotation, bodyType, userData);
         }
 
-        public static Body CreateCapsule(World world, float height, float endRadius, float density,
-            Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static,
+        public static Body CreateCapsule(World world, Fix64 height, Fix64 endRadius, Fix64 density,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64(), BodyType bodyType = BodyType.Static,
             object userData = null)
         {
             //Create the middle rectangle
@@ -152,22 +152,22 @@ namespace VelcroPhysics.Factories
             list.Add(rectangle);
 
             var body = CreateCompoundPolygon(world, list, density, position, rotation, bodyType, userData);
-            FixtureFactory.AttachCircle(endRadius, density, body, new Vector2(0, height / 2));
-            FixtureFactory.AttachCircle(endRadius, density, body, new Vector2(0, -(height / 2)));
+            FixtureFactory.AttachCircle(endRadius, density, body, new FVector2(0, height / 2));
+            FixtureFactory.AttachCircle(endRadius, density, body, new FVector2(0, -(height / 2)));
 
             //Create the two circles
             //CircleShape topCircle = new CircleShape(endRadius, density);
-            //topCircle.Position = new Vector2(0, height / 2);
+            //topCircle.Position = new FVector2(0, height / 2);
             //body.CreateFixture(topCircle);
 
             //CircleShape bottomCircle = new CircleShape(endRadius, density);
-            //bottomCircle.Position = new Vector2(0, -(height / 2));
+            //bottomCircle.Position = new FVector2(0, -(height / 2));
             //body.CreateFixture(bottomCircle);
             return body;
         }
 
-        public static Body CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius,
-            int segments, float density, Vector2 position = new Vector2(), float rotation = 0,
+        public static Body CreateRoundedRectangle(World world, Fix64 width, Fix64 height, Fix64 xRadius, Fix64 yRadius,
+            int segments, Fix64 density, FVector2 position = new FVector2(), Fix64 rotation = new Fix64(),
             BodyType bodyType = BodyType.Static, object userData = null)
         {
             var verts = PolygonUtils.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
@@ -182,8 +182,8 @@ namespace VelcroPhysics.Factories
             return CreatePolygon(world, verts, density, position, rotation, bodyType, userData);
         }
 
-        public static Body CreateLineArc(World world, float radians, int sides, float radius, bool closed = false,
-            Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static,
+        public static Body CreateLineArc(World world, Fix64 radians, int sides, Fix64 radius, bool closed = false,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64(), BodyType bodyType = BodyType.Static,
             object userData = null)
         {
             var body = CreateBody(world, position, rotation, bodyType, userData);
@@ -191,8 +191,8 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static Body CreateSolidArc(World world, float density, float radians, int sides, float radius,
-            Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static,
+        public static Body CreateSolidArc(World world, Fix64 density, Fix64 radians, int sides, Fix64 radius,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64(), BodyType bodyType = BodyType.Static,
             object userData = null)
         {
             var body = CreateBody(world, position, rotation, bodyType, userData);
@@ -201,8 +201,8 @@ namespace VelcroPhysics.Factories
             return body;
         }
 
-        public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density,
-            Vector2 position = new Vector2(), float rotation = 0)
+        public static BreakableBody CreateBreakableBody(World world, Vertices vertices, Fix64 density,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64())
         {
             //TODO: Implement a Voronoi diagram algorithm to split up the vertices
             var triangles = Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Earclip);
@@ -214,7 +214,7 @@ namespace VelcroPhysics.Factories
         }
 
         public static BreakableBody CreateBreakableBody(World world, IEnumerable<Shape> shapes,
-            Vector2 position = new Vector2(), float rotation = 0)
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64())
         {
             var breakableBody = new BreakableBody(world, shapes, position, rotation);
             breakableBody.MainBody.Position = position;

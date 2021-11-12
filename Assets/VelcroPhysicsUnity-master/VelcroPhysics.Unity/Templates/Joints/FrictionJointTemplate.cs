@@ -1,5 +1,5 @@
-using UnityEngine;
 using VelcroPhysics.Dynamics.VJoints;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.VJoints
 {
@@ -12,21 +12,21 @@ namespace VelcroPhysics.Templates.VJoints
         /// <summary>
         /// The local anchor point relative to bodyA's origin.
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point relative to bodyB's origin.
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// The maximum friction force in N.
         /// </summary>
-        public float MaxForce { get; set; }
+        public Fix64 MaxForce { get; set; }
 
         /// <summary>
         /// The maximum friction torque in N-m.
         /// </summary>
-        public float MaxTorque { get; set; }
+        public Fix64 MaxTorque { get; set; }
     }
 }

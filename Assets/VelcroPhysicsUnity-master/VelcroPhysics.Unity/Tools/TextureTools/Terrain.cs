@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.PolygonManipulation;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.TextureTools
 {
@@ -19,16 +19,16 @@ namespace VelcroPhysics.Tools.TextureTools
         private List<Body>[,] _bodyMap;
 
         private AABB _dirtyArea;
-        private float _localHeight;
+        private Fix64 _localHeight;
 
-        private float _localWidth;
+        private Fix64 _localWidth;
 
         /// <summary>
         /// Point cloud defining the VTerrain.
         /// </summary>
         private sbyte[,] _VTerrainMap;
 
-        private Vector2 _topLeft;
+        private FVector2 _topLeft;
         private int _xnum;
         private int _ynum;
 
@@ -40,7 +40,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <summary>
         /// Center of VTerrain in world units.
         /// </summary>
-        public Vector2 Center;
+        public FVector2 Center;
 
         /// <summary>
         /// Decomposer to use when regenerating VTerrain. Can be changed on the fly without consequence.
@@ -51,7 +51,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <summary>
         /// Height of VTerrain in world units.
         /// </summary>
-        public float Height;
+        public Fix64 Height;
 
         /// <summary>
         /// Number of iterations to perform in the Marching Squares algorithm.
@@ -72,7 +72,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <summary>
         /// Width of VTerrain in world units.
         /// </summary>
-        public float Width;
+        public Fix64 Width;
 
         /// <summary>
         /// World to manage VTerrain in.
@@ -99,7 +99,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="position">The position (center) of the VTerrain.</param>
         /// <param name="width">The width of the VTerrain.</param>
         /// <param name="height">The height of the VTerrain.</param>
-        public VTerrain(World world, Vector2 position, float width, float height)
+        public VTerrain(World world, FVector2 position, Fix64 width, Fix64 height)
         {
             World = world;
             Width = width;
@@ -113,25 +113,25 @@ namespace VelcroPhysics.Tools.TextureTools
         public void Initialize()
         {
             // find top left of VTerrain in world space
-            _topLeft = new Vector2(Center.x - Width * 0.5f, Center.y - -Height * 0.5f);
+            _topLeft = new FVector2(Center.x - Width * FixedMath.C0p5, Center.y - -Height * FixedMath.C0p5);
 
             // convert the VTerrains size to a point cloud size
             _localWidth = Width * PointsPerUnit;
             _localHeight = Height * PointsPerUnit;
 
-            _VTerrainMap = new sbyte[(int) _localWidth + 1, (int) _localHeight + 1];
+            _VTerrainMap = new sbyte[(int)_localWidth + 1, (int)_localHeight + 1];
 
             for (var x = 0; x < _localWidth; x++)
-            for (var y = 0; y < _localHeight; y++)
-                _VTerrainMap[x, y] = 1;
+                for (var y = 0; y < _localHeight; y++)
+                    _VTerrainMap[x, y] = 1;
 
-            _xnum = (int) (_localWidth / CellSize);
-            _ynum = (int) (_localHeight / CellSize);
+            _xnum = (int)(_localWidth / CellSize);
+            _ynum = (int)(_localHeight / CellSize);
             _bodyMap = new List<Body>[_xnum, _ynum];
 
             // make sure to mark the dirty area to an infinitely small box
-            _dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue),
-                new Vector2(float.MinValue, float.MinValue));
+            _dirtyArea = new AABB(new FVector2(Fix64.MaxValue, Fix64.MaxValue),
+                new FVector2(Fix64.MinValue, Fix64.MinValue));
         }
 
         /// <summary>
@@ -139,12 +139,12 @@ namespace VelcroPhysics.Tools.TextureTools
         /// </summary>
         /// <param name="data"></param>
         /// <param name="offset"></param>
-        public void ApplyData(sbyte[,] data, Vector2 offset = default(Vector2))
+        public void ApplyData(sbyte[,] data, FVector2 offset = default(FVector2))
         {
             for (var x = 0; x < data.GetUpperBound(0); x++)
-            for (var y = 0; y < data.GetUpperBound(1); y++)
-                if (x + offset.x >= 0 && x + offset.x < _localWidth && y + offset.y >= 0 && y + offset.y < _localHeight)
-                    _VTerrainMap[(int) (x + offset.x), (int) (y + offset.y)] = data[x, y];
+                for (var y = 0; y < data.GetUpperBound(1); y++)
+                    if (x + offset.x >= 0 && x + offset.x < _localWidth && y + offset.y >= 0 && y + offset.y < _localHeight)
+                        _VTerrainMap[(int)(x + offset.x), (int)(y + offset.y)] = data[x, y];
 
             RemoveOldData(0, _xnum, 0, _ynum);
         }
@@ -154,30 +154,40 @@ namespace VelcroPhysics.Tools.TextureTools
         /// </summary>
         /// <param name="location">World location to modify. Automatically clipped.</param>
         /// <param name="value">-1 = inside VTerrain, 1 = outside VTerrain</param>
-        public void ModifyVTerrain(Vector2 location, sbyte value)
+        public void ModifyVTerrain(FVector2 location, sbyte value)
         {
             // find local position
             // make position local to map space
             var p = location - _topLeft;
 
             // find map position for each axis
-            p.x = p.x * _localWidth / Width;
-            p.y = p.y * -_localHeight / Height;
+            var px = p.x * _localWidth / Width;
+            var py = p.y * -_localHeight / Height;
+
+            p = new FVector2(px, py);
 
             if (p.x >= 0 && p.x < _localWidth && p.y >= 0 && p.y < _localHeight)
             {
-                _VTerrainMap[(int) p.x, (int) p.y] = value;
+                _VTerrainMap[(int)p.x, (int)p.y] = value;
 
                 // expand dirty area
+                var lowerx = _dirtyArea.LowerBound.x;
+                var lowery = _dirtyArea.LowerBound.y;
+                var upperx = _dirtyArea.UpperBound.x;
+                var uppery = _dirtyArea.UpperBound.y;
                 if (p.x < _dirtyArea.LowerBound.x)
-                    _dirtyArea.LowerBound.x = p.x;
+                    lowerx = p.x;
                 if (p.x > _dirtyArea.UpperBound.x)
-                    _dirtyArea.UpperBound.x = p.x;
+                    upperx = p.x;
 
                 if (p.y < _dirtyArea.LowerBound.y)
-                    _dirtyArea.LowerBound.y = p.y;
+                    lowery = p.y;
                 if (p.y > _dirtyArea.UpperBound.y)
-                    _dirtyArea.UpperBound.y = p.y;
+                    uppery = p.y;
+
+                _dirtyArea.LowerBound = new FVector2(lowerx, lowery);
+                _dirtyArea.UpperBound = new FVector2(upperx, uppery);
+
             }
         }
 
@@ -187,52 +197,52 @@ namespace VelcroPhysics.Tools.TextureTools
         public void RegenerateVTerrain()
         {
             //iterate effected cells
-            var xStart = (int) (_dirtyArea.LowerBound.x / CellSize);
+            var xStart = (int)(_dirtyArea.LowerBound.x / CellSize);
             if (xStart < 0)
                 xStart = 0;
 
-            var xEnd = (int) (_dirtyArea.UpperBound.x / CellSize) + 1;
+            var xEnd = (int)(_dirtyArea.UpperBound.x / CellSize) + 1;
             if (xEnd > _xnum)
                 xEnd = _xnum;
 
-            var yStart = (int) (_dirtyArea.LowerBound.y / CellSize);
+            var yStart = (int)(_dirtyArea.LowerBound.y / CellSize);
             if (yStart < 0)
                 yStart = 0;
 
-            var yEnd = (int) (_dirtyArea.UpperBound.y / CellSize) + 1;
+            var yEnd = (int)(_dirtyArea.UpperBound.y / CellSize) + 1;
             if (yEnd > _ynum)
                 yEnd = _ynum;
 
             RemoveOldData(xStart, xEnd, yStart, yEnd);
 
-            _dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue),
-                new Vector2(float.MinValue, float.MinValue));
+            _dirtyArea = new AABB(new FVector2(Fix64.MaxValue, Fix64.MaxValue),
+                new FVector2(Fix64.MinValue, Fix64.MinValue));
         }
 
         private void RemoveOldData(int xStart, int xEnd, int yStart, int yEnd)
         {
             for (var x = xStart; x < xEnd; x++)
-            for (var y = yStart; y < yEnd; y++)
-            {
-                //remove old VTerrain object at grid cell
-                if (_bodyMap[x, y] != null)
-                    for (var i = 0; i < _bodyMap[x, y].Count; i++)
-                        World.RemoveBody(_bodyMap[x, y][i]);
+                for (var y = yStart; y < yEnd; y++)
+                {
+                    //remove old VTerrain object at grid cell
+                    if (_bodyMap[x, y] != null)
+                        for (var i = 0; i < _bodyMap[x, y].Count; i++)
+                            World.RemoveBody(_bodyMap[x, y][i]);
 
-                _bodyMap[x, y] = null;
+                    _bodyMap[x, y] = null;
 
-                //generate new one
-                GenerateVTerrain(x, y);
-            }
+                    //generate new one
+                    GenerateVTerrain(x, y);
+                }
         }
 
         private void GenerateVTerrain(int gx, int gy)
         {
-            float ax = gx * CellSize;
-            float ay = gy * CellSize;
+            Fix64 ax = gx * CellSize;
+            Fix64 ay = gy * CellSize;
 
             var polys = MarchingSquares.DetectSquares(
-                new AABB(new Vector2(ax, ay), new Vector2(ax + CellSize, ay + CellSize)), SubCellSize, SubCellSize,
+                new AABB(new FVector2(ax, ay), new FVector2(ax + CellSize, ay + CellSize)), SubCellSize, SubCellSize,
                 _VTerrainMap, Iterations, true);
             if (polys.Count == 0)
                 return;
@@ -240,7 +250,7 @@ namespace VelcroPhysics.Tools.TextureTools
             _bodyMap[gx, gy] = new List<Body>();
 
             // create the scale vector
-            var scale = new Vector2(1f / PointsPerUnit, 1f / -PointsPerUnit);
+            var scale = new FVector2(1 / PointsPerUnit, 1 / -PointsPerUnit);
 
             // create physics object for this grid cell
             foreach (var item in polys)
@@ -254,7 +264,7 @@ namespace VelcroPhysics.Tools.TextureTools
 
                 foreach (var poly in decompPolys)
                     if (poly.Count > 2)
-                        _bodyMap[gx, gy].Add(BodyFactory.CreatePolygon(World, poly, 1));
+                        _bodyMap[gx, gy].Add(BodyFactory.CreatePolygon(World, poly, Fix64.One));
             }
         }
     }

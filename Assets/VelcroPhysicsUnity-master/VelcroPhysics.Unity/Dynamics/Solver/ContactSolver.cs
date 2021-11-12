@@ -1,4 +1,4 @@
-//#define B2_DEBUG_SOLVER
+//#define B2_UnityEngine.Debug_SOLVER
 /*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
@@ -21,7 +21,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using UnityEngine;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
@@ -29,6 +28,7 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.Solver
 {
@@ -79,7 +79,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 var manifold = contact.Manifold;
 
                 var pointCount = manifold.PointCount;
-                Debug.Assert(pointCount > 0);
+                UnityEngine.Debug.Assert(pointCount > 0);
 
                 var vc = VelocityConstraints[i];
                 vc.Friction = contact.Friction;
@@ -124,15 +124,15 @@ namespace VelcroPhysics.Dynamics.Solver
                     }
                     else
                     {
-                        vcp.NormalImpulse = 0.0f;
-                        vcp.TangentImpulse = 0.0f;
+                        vcp.NormalImpulse = Fix64.Zero;
+                        vcp.TangentImpulse = Fix64.Zero;
                     }
 
-                    vcp.rA = Vector2.zero;
-                    vcp.rB = Vector2.zero;
-                    vcp.NormalMass = 0.0f;
-                    vcp.TangentMass = 0.0f;
-                    vcp.VelocityBias = 0.0f;
+                    vcp.rA = FVector2.zero;
+                    vcp.rB = FVector2.zero;
+                    vcp.NormalMass = Fix64.Zero;
+                    vcp.TangentMass = Fix64.Zero;
+                    vcp.VelocityBias = Fix64.Zero;
 
                     pc.LocalPoints[j] = cp.LocalPoint;
                 }
@@ -173,7 +173,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 var vB = _velocities[indexB].V;
                 var wB = _velocities[indexB].W;
 
-                Debug.Assert(manifold.PointCount > 0);
+                UnityEngine.Debug.Assert(manifold.PointCount > 0);
 
                 var xfA = new VTransform();
                 var xfB = new VTransform();
@@ -200,20 +200,20 @@ namespace VelcroPhysics.Dynamics.Solver
 
                     var kNormal = mA + mB + iA * rnA * rnA + iB * rnB * rnB;
 
-                    vcp.NormalMass = kNormal > 0.0f ? 1.0f / kNormal : 0.0f;
+                    vcp.NormalMass = kNormal > Fix64.Zero ? Fix64.One / kNormal : Fix64.Zero;
 
-                    var tangent = MathUtils.Cross(vc.Normal, 1.0f);
+                    var tangent = MathUtils.Cross(vc.Normal, Fix64.One);
 
                     var rtA = MathUtils.Cross(vcp.rA, tangent);
                     var rtB = MathUtils.Cross(vcp.rB, tangent);
 
                     var kTangent = mA + mB + iA * rtA * rtA + iB * rtB * rtB;
 
-                    vcp.TangentMass = kTangent > 0.0f ? 1.0f / kTangent : 0.0f;
+                    vcp.TangentMass = kTangent > Fix64.Zero ? Fix64.One / kTangent : Fix64.Zero;
 
                     // Setup a velocity bias for restitution.
-                    vcp.VelocityBias = 0.0f;
-                    var vRel = Vector2.Dot(vc.Normal,
+                    vcp.VelocityBias = Fix64.Zero;
+                    var vRel = FVector2.Dot(vc.Normal,
                         vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA));
                     if (vRel < -Settings.VelocityThreshold) vcp.VelocityBias = -vc.Restitution * vRel;
                 }
@@ -234,12 +234,14 @@ namespace VelcroPhysics.Dynamics.Solver
                     var k12 = mA + mB + iA * rn1A * rn2A + iB * rn1B * rn2B;
 
                     // Ensure a reasonable condition number.
-                    const float k_maxConditionNumber = 1000.0f;
+                    //const Fix64 k_maxConditionNumber = 1000;
+                    Fix64 k_maxConditionNumber = 1000;
+
                     if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
                     {
                         // K is safe to invert.
-                        vc.K.ex = new Vector2(k11, k12);
-                        vc.K.ey = new Vector2(k12, k22);
+                        vc.K.ex = new FVector2(k11, k12);
+                        vc.K.ey = new FVector2(k12, k22);
                         vc.NormalMass = vc.K.Inverse;
                     }
                     else
@@ -273,7 +275,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 var wB = _velocities[indexB].W;
 
                 var normal = vc.Normal;
-                var tangent = MathUtils.Cross(normal, 1.0f);
+                var tangent = MathUtils.Cross(normal, Fix64.One);
 
                 for (var j = 0; j < pointCount; ++j)
                 {
@@ -312,10 +314,10 @@ namespace VelcroPhysics.Dynamics.Solver
                 var wB = _velocities[indexB].W;
 
                 var normal = vc.Normal;
-                var tangent = MathUtils.Cross(normal, 1.0f);
+                var tangent = MathUtils.Cross(normal, Fix64.One);
                 var friction = vc.Friction;
 
-                Debug.Assert(pointCount == 1 || pointCount == 2);
+                UnityEngine.Debug.Assert(pointCount == 1 || pointCount == 2);
 
                 // Solve tangent constraints first because non-penetration is more important
                 // than friction.
@@ -327,7 +329,7 @@ namespace VelcroPhysics.Dynamics.Solver
                     var dv = vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA);
 
                     // Compute tangent force
-                    var vt = Vector2.Dot(dv, tangent) - vc.TangentSpeed;
+                    var vt = FVector2.Dot(dv, tangent) - vc.TangentSpeed;
                     var lambda = vcp.TangentMass * -vt;
 
                     // b2Clamp the accumulated force
@@ -357,11 +359,11 @@ namespace VelcroPhysics.Dynamics.Solver
                         var dv = vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA);
 
                         // Compute normal impulse
-                        var vn = Vector2.Dot(dv, normal);
+                        var vn = FVector2.Dot(dv, normal);
                         var lambda = -vcp.NormalMass * (vn - vcp.VelocityBias);
 
                         // b2Clamp the accumulated impulse
-                        var newImpulse = Mathf.Max(vcp.NormalImpulse + lambda, 0.0f);
+                        var newImpulse = Fix64.Max(vcp.NormalImpulse + lambda, Fix64.Zero);
                         lambda = newImpulse - vcp.NormalImpulse;
                         vcp.NormalImpulse = newImpulse;
 
@@ -412,27 +414,27 @@ namespace VelcroPhysics.Dynamics.Solver
                     var cp1 = vc.Points[0];
                     var cp2 = vc.Points[1];
 
-                    var a = new Vector2(cp1.NormalImpulse, cp2.NormalImpulse);
-                    Debug.Assert(a.x >= 0.0f && a.y >= 0.0f);
+                    var a = new FVector2(cp1.NormalImpulse, cp2.NormalImpulse);
+                    UnityEngine.Debug.Assert(a.x >= Fix64.Zero && a.y >= Fix64.Zero);
 
                     // Relative velocity at contact
                     var dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
                     var dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
                     // Compute normal velocity
-                    var vn1 = Vector2.Dot(dv1, normal);
-                    var vn2 = Vector2.Dot(dv2, normal);
+                    var vn1 = FVector2.Dot(dv1, normal);
+                    var vn2 = FVector2.Dot(dv2, normal);
 
-                    var b = Vector2.zero;
-                    b.x = vn1 - cp1.VelocityBias;
-                    b.y = vn2 - cp2.VelocityBias;
+                    var bx = vn1 - cp1.VelocityBias;
+                    var by = vn2 - cp2.VelocityBias;
+                    var b = new FVector2(vn1, vn2);
 
-                    //const float k_errorTol = 1e-3f;
+                    //const Fix64 k_errorTol = 1e-3f;
 
                     // Compute b'
                     b -= MathUtils.Mul(ref vc.K, a);
 
-                    for (;;)
+                    for (; ; )
                     {
                         //
                         // Case 1: vn = 0
@@ -445,7 +447,7 @@ namespace VelcroPhysics.Dynamics.Solver
                         //
                         var x = -MathUtils.Mul(ref vc.NormalMass, b);
 
-                        if (x.x >= 0.0f && x.y >= 0.0f)
+                        if (x.x >= Fix64.Zero && x.y >= Fix64.Zero)
                         {
                             // Get the incremental impulse
                             var d = x - a;
@@ -463,17 +465,17 @@ namespace VelcroPhysics.Dynamics.Solver
                             cp1.NormalImpulse = x.x;
                             cp2.NormalImpulse = x.y;
 
-#if B2_DEBUG_SOLVER
+#if B2_Debug_SOLVER
                             // Postconditions
                             dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
                             dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
                             // Compute normal velocity
-                            vn1 = Vector2.Dot(dv1, normal);
-                            vn2 = Vector2.Dot(dv2, normal);
+                            vn1 = FVector2.Dot(dv1, normal);
+                            vn2 = FVector2.Dot(dv2, normal);
 
-                            Debug.Assert(Mathf.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
-                            Debug.Assert(Mathf.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
+                            UnityEngine.Debug.Assert(Fix64.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
+                            UnityEngine.Debug.Assert(Fix64.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -484,12 +486,15 @@ namespace VelcroPhysics.Dynamics.Solver
                         //   0 = a11 * x1 + a12 * 0 + b1' 
                         // vn2 = a21 * x1 + a22 * 0 + b2'
                         //
-                        x.x = -cp1.NormalMass * b.x;
-                        x.y = 0.0f;
-                        vn1 = 0.0f;
+                        //x.x = -cp1.NormalMass * b.x;
+                        //x.y = Fix64.Zero;
+                        x = new FVector2(-cp1.NormalMass * b.x, 0);
+
+
+                        vn1 = Fix64.Zero;
                         vn2 = vc.K.ex.y * x.x + b.y;
 
-                        if (x.x >= 0.0f && vn2 >= 0.0f)
+                        if (x.x >= Fix64.Zero && vn2 >= Fix64.Zero)
                         {
                             // Get the incremental impulse
                             var d = x - a;
@@ -507,14 +512,14 @@ namespace VelcroPhysics.Dynamics.Solver
                             cp1.NormalImpulse = x.x;
                             cp2.NormalImpulse = x.y;
 
-#if B2_DEBUG_SOLVER
+#if B2_Debug_SOLVER
                             // Postconditions
                             dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
 
                             // Compute normal velocity
-                            vn1 = Vector2.Dot(dv1, normal);
+                            vn1 = FVector2.Dot(dv1, normal);
 
-                            Debug.Assert(Mathf.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
+                            UnityEngine.Debug.Assert(Fix64.Abs(vn1 - cp1.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -525,12 +530,15 @@ namespace VelcroPhysics.Dynamics.Solver
                         // vn1 = a11 * 0 + a12 * x2 + b1' 
                         //   0 = a21 * 0 + a22 * x2 + b2'
                         //
-                        x.x = 0.0f;
-                        x.y = -cp2.NormalMass * b.y;
-                        vn1 = vc.K.ey.x * x.y + b.x;
-                        vn2 = 0.0f;
 
-                        if (x.y >= 0.0f && vn1 >= 0.0f)
+                        //x.x = Fix64.Zero;
+                        //x.y = -cp2.NormalMass * b.y;
+                        x = new FVector2(0, -cp2.NormalMass * b.y);
+
+                        vn1 = vc.K.ey.x * x.y + b.x;
+                        vn2 = Fix64.Zero;
+
+                        if (x.y >= Fix64.Zero && vn1 >= Fix64.Zero)
                         {
                             // Resubstitute for the incremental impulse
                             var d = x - a;
@@ -548,14 +556,14 @@ namespace VelcroPhysics.Dynamics.Solver
                             cp1.NormalImpulse = x.x;
                             cp2.NormalImpulse = x.y;
 
-#if B2_DEBUG_SOLVER
+#if B2_Debug_SOLVER
                             // Postconditions
                             dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
                             // Compute normal velocity
-                            vn2 = Vector2.Dot(dv2, normal);
+                            vn2 = FVector2.Dot(dv2, normal);
 
-                            Debug.Assert(Mathf.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
+                            UnityEngine.Debug.Assert(Fix64.Abs(vn2 - cp2.VelocityBias) < k_errorTol);
 #endif
                             break;
                         }
@@ -565,12 +573,15 @@ namespace VelcroPhysics.Dynamics.Solver
                         // 
                         // vn1 = b1
                         // vn2 = b2;
-                        x.x = 0.0f;
-                        x.y = 0.0f;
+
+                        //x.x = Fix64.Zero;
+                        //x.y = Fix64.Zero;
+                        x = FVector2.zero;
+
                         vn1 = b.x;
                         vn2 = b.y;
 
-                        if (vn1 >= 0.0f && vn2 >= 0.0f)
+                        if (vn1 >= Fix64.Zero && vn2 >= Fix64.Zero)
                         {
                             // Resubstitute for the incremental impulse
                             var d = x - a;
@@ -624,7 +635,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
         public bool SolvePositionConstraints()
         {
-            var minSeparation = 0.0f;
+            var minSeparation = Fix64.Zero;
 
             for (var i = 0; i < _count; ++i)
             {
@@ -663,11 +674,11 @@ namespace VelcroPhysics.Dynamics.Solver
                     var rB = point - cB;
 
                     // Track max constraint error.
-                    minSeparation = Mathf.Min(minSeparation, separation);
+                    minSeparation = Fix64.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
                     var C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop),
-                        -Settings.MaxLinearCorrection, 0.0f);
+                        -Settings.MaxLinearCorrection, Fix64.Zero);
 
                     // Compute the effective mass.
                     var rnA = MathUtils.Cross(rA, normal);
@@ -675,7 +686,7 @@ namespace VelcroPhysics.Dynamics.Solver
                     var K = mA + mB + iA * rnA * rnA + iB * rnB * rnB;
 
                     // Compute normal impulse
-                    var impulse = K > 0.0f ? -C / K : 0.0f;
+                    var impulse = K > Fix64.Zero ? -C / K : Fix64.Zero;
 
                     var P = impulse * normal;
 
@@ -695,13 +706,13 @@ namespace VelcroPhysics.Dynamics.Solver
 
             // We can't expect minSpeparation >= -b2_linearSlop because we don't
             // push the separation above -b2_linearSlop.
-            return minSeparation >= -3.0f * Settings.LinearSlop;
+            return minSeparation >= -3 * Settings.LinearSlop;
         }
 
         // Sequential position solver for position constraints.
         public bool SolveTOIPositionConstraints(int toiIndexA, int toiIndexB)
         {
-            var minSeparation = 0.0f;
+            var minSeparation = Fix64.Zero;
 
             for (var i = 0; i < _count; ++i)
             {
@@ -713,16 +724,16 @@ namespace VelcroPhysics.Dynamics.Solver
                 var localCenterB = pc.LocalCenterB;
                 var pointCount = pc.PointCount;
 
-                var mA = 0.0f;
-                var iA = 0.0f;
+                var mA = Fix64.Zero;
+                var iA = Fix64.Zero;
                 if (indexA == toiIndexA || indexA == toiIndexB)
                 {
                     mA = pc.InvMassA;
                     iA = pc.InvIA;
                 }
 
-                var mB = 0.0f;
-                var iB = 0.0f;
+                var mB = Fix64.Zero;
+                var iB = Fix64.Zero;
                 if (indexB == toiIndexA || indexB == toiIndexB)
                 {
                     mB = pc.InvMassB;
@@ -752,11 +763,11 @@ namespace VelcroPhysics.Dynamics.Solver
                     var rB = point - cB;
 
                     // Track max constraint error.
-                    minSeparation = Mathf.Min(minSeparation, separation);
+                    minSeparation = Fix64.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
                     var C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop),
-                        -Settings.MaxLinearCorrection, 0.0f);
+                        -Settings.MaxLinearCorrection, Fix64.Zero);
 
                     // Compute the effective mass.
                     var rnA = MathUtils.Cross(rA, normal);
@@ -764,7 +775,7 @@ namespace VelcroPhysics.Dynamics.Solver
                     var K = mA + mB + iA * rnA * rnA + iB * rnB * rnB;
 
                     // Compute normal impulse
-                    var impulse = K > 0.0f ? -C / K : 0.0f;
+                    var impulse = K > Fix64.Zero ? -C / K : Fix64.Zero;
 
                     var P = impulse * normal;
 
@@ -784,7 +795,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
             // We can't expect minSpeparation >= -b2_linearSlop because we don't
             // push the separation above -b2_linearSlop.
-            return minSeparation >= -1.5f * Settings.LinearSlop;
+            return minSeparation >= -(1 + FixedMath.C0p5) * Settings.LinearSlop;
         }
     }
 }

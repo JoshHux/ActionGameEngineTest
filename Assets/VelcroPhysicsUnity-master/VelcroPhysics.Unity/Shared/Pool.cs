@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using VelcroPhysics.Shared.Optimization;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {
@@ -38,7 +39,7 @@ namespace VelcroPhysics.Shared
 
         public IEnumerable<T> GetManyFromPool(int count)
         {
-            Debug.Assert(count != 0);
+            UnityEngine.Debug.Assert(count != 0);
 
             for (var i = 0; i < count; i++) yield return GetFromPool();
         }

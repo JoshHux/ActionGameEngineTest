@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Seidel
 {
@@ -11,7 +12,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         private Edge _cross;
 
         // AABB margin
-        private float _margin;
+        private Fix64 _margin;
 
         // Trapezoid container
         public HashSet<Trapezoid> Map;
@@ -19,7 +20,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         public TrapezoidalMap()
         {
             Map = new HashSet<Trapezoid>();
-            _margin = 50.0f;
+            _margin = 50;
             _bCross = null;
             _cross = null;
         }

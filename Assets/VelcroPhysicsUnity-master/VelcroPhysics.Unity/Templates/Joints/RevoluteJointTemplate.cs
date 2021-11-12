@@ -1,5 +1,5 @@
-using UnityEngine;
 using VelcroPhysics.Dynamics.VJoints;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.VJoints
 {
@@ -35,36 +35,36 @@ namespace VelcroPhysics.Templates.VJoints
         /// <summary>
         /// The local anchor point relative to bodyA's origin.
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point relative to bodyB's origin.
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// The lower angle for the VJoint limit (radians).
         /// </summary>
-        public float LowerAngle { get; set; }
+        public Fix64 LowerAngle { get; set; }
 
         /// <summary>
         /// The maximum motor torque used to achieve the desired motor speed. Usually in N-m.
         /// </summary>
-        public float MaxMotorTorque { get; set; }
+        public Fix64 MaxMotorTorque { get; set; }
 
         /// <summary>
         /// The desired motor speed. Usually in radians per second.
         /// </summary>
-        public float MotorSpeed { get; set; }
+        public Fix64 MotorSpeed { get; set; }
 
         /// <summary>
         /// The bodyB angle minus bodyA angle in the reference state (radians).
         /// </summary>
-        public float ReferenceAngle { get; set; }
+        public Fix64 ReferenceAngle { get; set; }
 
         /// <summary>
         /// The upper angle for the VJoint limit (radians).
         /// </summary>
-        public float UpperAngle { get; set; }
+        public Fix64 UpperAngle { get; set; }
     }
 }

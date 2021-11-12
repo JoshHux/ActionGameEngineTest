@@ -47,14 +47,16 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {
     internal static class DTSweep
     {
-        private const float PI_div2 = Mathf.PI / 2;
-        private const float PI_3div4 = 3 * Mathf.PI / 4;
+        //private const Fix64 PI_div2 = Fix64.Pi / 2;
+        private static Fix64 PI_div2 = Fix64.Pi / 2;
+        //private const Fix64 PI_3div4 = 3 * Fix64.Pi / 4;
+        private static Fix64 PI_3div4 = 3 * Fix64.Pi / 4;
 
         /// <summary>
         /// Triangulate simple polygon with holes
@@ -278,7 +280,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             }
             catch (PointOnEdgeException e)
             {
-                Debug.Log($"Skipping Edge: {e.Message}");
+                UnityEngine.Debug.Log($"Skipping Edge: {e.Message}");
             }
         }
 
@@ -490,7 +492,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet");
                 }
 
-                if (tcx.IsDebugEnabled) Debug.Log("EdgeEvent - Point on constrained edge");
+                if (tcx.IsDebugEnabled) UnityEngine.Debug.Log("EdgeEvent - Point on constrained edge");
                 return;
             }
 
@@ -513,7 +515,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet");
                 }
 
-                if (tcx.IsDebugEnabled) Debug.Log("EdgeEvent - Point on constrained edge");
+                if (tcx.IsDebugEnabled) UnityEngine.Debug.Log("EdgeEvent - Point on constrained edge");
                 return;
             }
 
@@ -704,7 +706,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         /// </summary>
         private static void FillAdvancingFront(DTSweepContext tcx, AdvancingFrontNode n)
         {
-            float angle;
+            Fix64 angle;
 
             // Fill right holes
             var node = n.Next;
@@ -782,7 +784,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             return exceedsPlus90DegreesOrIsNegative;
         }
 
-        private static float Angle(TriangulationPoint origin, TriangulationPoint pa, TriangulationPoint pb)
+        private static Fix64 Angle(TriangulationPoint origin, TriangulationPoint pa, TriangulationPoint pb)
         {
             /* Complex plane
             * ab = cosA +i*sinA
@@ -800,7 +802,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             var by = pb.Y - py;
             var x = ax * by - ay * bx;
             var y = ax * bx + ay * by;
-            var angle = Mathf.Atan2(x, y);
+            var angle = Fix64.Atan2(x, y);
             return angle;
         }
 
@@ -882,7 +884,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 
         private static bool IsShallow(DTSweepContext tcx, AdvancingFrontNode node)
         {
-            float height;
+            Fix64 height;
 
             if (tcx.Basin.leftHighest)
                 height = tcx.Basin.leftNode.Point.Y - node.Point.Y;
@@ -897,7 +899,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         /// </summary>
         /// <param name="node">middle node</param>
         /// <returns>the angle between 3 front nodes</returns>
-        private static float HoleAngle(AdvancingFrontNode node)
+        private static Fix64 HoleAngle(AdvancingFrontNode node)
         {
             // XXX: do we really need a signed angle for holeAngle?
             //      could possible save some cycles here
@@ -915,17 +917,17 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             var ay = node.Next.Point.Y - py;
             var bx = node.Prev.Point.X - px;
             var by = node.Prev.Point.Y - py;
-            return Mathf.Atan2(ax * by - ay * bx, ax * bx + ay * by);
+            return Fix64.Atan2(ax * by - ay * bx, ax * bx + ay * by);
         }
 
         /// <summary>
         /// The basin angle is decided against the horizontal line [1,0]
         /// </summary>
-        private static float BasinAngle(AdvancingFrontNode node)
+        private static Fix64 BasinAngle(AdvancingFrontNode node)
         {
             var ax = node.Point.X - node.Next.Next.Point.X;
             var ay = node.Point.Y - node.Next.Next.Point.Y;
-            return Mathf.Atan2(ay, ax);
+            return Fix64.Atan2(ay, ax);
         }
 
         /// <summary>

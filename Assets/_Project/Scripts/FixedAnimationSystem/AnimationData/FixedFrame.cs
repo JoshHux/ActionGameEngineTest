@@ -4,7 +4,7 @@ using FixMath.NET;
 namespace FixedAnimationSystem
 {
     [System.Serializable]
-    public class AnimFrame
+    public struct FixedFrame
     {
         public FVector3[] deltaPos;
 
@@ -13,7 +13,17 @@ namespace FixedAnimationSystem
         //essentially used as a container for the rotation of all bones
         public FVector4[] deltaRot;
 
-        public AnimFrame(UnityEngine.Vector3[] deltaPos, UnityEngine.Vector3[] deltaScale, UnityEngine.Quaternion[] deltaRot)
+        public IAnimationEvent[] events;
+
+        public FixedFrame(FVector3[] deltaPos, FVector3[] deltaScale, FVector4[] deltaRot)
+        {
+            this.deltaPos = deltaPos;
+            this.deltaScale = deltaScale;
+            this.deltaRot = deltaRot;
+            this.events = new IAnimationEvent[0];
+        }
+
+        public FixedFrame(UnityEngine.Vector3[] deltaPos, UnityEngine.Vector3[] deltaScale, UnityEngine.Quaternion[] deltaRot)
         {
 
             int len = deltaPos.Length;
@@ -56,6 +66,26 @@ namespace FixedAnimationSystem
             this.deltaPos = holdPos.ToArray();
             this.deltaScale = holdScale.ToArray();
             this.deltaRot = holdRot.ToArray();
+            this.events = new IAnimationEvent[0];
+        }
+
+        public static FixedFrame operator +(FixedFrame a, FixedFrame b)
+        {
+            //all deltas should have the same length, the number of transforms to keep track of doesn't change
+            int len = a.deltaPos.Length;
+            FVector3[] diffPos = new FVector3[len];
+            FVector3[] diffScale = new FVector3[len];
+            FVector4[] diffRot = new FVector4[len];
+
+            for (int i = 0; i < len; i++)
+            {
+                diffPos[i] = a.deltaPos[i] + b.deltaPos[i];
+                diffScale[i] = a.deltaScale[i] + b.deltaScale[i];
+                diffRot[i] = a.deltaRot[i] + b.deltaRot[i];
+            }
+
+            FixedFrame ret = new FixedFrame(diffPos, diffScale, diffRot);
+            return ret;
         }
     }
 }

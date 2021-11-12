@@ -1,23 +1,23 @@
-using UnityEngine;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.Solver
 {
     public sealed class ContactVelocityConstraint
     {
         public int ContactIndex;
-        public float Friction;
+        public Fix64 Friction;
         public int IndexA;
         public int IndexB;
-        public float InvIA, InvIB;
-        public float InvMassA, InvMassB;
+        public Fix64 InvIA, InvIB;
+        public Fix64 InvMassA, InvMassB;
         public Mat22 K;
-        public Vector2 Normal;
+        public FVector2 Normal;
         public Mat22 NormalMass;
         public int PointCount;
         public VelocityConstraintPoint[] Points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
-        public float Restitution;
-        public float TangentSpeed;
+        public Fix64 Restitution;
+        public Fix64 TangentSpeed;
 
         public ContactVelocityConstraint()
         {

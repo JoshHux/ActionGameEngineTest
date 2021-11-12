@@ -18,5 +18,10 @@ namespace FixMath.NET
             this.z = z;
             this.w = w;
         }
+
+        public static FVector4 operator +(FVector4 a, FVector4 b)
+        {
+            return new FVector4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+        }
     }
 }

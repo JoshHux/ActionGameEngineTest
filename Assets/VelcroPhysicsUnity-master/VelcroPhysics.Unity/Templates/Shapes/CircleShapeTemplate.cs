@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using VelcroPhysics.Collision.Shapes;
+﻿using VelcroPhysics.Collision.Shapes;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.Shapes
 {
@@ -12,6 +12,6 @@ namespace VelcroPhysics.Templates.Shapes
         /// <summary>
         /// Get or set the position of the circle
         /// </summary>
-        public Vector2 Position { get; set; }
+        public FVector2 Position { get; set; }
     }
 }

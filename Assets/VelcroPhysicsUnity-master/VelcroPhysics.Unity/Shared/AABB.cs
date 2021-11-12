@@ -1,6 +1,6 @@
-using UnityEngine;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {
@@ -12,53 +12,53 @@ namespace VelcroPhysics.Shared
         /// <summary>
         /// The lower vertex
         /// </summary>
-        public Vector2 LowerBound;
+        public FVector2 LowerBound;
 
         /// <summary>
         /// The upper vertex
         /// </summary>
-        public Vector2 UpperBound;
+        public FVector2 UpperBound;
 
-        public AABB(Vector2 min, Vector2 max)
+        public AABB(FVector2 min, FVector2 max)
             : this(ref min, ref max)
         {
         }
 
-        public AABB(Vector2 center, float width, float height)
-            : this(center - new Vector2(width / 2, height / 2), center + new Vector2(width / 2, height / 2))
+        public AABB(FVector2 center, Fix64 width, Fix64 height)
+            : this(center - new FVector2(width / 2, height / 2), center + new FVector2(width / 2, height / 2))
         {
         }
 
-        public AABB(ref Vector2 min, ref Vector2 max)
+        public AABB(ref FVector2 min, ref FVector2 max)
         {
-            LowerBound = new Vector2(Mathf.Min(min.x, max.x), Mathf.Min(min.y, max.y));
-            UpperBound = new Vector2(Mathf.Max(min.x, max.x), Mathf.Max(min.y, max.y));
+            LowerBound = new FVector2(Fix64.Min(min.x, max.x), Fix64.Min(min.y, max.y));
+            UpperBound = new FVector2(Fix64.Max(min.x, max.x), Fix64.Max(min.y, max.y));
         }
 
-        public float Width => UpperBound.x - LowerBound.x;
+        public Fix64 Width => UpperBound.x - LowerBound.x;
 
-        public float Height => UpperBound.y - LowerBound.y;
+        public Fix64 Height => UpperBound.y - LowerBound.y;
 
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>
-        public Vector2 Center => 0.5f * (LowerBound + UpperBound);
+        public FVector2 Center => FixedMath.C0p5 * (LowerBound + UpperBound);
 
         /// <summary>
         /// Get the extents of the AABB (half-widths).
         /// </summary>
-        public Vector2 Extents => 0.5f * (UpperBound - LowerBound);
+        public FVector2 Extents => FixedMath.C0p5 * (UpperBound - LowerBound);
 
         /// <summary>
         /// Get the perimeter length
         /// </summary>
-        public float Perimeter
+        public Fix64 Perimeter
         {
             get
             {
                 var wx = UpperBound.x - LowerBound.x;
                 var wy = UpperBound.y - LowerBound.y;
-                return 2.0f * (wx + wy);
+                return 2 * (wx + wy);
             }
         }
 
@@ -72,9 +72,9 @@ namespace VelcroPhysics.Shared
             {
                 var vertices = new Vertices(4);
                 vertices.Add(UpperBound);
-                vertices.Add(new Vector2(UpperBound.x, LowerBound.y));
+                vertices.Add(new FVector2(UpperBound.x, LowerBound.y));
                 vertices.Add(LowerBound);
-                vertices.Add(new Vector2(LowerBound.x, UpperBound.y));
+                vertices.Add(new FVector2(LowerBound.x, UpperBound.y));
                 return vertices;
             }
         }
@@ -87,7 +87,7 @@ namespace VelcroPhysics.Shared
         /// <summary>
         /// Second quadrant
         /// </summary>
-        public AABB Q2 => new AABB(new Vector2(LowerBound.x, Center.y), new Vector2(Center.x, UpperBound.y));
+        public AABB Q2 => new AABB(new FVector2(LowerBound.x, Center.y), new FVector2(Center.x, UpperBound.y));
 
         /// <summary>
         /// Third quadrant
@@ -97,7 +97,7 @@ namespace VelcroPhysics.Shared
         /// <summary>
         /// Forth quadrant
         /// </summary>
-        public AABB Q4 => new AABB(new Vector2(Center.x, LowerBound.y), new Vector2(UpperBound.x, Center.y));
+        public AABB Q4 => new AABB(new FVector2(Center.x, LowerBound.y), new FVector2(UpperBound.x, Center.y));
 
         /// <summary>
         /// Verify that the bounds are sorted. And the bounds are valid numbers (not NaN).
@@ -108,7 +108,7 @@ namespace VelcroPhysics.Shared
         public bool IsValid()
         {
             var d = UpperBound - LowerBound;
-            var valid = d.x >= 0.0f && d.y >= 0.0f;
+            var valid = d.x >= Fix64.Zero && d.y >= Fix64.Zero;
             return valid && LowerBound.IsValid() && UpperBound.IsValid();
         }
 
@@ -118,8 +118,8 @@ namespace VelcroPhysics.Shared
         /// <param name="aabb">The AABB.</param>
         public void Combine(ref AABB aabb)
         {
-            LowerBound = Vector2.Min(LowerBound, aabb.LowerBound);
-            UpperBound = Vector2.Max(UpperBound, aabb.UpperBound);
+            LowerBound = FVector2.Min(LowerBound, aabb.LowerBound);
+            UpperBound = FVector2.Max(UpperBound, aabb.UpperBound);
         }
 
         /// <summary>
@@ -129,8 +129,8 @@ namespace VelcroPhysics.Shared
         /// <param name="aabb2">The aabb2.</param>
         public void Combine(ref AABB aabb1, ref AABB aabb2)
         {
-            LowerBound = Vector2.Min(aabb1.LowerBound, aabb2.LowerBound);
-            UpperBound = Vector2.Max(aabb1.UpperBound, aabb2.UpperBound);
+            LowerBound = FVector2.Min(aabb1.LowerBound, aabb2.LowerBound);
+            UpperBound = FVector2.Max(aabb1.UpperBound, aabb2.UpperBound);
         }
 
         /// <summary>
@@ -156,11 +156,11 @@ namespace VelcroPhysics.Shared
         /// <returns>
         /// <c>true</c> if it contains the specified point; otherwise, <c>false</c>.
         /// </returns>
-        public bool Contains(ref Vector2 point)
+        public bool Contains(ref FVector2 point)
         {
-            //using epsilon to try and guard against float rounding errors.
-            return point.x > LowerBound.x + float.Epsilon && point.x < UpperBound.x - float.Epsilon &&
-                   point.y > LowerBound.y + float.Epsilon && point.y < UpperBound.y - float.Epsilon;
+            //using epsilon to try and guard against Fix64 rounding errors.
+            return point.x > LowerBound.x + Settings.Epsilon && point.x < UpperBound.x - Settings.Epsilon &&
+                   point.y > LowerBound.y + Settings.Epsilon && point.y < UpperBound.y - Settings.Epsilon;
         }
 
         /// <summary>
@@ -189,14 +189,14 @@ namespace VelcroPhysics.Shared
 
             output = new RayCastOutput();
 
-            var tmin = -Settings.MaxFloat;
-            var tmax = Settings.MaxFloat;
+            var tmin = -Settings.MaxFix64;
+            var tmax = Settings.MaxFix64;
 
             var p = input.Point1;
             var d = input.Point2 - input.Point1;
             var absD = MathUtils.Abs(d);
 
-            var normal = Vector2.zero;
+            var normal = FVector2.zero;
 
             for (var i = 0; i < 2; ++i)
             {
@@ -214,32 +214,32 @@ namespace VelcroPhysics.Shared
                 {
                     var d_i = i == 0 ? d.x : d.y;
 
-                    var inv_d = 1.0f / d_i;
+                    var inv_d = Fix64.One / d_i;
                     var t1 = (lowerBound_i - p_i) * inv_d;
                     var t2 = (upperBound_i - p_i) * inv_d;
 
                     // Sign of the normal vector.
-                    var s = -1.0f;
+                    var s = -Fix64.One;
 
                     if (t1 > t2)
                     {
                         MathUtils.Swap(ref t1, ref t2);
-                        s = 1.0f;
+                        s = Fix64.One;
                     }
 
                     // Push the min up
                     if (t1 > tmin)
                     {
                         if (i == 0)
-                            normal.x = s;
+                            normal = new FVector2(s, normal.y);
                         else
-                            normal.y = s;
+                            normal = new FVector2(normal.x, s);
 
                         tmin = t1;
                     }
 
                     // Pull the max down
-                    tmax = Mathf.Min(tmax, t2);
+                    tmax = Fix64.Min(tmax, t2);
 
                     if (tmin > tmax) return false;
                 }
@@ -247,7 +247,7 @@ namespace VelcroPhysics.Shared
 
             // Does the ray start inside the box?
             // Does the ray intersect beyond the max fraction?
-            if (doInteriorCheck && (tmin < 0.0f || input.MaxFraction < tmin)) return false;
+            if (doInteriorCheck && (tmin < Fix64.Zero || input.MaxFraction < tmin)) return false;
 
             // Intersection.
             output.Fraction = tmin;

@@ -3,14 +3,14 @@
 * Copyright (c) 2017 Ian Qvist
 */
 
-using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
 using VTransform = VelcroPhysics.Shared.VTransform;
 
 namespace VelcroPhysics.Extensions.DebugView
 {
-    /// Implement and register this class with a World to provide debug drawing of physics
+    /// Implement and register this class with a World to provide UnityEngine.Debug drawing of physics
     /// entities in your game.
     public abstract class DebugViewBase
     {
@@ -22,7 +22,7 @@ namespace VelcroPhysics.Extensions.DebugView
         protected World World { get; }
 
         /// <summary>
-        /// Gets or sets the debug view flags.
+        /// Gets or sets the UnityEngine.Debug view flags.
         /// </summary>
         /// <value>The flags.</value>
         public DebugViewFlags Flags { get; set; }
@@ -53,7 +53,7 @@ namespace VelcroPhysics.Extensions.DebugView
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawPolygon(Vector2[] vertices, int count, float red, float blue, float green,
+        public abstract void DrawPolygon(FVector2[] vertices, int count, Fix64 red, Fix64 blue, Fix64 green,
             bool closed = true);
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace VelcroPhysics.Extensions.DebugView
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawSolidPolygon(Vector2[] vertices, int count, float red, float blue, float green);
+        public abstract void DrawSolidPolygon(FVector2[] vertices, int count, Fix64 red, Fix64 blue, Fix64 green);
 
         /// <summary>
         /// Draw a circle.
@@ -74,7 +74,7 @@ namespace VelcroPhysics.Extensions.DebugView
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawCircle(Vector2 center, float radius, float red, float blue, float green);
+        public abstract void DrawCircle(FVector2 center, Fix64 radius, Fix64 red, Fix64 blue, Fix64 green);
 
         /// <summary>
         /// Draw a solid circle.
@@ -85,8 +85,8 @@ namespace VelcroPhysics.Extensions.DebugView
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float blue,
-            float green);
+        public abstract void DrawSolidCircle(FVector2 center, Fix64 radius, FVector2 axis, Fix64 red, Fix64 blue,
+            Fix64 green);
 
         /// <summary>
         /// Draw a line segment.
@@ -96,7 +96,7 @@ namespace VelcroPhysics.Extensions.DebugView
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawSegment(Vector2 start, Vector2 end, float red, float blue, float green);
+        public abstract void DrawSegment(FVector2 start, FVector2 end, Fix64 red, Fix64 blue, Fix64 green);
 
         /// <summary>
         /// Draw a VTransform. Choose your own length scale.

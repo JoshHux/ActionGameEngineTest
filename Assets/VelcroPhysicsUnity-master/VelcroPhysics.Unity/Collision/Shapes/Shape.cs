@@ -24,6 +24,7 @@ using UnityEngine;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -34,9 +35,9 @@ namespace VelcroPhysics.Collision.Shapes
     /// </summary>
     public abstract class Shape
     {
-        internal float _2radius;
-        internal float _density;
-        internal float _radius;
+        internal Fix64 _2radius;
+        internal Fix64 _density;
+        internal Fix64 _radius;
 
         /// <summary>
         /// Contains the properties of the shape such as:
@@ -47,10 +48,10 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         public MassData MassData;
 
-        protected Shape(ShapeType type, float radius = 0, float density = 0)
+        protected Shape(ShapeType type, Fix64 radius = new Fix64(), Fix64 density = new Fix64())
         {
-            Debug.Assert(radius >= 0);
-            Debug.Assert(density >= 0);
+            UnityEngine.Debug.Assert(radius >= 0);
+            UnityEngine.Debug.Assert(density >= 0);
 
             ShapeType = type;
             _radius = radius;
@@ -75,12 +76,12 @@ namespace VelcroPhysics.Collision.Shapes
         /// Changing the density causes a recalculation of shape properties.
         /// </summary>
         /// <value>The density.</value>
-        public float Density
+        public Fix64 Density
         {
             get => _density;
             set
             {
-                Debug.Assert(value >= 0);
+                UnityEngine.Debug.Assert(value >= 0);
 
                 _density = value;
                 ComputeProperties();
@@ -91,12 +92,12 @@ namespace VelcroPhysics.Collision.Shapes
         /// Radius of the Shape
         /// Changing the radius causes a recalculation of shape properties.
         /// </summary>
-        public float Radius
+        public Fix64 Radius
         {
             get => _radius;
             set
             {
-                Debug.Assert(value >= 0);
+                UnityEngine.Debug.Assert(value >= 0);
 
                 _radius = value;
                 _2radius = _radius * _radius;
@@ -118,7 +119,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// <param name="VTransform">The shape world VTransform.</param>
         /// <param name="point">A point in world coordinates.</param>
         /// <returns>True if the point is inside the shape</returns>
-        public abstract bool TestPoint(ref VTransform VTransform, ref Vector2 point);
+        public abstract bool TestPoint(ref VTransform VTransform, ref FVector2 point);
 
         /// <summary>
         /// Cast a ray against a child shape.

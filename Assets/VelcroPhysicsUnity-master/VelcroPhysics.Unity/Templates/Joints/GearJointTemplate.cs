@@ -1,4 +1,5 @@
 using VelcroPhysics.Dynamics.VJoints;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.VJoints
 {
@@ -21,11 +22,11 @@ namespace VelcroPhysics.Templates.VJoints
         /// <summary>
         /// The gear ratio.
         /// </summary>
-        public float Ratio { get; set; }
+        public Fix64 Ratio { get; set; }
 
         public override void SetDefaults()
         {
-            Ratio = 1.0f;
+            Ratio = Fix64.One;
         }
     }
 }

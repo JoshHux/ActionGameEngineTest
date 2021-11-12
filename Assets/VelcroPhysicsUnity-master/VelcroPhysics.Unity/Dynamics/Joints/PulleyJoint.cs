@@ -20,10 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using UnityEngine;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
@@ -51,23 +51,23 @@ namespace VelcroPhysics.Dynamics.VJoints
     public class PulleyVJoint : VJoint
     {
         // Solver shared
-        private float _impulse;
+        private Fix64 _impulse;
 
         // Solver temp
         private int _indexA;
 
         private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
-        private float _invMassB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _mass;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _uA;
-        private Vector2 _uB;
+        private Fix64 _invIA;
+        private Fix64 _invIB;
+        private Fix64 _invMassA;
+        private Fix64 _invMassB;
+        private FVector2 _localCenterA;
+        private FVector2 _localCenterB;
+        private Fix64 _mass;
+        private FVector2 _rA;
+        private FVector2 _rB;
+        private FVector2 _uA;
+        private FVector2 _uB;
 
         internal PulleyVJoint()
         {
@@ -85,8 +85,8 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <param name="worldAnchorB">The world anchor for the second body.</param>
         /// <param name="ratio">The ratio.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public PulleyVJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 worldAnchorA,
-            Vector2 worldAnchorB, float ratio, bool useWorldCoordinates = false)
+        public PulleyVJoint(Body bodyA, Body bodyB, FVector2 anchorA, FVector2 anchorB, FVector2 worldAnchorA,
+            FVector2 worldAnchorB, Fix64 ratio, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             VJointType = VJointType.Pulley;
@@ -115,52 +115,52 @@ namespace VelcroPhysics.Dynamics.VJoints
                 LengthB = dB.magnitude;
             }
 
-            Debug.Assert(ratio != 0.0f);
-            Debug.Assert(ratio > Settings.Epsilon);
+            UnityEngine.Debug.Assert(ratio != Fix64.Zero);
+            UnityEngine.Debug.Assert(ratio > Settings.Epsilon);
 
             Ratio = ratio;
             Constant = LengthA + ratio * LengthB;
-            _impulse = 0.0f;
+            _impulse = Fix64.Zero;
         }
 
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// Get the first world anchor.
         /// </summary>
         /// <value></value>
-        public sealed override Vector2 WorldAnchorA { get; set; }
+        public sealed override FVector2 WorldAnchorA { get; set; }
 
         /// <summary>
         /// Get the second world anchor.
         /// </summary>
         /// <value></value>
-        public sealed override Vector2 WorldAnchorB { get; set; }
+        public sealed override FVector2 WorldAnchorB { get; set; }
 
         /// <summary>
         /// Get the current length of the segment attached to body1.
         /// </summary>
         /// <value></value>
-        public float LengthA { get; set; }
+        public Fix64 LengthA { get; set; }
 
         /// <summary>
         /// Get the current length of the segment attached to body2.
         /// </summary>
         /// <value></value>
-        public float LengthB { get; set; }
+        public Fix64 LengthB { get; set; }
 
         /// <summary>
         /// The current length between the anchor point on BodyA and WorldAnchorA
         /// </summary>
-        public float CurrentLengthA
+        public Fix64 CurrentLengthA
         {
             get
             {
@@ -174,7 +174,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The current length between the anchor point on BodyB and WorldAnchorB
         /// </summary>
-        public float CurrentLengthB
+        public Fix64 CurrentLengthB
         {
             get
             {
@@ -189,20 +189,20 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// Get the pulley ratio.
         /// </summary>
         /// <value></value>
-        public float Ratio { get; set; }
+        public Fix64 Ratio { get; set; }
 
         //Velcro note: Only used for serialization.
-        internal float Constant { get; set; }
+        internal Fix64 Constant { get; set; }
 
-        public override Vector2 GetReactionForce(float invDt)
+        public override FVector2 GetReactionForce(Fix64 invDt)
         {
             var P = _impulse * _uB;
             return invDt * P;
         }
 
-        public override float GetReactionTorque(float invDt)
+        public override Fix64 GetReactionTorque(Fix64 invDt)
         {
-            return 0.0f;
+            return Fix64.Zero;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
@@ -238,15 +238,15 @@ namespace VelcroPhysics.Dynamics.VJoints
             var lengthA = _uA.magnitude;
             var lengthB = _uB.magnitude;
 
-            if (lengthA > 10.0f * Settings.LinearSlop)
-                _uA *= 1.0f / lengthA;
+            if (lengthA > 10 * Settings.LinearSlop)
+                _uA *= Fix64.One / lengthA;
             else
-                _uA = Vector2.zero;
+                _uA = FVector2.zero;
 
-            if (lengthB > 10.0f * Settings.LinearSlop)
-                _uB *= 1.0f / lengthB;
+            if (lengthB > 10 * Settings.LinearSlop)
+                _uB *= Fix64.One / lengthB;
             else
-                _uB = Vector2.zero;
+                _uB = FVector2.zero;
 
             // Compute effective mass.
             var ruA = MathUtils.Cross(_rA, _uA);
@@ -257,7 +257,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             _mass = mA + Ratio * Ratio * mB;
 
-            if (_mass > 0.0f) _mass = 1.0f / _mass;
+            if (_mass > Fix64.Zero) _mass = Fix64.One / _mass;
 
             if (Settings.EnableWarmstarting)
             {
@@ -275,7 +275,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = 0.0f;
+                _impulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -294,7 +294,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             var vpA = vA + MathUtils.Cross(wA, _rA);
             var vpB = vB + MathUtils.Cross(wB, _rB);
 
-            var Cdot = -Vector2.Dot(_uA, vpA) - Ratio * Vector2.Dot(_uB, vpB);
+            var Cdot = -FVector2.Dot(_uA, vpA) - Ratio * FVector2.Dot(_uB, vpB);
             var impulse = -_mass * Cdot;
             _impulse += impulse;
 
@@ -330,15 +330,15 @@ namespace VelcroPhysics.Dynamics.VJoints
             var lengthA = uA.magnitude;
             var lengthB = uB.magnitude;
 
-            if (lengthA > 10.0f * Settings.LinearSlop)
-                uA *= 1.0f / lengthA;
+            if (lengthA > 10 * Settings.LinearSlop)
+                uA *= Fix64.One / lengthA;
             else
-                uA = Vector2.zero;
+                uA = FVector2.zero;
 
-            if (lengthB > 10.0f * Settings.LinearSlop)
-                uB *= 1.0f / lengthB;
+            if (lengthB > 10 * Settings.LinearSlop)
+                uB *= Fix64.One / lengthB;
             else
-                uB = Vector2.zero;
+                uB = FVector2.zero;
 
             // Compute effective mass.
             var ruA = MathUtils.Cross(rA, uA);
@@ -349,10 +349,10 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             var mass = mA + Ratio * Ratio * mB;
 
-            if (mass > 0.0f) mass = 1.0f / mass;
+            if (mass > Fix64.Zero) mass = Fix64.One / mass;
 
             var C = Constant - lengthA - Ratio * lengthB;
-            var linearError = Mathf.Abs(C);
+            var linearError = Fix64.Abs(C);
 
             var impulse = -mass * C;
 

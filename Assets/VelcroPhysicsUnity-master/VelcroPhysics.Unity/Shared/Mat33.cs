@@ -1,5 +1,5 @@
-using UnityEngine;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {
@@ -8,7 +8,7 @@ namespace VelcroPhysics.Shared
     /// </summary>
     public struct Mat33
     {
-        public Vector3 ex, ey, ez;
+        public FVector3 ex, ey, ez;
 
         /// <summary>
         /// Construct this matrix using columns.
@@ -16,7 +16,7 @@ namespace VelcroPhysics.Shared
         /// <param name="c1">The c1.</param>
         /// <param name="c2">The c2.</param>
         /// <param name="c3">The c3.</param>
-        public Mat33(Vector3 c1, Vector3 c2, Vector3 c3)
+        public Mat33(FVector3 c1, FVector3 c2, FVector3 c3)
         {
             ex = c1;
             ey = c2;
@@ -28,9 +28,9 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetZero()
         {
-            ex = Vector3.zero;
-            ey = Vector3.zero;
-            ez = Vector3.zero;
+            ex = FVector3.zero;
+            ey = FVector3.zero;
+            ez = FVector3.zero;
         }
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        public Vector3 Solve33(Vector3 b)
+        public FVector3 Solve33(FVector3 b)
         {
-            var det = Vector3.Dot(ex, Vector3.Cross(ey, ez));
-            if (det != 0.0f) det = 1.0f / det;
+            var det = FVector3.Dot(ex, FVector3.Cross(ey, ez));
+            if (det !=Fix64.Zero) det =Fix64.One / det;
 
-            return new Vector3(det * Vector3.Dot(b, Vector3.Cross(ey, ez)), det * Vector3.Dot(ex, Vector3.Cross(b, ez)),
-                det * Vector3.Dot(ex, Vector3.Cross(ey, b)));
+            return new FVector3(det * FVector3.Dot(b, FVector3.Cross(ey, ez)), det * FVector3.Dot(ex, FVector3.Cross(b, ez)),
+                det * FVector3.Dot(ex, FVector3.Cross(ey, b)));
         }
 
         /// <summary>
@@ -55,44 +55,44 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        public Vector2 Solve22(Vector2 b)
+        public FVector2 Solve22(FVector2 b)
         {
-            float a11 = ex.x, a12 = ey.x, a21 = ex.y, a22 = ey.y;
+            Fix64 a11 = ex.x, a12 = ey.x, a21 = ex.y, a22 = ey.y;
             var det = a11 * a22 - a12 * a21;
 
-            if (det != 0.0f) det = 1.0f / det;
+            if (det !=Fix64.Zero) det =Fix64.One / det;
 
-            return new Vector2(det * (a22 * b.x - a12 * b.y), det * (a11 * b.y - a21 * b.x));
+            return new FVector2(det * (a22 * b.x - a12 * b.y), det * (a11 * b.y - a21 * b.x));
         }
 
         /// Get the inverse of this matrix as a 2-by-2.
         /// Returns the zero matrix if singular.
         public void GetInverse22(ref Mat33 M)
         {
-            float a = ex.x, b = ey.x, c = ex.y, d = ey.y;
+            Fix64 a = ex.x, b = ey.x, c = ex.y, d = ey.y;
             var det = a * d - b * c;
-            if (det != 0.0f) det = 1.0f / det;
+            if (det !=Fix64.Zero) det =Fix64.One / det;
 
             M.ex.x = det * d;
             M.ey.x = -det * b;
-            M.ex.z = 0.0f;
+            M.ex.z =Fix64.Zero;
             M.ex.y = -det * c;
             M.ey.y = det * a;
-            M.ey.z = 0.0f;
-            M.ez.x = 0.0f;
-            M.ez.y = 0.0f;
-            M.ez.z = 0.0f;
+            M.ey.z =Fix64.Zero;
+            M.ez.x =Fix64.Zero;
+            M.ez.y =Fix64.Zero;
+            M.ez.z =Fix64.Zero;
         }
 
         /// Get the symmetric inverse of this matrix as a 3-by-3.
         /// Returns the zero matrix if singular.
         public void GetSymInverse33(ref Mat33 M)
         {
-            var det = MathUtils.Dot(ex, MathUtils.Cross((Vector3) ey, ez));
-            if (det != 0.0f) det = 1.0f / det;
+            var det = MathUtils.Dot(ex, MathUtils.Cross((FVector3) ey, ez));
+            if (det !=Fix64.Zero) det =Fix64.One / det;
 
-            float a11 = ex.x, a12 = ey.x, a13 = ez.x;
-            float a22 = ey.y, a23 = ez.y;
+            Fix64 a11 = ex.x, a12 = ey.x, a13 = ez.x;
+            Fix64 a22 = ey.y, a23 = ez.y;
             var a33 = ez.z;
 
             M.ex.x = det * (a22 * a33 - a23 * a23);

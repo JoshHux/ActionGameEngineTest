@@ -1,4 +1,5 @@
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Dynamics;
 
 public class ParentConstraint
@@ -8,10 +9,10 @@ public class ParentConstraint
 
     private Body child;
 
-    public Vector2 childOffset;
-    public float childRotation;
+    public FVector2 childOffset;
+    public Fix64 childRotation;
 
-    public ParentConstraint(Body parent, Body child, Vector2 childOffset, float childRot)
+    public ParentConstraint(Body parent, Body child, FVector2 childOffset, Fix64 childRot)
     {
         this.parent = parent;
         this.child = child;
@@ -22,8 +23,8 @@ public class ParentConstraint
 
     public void ParentUpdate()
     {
-        Vector2 newPos = childOffset + parent.Position;
-        float newRot = childRotation + parent.Rotation;
+        FVector2 newPos = childOffset + parent.Position;
+        Fix64 newRot = childRotation + parent.Rotation;
         child.SetVTransformIgnoreContacts(ref newPos, newRot);
     }
 }

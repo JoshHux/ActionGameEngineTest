@@ -1,4 +1,4 @@
-using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {
@@ -8,25 +8,25 @@ namespace VelcroPhysics.Shared
     public struct Rot
     {
         /// Sine and cosine
-        public float s,
+        public Fix64 s,
             c;
 
         /// <summary>
         /// Initialize from an angle in radians
         /// </summary>
         /// <param name="angle">Angle in radians</param>
-        public Rot(float angle)
+        public Rot(Fix64 angle)
         {
             // TODO_ERIN optimize
-            s = Mathf.Sin(angle);
-            c = Mathf.Cos(angle);
+            s = Fix64.Sin(angle);
+            c = Fix64.Cos(angle);
         }
 
         /// <summary>
         /// Set using an angle in radians.
         /// </summary>
         /// <param name="angle"></param>
-        public void Set(float angle)
+        public void Set(Fix64 angle)
         {
             //Velcro: Optimization
             if (angle == 0)
@@ -37,8 +37,8 @@ namespace VelcroPhysics.Shared
             else
             {
                 // TODO_ERIN optimize
-                s = Mathf.Sin(angle);
-                c = Mathf.Cos(angle);
+                s = Fix64.Sin(angle);
+                c = Fix64.Cos(angle);
             }
         }
 
@@ -47,32 +47,32 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetIdentity()
         {
-            s = 0.0f;
-            c = 1.0f;
+            s =Fix64.Zero;
+            c =Fix64.One;
         }
 
         /// <summary>
         /// Get the angle in radians
         /// </summary>
-        public float GetAngle()
+        public Fix64 GetAngle()
         {
-            return Mathf.Atan2(s, c);
+            return Fix64.Atan2(s, c);
         }
 
         /// <summary>
         /// Get the x-axis
         /// </summary>
-        public Vector2 GetXAxis()
+        public FVector2 GetXAxis()
         {
-            return new Vector2(c, s);
+            return new FVector2(c, s);
         }
 
         /// <summary>
         /// Get the y-axis
         /// </summary>
-        public Vector2 GetYAxis()
+        public FVector2 GetYAxis()
         {
-            return new Vector2(-s, c);
+            return new FVector2(-s, c);
         }
     }
 }

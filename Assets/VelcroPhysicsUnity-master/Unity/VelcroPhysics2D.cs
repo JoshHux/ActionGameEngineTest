@@ -1,4 +1,5 @@
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Collision.Shapes;
 public class VelcroPhysics2D
 {
@@ -7,7 +8,7 @@ public class VelcroPhysics2D
     {
         return null;
     }
-    public static VelcroBody[] OverlapBoxAll(Vector2 point, Vector2 size, float angle, int layerMask = 0)
+    public static VelcroBody[] OverlapBoxAll(FVector2 point, FVector2 size, Fix64 angle, int layerMask = 0)
     {
         return null;
     }

@@ -26,6 +26,7 @@ using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared.Optimization;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -58,7 +59,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             DistanceOutput output;
             DistanceGJK.ComputeDistance(ref input, out output, out cache);
 
-            return output.Distance < 10.0f * Settings.Epsilon;
+            return output.Distance < 10 * Settings.Epsilon;
         }
 
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
@@ -118,7 +119,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <param name="vertexIndexA">The vertex index A.</param>
         /// <returns></returns>
         internal static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn,
-            Vector2 normal, float offset, int vertexIndexA)
+            FVector2 normal, Fix64 offset, int vertexIndexA)
         {
             vOut = new FixedArray2<ClipVertex>();
 
@@ -126,15 +127,15 @@ namespace VelcroPhysics.Collision.Narrowphase
             var numOut = 0;
 
             // Calculate the distance of end points to the line
-            var distance0 = Vector2.Dot(normal, vIn.Value0.V) - offset;
-            var distance1 = Vector2.Dot(normal, vIn.Value1.V) - offset;
+            var distance0 = FVector2.Dot(normal, vIn.Value0.V) - offset;
+            var distance1 = FVector2.Dot(normal, vIn.Value1.V) - offset;
 
             // If the points are behind the plane
-            if (distance0 <= 0.0f) vOut[numOut++] = vIn.Value0;
-            if (distance1 <= 0.0f) vOut[numOut++] = vIn.Value1;
+            if (distance0 <=Fix64.Zero) vOut[numOut++] = vIn.Value0;
+            if (distance1 <=Fix64.Zero) vOut[numOut++] = vIn.Value1;
 
             // If the points are on different sides of the plane
-            if (distance0 * distance1 < 0.0f)
+            if (distance0 * distance1 <Fix64.Zero)
             {
                 // Find intersection point of edge and plane
                 var interp = distance0 / (distance0 - distance1);

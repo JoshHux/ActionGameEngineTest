@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay
 {
@@ -38,9 +39,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
     {
         // List of edges this point constitutes an upper ending point (CDT)
 
-        public float X, Y;
+        public Fix64 X, Y;
 
-        public TriangulationPoint(float x, float y)
+        public TriangulationPoint(Fix64 x, Fix64 y)
         {
             X = x;
             Y = y;
@@ -48,13 +49,13 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
 
         public List<DTSweepConstraint> Edges { get; private set; }
 
-        public float Xf
+        public Fix64 Xf
         {
             get => X;
             set => X = value;
         }
 
-        public float Yf
+        public Fix64 Yf
         {
             get => Y;
             set => Y = value;

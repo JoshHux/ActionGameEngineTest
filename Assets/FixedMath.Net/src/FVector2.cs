@@ -24,6 +24,7 @@ namespace FixMath.NET
     public struct FVector2
     {
         public static FVector2 zero { get { return new FVector2(Fix64.Zero, Fix64.Zero); } }
+        public static FVector2 one { get { return new FVector2(Fix64.One, Fix64.One); } }
 
         public static Fix64 Dot(FVector2 a, FVector2 b)
         {
@@ -64,6 +65,42 @@ namespace FixMath.NET
             this.y = y;
         }
 
+        public void Normalize()
+        {
+            this = new FVector2(this.normalized.x, this.normalized.y);
+        }
+
+        public static Fix64 Distance(FVector2 pos1, FVector2 pos2)
+        {
+            FVector2 difference = pos2 - pos1;
+
+            Fix64 ret = difference.magnitude;
+
+            return ret;
+        }
+
+        public static FVector2 Min(FVector2 a, FVector2 b)
+        {
+            var xMin = Fix64.Min(a.x, b.x);
+            var yMin = Fix64.Min(a.y, b.y);
+            var ret = new FVector2(xMin, yMin);
+            return ret;
+        }
+
+        public static FVector2 Max(FVector2 a, FVector2 b)
+        {
+
+            var xMax = Fix64.Max(a.x, b.x);
+            var yMax = Fix64.Max(a.y, b.y);
+            var ret = new FVector2(xMax, yMax);
+            return ret;
+        }
+
+        public static FVector2 operator *(FVector2 a, FVector2 b)
+        {
+            return new FVector2(a.x * b.x, a.y * b.y);
+        }
+
         public static FVector2 operator *(FVector2 a, Fix64 b)
         {
             return new FVector2(a.x * b, a.y * b);
@@ -72,6 +109,21 @@ namespace FixMath.NET
         public static FVector2 operator *(Fix64 a, FVector2 b)
         {
             return new FVector2(b.x * a, b.y * a);
+        }
+
+        public static FVector2 operator *(int a, FVector2 b)
+        {
+            return new FVector2(b.x * a, b.y * a);
+        }
+
+        public static FVector2 operator /(FVector2 a, int b)
+        {
+            return new FVector2(a.x / b, a.y / b);
+        }
+
+        public static FVector2 operator /(FVector2 a, Fix64 b)
+        {
+            return new FVector2(a.x / b, a.y / b);
         }
 
         public static FVector2 operator +(FVector2 a, FVector2 b)
@@ -87,6 +139,33 @@ namespace FixMath.NET
         public static FVector2 operator -(FVector2 a)
         {
             return new FVector2(-a.x, -a.y);
+        }
+
+        public static bool operator ==(FVector2 a, FVector2 b)
+        {
+            bool matchX = a.x == b.x;
+            bool matchY = a.y == b.y;
+            bool ret = matchX && matchY;
+            return ret;
+        }
+
+        public static bool operator !=(FVector2 a, FVector2 b)
+        {
+            bool matchX = a.x != b.x;
+            bool matchY = a.y != b.y;
+            bool ret = matchX || matchY;
+            return ret;
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            return (obj is FVector2) && (((FVector2)obj) == this);
+        }
+
+        public override int GetHashCode()
+        {
+            return x.GetHashCode()<<32|y.GetHashCode();
         }
     }
 }

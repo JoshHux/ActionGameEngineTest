@@ -28,6 +28,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay
 {
@@ -36,7 +37,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
      */
     internal class TriangulationUtil
     {
-        public static float EPSILON = 1e-12f;
+        //public static Fix64 EPSILON = 1e-12f;
+        public static Fix64 EPSILON = Settings.Epsilon;
 
         /// <summary>
         /// Requirements:
@@ -106,28 +108,28 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
         public static bool InScanArea(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc,
                                       TriangulationPoint pd)
         {
-            float pdx = pd.X;
-            float pdy = pd.Y;
-            float adx = pa.X - pdx;
-            float ady = pa.Y - pdy;
-            float bdx = pb.X - pdx;
-            float bdy = pb.Y - pdy;
+            Fix64 pdx = pd.X;
+            Fix64 pdy = pd.Y;
+            Fix64 adx = pa.X - pdx;
+            Fix64 ady = pa.Y - pdy;
+            Fix64 bdx = pb.X - pdx;
+            Fix64 bdy = pb.Y - pdy;
 
-            float adxbdy = adx*bdy;
-            float bdxady = bdx*ady;
-            float oabd = adxbdy - bdxady;
+            Fix64 adxbdy = adx*bdy;
+            Fix64 bdxady = bdx*ady;
+            Fix64 oabd = adxbdy - bdxady;
             //        oabd = orient2d(pa,pb,pd);
             if (oabd <= 0)
             {
                 return false;
             }
 
-            float cdx = pc.X - pdx;
-            float cdy = pc.Y - pdy;
+            Fix64 cdx = pc.X - pdx;
+            Fix64 cdy = pc.Y - pdy;
 
-            float cdxady = cdx*ady;
-            float adxcdy = adx*cdy;
-            float ocad = cdxady - adxcdy;
+            Fix64 cdxady = cdx*ady;
+            Fix64 adxcdy = adx*cdy;
+            Fix64 ocad = cdxady - adxcdy;
             //      ocad = orient2d(pc,pa,pd);
             if (ocad <= 0)
             {

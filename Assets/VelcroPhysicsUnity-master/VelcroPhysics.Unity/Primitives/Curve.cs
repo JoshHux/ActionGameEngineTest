@@ -33,6 +33,8 @@ SOFTWARE.
 #endregion License
 
 using System;
+using FixMath.NET;
+
 
 namespace Microsoft.Xna.Framework
 {
@@ -108,7 +110,7 @@ namespace Microsoft.Xna.Framework
             return curve;
         }
 
-        public float Evaluate(float position)
+        public Fix64 Evaluate(Fix64 position)
         {
             var first = keys[0];
             var last = keys[keys.Count - 1];
@@ -196,15 +198,15 @@ namespace Microsoft.Xna.Framework
 
         #region Private Methods
 
-        private int GetNumberOfCycle(float position)
+        private int GetNumberOfCycle(Fix64 position)
         {
             var cycle = (position - keys[0].Position) / (keys[keys.Count - 1].Position - keys[0].Position);
-            if (cycle < 0f)
-                cycle--;
-            return (int) cycle;
+            if (cycle < 0)
+                cycle -= Fix64.One;
+            return (int)cycle;
         }
 
-        private float GetCurvePosition(float position)
+        private Fix64 GetCurvePosition(Fix64 position)
         {
             //only for position in curve
             var prev = keys[0];
@@ -216,7 +218,7 @@ namespace Microsoft.Xna.Framework
                 {
                     if (prev.Continuity == CurveContinuity.Step)
                     {
-                        if (position >= 1f) return next.Value;
+                        if (position >= 1) return next.Value;
                         return prev.Value;
                     }
 
@@ -228,7 +230,7 @@ namespace Microsoft.Xna.Framework
                     //http://en.wikipedia.org/wiki/Cubic_Hermite_spline
                     //P(t) = (2*t^3 - 3t^2 + 1)*P0 + (t^3 - 2t^2 + t)m0 + (-2t^3 + 3t^2)P1 + (t^3-t^2)m1
                     //with P0.value = prev.value , m0 = prev.tangentOut, P1= next.value, m1 = next.TangentIn
-                    return (2 * tss - 3 * ts + 1f) * prev.Value + (tss - 2 * ts + t) * prev.TangentOut +
+                    return (2 * tss - 3 * ts + 1) * prev.Value + (tss - 2 * ts + t) * prev.TangentOut +
                            (3 * ts - 2 * tss) * next.Value +
                            (tss - ts) * next.TangentIn;
                 }
@@ -236,7 +238,7 @@ namespace Microsoft.Xna.Framework
                 prev = next;
             }
 
-            return 0f;
+            return Fix64.Zero;
         }
 
         #endregion

@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-
+using FixedAnimationSystem;
 namespace Spax
 {
     public class SpaxManager : MonoBehaviour
     {
+        public FixedAnimationController test;
         private static SpaxManager SpaxInstance;
 
         public delegate void InputUpdateEventHandler();
@@ -38,7 +38,7 @@ namespace Spax
         {
             SpaxInstance = this;
             Application.targetFrameRate = 60;
-
+            test.Initialize();
         }
 
         void FixedUpdate()

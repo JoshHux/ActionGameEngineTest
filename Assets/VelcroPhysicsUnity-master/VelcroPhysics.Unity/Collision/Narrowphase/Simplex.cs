@@ -5,6 +5,7 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -16,7 +17,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         internal void ReadCache(ref SimplexCache cache, ref DistanceProxy proxyA, ref VTransform VTransformA,
             ref DistanceProxy proxyB, ref VTransform VTransformB)
         {
-            Debug.Assert(cache.Count <= 3);
+            UnityEngine.Debug.Assert(cache.Count <= 3);
 
             // Copy data from cache.
             Count = cache.Count;
@@ -30,7 +31,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 v.WA = MathUtils.Mul(ref VTransformA, wALocal);
                 v.WB = MathUtils.Mul(ref VTransformB, wBLocal);
                 v.W = v.WB - v.WA;
-                v.A = 0.0f;
+                v.A = Fix64.Zero;
                 V[i] = v;
             }
 
@@ -40,7 +41,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 var metric1 = cache.Metric;
                 var metric2 = GetMetric();
-                if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
+                if (metric2 < FixedMath.C0p5 * metric1 ||2 * metric1 < metric2 || metric2 < Settings.Epsilon)
                     // Reset the simplex.
                     Count = 0;
             }
@@ -56,7 +57,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 v.WA = MathUtils.Mul(ref VTransformA, wALocal);
                 v.WB = MathUtils.Mul(ref VTransformB, wBLocal);
                 v.W = v.WB - v.WA;
-                v.A = 1.0f;
+                v.A = Fix64.One;
                 V[0] = v;
                 Count = 1;
             }
@@ -65,15 +66,15 @@ namespace VelcroPhysics.Collision.Narrowphase
         internal void WriteCache(ref SimplexCache cache)
         {
             cache.Metric = GetMetric();
-            cache.Count = (ushort) Count;
+            cache.Count = (ushort)Count;
             for (var i = 0; i < Count; ++i)
             {
-                cache.IndexA[i] = (byte) V[i].IndexA;
-                cache.IndexB[i] = (byte) V[i].IndexB;
+                cache.IndexA[i] = (byte)V[i].IndexA;
+                cache.IndexB[i] = (byte)V[i].IndexB;
             }
         }
 
-        internal Vector2 GetSearchDirection()
+        internal FVector2 GetSearchDirection()
         {
             switch (Count)
             {
@@ -81,30 +82,30 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return -V[0].W;
 
                 case 2:
-                {
-                    var e12 = V[1].W - V[0].W;
-                    var sgn = MathUtils.Cross(e12, -V[0].W);
-                    if (sgn > 0.0f)
-                        // Origin is left of e12.
-                        return MathUtils.Cross(1.0f, e12);
-                    else
-                        // Origin is right of e12.
-                        return MathUtils.Cross(e12, 1.0f);
-                }
+                    {
+                        var e12 = V[1].W - V[0].W;
+                        var sgn = MathUtils.Cross(e12, -V[0].W);
+                        if (sgn > Fix64.Zero)
+                            // Origin is left of e12.
+                            return MathUtils.Cross(1, e12);
+                        else
+                            // Origin is right of e12.
+                            return MathUtils.Cross(e12, Fix64.One);
+                    }
 
                 default:
-                    Debug.Assert(false);
-                    return Vector2.zero;
+                    UnityEngine.Debug.Assert(false);
+                    return FVector2.zero;
             }
         }
 
-        internal Vector2 GetClosestPoint()
+        internal FVector2 GetClosestPoint()
         {
             switch (Count)
             {
                 case 0:
-                    Debug.Assert(false);
-                    return Vector2.zero;
+                    UnityEngine.Debug.Assert(false);
+                    return FVector2.zero;
 
                 case 1:
                     return V[0].W;
@@ -113,22 +114,22 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return V[0].A * V[0].W + V[1].A * V[1].W;
 
                 case 3:
-                    return Vector2.zero;
+                    return FVector2.zero;
 
                 default:
-                    Debug.Assert(false);
-                    return Vector2.zero;
+                    UnityEngine.Debug.Assert(false);
+                    return FVector2.zero;
             }
         }
 
-        internal void GetWitnessPoints(out Vector2 pA, out Vector2 pB)
+        internal void GetWitnessPoints(out FVector2 pA, out FVector2 pB)
         {
             switch (Count)
             {
                 case 0:
-                    pA = Vector2.zero;
-                    pB = Vector2.zero;
-                    Debug.Assert(false);
+                    pA = FVector2.zero;
+                    pB = FVector2.zero;
+                    UnityEngine.Debug.Assert(false);
                     break;
 
                 case 1:
@@ -151,15 +152,15 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
         }
 
-        internal float GetMetric()
+        internal Fix64 GetMetric()
         {
             switch (Count)
             {
                 case 0:
-                    Debug.Assert(false);
-                    return 0.0f;
+                    UnityEngine.Debug.Assert(false);
+                    return Fix64.Zero;
                 case 1:
-                    return 0.0f;
+                    return Fix64.Zero;
 
                 case 2:
                     return (V[0].W - V[1].W).magnitude;
@@ -168,8 +169,8 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return MathUtils.Cross(V[1].W - V[0].W, V[2].W - V[0].W);
 
                 default:
-                    Debug.Assert(false);
-                    return 0.0f;
+                    UnityEngine.Debug.Assert(false);
+                    return Fix64.Zero;
             }
         }
 
@@ -204,28 +205,28 @@ namespace VelcroPhysics.Collision.Narrowphase
             var e12 = w2 - w1;
 
             // w1 region
-            var d12_2 = -Vector2.Dot(w1, e12);
-            if (d12_2 <= 0.0f)
+            var d12_2 = -FVector2.Dot(w1, e12);
+            if (d12_2 <= Fix64.Zero)
             {
                 // a2 <= 0, so we clamp it to 0
-                V.Value0.A = 1.0f;
+                V.Value0.A = Fix64.One;
                 Count = 1;
                 return;
             }
 
             // w2 region
-            var d12_1 = Vector2.Dot(w2, e12);
-            if (d12_1 <= 0.0f)
+            var d12_1 = FVector2.Dot(w2, e12);
+            if (d12_1 <= Fix64.Zero)
             {
                 // a1 <= 0, so we clamp it to 0
-                V.Value1.A = 1.0f;
+                V.Value1.A = Fix64.One;
                 Count = 1;
                 V.Value0 = V.Value1;
                 return;
             }
 
             // Must be in e12 region.
-            var inv_d12 = 1.0f / (d12_1 + d12_2);
+            var inv_d12 = Fix64.One / (d12_1 + d12_2);
             V.Value0.A = d12_1 * inv_d12;
             V.Value1.A = d12_2 * inv_d12;
             Count = 2;
@@ -247,8 +248,8 @@ namespace VelcroPhysics.Collision.Narrowphase
             // [w1.e12 w2.e12][a2] = [0]
             // a3 = 0
             var e12 = w2 - w1;
-            var w1e12 = Vector2.Dot(w1, e12);
-            var w2e12 = Vector2.Dot(w2, e12);
+            var w1e12 = FVector2.Dot(w1, e12);
+            var w2e12 = FVector2.Dot(w2, e12);
             var d12_1 = w2e12;
             var d12_2 = -w1e12;
 
@@ -257,8 +258,8 @@ namespace VelcroPhysics.Collision.Narrowphase
             // [w1.e13 w3.e13][a3] = [0]
             // a2 = 0
             var e13 = w3 - w1;
-            var w1e13 = Vector2.Dot(w1, e13);
-            var w3e13 = Vector2.Dot(w3, e13);
+            var w1e13 = FVector2.Dot(w1, e13);
+            var w3e13 = FVector2.Dot(w3, e13);
             var d13_1 = w3e13;
             var d13_2 = -w1e13;
 
@@ -267,8 +268,8 @@ namespace VelcroPhysics.Collision.Narrowphase
             // [w2.e23 w3.e23][a3] = [0]
             // a1 = 0
             var e23 = w3 - w2;
-            var w2e23 = Vector2.Dot(w2, e23);
-            var w3e23 = Vector2.Dot(w3, e23);
+            var w2e23 = FVector2.Dot(w2, e23);
+            var w3e23 = FVector2.Dot(w3, e23);
             var d23_1 = w3e23;
             var d23_2 = -w2e23;
 
@@ -280,17 +281,17 @@ namespace VelcroPhysics.Collision.Narrowphase
             var d123_3 = n123 * MathUtils.Cross(w1, w2);
 
             // w1 region
-            if (d12_2 <= 0.0f && d13_2 <= 0.0f)
+            if (d12_2 <= Fix64.Zero && d13_2 <= Fix64.Zero)
             {
-                V.Value0.A = 1.0f;
+                V.Value0.A = Fix64.One;
                 Count = 1;
                 return;
             }
 
             // e12
-            if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
+            if (d12_1 > Fix64.Zero && d12_2 > Fix64.Zero && d123_3 <= Fix64.Zero)
             {
-                var inv_d12 = 1.0f / (d12_1 + d12_2);
+                var inv_d12 = Fix64.One / (d12_1 + d12_2);
                 V.Value0.A = d12_1 * inv_d12;
                 V.Value1.A = d12_2 * inv_d12;
                 Count = 2;
@@ -298,9 +299,9 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
 
             // e13
-            if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
+            if (d13_1 > Fix64.Zero && d13_2 > Fix64.Zero && d123_2 <= Fix64.Zero)
             {
-                var inv_d13 = 1.0f / (d13_1 + d13_2);
+                var inv_d13 = Fix64.One / (d13_1 + d13_2);
                 V.Value0.A = d13_1 * inv_d13;
                 V.Value2.A = d13_2 * inv_d13;
                 Count = 2;
@@ -309,27 +310,27 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
 
             // w2 region
-            if (d12_1 <= 0.0f && d23_2 <= 0.0f)
+            if (d12_1 <= Fix64.Zero && d23_2 <= Fix64.Zero)
             {
-                V.Value1.A = 1.0f;
+                V.Value1.A = Fix64.One;
                 Count = 1;
                 V.Value0 = V.Value1;
                 return;
             }
 
             // w3 region
-            if (d13_1 <= 0.0f && d23_1 <= 0.0f)
+            if (d13_1 <= Fix64.Zero && d23_1 <= Fix64.Zero)
             {
-                V.Value2.A = 1.0f;
+                V.Value2.A = Fix64.One;
                 Count = 1;
                 V.Value0 = V.Value2;
                 return;
             }
 
             // e23
-            if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
+            if (d23_1 > Fix64.Zero && d23_2 > Fix64.Zero && d123_1 <= Fix64.Zero)
             {
-                var inv_d23 = 1.0f / (d23_1 + d23_2);
+                var inv_d23 = Fix64.One / (d23_1 + d23_2);
                 V.Value1.A = d23_1 * inv_d23;
                 V.Value2.A = d23_2 * inv_d23;
                 Count = 2;
@@ -338,7 +339,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
 
             // Must be in triangle123
-            var inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
+            var inv_d123 = Fix64.One / (d123_1 + d123_2 + d123_3);
             V.Value0.A = d123_1 * inv_d123;
             V.Value1.A = d123_2 * inv_d123;
             V.Value2.A = d123_3 * inv_d123;

@@ -24,6 +24,7 @@ using UnityEngine;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -33,15 +34,15 @@ namespace VelcroPhysics.Collision.Shapes
     /// </summary>
     public class EdgeShape : Shape
     {
-        internal Vector2 _vertex1;
-        internal Vector2 _vertex2;
+        internal FVector2 _vertex1;
+        internal FVector2 _vertex2;
 
         /// <summary>
         /// Create a new EdgeShape with the specified start and end.
         /// </summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
-        public EdgeShape(Vector2 start, Vector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
+        public EdgeShape(FVector2 start, FVector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
         {
             Set(start, end);
             ComputeProperties();
@@ -66,17 +67,17 @@ namespace VelcroPhysics.Collision.Shapes
         /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
         /// </summary>
-        public Vector2 Vertex0 { get; set; }
+        public FVector2 Vertex0 { get; set; }
 
         /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
         /// </summary>
-        public Vector2 Vertex3 { get; set; }
+        public FVector2 Vertex3 { get; set; }
 
         /// <summary>
         /// These are the edge vertices
         /// </summary>
-        public Vector2 Vertex1
+        public FVector2 Vertex1
         {
             get => _vertex1;
             set
@@ -89,7 +90,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// <summary>
         /// These are the edge vertices
         /// </summary>
-        public Vector2 Vertex2
+        public FVector2 Vertex2
         {
             get => _vertex2;
             set
@@ -104,7 +105,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        public void Set(Vector2 start, Vector2 end)
+        public void Set(FVector2 start, FVector2 end)
         {
             _vertex1 = start;
             _vertex2 = end;
@@ -114,7 +115,7 @@ namespace VelcroPhysics.Collision.Shapes
             ComputeProperties();
         }
 
-        public override bool TestPoint(ref VTransform VTransform, ref Vector2 point)
+        public override bool TestPoint(ref VTransform VTransform, ref FVector2 point)
         {
             return false;
         }
@@ -132,7 +133,7 @@ namespace VelcroPhysics.Collision.Shapes
 
         protected sealed override void ComputeProperties()
         {
-            MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
+            MassData.Centroid = FixedMath.C0p5 * (_vertex1 + _vertex2);
         }
 
         public bool CompareTo(EdgeShape shape)

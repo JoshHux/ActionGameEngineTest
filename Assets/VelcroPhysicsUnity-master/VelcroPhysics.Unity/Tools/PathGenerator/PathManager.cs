@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.VJoints;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.PathGenerator
 {
@@ -57,12 +57,12 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// <param name="body">The body.</param>
         /// <param name="density">The density.</param>
         /// <param name="subdivisions">The subdivisions.</param>
-        public static void ConvertPathToPolygon(Path path, Body body, float density, int subdivisions)
+        public static void ConvertPathToPolygon(Path path, Body body, Fix64 density, int subdivisions)
         {
             if (!path.Closed)
                 throw new Exception("The path must be closed to convert to a polygon.");
 
-            List<Vector2> verts = path.GetVertices(subdivisions);
+            List<FVector2> verts = path.GetVertices(subdivisions);
 
             var decomposedVerts = Triangulate.ConvexPartition(new Vertices(verts), TriangulationAlgorithm.Bayazit);
 
@@ -88,7 +88,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             for (var i = 0; i < centers.Count; i++)
             {
                 // copy the type from original body
-                var b = BodyFactory.CreateBody(world, new Vector2(centers[i].x, centers[i].y), centers[i].z, type,
+                var b = BodyFactory.CreateBody(world, new FVector2(centers[i].x, centers[i].y), centers[i].z, type,
                     userData);
 
                 foreach (var shape in shapes) b.CreateFixture(shape);
@@ -132,7 +132,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// <param name="time">The time.</param>
         /// <param name="strength">The strength.</param>
         /// <param name="timeStep">The time step.</param>
-        public static void MoveBodyOnPath(Path path, Body body, float time, float strength, float timeStep)
+        public static void MoveBodyOnPath(Path path, Body body, Fix64 time, Fix64 strength, Fix64 timeStep)
         {
             var destination = path.GetPosition(time);
             var positionDelta = body.Position - destination;
@@ -151,7 +151,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
         /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
         public static List<RevoluteVJoint> AttachBodiesWithRevoluteVJoint(World world, List<Body> bodies,
-            Vector2 localAnchorA, Vector2 localAnchorB, bool connectFirstAndLast, bool collideConnected)
+            FVector2 localAnchorA, FVector2 localAnchorB, bool connectFirstAndLast, bool collideConnected)
         {
             var VJoints = new List<RevoluteVJoint>(bodies.Count + 1);
 

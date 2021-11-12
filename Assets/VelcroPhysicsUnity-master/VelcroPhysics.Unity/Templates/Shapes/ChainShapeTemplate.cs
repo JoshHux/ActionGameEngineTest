@@ -1,6 +1,6 @@
-using UnityEngine;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.Shapes
 {
@@ -21,13 +21,13 @@ namespace VelcroPhysics.Templates.Shapes
         /// Establish connectivity to a vertex that follows the last vertex.
         /// <remarks>Don't call this for loops.</remarks>
         /// </summary>
-        public Vector2 NextVertex { get; set; }
+        public FVector2 NextVertex { get; set; }
 
         /// <summary>
         /// Establish connectivity to a vertex that precedes the first vertex.
         /// <remarks>Don't call this for loops.</remarks>
         /// </summary>
-        public Vector2 PrevVertex { get; set; }
+        public FVector2 PrevVertex { get; set; }
 
         /// <summary>
         /// The vertices. These are not owned/freed by the chain Shape.

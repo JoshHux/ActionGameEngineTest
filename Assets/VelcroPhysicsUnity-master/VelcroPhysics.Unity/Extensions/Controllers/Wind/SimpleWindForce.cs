@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Extensions.Controllers.Wind
 {
@@ -15,12 +16,12 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// <summary>
         /// Direction of the windforce
         /// </summary>
-        public Vector2 Direction { get; set; }
+        public FVector2 Direction { get; set; }
 
         /// <summary>
         /// The amount of Direction randomization. Allowed range is 0-1.
         /// </summary>
-        public float Divergence { get; set; }
+        public Fix64 Divergence { get; set; }
 
         /// <summary>
         /// Ignore the position and apply the force. If off only in the "front" (relative to position and direction)
@@ -28,7 +29,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// </summary>
         public bool IgnorePosition { get; set; }
 
-        public override void ApplyForce(float dt, float strength)
+        public override void ApplyForce(Fix64 dt, Fix64 strength)
         {
             foreach (var body in World.BodyList)
             {
@@ -37,7 +38,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
 
                 if (decayMultiplier != 0)
                 {
-                    Vector2 forceVector;
+                    FVector2 forceVector;
 
                     if (ForceType == ForceTypes.Point)
                     {
@@ -50,16 +51,16 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
                         forceVector = Direction;
 
                         if (forceVector.magnitude == 0)
-                            forceVector = new Vector2(0, 1);
+                            forceVector = new FVector2(0, 1);
                     }
 
                     //TODO: Consider Divergence:
-                    //forceVector = Vector2.VTransform(forceVector, Matrix.CreateRotationZ((Mathf.PI - Mathf.PI/2) * (float)Randomize.NextDouble()));
+                    //forceVector = FVector2.VTransform(forceVector, Matrix.CreateRotationZ((Fix64.Pi - Fix64.Pi/2) * (Fix64)Randomize.NextDouble()));
 
                     // Calculate random Variation
                     if (Variation != 0)
                     {
-                        var strengthVariation = Random.value * MathUtils.Clamp(Variation, 0, 1);
+                        var strengthVariation = 1 * MathUtils.Clamp(Variation, 0, 1);
                         forceVector.Normalize();
                         body.ApplyForce(forceVector * strength * decayMultiplier * strengthVariation);
                     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using UnityEngine;
+using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 
@@ -28,7 +29,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
 
         /// <summary>
         /// Forcetypes are used in the decay math to properly get the distance.
-        /// They are also used to draw a representation in DebugView
+        /// They are also used to draw a representation in UnityEngine.DebugView
         /// </summary>
         public enum ForceTypes
         {
@@ -84,24 +85,24 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         {
             Enabled = true;
 
-            Strength = 1.0f;
-            Position = new Vector2(0, 0);
-            MaximumSpeed = 100.0f;
+            Strength = Fix64.One;
+            Position = new FVector2(0, 0);
+            MaximumSpeed = 100;
             TimingMode = TimingModes.Switched;
-            ImpulseTime = 0.0f;
-            ImpulseLength = 1.0f;
+            ImpulseTime = Fix64.Zero;
+            ImpulseLength = Fix64.One;
             Triggered = false;
             StrengthCurve = new Curve();
-            Variation = 0.0f;
+            Variation = Fix64.Zero;
             DecayMode = DecayModes.None;
             DecayCurve = new Curve();
-            DecayStart = 0.0f;
-            DecayEnd = 0.0f;
+            DecayStart = Fix64.Zero;
+            DecayEnd = Fix64.Zero;
 
             StrengthCurve.Keys.Add(new CurveKey(0, 5));
-            StrengthCurve.Keys.Add(new CurveKey(0.1f, 5));
-            StrengthCurve.Keys.Add(new CurveKey(0.2f, -4));
-            StrengthCurve.Keys.Add(new CurveKey(1f, 0));
+            StrengthCurve.Keys.Add(new CurveKey(FixedMath.C0p1, 5));
+            StrengthCurve.Keys.Add(new CurveKey(FixedMath.C0p1 * 2, -4));
+            StrengthCurve.Keys.Add(new CurveKey(1, 0));
         }
 
         /// <summary>
@@ -129,26 +130,26 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// <summary>
         /// Global Strength of the force to be applied
         /// </summary>
-        public float Strength { get; set; }
+        public Fix64 Strength { get; set; }
 
         /// <summary>
         /// Position of the Force. Can be ignored (left at (0,0) for forces
         /// that are not position-dependent
         /// </summary>
-        public Vector2 Position { get; set; }
+        public FVector2 Position { get; set; }
 
         /// <summary>
         /// Maximum speed of the bodies. Bodies that are travelling faster are
         /// supposed to be ignored
         /// </summary>
-        public float MaximumSpeed { get; set; }
+        public Fix64 MaximumSpeed { get; set; }
 
         /// <summary>
         /// Maximum Force to be applied. As opposed to Maximum Speed this is
         /// independent of the velocity of
         /// the affected body
         /// </summary>
-        public float MaximumForce { get; set; }
+        public Fix64 MaximumForce { get; set; }
 
         /// <summary>
         /// Timing Mode of the force instance
@@ -159,12 +160,12 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// Time of the current impulse. Incremented in update till
         /// ImpulseLength is reached
         /// </summary>
-        public float ImpulseTime { get; private set; }
+        public Fix64 ImpulseTime { get; private set; }
 
         /// <summary>
         /// Length of a triggered impulse. Used in both Triggered and Curve Mode
         /// </summary>
-        public float ImpulseLength { get; set; }
+        public Fix64 ImpulseLength { get; set; }
 
         /// <summary>
         /// Indicating if we are currently during an Impulse
@@ -176,7 +177,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// Variation of the force applied to each body affected
         /// !! Must be used in inheriting classes properly !!
         /// </summary>
-        public float Variation { get; set; }
+        public Fix64 Variation { get; set; }
 
         /// <summary>
         /// See DecayModes
@@ -186,64 +187,64 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// <summary>
         /// Start of the distance based Decay. To set a non decaying area
         /// </summary>
-        public float DecayStart { get; set; }
+        public Fix64 DecayStart { get; set; }
 
         /// <summary>
         /// Maximum distance a force should be applied
         /// </summary>
-        public float DecayEnd { get; set; }
+        public Fix64 DecayEnd { get; set; }
 
         /// <summary>
         /// Calculate the Decay for a given body. Meant to ease force
         /// development and stick to the DRY principle and provide unified and
-        /// predictable decay Mathf.
+        /// predictable decay Fix64.
         /// </summary>
         /// <param name="body">The body to calculate decay for</param>
         /// <returns>
         /// A multiplier to multiply the force with to add decay
         /// support in inheriting classes
         /// </returns>
-        protected float GetDecayMultiplier(Body body)
+        protected Fix64 GetDecayMultiplier(Body body)
         {
             //TODO: Consider ForceType in distance calculation!
             var distance = (body.Position - Position).magnitude;
             switch (DecayMode)
             {
                 case DecayModes.None:
-                {
-                    return 1.0f;
-                }
+                    {
+                        return Fix64.One;
+                    }
                 case DecayModes.Step:
-                {
-                    if (distance < DecayEnd)
-                        return 1.0f;
-                    else
-                        return 0.0f;
-                }
+                    {
+                        if (distance < DecayEnd)
+                            return Fix64.One;
+                        else
+                            return Fix64.Zero;
+                    }
                 case DecayModes.Linear:
-                {
-                    if (distance < DecayStart)
-                        return 1.0f;
-                    if (distance > DecayEnd)
-                        return 0.0f;
-                    return DecayEnd - DecayStart / distance - DecayStart;
-                }
+                    {
+                        if (distance < DecayStart)
+                            return Fix64.One;
+                        if (distance > DecayEnd)
+                            return Fix64.Zero;
+                        return DecayEnd - DecayStart / distance - DecayStart;
+                    }
                 case DecayModes.InverseSquare:
-                {
-                    if (distance < DecayStart)
-                        return 1.0f;
-                    else
-                        return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
-                }
+                    {
+                        if (distance < DecayStart)
+                            return Fix64.One;
+                        else
+                            return Fix64.One / ((distance - DecayStart) * (distance - DecayStart));
+                    }
                 case DecayModes.Curve:
-                {
-                    if (distance < DecayStart)
-                        return 1.0f;
-                    else
-                        return DecayCurve.Evaluate(distance - DecayStart);
-                }
+                    {
+                        if (distance < DecayStart)
+                            return Fix64.One;
+                        else
+                            return DecayCurve.Evaluate(distance - DecayStart);
+                    }
                 default:
-                    return 1.0f;
+                    return Fix64.One;
             }
         }
 
@@ -261,49 +262,49 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// Depending on the TimingMode perform timing logic and call ApplyForce()
         /// </summary>
         /// <param name="dt"></param>
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             switch (TimingMode)
             {
                 case TimingModes.Switched:
-                {
-                    if (Enabled) ApplyForce(dt, Strength);
-                    break;
-                }
+                    {
+                        if (Enabled) ApplyForce(dt, Strength);
+                        break;
+                    }
                 case TimingModes.Triggered:
-                {
-                    if (Enabled && Triggered)
                     {
-                        if (ImpulseTime < ImpulseLength)
+                        if (Enabled && Triggered)
                         {
-                            ApplyForce(dt, Strength);
-                            ImpulseTime += dt;
+                            if (ImpulseTime < ImpulseLength)
+                            {
+                                ApplyForce(dt, Strength);
+                                ImpulseTime += dt;
+                            }
+                            else
+                            {
+                                Triggered = false;
+                            }
                         }
-                        else
-                        {
-                            Triggered = false;
-                        }
-                    }
 
-                    break;
-                }
+                        break;
+                    }
                 case TimingModes.Curve:
-                {
-                    if (Enabled && Triggered)
                     {
-                        if (ImpulseTime < ImpulseLength)
+                        if (Enabled && Triggered)
                         {
-                            ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
-                            ImpulseTime += dt;
+                            if (ImpulseTime < ImpulseLength)
+                            {
+                                ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
+                                ImpulseTime += dt;
+                            }
+                            else
+                            {
+                                Triggered = false;
+                            }
                         }
-                        else
-                        {
-                            Triggered = false;
-                        }
-                    }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
 
@@ -313,6 +314,6 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="strength">The strength</param>
-        public abstract void ApplyForce(float dt, float strength);
+        public abstract void ApplyForce(Fix64 dt, Fix64 strength);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.ConvexHull.ChainHull
 {
@@ -29,7 +29,7 @@ namespace VelcroPhysics.Tools.ConvexHull.ChainHull
             //Sort by X-axis
             pointSet.Sort(_pointComparer);
 
-            var h = new Vector2[pointSet.Count];
+            var h = new FVector2[pointSet.Count];
             Vertices res;
 
             var top = -1; // indices for bottom and top of the stack
@@ -123,9 +123,9 @@ namespace VelcroPhysics.Tools.ConvexHull.ChainHull
             return res;
         }
 
-        private class PointComparer : Comparer<Vector2>
+        private class PointComparer : Comparer<FVector2>
         {
-            public override int Compare(Vector2 a, Vector2 b)
+            public override int Compare(FVector2 a, FVector2 b)
             {
                 var f = a.x.CompareTo(b.x);
                 return f != 0 ? f : a.y.CompareTo(b.y);

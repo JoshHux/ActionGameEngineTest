@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared.Contracts
 {
     public static class Contract
     {
-        [Conditional("DEBUG")]
+        [Conditional("Debug")]
         public static void Requires(bool condition, string message)
         {
             if (condition)
@@ -17,14 +18,14 @@ namespace VelcroPhysics.Shared.Contracts
             throw new RequiredException(message);
         }
 
-        [Conditional("DEBUG")]
+        [Conditional("Debug")]
         public static void Warn(bool condition, string message)
         {
             message = BuildMessage("WARNING", message);
             Debug.WriteLineIf(!condition, message);
         }
 
-        [Conditional("DEBUG")]
+        [Conditional("Debug")]
         public static void Ensures(bool condition, string message)
         {
             if (condition)
@@ -34,13 +35,13 @@ namespace VelcroPhysics.Shared.Contracts
             throw new EnsuresException(message);
         }
 
-        [Conditional("DEBUG")]
+        [Conditional("Debug")]
         public static void RequireForAll<T>(IEnumerable<T> value, Predicate<T> check)
         {
             foreach (var item in value) Requires(check(item), "Failed on: " + item);
         }
 
-        [Conditional("DEBUG")]
+        [Conditional("Debug")]
         public static void Fail(string message)
         {
             message = BuildMessage("FAILURE", message);

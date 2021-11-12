@@ -1,3 +1,5 @@
+using FixMath.NET;
+
 namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace VelcroPhysics.Collision.Narrowphase
     public struct EPAxis
     {
         public int Index;
-        public float Separation;
+        public Fix64 Separation;
         public EPAxisType Type;
     }
 }

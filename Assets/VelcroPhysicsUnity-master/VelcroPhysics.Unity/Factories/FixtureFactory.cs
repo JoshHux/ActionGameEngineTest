@@ -6,7 +6,7 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
-using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Factories
 {
@@ -15,7 +15,7 @@ namespace VelcroPhysics.Factories
     /// </summary>
     public static class FixtureFactory
     {
-        public static Fixture AttachEdge(Vector2 start, Vector2 end, Body body, object userData = null)
+        public static Fixture AttachEdge(FVector2 start, FVector2 end, Body body, object userData = null)
         {
             var edgeShape = new EdgeShape(start, end);
             return body.CreateFixture(edgeShape, userData);
@@ -33,7 +33,7 @@ namespace VelcroPhysics.Factories
             return body.CreateFixture(shape, userData);
         }
 
-        public static Fixture AttachRectangle(float width, float height, float density, Vector2 offset, Body body,
+        public static Fixture AttachRectangle(Fix64 width, Fix64 height, Fix64 density, FVector2 offset, Body body,
             object userData = null)
         {
             var rectangleVertices = PolygonUtils.CreateRectangle(width / 2, height / 2);
@@ -42,7 +42,7 @@ namespace VelcroPhysics.Factories
             return body.CreateFixture(rectangleShape, userData);
         }
 
-        public static Fixture AttachCircle(float radius, float density, Body body, object userData = null)
+        public static Fixture AttachCircle(Fix64 radius, Fix64 density, Body body, object userData = null)
         {
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException(nameof(radius), "Radius must be more than 0 meters");
@@ -51,7 +51,7 @@ namespace VelcroPhysics.Factories
             return body.CreateFixture(circleShape, userData);
         }
 
-        public static Fixture AttachCircle(float radius, float density, Body body, Vector2 offset,
+        public static Fixture AttachCircle(Fix64 radius, Fix64 density, Body body, FVector2 offset,
             object userData = null)
         {
             if (radius <= 0)
@@ -62,7 +62,7 @@ namespace VelcroPhysics.Factories
             return body.CreateFixture(circleShape, userData);
         }
 
-        public static Fixture AttachPolygon(Vertices vertices, float density, Body body, object userData = null)
+        public static Fixture AttachPolygon(Vertices vertices, Fix64 density, Body body, object userData = null)
         {
             if (vertices.Count <= 1)
                 throw new ArgumentOutOfRangeException(nameof(vertices), "Too few points to be a polygon");
@@ -71,7 +71,7 @@ namespace VelcroPhysics.Factories
             return body.CreateFixture(polygon, userData);
         }
 
-        public static Fixture AttachEllipse(float xRadius, float yRadius, int edges, float density, Body body,
+        public static Fixture AttachEllipse(Fix64 xRadius, Fix64 yRadius, int edges, Fix64 density, Body body,
             object userData = null)
         {
             if (xRadius <= 0)
@@ -85,7 +85,7 @@ namespace VelcroPhysics.Factories
             return body.CreateFixture(polygonShape, userData);
         }
 
-        public static List<Fixture> AttachCompoundPolygon(List<Vertices> list, float density, Body body,
+        public static List<Fixture> AttachCompoundPolygon(List<Vertices> list, Fix64 density, Body body,
             object userData = null)
         {
             var res = new List<Fixture>(list.Count);
@@ -106,17 +106,17 @@ namespace VelcroPhysics.Factories
             return res;
         }
 
-        public static Fixture AttachLineArc(float radians, int sides, float radius, bool closed, Body body)
+        public static Fixture AttachLineArc(Fix64 radians, int sides, Fix64 radius, bool closed, Body body)
         {
             var arc = PolygonUtils.CreateArc(radians, sides, radius);
-            arc.Rotate((Mathf.PI - radians) / 2);
+            arc.Rotate((Fix64.Pi - radians) / 2);
             return closed ? AttachLoopShape(arc, body) : AttachChainShape(arc, body);
         }
 
-        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Body body)
+        public static List<Fixture> AttachSolidArc(Fix64 density, Fix64 radians, int sides, Fix64 radius, Body body)
         {
             var arc = PolygonUtils.CreateArc(radians, sides, radius);
-            arc.Rotate((Mathf.PI - radians) / 2);
+            arc.Rotate((Fix64.Pi - radians) / 2);
 
             //Close the arc
             arc.Add(arc[0]);

@@ -1,4 +1,5 @@
 using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Distance
 {
@@ -7,7 +8,7 @@ namespace VelcroPhysics.Collision.Distance
     /// </summary>
     public struct DistanceOutput
     {
-        public float Distance;
+        public Fix64 Distance;
 
         /// <summary>
         /// Number of GJK iterations used
@@ -17,11 +18,11 @@ namespace VelcroPhysics.Collision.Distance
         /// <summary>
         /// Closest point on shapeA
         /// </summary>
-        public Vector2 PointA;
+        public FVector2 PointA;
 
         /// <summary>
         /// Closest point on shapeB
         /// </summary>
-        public Vector2 PointB;
+        public FVector2 PointB;
     }
 }

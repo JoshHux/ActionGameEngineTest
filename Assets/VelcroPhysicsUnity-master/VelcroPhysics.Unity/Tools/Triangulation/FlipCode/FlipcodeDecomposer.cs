@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.FlipCode
 {
@@ -16,9 +16,9 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
     /// </summary>
     internal static class FlipcodeDecomposer
     {
-        private static Vector2 _tmpA;
-        private static Vector2 _tmpB;
-        private static Vector2 _tmpC;
+        private static FVector2 _tmpA;
+        private static FVector2 _tmpB;
+        private static FVector2 _tmpC;
 
         /// <summary>
         /// Decompose the polygon into triangles.
@@ -28,8 +28,8 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
         /// <param name="vertices">The list of points describing the polygon</param>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            Debug.Assert(vertices.Count > 3);
-            Debug.Assert(vertices.IsCounterClockWise());
+            UnityEngine.Debug.Assert(vertices.Count > 3);
+            UnityEngine.Debug.Assert(vertices.IsCounterClockWise());
 
             var polygon = new int[vertices.Count];
 
@@ -97,7 +97,7 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
         /// <param name="c">The C point.</param>
         /// <param name="p">The point to be tested.</param>
         /// <returns>True if the point is inside the triangle</returns>
-        private static bool InsideTriangle(ref Vector2 a, ref Vector2 b, ref Vector2 c, ref Vector2 p)
+        private static bool InsideTriangle(ref FVector2 a, ref FVector2 b, ref FVector2 c, ref FVector2 p)
         {
             //A cross bp
             var abp = (c.x - b.x) * (p.y - b.y) - (c.y - b.y) * (p.x - b.x);
@@ -108,7 +108,7 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
             //b cross cp
             var bcp = (a.x - c.x) * (p.y - c.y) - (a.y - c.y) * (p.x - c.x);
 
-            return abp >= 0.0f && bcp >= 0.0f && aap >= 0.0f;
+            return abp >= Fix64.Zero && bcp >= Fix64.Zero && aap >= Fix64.Zero;
         }
 
         /// <summary>

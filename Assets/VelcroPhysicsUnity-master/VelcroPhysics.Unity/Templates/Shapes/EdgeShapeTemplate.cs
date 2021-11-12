@@ -1,5 +1,5 @@
-using UnityEngine;
 using VelcroPhysics.Collision.Shapes;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.Shapes
 {
@@ -26,21 +26,21 @@ namespace VelcroPhysics.Templates.Shapes
         /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
         /// </summary>
-        public Vector2 Vertex0 { get; set; }
+        public FVector2 Vertex0 { get; set; }
 
         /// <summary>
         /// These are the edge vertices
         /// </summary>
-        public Vector2 Vertex1 { get; set; }
+        public FVector2 Vertex1 { get; set; }
 
         /// <summary>
         /// These are the edge vertices
         /// </summary>
-        public Vector2 Vertex2 { get; set; }
+        public FVector2 Vertex2 { get; set; }
 
         /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
         /// </summary>
-        public Vector2 Vertex3 { get; set; }
+        public FVector2 Vertex3 { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Bayazit
 {
@@ -26,8 +26,8 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            Debug.Assert(vertices.Count > 3);
-            Debug.Assert(vertices.IsCounterClockWise());
+            UnityEngine.Debug.Assert(vertices.Count > 3);
+            UnityEngine.Debug.Assert(vertices.IsCounterClockWise());
 
             return TriangulatePolygon(vertices);
         }
@@ -35,21 +35,21 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
         private static List<Vertices> TriangulatePolygon(Vertices vertices)
         {
             var list = new List<Vertices>();
-            var lowerInt = new Vector2();
-            var upperInt = new Vector2(); // intersection points
+            var lowerInt = new FVector2();
+            var upperInt = new FVector2(); // intersection points
             int lowerIndex = 0, upperIndex = 0;
             Vertices lowerPoly, upperPoly;
 
             for (var i = 0; i < vertices.Count; ++i)
                 if (Reflex(i, vertices))
                 {
-                    float upperDist;
-                    var lowerDist = upperDist = float.MaxValue;
+                    Fix64 upperDist;
+                    var lowerDist = upperDist =  Fix64.MaxValue;
                     for (var j = 0; j < vertices.Count; ++j)
                     {
                         // if line intersects with an edge
-                        float d;
-                        Vector2 p;
+                        Fix64 d;
+                        FVector2 p;
                         if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) &&
                             RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
                         {
@@ -102,7 +102,7 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
                     }
                     else
                     {
-                        float highestScore = 0, bestIndex = lowerIndex;
+                        Fix64 highestScore = 0, bestIndex = lowerIndex;
                         while (upperIndex < lowerIndex)
                             upperIndex += vertices.Count;
 
@@ -155,7 +155,7 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
             return list;
         }
 
-        private static Vector2 At(int i, Vertices vertices)
+        private static FVector2 At(int i, Vertices vertices)
         {
             var s = vertices.Count;
             return vertices[i < 0 ? s - 1 - (-i - 1) % s : i % s];
@@ -205,7 +205,7 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
                 if ((k + 1) % vertices.Count == i || k == i || (k + 1) % vertices.Count == j || k == j)
                     continue; // ignore incident edges
 
-                Vector2 intersectionPoint;
+                FVector2 intersectionPoint;
 
                 if (LineUtils.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices),
                     out intersectionPoint))
@@ -225,27 +225,27 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
             return Right(At(i - 1, vertices), At(i, vertices), At(i + 1, vertices));
         }
 
-        private static bool Left(Vector2 a, Vector2 b, Vector2 c)
+        private static bool Left(FVector2 a, FVector2 b, FVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) > 0;
         }
 
-        private static bool LeftOn(Vector2 a, Vector2 b, Vector2 c)
+        private static bool LeftOn(FVector2 a, FVector2 b, FVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) >= 0;
         }
 
-        private static bool Right(Vector2 a, Vector2 b, Vector2 c)
+        private static bool Right(FVector2 a, FVector2 b, FVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) < 0;
         }
 
-        private static bool RightOn(Vector2 a, Vector2 b, Vector2 c)
+        private static bool RightOn(FVector2 a, FVector2 b, FVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) <= 0;
         }
 
-        private static float SquareDist(Vector2 a, Vector2 b)
+        private static Fix64 SquareDist(FVector2 a, FVector2 b)
         {
             var dx = b.x - a.x;
             var dy = b.y - a.y;

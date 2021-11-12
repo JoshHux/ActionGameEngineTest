@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics
 {
@@ -13,25 +13,25 @@ namespace VelcroPhysics.Dynamics
     /// </summary>
     public class BreakableBody
     {
-        private float[] _angularVelocitiesCache = new float[8];
+        private Fix64[] _angularVelocitiesCache = new Fix64[8];
         private bool _break;
-        private Vector2[] _velocitiesCache = new Vector2[8];
+        private FVector2[] _velocitiesCache = new FVector2[8];
         private readonly World _world;
 
         /// <summary>
         /// The force needed to break the body apart.
         /// Default: 500
         /// </summary>
-        public float Strength { get; set; }
+        public Fix64 Strength { get; set; }
 
-        public BreakableBody(World world, IEnumerable<Vertices> vertices, float density,
-            Vector2 position = new Vector2(), float rotation = 0)
+        public BreakableBody(World world, IEnumerable<Vertices> vertices, Fix64 density,
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64())
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
             Parts = new List<Fixture>(8);
             MainBody = BodyFactory.CreateBody(_world, position, rotation, BodyType.Dynamic);
-            Strength = 500.0f;
+            Strength = 500;
 
             foreach (var part in vertices)
             {
@@ -41,8 +41,8 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        public BreakableBody(World world, IEnumerable<Shape> shapes, Vector2 position = new Vector2(),
-            float rotation = 0)
+        public BreakableBody(World world, IEnumerable<Shape> shapes, FVector2 position = new FVector2(),
+            Fix64 rotation = new Fix64())
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
@@ -65,10 +65,10 @@ namespace VelcroPhysics.Dynamics
             if (!Broken)
                 if (Parts.Contains(contact.FixtureA) || Parts.Contains(contact.FixtureB))
                 {
-                    var maxImpulse = 0.0f;
+                    var maxImpulse = Fix64.Zero;
                     var count = contact.Manifold.PointCount;
 
-                    for (var i = 0; i < count; ++i) maxImpulse = Mathf.Max(maxImpulse, impulse.Points[i].NormalImpulse);
+                    for (var i = 0; i < count; ++i) maxImpulse = Fix64.Max(maxImpulse, impulse.Points[i].NormalImpulse);
 
                     if (maxImpulse > Strength)
                         // Flag the body for breaking.
@@ -91,8 +91,8 @@ namespace VelcroPhysics.Dynamics
                 //Enlarge the cache if needed
                 if (Parts.Count > _angularVelocitiesCache.Length)
                 {
-                    _velocitiesCache = new Vector2[Parts.Count];
-                    _angularVelocitiesCache = new float[Parts.Count];
+                    _velocitiesCache = new FVector2[Parts.Count];
+                    _angularVelocitiesCache = new Fix64[Parts.Count];
                 }
 
                 //Cache the linear and angular velocities.

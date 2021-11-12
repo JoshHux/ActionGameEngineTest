@@ -4,10 +4,10 @@
 */
 
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay
 {
@@ -31,7 +31,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            Debug.Assert(vertices.Count > 3);
+            UnityEngine.Debug.Assert(vertices.Count > 3);
 
             var poly = new Polygon.Polygon();
 
@@ -58,7 +58,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
             foreach (var triangle in poly.Triangles)
             {
                 var v = new Vertices();
-                foreach (var p in triangle.Points) v.Add(new Vector2(p.X, p.Y));
+                foreach (var p in triangle.Points) v.Add(new FVector2(p.X, p.Y));
                 results.Add(v);
             }
 

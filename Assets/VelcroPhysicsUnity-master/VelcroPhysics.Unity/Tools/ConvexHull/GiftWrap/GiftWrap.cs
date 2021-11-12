@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using VelcroPhysics.Shared;
+﻿using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.ConvexHull.GiftWrap
 {
@@ -39,7 +39,7 @@ namespace VelcroPhysics.Tools.ConvexHull.GiftWrap
             var m = 0;
             var ih = i0;
 
-            for (;;)
+            for (; ; )
             {
                 hull[m] = ih;
 
@@ -55,10 +55,10 @@ namespace VelcroPhysics.Tools.ConvexHull.GiftWrap
                     var r = vertices[ie] - vertices[hull[m]];
                     var v = vertices[j] - vertices[hull[m]];
                     var c = MathUtils.Cross(ref r, ref v);
-                    if (c < 0.0f) ie = j;
+                    if (c < Fix64.Zero) ie = j;
 
                     // Collinearity check
-                    if (c == 0.0f && v.sqrMagnitude > r.sqrMagnitude) ie = j;
+                    if (c == Fix64.Zero && v.sqrMagnitude > r.sqrMagnitude) ie = j;
                 }
 
                 ++m;

@@ -34,6 +34,7 @@
 //   Has* turned into attributes
 // Future possibilities
 //   Comments!
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {
@@ -43,7 +44,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         public TriangulationPoint Point;
         public AdvancingFrontNode Prev;
         public DelaunayTriangle Triangle;
-        public float Value;
+        public Fix64 Value;
 
         public AdvancingFrontNode(TriangulationPoint point)
         {

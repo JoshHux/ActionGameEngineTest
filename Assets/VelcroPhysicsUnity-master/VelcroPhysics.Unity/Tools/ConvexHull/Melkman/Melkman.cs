@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using VelcroPhysics.Shared;
+﻿using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.ConvexHull.Melkman
 {
@@ -28,8 +28,8 @@ namespace VelcroPhysics.Tools.ConvexHull.Melkman
                 return vertices;
 
             //We'll never need a queue larger than the current number of Vertices +1
-            //Create float-ended queue
-            var deque = new Vector2[vertices.Count + 1];
+            //Create Fix64-ended queue
+            var deque = new FVector2[vertices.Count + 1];
             int qf = 3, qb = 0; //Queue front index, queue back index
 
             //Start by placing first 3 vertices in convex CCW order

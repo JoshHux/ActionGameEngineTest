@@ -1,5 +1,6 @@
 using UnityEngine;
 using VelcroPhysics.Collision.ContactSystem;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -25,16 +26,16 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <summary>
         /// Usage depends on manifold type
         /// </summary>
-        public Vector2 LocalPoint;
+        public FVector2 LocalPoint;
 
         /// <summary>
         /// The non-penetration impulse
         /// </summary>
-        public float NormalImpulse;
+        public Fix64 NormalImpulse;
 
         /// <summary>
         /// The friction impulse
         /// </summary>
-        public float TangentImpulse;
+        public Fix64 TangentImpulse;
     }
 }

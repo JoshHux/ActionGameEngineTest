@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Cutting.Simple
 {
@@ -20,7 +20,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
         /// <param name="exitPoint">The exit point - The end point</param>
         /// <param name="first">The first collection of vertexes</param>
         /// <param name="second">The second collection of vertexes</param>
-        public static void SplitShape(Fixture fixture, Vector2 entryPoint, Vector2 exitPoint, out Vertices first,
+        public static void SplitShape(Fixture fixture, FVector2 entryPoint, FVector2 exitPoint, out Vertices first,
             out Vertices second)
         {
             var localEntryPoint = fixture.Body.GetLocalPoint(ref entryPoint);
@@ -40,10 +40,10 @@ namespace VelcroPhysics.Tools.Cutting.Simple
             foreach (var vertex in shape.Vertices)
             {
                 if (vertex.Equals(localEntryPoint))
-                    localEntryPoint -= new Vector2(0, Settings.Epsilon);
+                    localEntryPoint -= new FVector2(0, Settings.Epsilon);
 
                 if (vertex.Equals(localExitPoint))
-                    localExitPoint += new Vector2(0, Settings.Epsilon);
+                    localExitPoint += new FVector2(0, Settings.Epsilon);
             }
 
             var vertices = new Vertices(shape.Vertices);
@@ -58,7 +58,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
                 int n;
 
                 //Find out if this vertex is on the old or new shape.
-                if (Vector2.Dot(MathUtils.Cross(localExitPoint - localEntryPoint, 1), vertices[i] - localEntryPoint) >
+                if (FVector2.Dot(MathUtils.Cross(localExitPoint - localEntryPoint, 1), vertices[i] - localEntryPoint) >
                     Settings.Epsilon)
                     n = 0;
                 else
@@ -69,7 +69,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
                     //If we switch from one shape to the other add the cut vertices.
                     if (last == 0)
                     {
-                        Debug.Assert(cutAdded[0] == -1);
+                        UnityEngine.Debug.Assert(cutAdded[0] == -1);
                         cutAdded[0] = newPolygon[last].Count;
                         newPolygon[last].Add(localExitPoint);
                         newPolygon[last].Add(localEntryPoint);
@@ -77,7 +77,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
 
                     if (last == 1)
                     {
-                        Debug.Assert(cutAdded[last] == -1);
+                        UnityEngine.Debug.Assert(cutAdded[last] == -1);
                         cutAdded[last] = newPolygon[last].Count;
                         newPolygon[last].Add(localEntryPoint);
                         newPolygon[last].Add(localExitPoint);
@@ -105,7 +105,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
 
             for (var n = 0; n < 2; n++)
             {
-                Vector2 offset;
+                FVector2 offset;
                 if (cutAdded[n] > 0)
                     offset = newPolygon[n][cutAdded[n] - 1] - newPolygon[n][cutAdded[n]];
                 else
@@ -113,7 +113,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
                 offset.Normalize();
 
                 if (!offset.IsValid())
-                    offset = Vector2.one;
+                    offset = FVector2.one;
 
                 newPolygon[n][cutAdded[n]] += Settings.Epsilon * offset;
 
@@ -124,7 +124,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
                 offset.Normalize();
 
                 if (!offset.IsValid())
-                    offset = Vector2.one;
+                    offset = FVector2.one;
 
                 newPolygon[n][cutAdded[n] + 1] += Settings.Epsilon * offset;
             }
@@ -141,11 +141,11 @@ namespace VelcroPhysics.Tools.Cutting.Simple
         /// <param name="start">The startpoint.</param>
         /// <param name="end">The endpoint.</param>
         /// <returns>True if the cut was performed.</returns>
-        public static bool Cut(World world, Vector2 start, Vector2 end)
+        public static bool Cut(World world, FVector2 start, FVector2 end)
         {
             var fixtures = new List<Fixture>();
-            var entryPoints = new List<Vector2>();
-            var exitPoints = new List<Vector2>();
+            var entryPoints = new List<FVector2>();
+            var exitPoints = new List<FVector2>();
 
             //We don't support cutting when the start or end is inside a shape.
             if (world.TestPoint(start) != null || world.TestPoint(end) != null)

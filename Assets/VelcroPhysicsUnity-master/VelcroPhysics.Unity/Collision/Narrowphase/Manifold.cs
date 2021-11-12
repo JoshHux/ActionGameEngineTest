@@ -1,5 +1,6 @@
 using UnityEngine;
 using VelcroPhysics.Shared.Optimization;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -26,12 +27,12 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <summary>
         /// Not use for Type.SeparationFunction.Points
         /// </summary>
-        public Vector2 LocalNormal;
+        public FVector2 LocalNormal;
 
         /// <summary>
         /// Usage depends on manifold type
         /// </summary>
-        public Vector2 LocalPoint;
+        public FVector2 LocalPoint;
 
         /// <summary>
         /// The number of manifold points

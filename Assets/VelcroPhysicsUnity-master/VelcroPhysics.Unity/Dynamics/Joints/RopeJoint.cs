@@ -20,10 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using UnityEngine;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
+using FixMath.NET;
 
 namespace VelcroPhysics.Dynamics.VJoints
 {
@@ -45,22 +45,22 @@ namespace VelcroPhysics.Dynamics.VJoints
     public class RopeVJoint : VJoint
     {
         // Solver shared
-        private float _impulse;
+        private Fix64 _impulse;
 
         // Solver temp
         private int _indexA;
 
         private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
-        private float _invMassB;
-        private float _length;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _mass;
-        private Vector2 _rA, _rB;
-        private Vector2 _u;
+        private Fix64 _invIA;
+        private Fix64 _invIB;
+        private Fix64 _invMassA;
+        private Fix64 _invMassB;
+        private Fix64 _length;
+        private FVector2 _localCenterA;
+        private FVector2 _localCenterB;
+        private Fix64 _mass;
+        private FVector2 _rA, _rB;
+        private FVector2 _u;
 
         internal RopeVJoint()
         {
@@ -75,7 +75,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <param name="anchorA">The anchor on the first body</param>
         /// <param name="anchorB">The anchor on the second body</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public RopeVJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
+        public RopeVJoint(Body bodyA, Body bodyB, FVector2 anchorA, FVector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             VJointType = VJointType.Rope;
@@ -99,20 +99,20 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
-        public sealed override Vector2 WorldAnchorA
+        public sealed override FVector2 WorldAnchorA
         {
             get => BodyA.GetWorldPoint(LocalAnchorA);
             set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
-        public sealed override Vector2 WorldAnchorB
+        public sealed override FVector2 WorldAnchorB
         {
             get => BodyB.GetWorldPoint(LocalAnchorB);
             set => LocalAnchorB = BodyB.GetLocalPoint(value);
@@ -122,19 +122,19 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// Get or set the maximum length of the rope.
         /// By default, it is the distance between the two anchor points.
         /// </summary>
-        public float MaxLength { get; set; }
+        public Fix64 MaxLength { get; set; }
 
         /// <summary>
         /// Gets the state of the VJoint.
         /// </summary>
         public LimitState State { get; private set; }
 
-        public override Vector2 GetReactionForce(float invDt)
+        public override FVector2 GetReactionForce(Fix64 invDt)
         {
             return invDt * _impulse * _u;
         }
 
-        public override float GetReactionTorque(float invDt)
+        public override Fix64 GetReactionTorque(Fix64 invDt)
         {
             return 0;
         }
@@ -169,20 +169,20 @@ namespace VelcroPhysics.Dynamics.VJoints
             _length = _u.magnitude;
 
             var C = _length - MaxLength;
-            if (C > 0.0f)
+            if (C > Fix64.Zero)
                 State = LimitState.AtUpper;
             else
                 State = LimitState.Inactive;
 
             if (_length > Settings.LinearSlop)
             {
-                _u *= 1.0f / _length;
+                _u *= Fix64.One / _length;
             }
             else
             {
-                _u = Vector2.zero;
-                _mass = 0.0f;
-                _impulse = 0.0f;
+                _u = FVector2.zero;
+                _mass = Fix64.Zero;
+                _impulse = Fix64.Zero;
                 return;
             }
 
@@ -191,7 +191,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             var crB = MathUtils.Cross(_rB, _u);
             var invMass = _invMassA + _invIA * crA * crA + _invMassB + _invIB * crB * crB;
 
-            _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
+            _mass = invMass != Fix64.Zero ? Fix64.One / invMass : Fix64.Zero;
 
             if (Settings.EnableWarmstarting)
             {
@@ -206,7 +206,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = 0.0f;
+                _impulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -226,14 +226,14 @@ namespace VelcroPhysics.Dynamics.VJoints
             var vpA = vA + MathUtils.Cross(wA, _rA);
             var vpB = vB + MathUtils.Cross(wB, _rB);
             var C = _length - MaxLength;
-            var Cdot = Vector2.Dot(_u, vpB - vpA);
+            var Cdot = FVector2.Dot(_u, vpB - vpA);
 
             // Predictive constraint.
-            if (C < 0.0f) Cdot += data.Step.inv_dt * C;
+            if (C < Fix64.Zero) Cdot += data.Step.inv_dt * C;
 
             var impulse = -_mass * Cdot;
             var oldImpulse = _impulse;
-            _impulse = Mathf.Min(0.0f, _impulse + impulse);
+            _impulse = Fix64.Min(0, _impulse + impulse);
             impulse = _impulse - oldImpulse;
 
             var P = impulse * _u;
@@ -265,7 +265,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             u.Normalize();
             var C = length - MaxLength;
 
-            C = MathUtils.Clamp(C, 0.0f, Settings.MaxLinearCorrection);
+            C = MathUtils.Clamp(C, Fix64.Zero, Settings.MaxLinearCorrection);
 
             var impulse = -_mass * C;
             var P = impulse * u;

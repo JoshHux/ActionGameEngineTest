@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using VelcroPhysics.Shared.Contracts;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {

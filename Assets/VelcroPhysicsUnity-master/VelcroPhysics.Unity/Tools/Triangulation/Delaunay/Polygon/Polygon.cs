@@ -42,6 +42,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
 {
@@ -154,7 +155,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
                 _points.Add(p);
             }
 
-            first = (PolygonPoint) _points[0];
+            first = (PolygonPoint)_points[0];
             _last.Next = first;
             first.Previous = _last;
         }

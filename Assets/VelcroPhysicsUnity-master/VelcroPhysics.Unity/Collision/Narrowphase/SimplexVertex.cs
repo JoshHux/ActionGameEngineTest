@@ -1,4 +1,5 @@
 using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -7,7 +8,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <summary>
         /// Barycentric coordinate for closest point
         /// </summary>
-        public float A;
+        public Fix64 A;
 
         /// <summary>
         /// wA index
@@ -22,16 +23,16 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <summary>
         /// wB - wA
         /// </summary>
-        public Vector2 W;
+        public FVector2 W;
 
         /// <summary>
         /// Support point in proxyA
         /// </summary>
-        public Vector2 WA;
+        public FVector2 WA;
 
         /// <summary>
         /// Support point in proxyB
         /// </summary>
-        public Vector2 WB;
+        public FVector2 WB;
     }
 }

@@ -4,6 +4,7 @@ using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Broadphase
 {
@@ -18,7 +19,7 @@ namespace VelcroPhysics.Collision.Broadphase
 
         void RemoveProxy(int proxyId);
 
-        void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement);
+        void MoveProxy(int proxyId, ref AABB aabb, FVector2 displacement);
 
         FixtureProxy GetProxy(int proxyId);
 
@@ -28,8 +29,8 @@ namespace VelcroPhysics.Collision.Broadphase
 
         void Query(Func<int, bool> callback, ref AABB aabb);
 
-        void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input);
+        void RayCast(Func<RayCastInput, int, Fix64> callback, ref RayCastInput input);
 
-        void ShiftOrigin(Vector2 newOrigin);
+        void ShiftOrigin(FVector2 newOrigin);
     }
 }

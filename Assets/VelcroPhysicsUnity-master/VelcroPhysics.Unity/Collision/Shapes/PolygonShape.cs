@@ -26,6 +26,7 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.ConvexHull.GiftWrap;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -43,7 +44,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="density">The density.</param>
-        public PolygonShape(Vertices vertices, float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
+        public PolygonShape(Vertices vertices, Fix64 density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
         {
             Vertices = vertices; //This assignment will call ComputeProperties()
         }
@@ -52,7 +53,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// Create a new PolygonShape with the specified density.
         /// </summary>
         /// <param name="density">The density.</param>
-        public PolygonShape(float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
+        public PolygonShape(Fix64 density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
         {
         }
 
@@ -71,7 +72,7 @@ namespace VelcroPhysics.Collision.Shapes
             get => _vertices;
             set
             {
-                Debug.Assert(value.Count >= 3 && value.Count <= Settings.MaxPolygonVertices);
+                UnityEngine.Debug.Assert(value.Count >= 3 && value.Count <= Settings.MaxPolygonVertices);
 
                 if (Settings.UseConvexHullPolygons)
                 {
@@ -100,8 +101,8 @@ namespace VelcroPhysics.Collision.Shapes
                     var i1 = i;
                     var i2 = i + 1 < _vertices.Count ? i + 1 : 0;
                     var edge = _vertices[i2] - _vertices[i1];
-                    Debug.Assert(edge.sqrMagnitude > Settings.Epsilon * Settings.Epsilon);
-                    var temp = MathUtils.Cross(edge, 1.0f);
+                    UnityEngine.Debug.Assert(edge.sqrMagnitude > Settings.Epsilon * Settings.Epsilon);
+                    var temp = MathUtils.Cross(edge, Fix64.One);
                     temp.Normalize();
                     _normals.Add(temp);
                 }
@@ -141,28 +142,29 @@ namespace VelcroPhysics.Collision.Shapes
             //
             // The rest of the derivation is handled by computer algebra.
 
-            Debug.Assert(Vertices.Count >= 3);
+            UnityEngine.Debug.Assert(Vertices.Count >= 3);
 
             //Velcro optimization: Early exit as polygons with 0 density does not have any properties.
             if (_density <= 0)
                 return;
 
             //Velcro optimization: Consolidated the calculate centroid and mass code to a single method.
-            var center = Vector2.zero;
-            var area = 0.0f;
-            var I = 0.0f;
+            var center = FVector2.zero;
+            var area = Fix64.Zero;
+            var I = Fix64.Zero;
 
             //Velcro: We change the reference point to be inside the polygon
 
             // pRef is the reference point for forming triangles.
             // It's location doesn't change the result (except for rounding error).
-            var s = Vector2.zero;
+            var s = FVector2.zero;
 
             // This code would put the reference point inside the polygon.
             for (var i = 0; i < Vertices.Count; ++i) s += Vertices[i];
-            s *= 1.0f / Vertices.Count;
+            s *= Fix64.One / Vertices.Count;
 
-            const float k_inv3 = 1.0f / 3.0f;
+            //const Fix64 k_inv3 = Fix64.One / 3;
+            Fix64 k_inv3 = Fix64.One / 3;
 
             for (var i = 0; i < Vertices.Count; ++i)
             {
@@ -172,23 +174,23 @@ namespace VelcroPhysics.Collision.Shapes
 
                 var D = MathUtils.Cross(e1, e2);
 
-                var triangleArea = 0.5f * D;
+                var triangleArea = FixedMath.C0p5 * D;
                 area += triangleArea;
 
                 // Area weighted centroid
                 center += triangleArea * k_inv3 * (e1 + e2);
 
-                float ex1 = e1.x, ey1 = e1.y;
-                float ex2 = e2.x, ey2 = e2.y;
+                Fix64 ex1 = e1.x, ey1 = e1.y;
+                Fix64 ex2 = e2.x, ey2 = e2.y;
 
                 var intx2 = ex1 * ex1 + ex2 * ex1 + ex2 * ex2;
                 var inty2 = ey1 * ey1 + ey2 * ey1 + ey2 * ey2;
 
-                I += 0.25f * k_inv3 * D * (intx2 + inty2);
+                I += FixedMath.C0p25 * k_inv3 * D * (intx2 + inty2);
             }
 
             //The area is too small for the engine to handle.
-            Debug.Assert(area > Settings.Epsilon);
+            UnityEngine.Debug.Assert(area > Settings.Epsilon);
 
             // We save the area
             MassData.Area = area;
@@ -197,7 +199,7 @@ namespace VelcroPhysics.Collision.Shapes
             MassData.Mass = _density * area;
 
             // Center of mass
-            center *= 1.0f / area;
+            center *= Fix64.One / area;
             MassData.Centroid = center + s;
 
             // Inertia tensor relative to the local origin (point s).
@@ -205,10 +207,10 @@ namespace VelcroPhysics.Collision.Shapes
 
             // Shift to center of mass then to original body origin.
             MassData.Inertia += MassData.Mass *
-                                (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(center, center));
+                                (FVector2.Dot(MassData.Centroid, MassData.Centroid) - FVector2.Dot(center, center));
         }
 
-        public override bool TestPoint(ref VTransform VTransform, ref Vector2 point)
+        public override bool TestPoint(ref VTransform VTransform, ref FVector2 point)
         {
             return TestPointHelper.TestPointPolygon(_vertices, _normals, ref point, ref VTransform);
         }

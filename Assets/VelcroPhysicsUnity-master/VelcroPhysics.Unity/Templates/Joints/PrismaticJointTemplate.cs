@@ -1,5 +1,5 @@
-using UnityEngine;
 using VelcroPhysics.Dynamics.VJoints;
+using FixMath.NET;
 
 namespace VelcroPhysics.Templates.VJoints
 {
@@ -30,46 +30,46 @@ namespace VelcroPhysics.Templates.VJoints
         /// <summary>
         /// The local anchor point relative to bodyA's origin.
         /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public FVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point relative to bodyB's origin.
         /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public FVector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// The local translation unit axis in bodyA.
         /// </summary>
-        public Vector2 LocalAxisA { get; set; }
+        public FVector2 LocalAxisA { get; set; }
 
         /// <summary>
         /// The lower translation limit, usually in meters.
         /// </summary>
-        public float LowerTranslation { get; set; }
+        public Fix64 LowerTranslation { get; set; }
 
         /// <summary>
         /// The maximum motor torque, usually in N-m.
         /// </summary>
-        public float MaxMotorForce { get; set; }
+        public Fix64 MaxMotorForce { get; set; }
 
         /// <summary>
         /// The desired motor speed in radians per second.
         /// </summary>
-        public float MotorSpeed { get; set; }
+        public Fix64 MotorSpeed { get; set; }
 
         /// <summary>
         /// The constrained angle between the bodies: bodyB_angle - bodyA_angle.
         /// </summary>
-        public float ReferenceAngle { get; set; }
+        public Fix64 ReferenceAngle { get; set; }
 
         /// <summary>
         /// The upper translation limit, usually in meters.
         /// </summary>
-        public float UpperTranslation { get; set; }
+        public Fix64 UpperTranslation { get; set; }
 
         public override void SetDefaults()
         {
-            LocalAxisA = new Vector2(1.0f, 0.0f);
+            LocalAxisA = new FVector2(1, Fix64.Zero);
         }
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+using FixMath.NET;
 
 namespace VelcroPhysics.Shared
 {
@@ -7,14 +7,14 @@ namespace VelcroPhysics.Shared
     /// </summary>
     public struct Mat22
     {
-        public Vector2 ex, ey;
+        public FVector2 ex, ey;
 
         /// <summary>
         /// Construct this matrix using columns.
         /// </summary>
         /// <param name="c1">The c1.</param>
         /// <param name="c2">The c2.</param>
-        public Mat22(Vector2 c1, Vector2 c2)
+        public Mat22(FVector2 c1, FVector2 c2)
         {
             ex = c1;
             ey = c2;
@@ -27,26 +27,28 @@ namespace VelcroPhysics.Shared
         /// <param name="a12">The a12.</param>
         /// <param name="a21">The a21.</param>
         /// <param name="a22">The a22.</param>
-        public Mat22(float a11, float a12, float a21, float a22)
+        public Mat22(Fix64 a11, Fix64 a12, Fix64 a21, Fix64 a22)
         {
-            ex = new Vector2(a11, a21);
-            ey = new Vector2(a12, a22);
+            ex = new FVector2(a11, a21);
+            ey = new FVector2(a12, a22);
         }
 
         public Mat22 Inverse
         {
             get
             {
-                float a = ex.x, b = ey.x, c = ex.y, d = ey.y;
+                Fix64 a = ex.x, b = ey.x, c = ex.y, d = ey.y;
                 var det = a * d - b * c;
-                if (det != 0.0f) det = 1.0f / det;
+                if (det != Fix64.Zero) det = Fix64.One / det;
 
                 var result = new Mat22();
-                result.ex.x = det * d;
-                result.ex.y = -det * c;
+                var rexx = det * d;
+                var rexy = -det * c;
+                var reyx = -det * b;
+                var reyy = det * a;
 
-                result.ey.x = -det * b;
-                result.ey.y = det * a;
+                result.ex = new FVector2(rexx, rexy);
+                result.ey = new FVector2(reyx, reyy);
 
                 return result;
             }
@@ -57,7 +59,7 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <param name="c1">The c1.</param>
         /// <param name="c2">The c2.</param>
-        public void Set(Vector2 c1, Vector2 c2)
+        public void Set(FVector2 c1, FVector2 c2)
         {
             ex = c1;
             ey = c2;
@@ -68,10 +70,12 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetIdentity()
         {
-            ex.x = 1.0f;
-            ey.x = 0.0f;
-            ex.y = 0.0f;
-            ey.y = 1.0f;
+            //ex.x =Fix64.One;
+            //ey.x =Fix64.Zero;
+            //ex.y =Fix64.Zero;
+            //ey.y =Fix64.One;
+            ex = new FVector2(1, 0);
+            ey = new FVector2(0, 1);
         }
 
         /// <summary>
@@ -79,10 +83,12 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetZero()
         {
-            ex.x = 0.0f;
-            ey.x = 0.0f;
-            ex.y = 0.0f;
-            ey.y = 0.0f;
+            //ex.x =Fix64.Zero;
+            //ey.x =Fix64.Zero;
+            //ex.y =Fix64.Zero;
+            //ey.y =Fix64.Zero;
+            ex = new FVector2();
+            ey = new FVector2();
         }
 
         /// <summary>
@@ -91,13 +97,13 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        public Vector2 Solve(Vector2 b)
+        public FVector2 Solve(FVector2 b)
         {
-            float a11 = ex.x, a12 = ey.x, a21 = ex.y, a22 = ey.y;
+            Fix64 a11 = ex.x, a12 = ey.x, a21 = ex.y, a22 = ey.y;
             var det = a11 * a22 - a12 * a21;
-            if (det != 0.0f) det = 1.0f / det;
+            if (det != Fix64.Zero) det = Fix64.One / det;
 
-            return new Vector2(det * (a22 * b.x - a12 * b.y), det * (a11 * b.y - a21 * b.x));
+            return new FVector2(det * (a22 * b.x - a12 * b.y), det * (a11 * b.y - a21 * b.x));
         }
 
         public static void Add(ref Mat22 A, ref Mat22 B, out Mat22 R)

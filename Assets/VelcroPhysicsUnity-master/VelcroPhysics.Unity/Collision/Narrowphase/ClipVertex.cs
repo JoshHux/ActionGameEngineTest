@@ -1,5 +1,6 @@
 using UnityEngine;
 using VelcroPhysics.Collision.ContactSystem;
+using FixMath.NET;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -9,6 +10,6 @@ namespace VelcroPhysics.Collision.Narrowphase
     internal struct ClipVertex
     {
         public ContactID ID;
-        public Vector2 V;
+        public FVector2 V;
     }
 }
