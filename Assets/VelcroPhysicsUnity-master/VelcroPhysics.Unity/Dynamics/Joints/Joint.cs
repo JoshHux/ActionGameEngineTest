@@ -53,7 +53,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         protected VJoint(Body bodyA, Body bodyB) : this()
         {
             //Can't connect a VJoint to the same body twice.
-            Debug.Assert(bodyA != bodyB);
+            UnityEngine.Debug.Assert(bodyA != bodyB);
 
             BodyA = bodyA;
             BodyB = bodyB;
@@ -108,7 +108,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the VJointError can be before it breaks.
-        /// The default value is Fix64.MaxValue, which means it never breaks.
+        /// The default value is  Fix64.MaxValue, which means it never breaks.
         /// </summary>
         public Fix64 Breakpoint
         {

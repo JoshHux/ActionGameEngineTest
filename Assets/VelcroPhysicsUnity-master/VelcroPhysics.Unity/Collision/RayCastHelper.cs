@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using VelcroPhysics.Shared;
+﻿using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
 using FixMath.NET;
@@ -35,24 +34,24 @@ namespace VelcroPhysics.Collision.RayCast
             var numerator = FVector2.Dot(normal, v1 - p1);
             var denominator = FVector2.Dot(normal, d);
 
-            if (denominator ==Fix64.Zero) return false;
+            if (denominator == Fix64.Zero) return false;
 
             var t = numerator / denominator;
-            if (t <Fix64.Zero || input.MaxFraction < t) return false;
+            if (t < Fix64.Zero || input.MaxFraction < t) return false;
 
             var q = p1 + t * d;
 
             // q = v1 + s * r
-            // s = dot(q - v1, r) / dot(r, r)
+            // s = dot(q - v1,  r) / dot(r, r)
             var r = v2 - v1;
             var rr = FVector2.Dot(r, r);
-            if (rr ==Fix64.Zero) return false;
+            if (rr == Fix64.Zero) return false;
 
             var s = FVector2.Dot(q - v1, r) / rr;
-            if (s <Fix64.Zero ||Fix64.One < s) return false;
+            if (s < Fix64.Zero || Fix64.One < s) return false;
 
             output.Fraction = t;
-            if (numerator >Fix64.Zero)
+            if (numerator > Fix64.Zero)
                 output.Normal = -MathUtils.MulT(VTransform.q, normal);
             else
                 output.Normal = MathUtils.MulT(VTransform.q, normal);
@@ -80,13 +79,13 @@ namespace VelcroPhysics.Collision.RayCast
             var sigma = c * c - rr * b;
 
             // Check for negative discriminant and short segment.
-            if (sigma <Fix64.Zero || rr < Settings.Epsilon) return false;
+            if (sigma < Fix64.Zero || rr < Settings.Epsilon) return false;
 
             // Find the point of intersection of the line with the circle.
             var a = -(c + Fix64.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.MaxFraction * rr)
+            if (0 <= a && a <= input.MaxFraction * rr)
             {
                 a /= rr;
                 output.Fraction = a;
@@ -108,7 +107,7 @@ namespace VelcroPhysics.Collision.RayCast
             var p2 = MathUtils.MulT(VTransform.q, input.Point2 - VTransform.p);
             var d = p2 - p1;
 
-            Fix64 lower =Fix64.Zero, upper = input.MaxFraction;
+            Fix64 lower = Fix64.Zero, upper = input.MaxFraction;
 
             var index = -1;
 
@@ -116,28 +115,28 @@ namespace VelcroPhysics.Collision.RayCast
             {
                 // p = p1 + a * d
                 // dot(normal, p - v) = 0
-                // dot(normal, p1 - v) + a * dot(normal, d) = 0
+                // dot(no rmal, p1 - v) + a * dot(normal, d) = 0
                 var numerator = FVector2.Dot(normals[i], vertices[i] - p1);
                 var denominator = FVector2.Dot(normals[i], d);
 
-                if (denominator ==Fix64.Zero)
+                if (denominator == Fix64.Zero)
                 {
-                    if (numerator <Fix64.Zero) return false;
+                    if (numerator < Fix64.Zero) return false;
                 }
                 else
                 {
                     // Note: we want this predicate without division:
                     // lower < numerator / denominator, where denominator < 0
-                    // Since denominator < 0, we have to flip the inequality:
+                    // Since denom inator < 0, we have to flip the inequality:
                     // lower < numerator / denominator <==> denominator * lower > numerator.
-                    if (denominator <Fix64.Zero && numerator < lower * denominator)
+                    if (denominator < Fix64.Zero && numerator < lower * denominator)
                     {
                         // Increase lower.
                         // The segment enters this half-space.
                         lower = numerator / denominator;
                         index = i;
                     }
-                    else if (denominator >Fix64.Zero && numerator < upper * denominator)
+                    else if (denominator > Fix64.Zero && numerator < upper * denominator)
                     {
                         // Decrease upper.
                         // The segment exits this half-space.
@@ -145,14 +144,14 @@ namespace VelcroPhysics.Collision.RayCast
                     }
                 }
 
-                // The use of epsilon here causes the assert on lower to trip
+                // The use of epsilon here  causes the assert on lower to trip
                 // in some cases. Apparently the use of epsilon was to make edge
                 // shapes work, but now those are handled separately.
                 //if (upper < lower - b2_epsilon)
                 if (upper < lower) return false;
             }
 
-            Debug.Assert(0.0f <= lower && lower <= input.MaxFraction);
+            UnityEngine.Debug.Assert(0 <= lower && lower <= input.MaxFraction);
 
             if (index >= 0)
             {

@@ -72,8 +72,10 @@ namespace VelcroPhysics.Utilities
 
             if (0 < ua && ua < 1 && 0 < ub && ub < 1)
             {
-                intersectionPoint.x = x1 + ua * (x2 - x1);
-                intersectionPoint.y = y1 + ua * (y2 - y1);
+                var intersectionPointx = x1 + ua * (x2 - x1);
+                var intersectionPointy = y1 + ua * (y2 - y1);
+
+                intersectionPoint = new FVector2(intersectionPointx, intersectionPointy);
                 return true;
             }
 
@@ -95,8 +97,10 @@ namespace VelcroPhysics.Utilities
             if (!MathUtils.Fix64Equals(det, 0))
             {
                 // lines are not parallel
-                i.x = (b2 * c1 - b1 * c2) / det;
-                i.y = (a1 * c2 - a2 * c1) / det;
+                var ix = (b2 * c1 - b1 * c2) / det;
+                var iy = (a1 * c2 - a2 * c1) / det;
+
+                i = new FVector2(ix, iy);
             }
 
             return i;
@@ -171,11 +175,13 @@ namespace VelcroPhysics.Utilities
                     // segment 1 as well.
                     if (!secondIsSegment || ub >= Fix64.Zero && ub <= Fix64.One)
                         // check if they are coincident (no collision in this case)
-                        if (ua != 0f || ub != 0f)
+                        if (ua != 0 || ub != 0)
                         {
                             //There is an intersection
-                            point.x = point1.x + ua * b;
-                            point.y = point1.y + ua * d;
+                            var pointx = point1.x + ua * b;
+                            var pointy = point1.y + ua * d;
+
+                            point = new FVector2(pointx, pointy);
                             return true;
                         }
                 }

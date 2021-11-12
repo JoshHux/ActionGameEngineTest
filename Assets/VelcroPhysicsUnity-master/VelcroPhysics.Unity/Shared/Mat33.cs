@@ -1,4 +1,3 @@
-using UnityEngine;
 using VelcroPhysics.Utilities;
 using FixMath.NET;
 
@@ -9,7 +8,7 @@ namespace VelcroPhysics.Shared
     /// </summary>
     public struct Mat33
     {
-        public Vector3 ex, ey, ez;
+        public FVector3 ex, ey, ez;
 
         /// <summary>
         /// Construct this matrix using columns.
@@ -17,7 +16,7 @@ namespace VelcroPhysics.Shared
         /// <param name="c1">The c1.</param>
         /// <param name="c2">The c2.</param>
         /// <param name="c3">The c3.</param>
-        public Mat33(Vector3 c1, Vector3 c2, Vector3 c3)
+        public Mat33(FVector3 c1, FVector3 c2, FVector3 c3)
         {
             ex = c1;
             ey = c2;
@@ -29,9 +28,9 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetZero()
         {
-            ex = Vector3.zero;
-            ey = Vector3.zero;
-            ez = Vector3.zero;
+            ex = FVector3.zero;
+            ey = FVector3.zero;
+            ez = FVector3.zero;
         }
 
         /// <summary>
@@ -40,13 +39,13 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        public Vector3 Solve33(Vector3 b)
+        public FVector3 Solve33(FVector3 b)
         {
-            var det = Vector3.Dot(ex, Vector3.Cross(ey, ez));
+            var det = FVector3.Dot(ex, FVector3.Cross(ey, ez));
             if (det !=Fix64.Zero) det =Fix64.One / det;
 
-            return new Vector3(det * Vector3.Dot(b, Vector3.Cross(ey, ez)), det * Vector3.Dot(ex, Vector3.Cross(b, ez)),
-                det * Vector3.Dot(ex, Vector3.Cross(ey, b)));
+            return new FVector3(det * FVector3.Dot(b, FVector3.Cross(ey, ez)), det * FVector3.Dot(ex, FVector3.Cross(b, ez)),
+                det * FVector3.Dot(ex, FVector3.Cross(ey, b)));
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace VelcroPhysics.Shared
         /// Returns the zero matrix if singular.
         public void GetSymInverse33(ref Mat33 M)
         {
-            var det = MathUtils.Dot(ex, MathUtils.Cross((Vector3) ey, ez));
+            var det = MathUtils.Dot(ex, MathUtils.Cross((FVector3) ey, ez));
             if (det !=Fix64.Zero) det =Fix64.One / det;
 
             Fix64 a11 = ex.x, a12 = ey.x, a13 = ez.x;

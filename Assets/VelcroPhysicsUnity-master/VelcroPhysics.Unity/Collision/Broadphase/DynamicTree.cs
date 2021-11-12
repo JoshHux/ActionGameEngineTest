@@ -94,12 +94,12 @@ namespace VelcroPhysics.Collision.Broadphase
         {
             get
             {
-                if (_root == NullNode) returnFix64.Zero;
+                if (_root == NullNode) return Fix64.Zero;
 
                 var root = _nodes[_root];
                 var rootArea = root.AABB.Perimeter;
 
-                var totalArea =Fix64.Zero;
+                var totalArea = Fix64.Zero;
                 for (var i = 0; i < _nodeCapacity; ++i)
                 {
                     var node = _nodes[i];
@@ -128,12 +128,12 @@ namespace VelcroPhysics.Collision.Broadphase
                     var node = _nodes[i];
                     if (node.Height <= 1) continue;
 
-                    Debug.Assert(node.IsLeaf() == false);
+                    UnityEngine.Debug.Assert(node.IsLeaf() == false);
 
                     var child1 = node.Child1;
                     var child2 = node.Child2;
                     var balance = Fix64.Abs(_nodes[child2].Height - _nodes[child1].Height);
-                    maxBalance = Fix64.Max(maxBalance, balance);
+                    maxBalance = Mathf.Max(maxBalance, (int)balance);
                 }
 
                 return maxBalance;
@@ -170,8 +170,8 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <param name="proxyId">The proxy id.</param>
         public void RemoveProxy(int proxyId)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            Debug.Assert(_nodes[proxyId].IsLeaf());
+            UnityEngine.Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            UnityEngine.Debug.Assert(_nodes[proxyId].IsLeaf());
 
             RemoveLeaf(proxyId);
             FreeNode(proxyId);
@@ -188,9 +188,9 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <returns>true if the proxy was re-inserted.</returns>
         public bool MoveProxy(int proxyId, ref AABB aabb, FVector2 displacement)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
 
-            Debug.Assert(_nodes[proxyId].IsLeaf());
+            UnityEngine.Debug.Assert(_nodes[proxyId].IsLeaf());
 
             if (_nodes[proxyId].AABB.Contains(ref aabb)) return false;
 
@@ -204,16 +204,23 @@ namespace VelcroPhysics.Collision.Broadphase
 
             // Predict AABB displacement.
             var d = Settings.AABBMultiplier * displacement;
+            var lowerX = b.LowerBound.x;
+            var lowerY = b.LowerBound.y;
+            var upperX = b.UpperBound.x;
+            var upperY = b.UpperBound.y;
 
-            if (d.x <Fix64.Zero)
-                b.LowerBound.x += d.x;
+            if (d.x < Fix64.Zero)
+                lowerX += d.x;
             else
-                b.UpperBound.x += d.x;
+                upperX += d.x;
 
-            if (d.y <Fix64.Zero)
-                b.LowerBound.y += d.y;
+            if (d.y < Fix64.Zero)
+                lowerY += d.y;
             else
-                b.UpperBound.y += d.y;
+                upperY += d.y;
+
+            b.LowerBound = new FVector2(lowerX, lowerY);
+            b.UpperBound = new FVector2(upperX, upperY);
 
             _nodes[proxyId].AABB = b;
 
@@ -229,7 +236,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <returns>the proxy user data or 0 if the id is invalid.</returns>
         public T GetUserData(int proxyId)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             return _nodes[proxyId].UserData;
         }
 
@@ -240,7 +247,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <param name="fatAABB">The fat AABB.</param>
         public void GetFatAABB(int proxyId, out AABB fatAABB)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             fatAABB = _nodes[proxyId].AABB;
         }
 
@@ -292,7 +299,7 @@ namespace VelcroPhysics.Collision.Broadphase
             var p1 = input.Point1;
             var p2 = input.Point2;
             var r = p2 - p1;
-            Debug.Assert(r.sqrMagnitude >Fix64.Zero);
+            UnityEngine.Debug.Assert(r.sqrMagnitude > Fix64.Zero);
             r.Normalize();
 
             // v is perpendicular to the segment.
@@ -328,7 +335,7 @@ namespace VelcroPhysics.Collision.Broadphase
                 var c = node.AABB.Center;
                 var h = node.AABB.Extents;
                 var separation = Fix64.Abs(FVector2.Dot(new FVector2(-r.y, r.x), p1 - c)) - FVector2.Dot(absV, h);
-                if (separation >Fix64.Zero) continue;
+                if (separation > Fix64.Zero) continue;
 
                 if (node.IsLeaf())
                 {
@@ -339,11 +346,11 @@ namespace VelcroPhysics.Collision.Broadphase
 
                     var value = callback(subInput, nodeId);
 
-                    if (value ==Fix64.Zero)
+                    if (value == Fix64.Zero)
                         // the client has terminated the raycast.
                         return;
 
-                    if (value >Fix64.Zero)
+                    if (value > Fix64.Zero)
                     {
                         // Update segment bounding box.
                         maxFraction = value;
@@ -365,7 +372,7 @@ namespace VelcroPhysics.Collision.Broadphase
             // Expand the node pool as needed.
             if (_freeList == NullNode)
             {
-                Debug.Assert(_nodeCount == _nodeCapacity);
+                UnityEngine.Debug.Assert(_nodeCount == _nodeCapacity);
 
                 // The free list is empty. Rebuild a bigger pool.
                 var oldNodes = _nodes;
@@ -402,8 +409,8 @@ namespace VelcroPhysics.Collision.Broadphase
 
         private void FreeNode(int nodeId)
         {
-            Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
-            Debug.Assert(0 < _nodeCount);
+            UnityEngine.Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 < _nodeCount);
             _nodes[nodeId].ParentOrNext = _freeList;
             _nodes[nodeId].Height = -1;
             _freeList = nodeId;
@@ -434,10 +441,10 @@ namespace VelcroPhysics.Collision.Broadphase
                 var combinedArea = combinedAABB.Perimeter;
 
                 // Cost of creating a new parent for this node and the new leaf
-                var cost = 2.0f * combinedArea;
+                var cost = 2 * combinedArea;
 
                 // Minimum cost of pushing the leaf further down the tree
-                var inheritanceCost = 2.0f * (combinedArea - area);
+                var inheritanceCost = 2 * (combinedArea - area);
 
                 // Cost of descending into child1
                 Fix64 cost1;
@@ -525,10 +532,10 @@ namespace VelcroPhysics.Collision.Broadphase
                 var child1 = _nodes[index].Child1;
                 var child2 = _nodes[index].Child2;
 
-                Debug.Assert(child1 != NullNode);
-                Debug.Assert(child2 != NullNode);
+                UnityEngine.Debug.Assert(child1 != NullNode);
+                UnityEngine.Debug.Assert(child2 != NullNode);
 
-                _nodes[index].Height = 1 + Fix64.Max(_nodes[child1].Height, _nodes[child2].Height);
+                _nodes[index].Height = 1 + Mathf.Max(_nodes[child1].Height, _nodes[child2].Height);
                 _nodes[index].AABB.Combine(ref _nodes[child1].AABB, ref _nodes[child2].AABB);
 
                 index = _nodes[index].ParentOrNext;
@@ -573,7 +580,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     var child2 = _nodes[index].Child2;
 
                     _nodes[index].AABB.Combine(ref _nodes[child1].AABB, ref _nodes[child2].AABB);
-                    _nodes[index].Height = 1 + Fix64.Max(_nodes[child1].Height, _nodes[child2].Height);
+                    _nodes[index].Height = 1 + Mathf.Max(_nodes[child1].Height, _nodes[child2].Height);
 
                     index = _nodes[index].ParentOrNext;
                 }
@@ -595,15 +602,15 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <returns>the new root index.</returns>
         private int Balance(int iA)
         {
-            Debug.Assert(iA != NullNode);
+            UnityEngine.Debug.Assert(iA != NullNode);
 
             var A = _nodes[iA];
             if (A.IsLeaf() || A.Height < 2) return iA;
 
             var iB = A.Child1;
             var iC = A.Child2;
-            Debug.Assert(0 <= iB && iB < _nodeCapacity);
-            Debug.Assert(0 <= iC && iC < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= iB && iB < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= iC && iC < _nodeCapacity);
 
             var B = _nodes[iB];
             var C = _nodes[iC];
@@ -617,8 +624,8 @@ namespace VelcroPhysics.Collision.Broadphase
                 var iG = C.Child2;
                 var F = _nodes[iF];
                 var G = _nodes[iG];
-                Debug.Assert(0 <= iF && iF < _nodeCapacity);
-                Debug.Assert(0 <= iG && iG < _nodeCapacity);
+                UnityEngine.Debug.Assert(0 <= iF && iF < _nodeCapacity);
+                UnityEngine.Debug.Assert(0 <= iG && iG < _nodeCapacity);
 
                 // Swap A and C
                 C.Child1 = iA;
@@ -634,7 +641,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     }
                     else
                     {
-                        Debug.Assert(_nodes[C.ParentOrNext].Child2 == iA);
+                        UnityEngine.Debug.Assert(_nodes[C.ParentOrNext].Child2 == iA);
                         _nodes[C.ParentOrNext].Child2 = iC;
                     }
                 }
@@ -652,8 +659,8 @@ namespace VelcroPhysics.Collision.Broadphase
                     A.AABB.Combine(ref B.AABB, ref G.AABB);
                     C.AABB.Combine(ref A.AABB, ref F.AABB);
 
-                    A.Height = 1 + Fix64.Max(B.Height, G.Height);
-                    C.Height = 1 + Fix64.Max(A.Height, F.Height);
+                    A.Height = 1 + Mathf.Max(B.Height, G.Height);
+                    C.Height = 1 + Mathf.Max(A.Height, F.Height);
                 }
                 else
                 {
@@ -663,8 +670,8 @@ namespace VelcroPhysics.Collision.Broadphase
                     A.AABB.Combine(ref B.AABB, ref F.AABB);
                     C.AABB.Combine(ref A.AABB, ref G.AABB);
 
-                    A.Height = 1 + Fix64.Max(B.Height, F.Height);
-                    C.Height = 1 + Fix64.Max(A.Height, G.Height);
+                    A.Height = 1 + Mathf.Max(B.Height, F.Height);
+                    C.Height = 1 + Mathf.Max(A.Height, G.Height);
                 }
 
                 return iC;
@@ -677,8 +684,8 @@ namespace VelcroPhysics.Collision.Broadphase
                 var iE = B.Child2;
                 var D = _nodes[iD];
                 var E = _nodes[iE];
-                Debug.Assert(0 <= iD && iD < _nodeCapacity);
-                Debug.Assert(0 <= iE && iE < _nodeCapacity);
+                UnityEngine.Debug.Assert(0 <= iD && iD < _nodeCapacity);
+                UnityEngine.Debug.Assert(0 <= iE && iE < _nodeCapacity);
 
                 // Swap A and B
                 B.Child1 = iA;
@@ -694,7 +701,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     }
                     else
                     {
-                        Debug.Assert(_nodes[B.ParentOrNext].Child2 == iA);
+                        UnityEngine.Debug.Assert(_nodes[B.ParentOrNext].Child2 == iA);
                         _nodes[B.ParentOrNext].Child2 = iB;
                     }
                 }
@@ -712,8 +719,8 @@ namespace VelcroPhysics.Collision.Broadphase
                     A.AABB.Combine(ref C.AABB, ref E.AABB);
                     B.AABB.Combine(ref A.AABB, ref D.AABB);
 
-                    A.Height = 1 + Fix64.Max(C.Height, E.Height);
-                    B.Height = 1 + Fix64.Max(A.Height, D.Height);
+                    A.Height = 1 + Mathf.Max(C.Height, E.Height);
+                    B.Height = 1 + Mathf.Max(A.Height, D.Height);
                 }
                 else
                 {
@@ -723,8 +730,8 @@ namespace VelcroPhysics.Collision.Broadphase
                     A.AABB.Combine(ref C.AABB, ref D.AABB);
                     B.AABB.Combine(ref A.AABB, ref E.AABB);
 
-                    A.Height = 1 + Fix64.Max(C.Height, D.Height);
-                    B.Height = 1 + Fix64.Max(A.Height, E.Height);
+                    A.Height = 1 + Mathf.Max(C.Height, D.Height);
+                    B.Height = 1 + Mathf.Max(A.Height, E.Height);
                 }
 
                 return iB;
@@ -740,14 +747,14 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <returns>The height of the tree.</returns>
         public int ComputeHeight(int nodeId)
         {
-            Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
             var node = _nodes[nodeId];
 
             if (node.IsLeaf()) return 0;
 
             var height1 = ComputeHeight(node.Child1);
             var height2 = ComputeHeight(node.Child2);
-            return 1 + Fix64.Max(height1, height2);
+            return 1 + Mathf.Max(height1, height2);
         }
 
         /// <summary>
@@ -764,7 +771,7 @@ namespace VelcroPhysics.Collision.Broadphase
         {
             if (index == NullNode) return;
 
-            if (index == _root) Debug.Assert(_nodes[index].ParentOrNext == NullNode);
+            if (index == _root) UnityEngine.Debug.Assert(_nodes[index].ParentOrNext == NullNode);
 
             var node = _nodes[index];
 
@@ -773,17 +780,17 @@ namespace VelcroPhysics.Collision.Broadphase
 
             if (node.IsLeaf())
             {
-                Debug.Assert(child1 == NullNode);
-                Debug.Assert(child2 == NullNode);
-                Debug.Assert(node.Height == 0);
+                UnityEngine.Debug.Assert(child1 == NullNode);
+                UnityEngine.Debug.Assert(child2 == NullNode);
+                UnityEngine.Debug.Assert(node.Height == 0);
                 return;
             }
 
-            Debug.Assert(0 <= child1 && child1 < _nodeCapacity);
-            Debug.Assert(0 <= child2 && child2 < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= child1 && child1 < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= child2 && child2 < _nodeCapacity);
 
-            Debug.Assert(_nodes[child1].ParentOrNext == index);
-            Debug.Assert(_nodes[child2].ParentOrNext == index);
+            UnityEngine.Debug.Assert(_nodes[child1].ParentOrNext == index);
+            UnityEngine.Debug.Assert(_nodes[child2].ParentOrNext == index);
 
             ValidateStructure(child1);
             ValidateStructure(child2);
@@ -800,25 +807,25 @@ namespace VelcroPhysics.Collision.Broadphase
 
             if (node.IsLeaf())
             {
-                Debug.Assert(child1 == NullNode);
-                Debug.Assert(child2 == NullNode);
-                Debug.Assert(node.Height == 0);
+                UnityEngine.Debug.Assert(child1 == NullNode);
+                UnityEngine.Debug.Assert(child2 == NullNode);
+                UnityEngine.Debug.Assert(node.Height == 0);
                 return;
             }
 
-            Debug.Assert(0 <= child1 && child1 < _nodeCapacity);
-            Debug.Assert(0 <= child2 && child2 < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= child1 && child1 < _nodeCapacity);
+            UnityEngine.Debug.Assert(0 <= child2 && child2 < _nodeCapacity);
 
             var height1 = _nodes[child1].Height;
             var height2 = _nodes[child2].Height;
-            var height = 1 + Fix64.Max(height1, height2);
-            Debug.Assert(node.Height == height);
+            var height = 1 + UnityEngine.Mathf.Max(height1, height2);
+            UnityEngine.Debug.Assert(node.Height == height);
 
             var AABB = new AABB();
             AABB.Combine(ref _nodes[child1].AABB, ref _nodes[child2].AABB);
 
-            Debug.Assert(AABB.LowerBound == node.AABB.LowerBound);
-            Debug.Assert(AABB.UpperBound == node.AABB.UpperBound);
+            UnityEngine.Debug.Assert(AABB.LowerBound == node.AABB.LowerBound);
+            UnityEngine.Debug.Assert(AABB.UpperBound == node.AABB.UpperBound);
 
             ValidateMetrics(child1);
             ValidateMetrics(child2);
@@ -836,14 +843,14 @@ namespace VelcroPhysics.Collision.Broadphase
             var freeIndex = _freeList;
             while (freeIndex != NullNode)
             {
-                Debug.Assert(0 <= freeIndex && freeIndex < _nodeCapacity);
+                UnityEngine.Debug.Assert(0 <= freeIndex && freeIndex < _nodeCapacity);
                 freeIndex = _nodes[freeIndex].ParentOrNext;
                 ++freeCount;
             }
 
-            Debug.Assert(Height == ComputeHeight());
+            UnityEngine.Debug.Assert(Height == ComputeHeight());
 
-            Debug.Assert(_nodeCount + freeCount == _nodeCapacity);
+            UnityEngine.Debug.Assert(_nodeCount + freeCount == _nodeCapacity);
         }
 
         /// <summary>
@@ -905,7 +912,7 @@ namespace VelcroPhysics.Collision.Broadphase
                 var parent = _nodes[parentIndex];
                 parent.Child1 = index1;
                 parent.Child2 = index2;
-                parent.Height = 1 + Fix64.Max(child1.Height, child2.Height);
+                parent.Height = 1 + Mathf.Max(child1.Height, child2.Height);
                 parent.AABB.Combine(ref child1.AABB, ref child2.AABB);
                 parent.ParentOrNext = NullNode;
 

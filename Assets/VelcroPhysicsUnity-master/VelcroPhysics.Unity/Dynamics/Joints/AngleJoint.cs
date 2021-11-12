@@ -33,7 +33,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             : base(bodyA, bodyB)
         {
             VJointType = VJointType.Angle;
-            BiasFactor = .2f;
+            BiasFactor = FixedMath.C0p1 * 2;
             MaxImpulse = Fix64.MaxValue;
         }
 
@@ -73,7 +73,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         /// <summary>
         /// Gets or sets the maximum impulse
-        /// Defaults to Fix64.MaxValue
+        /// Defaults to  Fix64.MaxValue
         /// </summary>
         public Fix64 MaxImpulse { get; set; }
 

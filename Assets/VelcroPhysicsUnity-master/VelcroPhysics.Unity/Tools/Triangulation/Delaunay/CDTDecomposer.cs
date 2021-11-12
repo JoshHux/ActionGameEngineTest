@@ -31,7 +31,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            Debug.Assert(vertices.Count > 3);
+            UnityEngine.Debug.Assert(vertices.Count > 3);
 
             var poly = new Polygon.Polygon();
 

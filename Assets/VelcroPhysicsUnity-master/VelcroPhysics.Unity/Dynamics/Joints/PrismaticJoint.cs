@@ -105,7 +105,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         private FVector2 _axis1;
         private bool _enableLimit;
         private bool _enableMotor;
-        private Vector3 _impulse;
+        private FVector3 _impulse;
 
         // Solver temp
         private int _indexA;
@@ -235,7 +235,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             get => _enableLimit;
             set
             {
-                Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false,
+                UnityEngine.Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false,
                     "Warning: limits does currently not work with fixed rotation");
 
                 if (value == _enableLimit)
@@ -261,7 +261,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 WakeBodies();
                 _lowerTranslation = value;
-                _impulse.z =Fix64.Zero;
+                _impulse.z = Fix64.Zero;
             }
         }
 
@@ -279,7 +279,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 WakeBodies();
                 _upperTranslation = value;
-                _impulse.z =Fix64.Zero;
+                _impulse.z = Fix64.Zero;
             }
         }
 
@@ -351,7 +351,7 @@ namespace VelcroPhysics.Dynamics.VJoints
                 _axis1 = value;
                 LocalXAxis = BodyA.GetLocalVector(_axis1);
                 LocalXAxis.Normalize();
-                _localYAxisA = MathUtils.Cross(1.0f, LocalXAxis);
+                _localYAxisA = MathUtils.Cross(1, LocalXAxis);
             }
         }
 
@@ -399,7 +399,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             WakeBodies();
             _upperTranslation = upper;
             _lowerTranslation = lower;
-            _impulse.z =Fix64.Zero;
+            _impulse.z = Fix64.Zero;
         }
 
         /// <summary>
@@ -459,7 +459,7 @@ namespace VelcroPhysics.Dynamics.VJoints
                 _a2 = MathUtils.Cross(rB, _axis);
 
                 _motorMass = mA + mB + iA * _a1 * _a1 + iB * _a2 * _a2;
-                if (_motorMass >Fix64.Zero) _motorMass =Fix64.One / _motorMass;
+                if (_motorMass > Fix64.Zero) _motorMass = Fix64.One / _motorMass;
             }
 
             // Prismatic constraint.
@@ -473,22 +473,22 @@ namespace VelcroPhysics.Dynamics.VJoints
                 var k12 = iA * _s1 + iB * _s2;
                 var k13 = iA * _s1 * _a1 + iB * _s2 * _a2;
                 var k22 = iA + iB;
-                if (k22 ==Fix64.Zero)
+                if (k22 == Fix64.Zero)
                     // For bodies with fixed rotation.
-                    k22 =Fix64.One;
+                    k22 = Fix64.One;
                 var k23 = iA * _a1 + iB * _a2;
                 var k33 = mA + mB + iA * _a1 * _a1 + iB * _a2 * _a2;
 
-                _K.ex = new Vector3(k11, k12, k13);
-                _K.ey = new Vector3(k12, k22, k23);
-                _K.ez = new Vector3(k13, k23, k33);
+                _K.ex = new FVector3(k11, k12, k13);
+                _K.ey = new FVector3(k12, k22, k23);
+                _K.ez = new FVector3(k13, k23, k33);
             }
 
             // Compute motor and limit terms.
             if (_enableLimit)
             {
                 var VJointTranslation = FVector2.Dot(_axis, d);
-                if (Fix64.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
+                if (Fix64.Abs(_upperTranslation - _lowerTranslation) < 2 * Settings.LinearSlop)
                 {
                     _limitState = LimitState.Equal;
                 }
@@ -497,7 +497,7 @@ namespace VelcroPhysics.Dynamics.VJoints
                     if (_limitState != LimitState.AtLower)
                     {
                         _limitState = LimitState.AtLower;
-                        _impulse.z =Fix64.Zero;
+                        _impulse.z = Fix64.Zero;
                     }
                 }
                 else if (VJointTranslation >= _upperTranslation)
@@ -505,22 +505,22 @@ namespace VelcroPhysics.Dynamics.VJoints
                     if (_limitState != LimitState.AtUpper)
                     {
                         _limitState = LimitState.AtUpper;
-                        _impulse.z =Fix64.Zero;
+                        _impulse.z = Fix64.Zero;
                     }
                 }
                 else
                 {
                     _limitState = LimitState.Inactive;
-                    _impulse.z =Fix64.Zero;
+                    _impulse.z = Fix64.Zero;
                 }
             }
             else
             {
                 _limitState = LimitState.Inactive;
-                _impulse.z =Fix64.Zero;
+                _impulse.z = Fix64.Zero;
             }
 
-            if (_enableMotor == false) MotorImpulse =Fix64.Zero;
+            if (_enableMotor == false) MotorImpulse = Fix64.Zero;
 
             if (Settings.EnableWarmstarting)
             {
@@ -540,8 +540,8 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = Vector3.zero;
-                MotorImpulse =Fix64.Zero;
+                _impulse = FVector3.zero;
+                MotorImpulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -581,24 +581,24 @@ namespace VelcroPhysics.Dynamics.VJoints
                 wB += iB * LB;
             }
 
-            var Cdot1 = new FVector2();
-            Cdot1.x = FVector2.Dot(_perp, vB - vA) + _s2 * wB - _s1 * wA;
-            Cdot1.y = wB - wA;
+            var cdotX = FVector2.Dot(_perp, vB - vA) + _s2 * wB - _s1 * wA;
+            var cdotY = wB - wA;
+            var Cdot1 = new FVector2(cdotX, cdotY);
 
             if (_enableLimit && _limitState != LimitState.Inactive)
             {
                 // Solve prismatic and limit constraint in block form.
                 Fix64 Cdot2;
                 Cdot2 = FVector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
-                var Cdot = new Vector3(Cdot1.x, Cdot1.y, Cdot2);
+                var Cdot = new FVector3(Cdot1.x, Cdot1.y, Cdot2);
 
                 var f1 = _impulse;
                 var df = _K.Solve33(-Cdot);
                 _impulse += df;
 
                 if (_limitState == LimitState.AtLower)
-                    _impulse.z = Fix64.Max(_impulse.z,Fix64.Zero);
-                else if (_limitState == LimitState.AtUpper) _impulse.z = Fix64.Min(_impulse.z,Fix64.Zero);
+                    _impulse.z = Fix64.Max(_impulse.z, Fix64.Zero);
+                else if (_limitState == LimitState.AtUpper) _impulse.z = Fix64.Min(_impulse.z, Fix64.Zero);
 
                 // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
                 var b = -Cdot1 - (_impulse.z - f1.z) * new FVector2(_K.ez.x, _K.ez.y);
@@ -667,20 +667,20 @@ namespace VelcroPhysics.Dynamics.VJoints
             var s1 = MathUtils.Cross(d + rA, perp);
             var s2 = MathUtils.Cross(rB, perp);
 
-            Vector3 impulse;
-            var C1 = new FVector2();
-            C1.x = FVector2.Dot(perp, d);
-            C1.y = aB - aA - ReferenceAngle;
+            FVector3 impulse;
+            var C1x = FVector2.Dot(perp, d);
+            var C1y = aB - aA - ReferenceAngle;
+            var C1 = new FVector2(C1x, C1y);
 
             var linearError = Fix64.Abs(C1.x);
             var angularError = Fix64.Abs(C1.y);
 
             var active = false;
-            var C2 =Fix64.Zero;
+            var C2 = Fix64.Zero;
             if (_enableLimit)
             {
                 var translation = FVector2.Dot(axis, d);
-                if (Fix64.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
+                if (Fix64.Abs(_upperTranslation - _lowerTranslation) < 2 * Settings.LinearSlop)
                 {
                     // Prevent large angular corrections
                     C2 = MathUtils.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
@@ -691,14 +691,14 @@ namespace VelcroPhysics.Dynamics.VJoints
                 {
                     // Prevent large linear corrections and allow some slop.
                     C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.LinearSlop,
-                        -Settings.MaxLinearCorrection,Fix64.Zero);
+                        -Settings.MaxLinearCorrection, Fix64.Zero);
                     linearError = Fix64.Max(linearError, _lowerTranslation - translation);
                     active = true;
                 }
                 else if (translation >= _upperTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
-                    C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop,Fix64.Zero,
+                    C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop, Fix64.Zero,
                         Settings.MaxLinearCorrection);
                     linearError = Fix64.Max(linearError, translation - _upperTranslation);
                     active = true;
@@ -711,18 +711,18 @@ namespace VelcroPhysics.Dynamics.VJoints
                 var k12 = iA * s1 + iB * s2;
                 var k13 = iA * s1 * a1 + iB * s2 * a2;
                 var k22 = iA + iB;
-                if (k22 ==Fix64.Zero)
+                if (k22 == Fix64.Zero)
                     // For fixed rotation
-                    k22 =Fix64.One;
+                    k22 = Fix64.One;
                 var k23 = iA * a1 + iB * a2;
                 var k33 = mA + mB + iA * a1 * a1 + iB * a2 * a2;
 
                 var K = new Mat33();
-                K.ex = new Vector3(k11, k12, k13);
-                K.ey = new Vector3(k12, k22, k23);
-                K.ez = new Vector3(k13, k23, k33);
+                K.ex = new FVector3(k11, k12, k13);
+                K.ey = new FVector3(k12, k22, k23);
+                K.ez = new FVector3(k13, k23, k33);
 
-                var C = new Vector3();
+                var C = new FVector3();
                 C.x = C1.x;
                 C.y = C1.y;
                 C.z = C2;
@@ -734,17 +734,17 @@ namespace VelcroPhysics.Dynamics.VJoints
                 var k11 = mA + mB + iA * s1 * s1 + iB * s2 * s2;
                 var k12 = iA * s1 + iB * s2;
                 var k22 = iA + iB;
-                if (k22 ==Fix64.Zero) k22 =Fix64.One;
+                if (k22 == Fix64.Zero) k22 = Fix64.One;
 
                 var K = new Mat22();
                 K.ex = new FVector2(k11, k12);
                 K.ey = new FVector2(k12, k22);
 
                 var impulse1 = K.Solve(-C1);
-                impulse = new Vector3();
+                impulse = new FVector3();
                 impulse.x = impulse1.x;
                 impulse.y = impulse1.y;
-                impulse.z =Fix64.Zero;
+                impulse.z = Fix64.Zero;
             }
 
             var P = impulse.x * perp + impulse.z * axis;

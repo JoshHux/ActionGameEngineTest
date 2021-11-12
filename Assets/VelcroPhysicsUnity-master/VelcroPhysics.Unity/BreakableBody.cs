@@ -25,13 +25,13 @@ namespace VelcroPhysics.Dynamics
         public Fix64 Strength { get; set; }
 
         public BreakableBody(World world, IEnumerable<Vertices> vertices, Fix64 density,
-            FVector2 position = new FVector2(), long rotation = 0)
+            FVector2 position = new FVector2(), Fix64 rotation = new Fix64())
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
             Parts = new List<Fixture>(8);
-            MainBody = BodyFactory.CreateBody(_world, position, Fix64.FromRaw(rotation), BodyType.Dynamic);
-            Strength = 500.0f;
+            MainBody = BodyFactory.CreateBody(_world, position, rotation, BodyType.Dynamic);
+            Strength = 500;
 
             foreach (var part in vertices)
             {
@@ -42,11 +42,11 @@ namespace VelcroPhysics.Dynamics
         }
 
         public BreakableBody(World world, IEnumerable<Shape> shapes, FVector2 position = new FVector2(),
-            long rotation = 0)
+            Fix64 rotation = new Fix64())
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
-            MainBody = BodyFactory.CreateBody(_world, position, Fix64.FromRaw(rotation), BodyType.Dynamic);
+            MainBody = BodyFactory.CreateBody(_world, position, rotation, BodyType.Dynamic);
             Parts = new List<Fixture>(8);
 
             foreach (var part in shapes)

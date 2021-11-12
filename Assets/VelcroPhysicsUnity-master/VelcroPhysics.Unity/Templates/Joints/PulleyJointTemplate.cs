@@ -49,11 +49,11 @@ namespace VelcroPhysics.Templates.VJoints
 
         public override void SetDefaults()
         {
-            GroundAnchorA = new FVector2(-1.0f,Fix64.One);
-            GroundAnchorB = new FVector2(1.0f,Fix64.One);
-            LocalAnchorA = new FVector2(-1.0f,Fix64.Zero);
-            LocalAnchorB = new FVector2(1.0f,Fix64.Zero);
-            Ratio =Fix64.One;
+            GroundAnchorA = new FVector2(-1, Fix64.One);
+            GroundAnchorB = new FVector2(1, Fix64.One);
+            LocalAnchorA = new FVector2(-1, Fix64.Zero);
+            LocalAnchorB = new FVector2(1, Fix64.Zero);
+            Ratio = Fix64.One;
             CollideConnected = true;
         }
     }

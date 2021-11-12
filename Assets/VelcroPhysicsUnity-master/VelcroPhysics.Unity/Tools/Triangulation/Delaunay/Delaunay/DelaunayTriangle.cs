@@ -298,13 +298,13 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             var b = Points[0].X - Points[1].X;
             var h = Points[2].Y - Points[1].Y;
 
-            return Math.Abs(b * h * 0.5f);
+            return Fix64.Abs(b * h * FixedMath.C0p5);
         }
 
         public TriangulationPoint Centroid()
         {
-            var cx = (Points[0].X + Points[1].X + Points[2].X) / 3f;
-            var cy = (Points[0].Y + Points[1].Y + Points[2].Y) / 3f;
+            var cx = (Points[0].X + Points[1].X + Points[2].X) / 3;
+            var cy = (Points[0].Y + Points[1].Y + Points[2].Y) / 3;
             return new TriangulationPoint(cx, cy);
         }
 

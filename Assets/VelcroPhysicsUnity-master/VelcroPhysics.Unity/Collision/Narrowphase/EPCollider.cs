@@ -44,7 +44,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             edge1.Normalize();
             var normal1 = new FVector2(edge1.y, -edge1.x);
             var offset1 = FVector2.Dot(normal1, centroidB - v1);
-            Fix64 offset0 =Fix64.Zero, offset2 =Fix64.Zero;
+            Fix64 offset0 = Fix64.Zero, offset2 = Fix64.Zero;
             bool convex1 = false, convex2 = false;
 
             // Is there a preceding edge?
@@ -53,7 +53,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 var edge0 = v1 - v0;
                 edge0.Normalize();
                 normal0 = new FVector2(edge0.y, -edge0.x);
-                convex1 = MathUtils.Cross(edge0, edge1) >=Fix64.Zero;
+                convex1 = MathUtils.Cross(edge0, edge1) >= Fix64.Zero;
                 offset0 = FVector2.Dot(normal0, centroidB - v0);
             }
 
@@ -63,7 +63,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 var edge2 = v3 - v2;
                 edge2.Normalize();
                 normal2 = new FVector2(edge2.y, -edge2.x);
-                convex2 = MathUtils.Cross(edge1, edge2) >Fix64.Zero;
+                convex2 = MathUtils.Cross(edge1, edge2) > Fix64.Zero;
                 offset2 = FVector2.Dot(normal2, centroidB - v2);
             }
 
@@ -72,7 +72,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 if (convex1 && convex2)
                 {
-                    front = offset0 >=Fix64.Zero || offset1 >=Fix64.Zero || offset2 >=Fix64.Zero;
+                    front = offset0 >= Fix64.Zero || offset1 >= Fix64.Zero || offset2 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -88,7 +88,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 }
                 else if (convex1)
                 {
-                    front = offset0 >=Fix64.Zero || offset1 >=Fix64.Zero && offset2 >=Fix64.Zero;
+                    front = offset0 >= Fix64.Zero || offset1 >= Fix64.Zero && offset2 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -104,7 +104,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 }
                 else if (convex2)
                 {
-                    front = offset2 >=Fix64.Zero || offset0 >=Fix64.Zero && offset1 >=Fix64.Zero;
+                    front = offset2 >= Fix64.Zero || offset0 >= Fix64.Zero && offset1 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -120,7 +120,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 }
                 else
                 {
-                    front = offset0 >=Fix64.Zero && offset1 >=Fix64.Zero && offset2 >=Fix64.Zero;
+                    front = offset0 >= Fix64.Zero && offset1 >= Fix64.Zero && offset2 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -139,7 +139,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 if (convex1)
                 {
-                    front = offset0 >=Fix64.Zero || offset1 >=Fix64.Zero;
+                    front = offset0 >= Fix64.Zero || offset1 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -155,7 +155,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 }
                 else
                 {
-                    front = offset0 >=Fix64.Zero && offset1 >=Fix64.Zero;
+                    front = offset0 >= Fix64.Zero && offset1 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -174,7 +174,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 if (convex2)
                 {
-                    front = offset1 >=Fix64.Zero || offset2 >=Fix64.Zero;
+                    front = offset1 >= Fix64.Zero || offset2 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -190,7 +190,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 }
                 else
                 {
-                    front = offset1 >=Fix64.Zero && offset2 >=Fix64.Zero;
+                    front = offset1 >= Fix64.Zero && offset2 >= Fix64.Zero;
                     if (front)
                     {
                         normal = normal1;
@@ -207,7 +207,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
             else
             {
-                front = offset1 >=Fix64.Zero;
+                front = offset1 >= Fix64.Zero;
                 if (front)
                 {
                     normal = normal1;
@@ -279,7 +279,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 }
 
                 // Adjacency
-                if (FVector2.Dot(n, perp) >=Fix64.Zero)
+                if (FVector2.Dot(n, perp) >= Fix64.Zero)
                 {
                     if (FVector2.Dot(n - upperLimit, normal) < -Settings.AngularSlop) continue;
                 }
@@ -299,8 +299,10 @@ namespace VelcroPhysics.Collision.Narrowphase
             if (polygonAxis.Type != EPAxisType.Unknown && polygonAxis.Separation > radius) return;
 
             // Use hysteresis for jitter reduction.
-            const Fix64 k_relativeTol = 0.98f;
-            const Fix64 k_absoluteTol = 0.001f;
+            //const Fix64 k_relativeTol = FixedMath.C0p1 * 9 + FixedMath.C0p01 * 8;
+            Fix64 k_relativeTol = FixedMath.C0p1 * 9 + FixedMath.C0p01 * 8;
+            //const Fix64 k_absoluteTol = FixedMath.C0p001;
+            Fix64 k_absoluteTol = FixedMath.C0p001;
 
             EPAxis primaryAxis;
             if (polygonAxis.Type == EPAxisType.Unknown)
@@ -334,13 +336,13 @@ namespace VelcroPhysics.Collision.Narrowphase
 
                 ie.Value0.V = vertices[i1];
                 ie.Value0.ID.ContactFeature.IndexA = 0;
-                ie.Value0.ID.ContactFeature.IndexB = (byte) i1;
+                ie.Value0.ID.ContactFeature.IndexB = (byte)i1;
                 ie.Value0.ID.ContactFeature.TypeA = ContactFeatureType.Face;
                 ie.Value0.ID.ContactFeature.TypeB = ContactFeatureType.Vertex;
 
                 ie.Value1.V = vertices[i2];
                 ie.Value1.ID.ContactFeature.IndexA = 0;
-                ie.Value1.ID.ContactFeature.IndexB = (byte) i2;
+                ie.Value1.ID.ContactFeature.IndexB = (byte)i2;
                 ie.Value1.ID.ContactFeature.TypeA = ContactFeatureType.Face;
                 ie.Value1.ID.ContactFeature.TypeB = ContactFeatureType.Vertex;
 
@@ -367,13 +369,13 @@ namespace VelcroPhysics.Collision.Narrowphase
 
                 ie.Value0.V = v1;
                 ie.Value0.ID.ContactFeature.IndexA = 0;
-                ie.Value0.ID.ContactFeature.IndexB = (byte) primaryAxis.Index;
+                ie.Value0.ID.ContactFeature.IndexB = (byte)primaryAxis.Index;
                 ie.Value0.ID.ContactFeature.TypeA = ContactFeatureType.Vertex;
                 ie.Value0.ID.ContactFeature.TypeB = ContactFeatureType.Face;
 
                 ie.Value1.V = v2;
                 ie.Value1.ID.ContactFeature.IndexA = 0;
-                ie.Value1.ID.ContactFeature.IndexB = (byte) primaryAxis.Index;
+                ie.Value1.ID.ContactFeature.IndexB = (byte)primaryAxis.Index;
                 ie.Value1.ID.ContactFeature.TypeA = ContactFeatureType.Vertex;
                 ie.Value1.ID.ContactFeature.TypeB = ContactFeatureType.Face;
 

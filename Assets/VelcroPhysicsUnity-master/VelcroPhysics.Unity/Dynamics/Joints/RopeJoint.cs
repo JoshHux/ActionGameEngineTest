@@ -169,20 +169,20 @@ namespace VelcroPhysics.Dynamics.VJoints
             _length = _u.magnitude;
 
             var C = _length - MaxLength;
-            if (C >Fix64.Zero)
+            if (C > Fix64.Zero)
                 State = LimitState.AtUpper;
             else
                 State = LimitState.Inactive;
 
             if (_length > Settings.LinearSlop)
             {
-                _u *=Fix64.One / _length;
+                _u *= Fix64.One / _length;
             }
             else
             {
                 _u = FVector2.zero;
-                _mass =Fix64.Zero;
-                _impulse =Fix64.Zero;
+                _mass = Fix64.Zero;
+                _impulse = Fix64.Zero;
                 return;
             }
 
@@ -191,7 +191,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             var crB = MathUtils.Cross(_rB, _u);
             var invMass = _invMassA + _invIA * crA * crA + _invMassB + _invIB * crB * crB;
 
-            _mass = invMass !=Fix64.Zero ?Fix64.One / invMass :Fix64.Zero;
+            _mass = invMass != Fix64.Zero ? Fix64.One / invMass : Fix64.Zero;
 
             if (Settings.EnableWarmstarting)
             {
@@ -206,7 +206,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse =Fix64.Zero;
+                _impulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -229,11 +229,11 @@ namespace VelcroPhysics.Dynamics.VJoints
             var Cdot = FVector2.Dot(_u, vpB - vpA);
 
             // Predictive constraint.
-            if (C <Fix64.Zero) Cdot += data.Step.inv_dt * C;
+            if (C < Fix64.Zero) Cdot += data.Step.inv_dt * C;
 
             var impulse = -_mass * Cdot;
             var oldImpulse = _impulse;
-            _impulse = Fix64.Min(0.0f, _impulse + impulse);
+            _impulse = Fix64.Min(0, _impulse + impulse);
             impulse = _impulse - oldImpulse;
 
             var P = impulse * _u;
@@ -265,7 +265,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             u.Normalize();
             var C = length - MaxLength;
 
-            C = MathUtils.Clamp(C,Fix64.Zero, Settings.MaxLinearCorrection);
+            C = MathUtils.Clamp(C, Fix64.Zero, Settings.MaxLinearCorrection);
 
             var impulse = -_mass * C;
             var P = impulse * u;

@@ -89,7 +89,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
                 manifold.LocalNormal = normals[normalIndex];
-                manifold.LocalPoint = 0.5f * (v1 + v2);
+                manifold.LocalPoint = FixedMath.C0p5 * (v1 + v2);
                 manifold.Points.Value0.LocalPoint = circleB.Position;
                 manifold.Points.Value0.Id.Key = 0;
                 return;
@@ -125,7 +125,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
             else
             {
-                var faceCenter = 0.5f * (v1 + v2);
+                var faceCenter = FixedMath.C0p5 * (v1 + v2);
                 var s = FVector2.Dot(cLocal - faceCenter, normals[vertIndex1]);
                 if (s > radius) return;
 

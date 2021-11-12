@@ -41,7 +41,7 @@ namespace VelcroPhysics.Collision.Distance
                 case ShapeType.Chain:
                 {
                     var chain = (ChainShape) shape;
-                    Debug.Assert(0 <= index && index < chain.Vertices.Count);
+                    UnityEngine.Debug.Assert(0 <= index && index < chain.Vertices.Count);
 
                     Vertices = new FVector2[2];
                     Vertices[0] = chain.Vertices[index];

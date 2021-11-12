@@ -27,7 +27,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         public static Path CreateChain(World world, FVector2 start, FVector2 end, Fix64 linkWidth, Fix64 linkHeight,
             int numberOfLinks, Fix64 linkDensity, bool attachRopeVJoint)
         {
-            Debug.Assert(numberOfLinks >= 2);
+            UnityEngine.Debug.Assert(numberOfLinks >= 2);
 
             //Chain start / end
             var path = new Path();

@@ -28,7 +28,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 case ManifoldType.Circles:
                     {
-                        normal = new FVector2(1.0f, Fix64.Zero);
+                        normal = new FVector2(1, Fix64.Zero);
                         var pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
                         var pointB = MathUtils.Mul(ref xfB, manifold.Points.Value0.LocalPoint);
                         if (Fix64.Sqrt(FVector2.Distance(pointA, pointB)) > Settings.Epsilon * Settings.Epsilon)
@@ -39,7 +39,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 
                         var cA = pointA + radiusA * normal;
                         var cB = pointB - radiusB * normal;
-                        points.Value0 = 0.5f * (cA + cB);
+                        points.Value0 = FixedMath.C0p5 * (cA + cB);
                         separations.Value0 = FVector2.Dot(cB - cA, normal);
                     }
                     break;
@@ -54,7 +54,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                             var clipPoint = MathUtils.Mul(ref xfB, manifold.Points[i].LocalPoint);
                             var cA = clipPoint + (radiusA - FVector2.Dot(clipPoint - planePoint, normal)) * normal;
                             var cB = clipPoint - radiusB * normal;
-                            points[i] = 0.5f * (cA + cB);
+                            points[i] = FixedMath.C0p5 * (cA + cB);
                             separations[i] = FVector2.Dot(cB - cA, normal);
                         }
                     }
@@ -70,7 +70,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                             var clipPoint = MathUtils.Mul(ref xfA, manifold.Points[i].LocalPoint);
                             var cB = clipPoint + (radiusB - FVector2.Dot(clipPoint - planePoint, normal)) * normal;
                             var cA = clipPoint - radiusA * normal;
-                            points[i] = 0.5f * (cA + cB);
+                            points[i] = FixedMath.C0p5 * (cA + cB);
                             separations[i] = FVector2.Dot(cA - cB, normal);
                         }
 

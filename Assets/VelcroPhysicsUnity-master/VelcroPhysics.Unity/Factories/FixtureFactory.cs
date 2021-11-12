@@ -6,7 +6,6 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
-using UnityEngine;
 using FixMath.NET;
 
 namespace VelcroPhysics.Factories
@@ -110,14 +109,14 @@ namespace VelcroPhysics.Factories
         public static Fixture AttachLineArc(Fix64 radians, int sides, Fix64 radius, bool closed, Body body)
         {
             var arc = PolygonUtils.CreateArc(radians, sides, radius);
-            arc.Rotate((Fix64.PI - radians) / 2);
+            arc.Rotate((Fix64.Pi - radians) / 2);
             return closed ? AttachLoopShape(arc, body) : AttachChainShape(arc, body);
         }
 
         public static List<Fixture> AttachSolidArc(Fix64 density, Fix64 radians, int sides, Fix64 radius, Body body)
         {
             var arc = PolygonUtils.CreateArc(radians, sides, radius);
-            arc.Rotate((Fix64.PI - radians) / 2);
+            arc.Rotate((Fix64.Pi - radians) / 2);
 
             //Close the arc
             arc.Add(arc[0]);

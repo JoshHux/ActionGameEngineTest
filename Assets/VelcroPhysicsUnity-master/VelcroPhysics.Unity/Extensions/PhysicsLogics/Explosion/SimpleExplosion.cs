@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using VelcroPhysics.Shared;
@@ -36,7 +35,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
             Fix64? holdMaxForce = null)
         {
 
-            Fix64 maxForce = holdMaxForce ?? Fix64.MaxValue;
+            Fix64 maxForce = holdMaxForce ??  Fix64.MaxValue;
             var affectedBodies = new HashSet<Body>();
 
             AABB aabb;
@@ -69,8 +68,8 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 
                     var forceVector = pos - overlappingBody.Position;
                     forceVector *=
-                        1f / Fix64.Sqrt(forceVector.x * forceVector.x + forceVector.y * forceVector.y);
-                    forceVector *= Fix64.Min(force * forcePercent, maxForce);
+                        Fix64.One / Fix64.Sqrt(forceVector.x * forceVector.x + forceVector.y * forceVector.y);
+                    forceVector *=  Fix64.Min(force * forcePercent, maxForce);
                     forceVector *= -1;
 
                     overlappingBody.ApplyLinearImpulse(forceVector);
@@ -86,9 +85,9 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
             var percent = Fix64.Pow(1 - (distance - radius) / radius, Power) - 1;
 
             if (Fix64.IsNaN(percent))
-                return 0f;
+                return Fix64.Zero;
 
-            return Fix64.Clamp(percent, 0f, 1f);
+            return Fix64.Clamp(percent, Fix64.Zero, Fix64.One);
         }
     }
 }

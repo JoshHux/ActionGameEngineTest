@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
@@ -109,18 +108,23 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
                     FVector2 sc;
                     var sarea = ComputeSubmergedArea(shape, ref _normal, _offset, ref body._xf, out sc);
                     area += sarea;
-                    areac.x += sarea * sc.x;
-                    areac.y += sarea * sc.y;
+                    var acX = areac.x + sarea * sc.x;
+                    var acY = areac.y + sarea * sc.y;
+                    areac = new FVector2(acX, acY);
 
                     mass += sarea * shape.Density;
-                    massc.x += sarea * sc.x * shape.Density;
-                    massc.y += sarea * sc.y * shape.Density;
+                    var mcX = massc.x + sarea * sc.x * shape.Density;
+                    var mcY = massc.y + sarea * sc.y * shape.Density;
+                    massc = new FVector2(mcX, mcY);
                 }
 
-                areac.x /= area;
-                areac.y /= area;
-                massc.x /= mass;
-                massc.y /= mass;
+                var areacx = areac.x / area;
+                var areacy = areac.x / area;
+                areac = new FVector2(areacx, areacy);
+
+                var masscx = massc.x / mass;
+                var masscy = massc.x / mass;
+                massc = new FVector2(masscx, masscy);
 
                 if (area < Settings.Epsilon)
                     continue;
@@ -145,162 +149,165 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
-                {
-                    var circleShape = (CircleShape) shape;
-
-                    sc = FVector2.zero;
-
-                    var p = MathUtils.Mul(ref xf, circleShape.Position);
-                    var l = -(FVector2.Dot(normal, p) - offset);
-                    if (l < -circleShape.Radius + Settings.Epsilon)
-                        //Completely dry
-                        return 0;
-                    if (l > circleShape.Radius)
                     {
-                        //Completely wet
-                        sc = p;
-                        return Fix64.Pi * circleShape._2radius;
+                        var circleShape = (CircleShape)shape;
+
+                        sc = FVector2.zero;
+
+                        var p = MathUtils.Mul(ref xf, circleShape.Position);
+                        var l = -(FVector2.Dot(normal, p) - offset);
+                        if (l < -circleShape.Radius + Settings.Epsilon)
+                            //Completely dry
+                            return 0;
+                        if (l > circleShape.Radius)
+                        {
+                            //Completely wet
+                            sc = p;
+                            return Fix64.Pi * circleShape._2radius;
+                        }
+
+                        //Magic
+                        var l2 = l * l;
+                        var area = circleShape._2radius *
+                                   (Fix64.Asin(l / circleShape.Radius) + Fix64.Pi / 2 +
+                                            l * Fix64.Sqrt(circleShape._2radius - l2));
+                        var com = -2 / 3 * Fix64.Pow(circleShape._2radius - l2, (1 + FixedMath.C0p5)) / area;
+
+                        var scx = p.x + normal.x * com;
+                        var scy = p.y + normal.y * com;
+
+                        sc = new FVector2(scx, scy);
+
+                        return area;
                     }
-
-                    //Magic
-                    var l2 = l * l;
-                    var area = circleShape._2radius *
-                               (Fix64.Asin(l / circleShape.Radius) + Fix64.Pi / 2 +
-                                        l * Fix64.Sqrt(circleShape._2radius - l2));
-                    var com = -2.0f / 3.0f * Fix64.Pow(circleShape._2radius - l2, 1.5f) / area;
-
-                    sc.x = p.x + normal.x * com;
-                    sc.y = p.y + normal.y * com;
-
-                    return area;
-                }
                 case ShapeType.Edge:
                     sc = FVector2.zero;
                     return 0;
                 case ShapeType.Polygon:
-                {
-                    sc = FVector2.zero;
-
-                    var polygonShape = (PolygonShape) shape;
-
-                    //VTransform plane into shape co-ordinates
-                    var normalL = MathUtils.MulT(xf.q, normal);
-                    var offsetL = offset - FVector2.Dot(normal, xf.p);
-
-                    var depths = new Fix64[Settings.MaxPolygonVertices];
-                    var diveCount = 0;
-                    var intoIndex = -1;
-                    var outoIndex = -1;
-
-                    var lastSubmerged = false;
-                    int i;
-                    for (i = 0; i < polygonShape.Vertices.Count; i++)
                     {
-                        depths[i] = FVector2.Dot(normalL, polygonShape.Vertices[i]) - offsetL;
-                        var isSubmerged = depths[i] < -Settings.Epsilon;
-                        if (i > 0)
+                        sc = FVector2.zero;
+
+                        var polygonShape = (PolygonShape)shape;
+
+                        //VTransform plane into shape co-ordinates
+                        var normalL = MathUtils.MulT(xf.q, normal);
+                        var offsetL = offset - FVector2.Dot(normal, xf.p);
+
+                        var depths = new Fix64[Settings.MaxPolygonVertices];
+                        var diveCount = 0;
+                        var intoIndex = -1;
+                        var outoIndex = -1;
+
+                        var lastSubmerged = false;
+                        int i;
+                        for (i = 0; i < polygonShape.Vertices.Count; i++)
                         {
-                            if (isSubmerged)
+                            depths[i] = FVector2.Dot(normalL, polygonShape.Vertices[i]) - offsetL;
+                            var isSubmerged = depths[i] < -Settings.Epsilon;
+                            if (i > 0)
                             {
-                                if (!lastSubmerged)
+                                if (isSubmerged)
                                 {
-                                    intoIndex = i - 1;
-                                    diveCount++;
+                                    if (!lastSubmerged)
+                                    {
+                                        intoIndex = i - 1;
+                                        diveCount++;
+                                    }
+                                }
+                                else
+                                {
+                                    if (lastSubmerged)
+                                    {
+                                        outoIndex = i - 1;
+                                        diveCount++;
+                                    }
                                 }
                             }
-                            else
-                            {
+
+                            lastSubmerged = isSubmerged;
+                        }
+
+                        switch (diveCount)
+                        {
+                            case 0:
                                 if (lastSubmerged)
                                 {
-                                    outoIndex = i - 1;
-                                    diveCount++;
+                                    //Completely submerged
+                                    sc = MathUtils.Mul(ref xf, polygonShape.MassData.Centroid);
+                                    return polygonShape.MassData.Mass / Density;
                                 }
-                            }
+
+                                //Completely dry
+                                return 0;
+                            case 1:
+                                if (intoIndex == -1)
+                                    intoIndex = polygonShape.Vertices.Count - 1;
+                                else
+                                    outoIndex = polygonShape.Vertices.Count - 1;
+                                break;
                         }
 
-                        lastSubmerged = isSubmerged;
-                    }
+                        var intoIndex2 = (intoIndex + 1) % polygonShape.Vertices.Count;
+                        var outoIndex2 = (outoIndex + 1) % polygonShape.Vertices.Count;
 
-                    switch (diveCount)
-                    {
-                        case 0:
-                            if (lastSubmerged)
-                            {
-                                //Completely submerged
-                                sc = MathUtils.Mul(ref xf, polygonShape.MassData.Centroid);
-                                return polygonShape.MassData.Mass / Density;
-                            }
+                        var intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
+                        var outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
 
-                            //Completely dry
-                            return 0;
-                        case 1:
-                            if (intoIndex == -1)
-                                intoIndex = polygonShape.Vertices.Count - 1;
-                            else
-                                outoIndex = polygonShape.Vertices.Count - 1;
-                            break;
-                    }
+                        var intoVec = new FVector2(
+                            polygonShape.Vertices[intoIndex].x * (1 - intoLambda) +
+                            polygonShape.Vertices[intoIndex2].x * intoLambda,
+                            polygonShape.Vertices[intoIndex].y * (1 - intoLambda) +
+                            polygonShape.Vertices[intoIndex2].y * intoLambda);
+                        var outoVec = new FVector2(
+                            polygonShape.Vertices[outoIndex].x * (1 - outoLambda) +
+                            polygonShape.Vertices[outoIndex2].x * outoLambda,
+                            polygonShape.Vertices[outoIndex].y * (1 - outoLambda) +
+                            polygonShape.Vertices[outoIndex2].y * outoLambda);
 
-                    var intoIndex2 = (intoIndex + 1) % polygonShape.Vertices.Count;
-                    var outoIndex2 = (outoIndex + 1) % polygonShape.Vertices.Count;
+                        //Initialize accumulator
+                        Fix64 area = 0;
+                        var center = new FVector2(0, 0);
+                        var p2 = polygonShape.Vertices[intoIndex2];
 
-                    var intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
-                    var outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
+                        //const Fix64 k_inv3 = Fix64.One / 3;
+                        Fix64 k_inv3 = Fix64.One / 3;
 
-                    var intoVec = new FVector2(
-                        polygonShape.Vertices[intoIndex].x * (1 - intoLambda) +
-                        polygonShape.Vertices[intoIndex2].x * intoLambda,
-                        polygonShape.Vertices[intoIndex].y * (1 - intoLambda) +
-                        polygonShape.Vertices[intoIndex2].y * intoLambda);
-                    var outoVec = new FVector2(
-                        polygonShape.Vertices[outoIndex].x * (1 - outoLambda) +
-                        polygonShape.Vertices[outoIndex2].x * outoLambda,
-                        polygonShape.Vertices[outoIndex].y * (1 - outoLambda) +
-                        polygonShape.Vertices[outoIndex2].y * outoLambda);
-
-                    //Initialize accumulator
-                    Fix64 area = 0;
-                    var center = new FVector2(0, 0);
-                    var p2 = polygonShape.Vertices[intoIndex2];
-
-                    const Fix64 k_inv3 =Fix64.One / 3.0f;
-
-                    //An awkward loop from intoIndex2+1 to outIndex2
-                    i = intoIndex2;
-                    while (i != outoIndex2)
-                    {
-                        i = (i + 1) % polygonShape.Vertices.Count;
-                        FVector2 p3;
-                        if (i == outoIndex2)
-                            p3 = outoVec;
-                        else
-                            p3 = polygonShape.Vertices[i];
-
-                        //Add the triangle formed by intoVec,p2,p3
+                        //An awkward loop from intoIndex2+1 to outIndex2
+                        i = intoIndex2;
+                        while (i != outoIndex2)
                         {
-                            var e1 = p2 - intoVec;
-                            var e2 = p3 - intoVec;
+                            i = (i + 1) % polygonShape.Vertices.Count;
+                            FVector2 p3;
+                            if (i == outoIndex2)
+                                p3 = outoVec;
+                            else
+                                p3 = polygonShape.Vertices[i];
 
-                            var D = MathUtils.Cross(e1, e2);
+                            //Add the triangle formed by intoVec,p2,p3
+                            {
+                                var e1 = p2 - intoVec;
+                                var e2 = p3 - intoVec;
 
-                            var triangleArea = 0.5f * D;
+                                var D = MathUtils.Cross(e1, e2);
 
-                            area += triangleArea;
+                                var triangleArea = FixedMath.C0p5 * D;
 
-                            // Area weighted centroid
-                            center += triangleArea * k_inv3 * (intoVec + p2 + p3);
+                                area += triangleArea;
+
+                                // Area weighted centroid
+                                center += triangleArea * k_inv3 * (intoVec + p2 + p3);
+                            }
+
+                            p2 = p3;
                         }
 
-                        p2 = p3;
+                        //Normalize and VTransform centroid
+                        center *= Fix64.One / area;
+
+                        sc = MathUtils.Mul(ref xf, center);
+
+                        return area;
                     }
-
-                    //Normalize and VTransform centroid
-                    center *=Fix64.One / area;
-
-                    sc = MathUtils.Mul(ref xf, center);
-
-                    return area;
-                }
                 case ShapeType.Chain:
                     sc = FVector2.zero;
                     return 0;

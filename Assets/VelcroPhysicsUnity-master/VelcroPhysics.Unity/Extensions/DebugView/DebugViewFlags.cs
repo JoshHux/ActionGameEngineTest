@@ -30,7 +30,7 @@ namespace VelcroPhysics.Extensions.DebugView
         CenterOfMass = 1 << 4,
 
         /// <summary>
-        /// Draw useful debug data such as timings and number of bodies, VJoints, contacts and more.
+        /// Draw useful UnityEngine.Debug data such as timings and number of bodies, VJoints, contacts and more.
         /// </summary>
         DebugPanel = 1 << 5,
 

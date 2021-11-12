@@ -104,7 +104,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 
             // Region AB
             var den = FVector2.Dot(e, e);
-            Debug.Assert(den > Fix64.Zero);
+            UnityEngine.Debug.Assert(den > Fix64.Zero);
             var P = Fix64.One / den * (u * A + v * B);
             var d = Q - P;
             var dd = FVector2.Dot(d, d);

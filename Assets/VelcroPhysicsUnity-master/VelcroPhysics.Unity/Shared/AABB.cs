@@ -1,4 +1,3 @@
-using UnityEngine;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Utilities;
 using FixMath.NET;
@@ -43,12 +42,12 @@ namespace VelcroPhysics.Shared
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>
-        public FVector2 Center => 0.5f * (LowerBound + UpperBound);
+        public FVector2 Center => FixedMath.C0p5 * (LowerBound + UpperBound);
 
         /// <summary>
         /// Get the extents of the AABB (half-widths).
         /// </summary>
-        public FVector2 Extents => 0.5f * (UpperBound - LowerBound);
+        public FVector2 Extents => FixedMath.C0p5 * (UpperBound - LowerBound);
 
         /// <summary>
         /// Get the perimeter length
@@ -59,7 +58,7 @@ namespace VelcroPhysics.Shared
             {
                 var wx = UpperBound.x - LowerBound.x;
                 var wy = UpperBound.y - LowerBound.y;
-                return 2.0f * (wx + wy);
+                return 2 * (wx + wy);
             }
         }
 
@@ -160,8 +159,8 @@ namespace VelcroPhysics.Shared
         public bool Contains(ref FVector2 point)
         {
             //using epsilon to try and guard against Fix64 rounding errors.
-            return point.x > LowerBound.x + Fix64.Epsilon && point.x < UpperBound.x - Fix64.Epsilon &&
-                   point.y > LowerBound.y + Fix64.Epsilon && point.y < UpperBound.y - Fix64.Epsilon;
+            return point.x > LowerBound.x + Settings.Epsilon && point.x < UpperBound.x - Settings.Epsilon &&
+                   point.y > LowerBound.y + Settings.Epsilon && point.y < UpperBound.y - Settings.Epsilon;
         }
 
         /// <summary>
@@ -220,7 +219,7 @@ namespace VelcroPhysics.Shared
                     var t2 = (upperBound_i - p_i) * inv_d;
 
                     // Sign of the normal vector.
-                    var s = -1.0f;
+                    var s = -Fix64.One;
 
                     if (t1 > t2)
                     {
@@ -232,9 +231,9 @@ namespace VelcroPhysics.Shared
                     if (t1 > tmin)
                     {
                         if (i == 0)
-                            normal.x = s;
+                            normal = new FVector2(s, normal.y);
                         else
-                            normal.y = s;
+                            normal = new FVector2(normal.x, s);
 
                         tmin = t1;
                     }

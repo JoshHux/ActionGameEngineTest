@@ -46,9 +46,11 @@ namespace VelcroPhysics.Collision.TOI
         public void GetVTransform(out VTransform xfb, Fix64 beta)
         {
             xfb = new VTransform();
-            xfb.p.x = (FixMath.One - beta) * C0.x + beta * C.x;
-            xfb.p.y = (FixMath.One - beta) * C0.y + beta * C.y;
-            var angle = (FixMath.One - beta) * A0 + beta * A;
+            var xPos = (Fix64.One - beta) * C0.x + beta * C.x;
+            var yPos = (Fix64.One - beta) * C0.y + beta * C.y;
+            xfb.p = new FVector2(xPos, yPos);
+
+            var angle = (Fix64.One - beta) * A0 + beta * A;
             xfb.q.Set(angle);
 
             // Shift to origin
@@ -61,8 +63,8 @@ namespace VelcroPhysics.Collision.TOI
         /// <param name="alpha">new initial time</param>
         public void Advance(Fix64 alpha)
         {
-            Debug.Assert(Alpha0 <Fix64.One);
-            var beta = (alpha - Alpha0) / (FixMath.One - Alpha0);
+            UnityEngine.Debug.Assert(Alpha0 < Fix64.One);
+            var beta = (alpha - Alpha0) / (Fix64.One - Alpha0);
             C0 += beta * (C - C0);
             A0 += beta * (A - A0);
             Alpha0 = alpha;
@@ -73,7 +75,7 @@ namespace VelcroPhysics.Collision.TOI
         /// </summary>
         public void Normalize()
         {
-            var d = Fix64.PI * 2f * Fix64.Floor(A0 / (Fix64.PI * 2f));
+            var d = Fix64.PiTimes2 * Fix64.Floor(A0 / (Fix64.PiTimes2));
             A0 -= d;
             A -= d;
         }

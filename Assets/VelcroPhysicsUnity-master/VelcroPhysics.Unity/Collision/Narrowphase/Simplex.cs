@@ -17,7 +17,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         internal void ReadCache(ref SimplexCache cache, ref DistanceProxy proxyA, ref VTransform VTransformA,
             ref DistanceProxy proxyB, ref VTransform VTransformB)
         {
-            Debug.Assert(cache.Count <= 3);
+            UnityEngine.Debug.Assert(cache.Count <= 3);
 
             // Copy data from cache.
             Count = cache.Count;
@@ -41,7 +41,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 var metric1 = cache.Metric;
                 var metric2 = GetMetric();
-                if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
+                if (metric2 < FixedMath.C0p5 * metric1 ||2 * metric1 < metric2 || metric2 < Settings.Epsilon)
                     // Reset the simplex.
                     Count = 0;
             }
@@ -87,14 +87,14 @@ namespace VelcroPhysics.Collision.Narrowphase
                         var sgn = MathUtils.Cross(e12, -V[0].W);
                         if (sgn > Fix64.Zero)
                             // Origin is left of e12.
-                            return MathUtils.Cross(1.0f, e12);
+                            return MathUtils.Cross(1, e12);
                         else
                             // Origin is right of e12.
                             return MathUtils.Cross(e12, Fix64.One);
                     }
 
                 default:
-                    Debug.Assert(false);
+                    UnityEngine.Debug.Assert(false);
                     return FVector2.zero;
             }
         }
@@ -104,7 +104,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             switch (Count)
             {
                 case 0:
-                    Debug.Assert(false);
+                    UnityEngine.Debug.Assert(false);
                     return FVector2.zero;
 
                 case 1:
@@ -117,7 +117,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return FVector2.zero;
 
                 default:
-                    Debug.Assert(false);
+                    UnityEngine.Debug.Assert(false);
                     return FVector2.zero;
             }
         }
@@ -129,7 +129,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 case 0:
                     pA = FVector2.zero;
                     pB = FVector2.zero;
-                    Debug.Assert(false);
+                    UnityEngine.Debug.Assert(false);
                     break;
 
                 case 1:
@@ -157,10 +157,10 @@ namespace VelcroPhysics.Collision.Narrowphase
             switch (Count)
             {
                 case 0:
-                    Debug.Assert(false);
-                    returnFix64.Zero;
+                    UnityEngine.Debug.Assert(false);
+                    return Fix64.Zero;
                 case 1:
-                    returnFix64.Zero;
+                    return Fix64.Zero;
 
                 case 2:
                     return (V[0].W - V[1].W).magnitude;
@@ -169,8 +169,8 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return MathUtils.Cross(V[1].W - V[0].W, V[2].W - V[0].W);
 
                 default:
-                    Debug.Assert(false);
-                    returnFix64.Zero;
+                    UnityEngine.Debug.Assert(false);
+                    return Fix64.Zero;
             }
         }
 

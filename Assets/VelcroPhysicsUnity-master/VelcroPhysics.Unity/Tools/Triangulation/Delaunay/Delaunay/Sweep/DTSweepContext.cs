@@ -41,7 +41,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
     {
         // Inital triangle factor, seed triangle will extend 30% of 
         // PointSet width to both left and right.
-        private const Fix64 ALPHA = 0.3f;
+        //private const Fix64 ALPHA = 0.3f;
+        private static Fix64 ALPHA = FixedMath.C0p1 * 3;
 
         private DTSweepPointComparator _comparator = new DTSweepPointComparator();
         public AdvancingFront aFront;

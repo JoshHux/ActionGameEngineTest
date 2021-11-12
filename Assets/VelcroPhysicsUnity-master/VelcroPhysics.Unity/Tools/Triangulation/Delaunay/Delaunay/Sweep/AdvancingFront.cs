@@ -37,6 +37,7 @@
 
 using System;
 using System.Text;
+using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {

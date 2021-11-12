@@ -36,9 +36,9 @@ namespace VelcroPhysics.Templates.VJoints
 
         public override void SetDefaults()
         {
-            MaxForce =Fix64.One;
-            MaxTorque =Fix64.One;
-            CorrectionFactor = 0.3f;
+            MaxForce = Fix64.One;
+            MaxTorque = Fix64.One;
+            CorrectionFactor = FixedMath.C0p1 * 3;
         }
     }
 }

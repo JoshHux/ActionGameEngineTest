@@ -42,7 +42,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         private bool _enableMotor;
 
         // Solver shared
-        private Vector3 _impulse;
+        private FVector3 _impulse;
 
         // Solver temp
         private int _indexA;
@@ -97,7 +97,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
 
-            _impulse = Vector3.zero;
+            _impulse = FVector3.zero;
             _limitState = LimitState.Inactive;
         }
 
@@ -367,7 +367,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             if (_enableLimit && fixedRotation == false)
             {
                 var VJointAngle = aB - aA - ReferenceAngle;
-                if (Fix64.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
+                if (Fix64.Abs(_upperAngle - _lowerAngle) < 2 * Settings.AngularSlop)
                 {
                     _limitState = LimitState.Equal;
                 }
@@ -408,7 +408,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = Vector3.zero;
+                _impulse = FVector3.zero;
                 _motorImpulse = Fix64.Zero;
             }
 
@@ -449,7 +449,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             {
                 var Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
                 var Cdot2 = wB - wA;
-                var Cdot = new Vector3(Cdot1.x, Cdot1.y, Cdot2);
+                var Cdot = new FVector3(Cdot1.x, Cdot1.y, Cdot2);
 
                 var impulse = -_mass.Solve33(Cdot);
 
@@ -591,10 +591,14 @@ namespace VelcroPhysics.Dynamics.VJoints
                 Fix64 iA = _invIA, iB = _invIB;
 
                 var K = new Mat22();
-                K.ex.x = mA + mB + iA * rA.y * rA.y + iB * rB.y * rB.y;
-                K.ex.y = -iA * rA.x * rA.y - iB * rB.x * rB.y;
-                K.ey.x = K.ex.y;
-                K.ey.y = mA + mB + iA * rA.x * rA.x + iB * rB.x * rB.x;
+                var Kexx = mA + mB + iA * rA.y * rA.y + iB * rB.y * rB.y;
+                var Kexy = -iA * rA.x * rA.y - iB * rB.x * rB.y;
+                var Keyx = K.ex.y;
+                var Keyy = mA + mB + iA * rA.x * rA.x + iB * rB.x * rB.x;
+
+                K.ex = new FVector2(Kexx, Kexy);
+                K.ey = new FVector2(Keyx, Keyy);
+
 
                 var impulse = -K.Solve(C);
 

@@ -53,8 +53,10 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {
     internal static class DTSweep
     {
-        private const Fix64 PI_div2 = Fix64.PI / 2;
-        private const Fix64 PI_3div4 = 3 * Fix64.PI / 4;
+        //private const Fix64 PI_div2 = Fix64.Pi / 2;
+        private static Fix64 PI_div2 = Fix64.Pi / 2;
+        //private const Fix64 PI_3div4 = 3 * Fix64.Pi / 4;
+        private static Fix64 PI_3div4 = 3 * Fix64.Pi / 4;
 
         /// <summary>
         /// Triangulate simple polygon with holes
@@ -278,7 +280,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             }
             catch (PointOnEdgeException e)
             {
-                Debug.Log($"Skipping Edge: {e.Message}");
+                UnityEngine.Debug.Log($"Skipping Edge: {e.Message}");
             }
         }
 
@@ -490,7 +492,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet");
                 }
 
-                if (tcx.IsDebugEnabled) Debug.Log("EdgeEvent - Point on constrained edge");
+                if (tcx.IsDebugEnabled) UnityEngine.Debug.Log("EdgeEvent - Point on constrained edge");
                 return;
             }
 
@@ -513,7 +515,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet");
                 }
 
-                if (tcx.IsDebugEnabled) Debug.Log("EdgeEvent - Point on constrained edge");
+                if (tcx.IsDebugEnabled) UnityEngine.Debug.Log("EdgeEvent - Point on constrained edge");
                 return;
             }
 

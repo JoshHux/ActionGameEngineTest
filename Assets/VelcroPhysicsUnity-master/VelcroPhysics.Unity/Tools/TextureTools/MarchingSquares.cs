@@ -58,9 +58,9 @@ namespace VelcroPhysics.Tools.TextureTools
             List<GeomPoly> polyList;
             GeomPoly gp;
 
-            var xn = (int) (domain.Extents.x * 2 / cellWidth);
+            var xn = (int)(domain.Extents.x * 2 / cellWidth);
             var xp = xn == domain.Extents.x * 2 / cellWidth;
-            var yn = (int) (domain.Extents.y * 2 / cellHeight);
+            var yn = (int)(domain.Extents.y * 2 / cellHeight);
             var yp = yn == domain.Extents.y * 2 / cellHeight;
             if (!xp)
                 xn++;
@@ -75,16 +75,16 @@ namespace VelcroPhysics.Tools.TextureTools
             {
                 int x0;
                 if (x == xn)
-                    x0 = (int) domain.UpperBound.x;
+                    x0 = (int)domain.UpperBound.x;
                 else
-                    x0 = (int) (x * cellWidth + domain.LowerBound.x);
+                    x0 = (int)(x * cellWidth + domain.LowerBound.x);
                 for (var y = 0; y < yn + 1; y++)
                 {
                     int y0;
                     if (y == yn)
-                        y0 = (int) domain.UpperBound.y;
+                        y0 = (int)domain.UpperBound.y;
                     else
-                        y0 = (int) (y * cellHeight + domain.LowerBound.y);
+                        y0 = (int)(y * cellHeight + domain.LowerBound.y);
                     fs[x, y] = f[x0, y0];
                 }
             }
@@ -154,14 +154,14 @@ namespace VelcroPhysics.Tools.TextureTools
                     //skip along scan line if no polygon exists at this point
                     if (p == null)
                     {
-                        x++;
+                        x += 1;
                         continue;
                     }
 
                     //skip along if current polygon cannot be combined above.
                     if ((p.Key & 12) == 0)
                     {
-                        x++;
+                        x += 1;
                         continue;
                     }
 
@@ -169,14 +169,14 @@ namespace VelcroPhysics.Tools.TextureTools
                     var u = ps[x, y - 1];
                     if (u == null)
                     {
-                        x++;
+                        x += 1;
                         continue;
                     }
 
                     //skip along if polygon above cannot be combined with.
                     if ((u.Key & 3) == 0)
                     {
-                        x++;
+                        x += 1;
                         continue;
                     }
 
@@ -189,7 +189,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     //skip if it's already been combined with above polygon
                     if (u.GeomP == p.GeomP)
                     {
-                        x++;
+                        x += 1;
                         continue;
                     }
 
@@ -203,7 +203,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     var b1 = bi.Next().Elem();
                     if (Square(b1.y - ay) > Settings.Epsilon)
                     {
-                        x++;
+                        x += 1;
                         continue;
                     }
 
@@ -222,7 +222,7 @@ namespace VelcroPhysics.Tools.TextureTools
 
                     if (brk)
                     {
-                        x++;
+                        x += 1;
                         continue;
                     }
 
@@ -243,35 +243,35 @@ namespace VelcroPhysics.Tools.TextureTools
                     ax = x + 1;
                     while (ax < xn)
                     {
-                        var p2 = ps[(int) ax, y];
+                        var p2 = ps[(int)ax, y];
                         if (p2 == null || p2.GeomP != p.GeomP)
                         {
-                            ax++;
+                            ax += 1;
                             continue;
                         }
 
                         p2.GeomP = u.GeomP;
-                        ax++;
+                        ax += 1;
                     }
 
                     ax = x - 1;
                     while (ax >= 0)
                     {
-                        var p2 = ps[(int) ax, y];
+                        var p2 = ps[(int)ax, y];
                         if (p2 == null || p2.GeomP != p.GeomP)
                         {
-                            ax--;
+                            ax -= 1;
                             continue;
                         }
 
                         p2.GeomP = u.GeomP;
-                        ax--;
+                        ax -= 1;
                     }
 
                     ret.Remove(p.GeomP);
                     p.GeomP = u.GeomP;
 
-                    x = (int) ((bi.Next().Elem().x - domain.LowerBound.x) / cellWidth) + 1;
+                    x = (int)((bi.Next().Elem().x - domain.LowerBound.x) / cellWidth) + 1;
 
                     //x++; this was already commented out!
                 }
@@ -302,7 +302,7 @@ namespace VelcroPhysics.Tools.TextureTools
             var dv = v0 - v1;
             Fix64 t;
             if (dv * dv < Settings.Epsilon)
-                t = 0.5f;
+                t = FixedMath.C0p5;
             else
                 t = v0 / dv;
             return x0 + t * (x1 - x0);
@@ -317,7 +317,7 @@ namespace VelcroPhysics.Tools.TextureTools
             if (c == 0)
                 return xm;
 
-            var vm = f[(int) xm, (int) y];
+            var vm = f[(int)xm, (int)y];
 
             if (v0 * vm < 0)
                 return Xlerp(x0, xm, y, v0, vm, f, c - 1);
@@ -332,7 +332,7 @@ namespace VelcroPhysics.Tools.TextureTools
             if (c == 0)
                 return ym;
 
-            var vm = f[(int) x, (int) ym];
+            var vm = f[(int)x, (int)ym];
 
             if (v0 * vm < 0)
                 return Ylerp(y0, ym, x, v0, vm, f, c - 1);
@@ -598,14 +598,14 @@ namespace VelcroPhysics.Tools.TextureTools
                                 if (head == _head)
                                 {
                                     _head = head._next;
-                                    _count--;
+                                    _count -= 1;
                                     return true;
                                 }
                                 else
                                 {
                                     // were not at the head
                                     prev._next = head._next;
-                                    _count--;
+                                    _count -= 1;
                                     return true;
                                 }
                             }

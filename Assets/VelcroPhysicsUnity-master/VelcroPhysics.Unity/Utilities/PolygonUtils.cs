@@ -67,28 +67,28 @@ namespace VelcroPhysics.Utilities
 
             //TODO: TBM
             //We need at least 8 vertices to create a rounded rectangle
-            //Debug.Assert(Settings.MaxPolygonVertices >= 8);
+            //UnityEngine.Debug.Assert(Settings.MaxPolygonVertices >= 8);
 
             var vertices = new Vertices();
             if (segments == 0)
             {
-                vertices.Add(new FVector2(width * .5f - xRadius, -height * .5f));
-                vertices.Add(new FVector2(width * .5f, -height * .5f + yRadius));
+                vertices.Add(new FVector2(width * FixedMath.C0p5 - xRadius, -height * FixedMath.C0p5));
+                vertices.Add(new FVector2(width * FixedMath.C0p5, -height * FixedMath.C0p5 + yRadius));
 
-                vertices.Add(new FVector2(width * .5f, height * .5f - yRadius));
-                vertices.Add(new FVector2(width * .5f - xRadius, height * .5f));
+                vertices.Add(new FVector2(width * FixedMath.C0p5, height * FixedMath.C0p5 - yRadius));
+                vertices.Add(new FVector2(width * FixedMath.C0p5 - xRadius, height * FixedMath.C0p5));
 
-                vertices.Add(new FVector2(-width * .5f + xRadius, height * .5f));
-                vertices.Add(new FVector2(-width * .5f, height * .5f - yRadius));
+                vertices.Add(new FVector2(-width * FixedMath.C0p5 + xRadius, height * FixedMath.C0p5));
+                vertices.Add(new FVector2(-width * FixedMath.C0p5, height * FixedMath.C0p5 - yRadius));
 
-                vertices.Add(new FVector2(-width * .5f, -height * .5f + yRadius));
-                vertices.Add(new FVector2(-width * .5f + xRadius, -height * .5f));
+                vertices.Add(new FVector2(-width * FixedMath.C0p5, -height * FixedMath.C0p5 + yRadius));
+                vertices.Add(new FVector2(-width * FixedMath.C0p5 + xRadius, -height * FixedMath.C0p5));
             }
             else
             {
                 var numberOfEdges = segments * 4 + 8;
 
-                var stepSize = Fix64.PI * 2f / (numberOfEdges - 4);
+                var stepSize = Fix64.Pi * 2 / (numberOfEdges - 4);
                 var perPhase = numberOfEdges / 4;
 
                 var posOffset = new FVector2(width / 2 - xRadius, height / 2 - yRadius);
@@ -98,12 +98,14 @@ namespace VelcroPhysics.Utilities
                 {
                     if (i - perPhase == 0 || i - perPhase * 3 == 0)
                     {
-                        posOffset.x *= -1;
+                        var newOffset = new FVector2(posOffset.x * -1, posOffset.y);
+                        //posOffset.x *= -1;
                         phase--;
                     }
                     else if (i - perPhase * 2 == 0)
                     {
-                        posOffset.y *= -1;
+                        var newOffset = new FVector2(posOffset.x, posOffset.y * -1);
+                        //posOffset.y *= -1;
                         phase--;
                     }
 
@@ -151,7 +153,7 @@ namespace VelcroPhysics.Utilities
         {
             var vertices = new Vertices();
 
-            var stepSize = Fix64.PI * 2f / numberOfEdges;
+            var stepSize = Fix64.Pi * 2 / numberOfEdges;
 
             vertices.Add(new FVector2(xRadius, 0));
             for (var i = numberOfEdges - 1; i > 0; --i)
@@ -163,9 +165,9 @@ namespace VelcroPhysics.Utilities
 
         public static Vertices CreateArc(Fix64 radians, int sides, Fix64 radius)
         {
-            Debug.Assert(radians > 0, "The arc needs to be larger than 0");
-            Debug.Assert(sides > 1, "The arc needs to have more than 1 sides");
-            Debug.Assert(radius > 0, "The arc needs to have a radius larger than 0");
+            UnityEngine.Debug.Assert(radians > 0, "The arc needs to be larger than 0");
+            UnityEngine.Debug.Assert(sides > 1, "The arc needs to have more than 1 sides");
+            UnityEngine.Debug.Assert(radius > 0, "The arc needs to have a radius larger than 0");
 
             var vertices = new Vertices();
 
@@ -237,12 +239,12 @@ namespace VelcroPhysics.Utilities
 
             var vertices = new Vertices();
 
-            var newHeight = (height - topRadius - bottomRadius) * 0.5f;
+            var newHeight = (height - topRadius - bottomRadius) * FixedMath.C0p5;
 
             // top
             vertices.Add(new FVector2(topRadius, newHeight));
 
-            var stepSize = Fix64.PI / topEdges;
+            var stepSize = Fix64.Pi / topEdges;
             for (var i = 1; i < topEdges; i++)
                 vertices.Add(new FVector2(topRadius * Fix64.Cos(stepSize * i),
                     topRadius * Fix64.Sin(stepSize * i) + newHeight));
@@ -252,7 +254,7 @@ namespace VelcroPhysics.Utilities
             // bottom
             vertices.Add(new FVector2(-bottomRadius, -newHeight));
 
-            stepSize = Fix64.PI / bottomEdges;
+            stepSize = Fix64.Pi / bottomEdges;
             for (var i = 1; i < bottomEdges; i++)
                 vertices.Add(new FVector2(-bottomRadius * Fix64.Cos(stepSize * i),
                     -bottomRadius * Fix64.Sin(stepSize * i) - newHeight));
@@ -274,22 +276,22 @@ namespace VelcroPhysics.Utilities
         {
             var vertices = new Vertices();
 
-            var stepSize = Fix64.PI * 2f / numberOfTeeth;
-            tipPercentage /= 100f;
-            Fix64.Clamp(tipPercentage, 0f, 1f);
-            var toothTipStepSize = stepSize / 2f * tipPercentage;
+            var stepSize = Fix64.PiOver2 / numberOfTeeth;
+            tipPercentage /= 100;
+            Fix64.Clamp(tipPercentage, Fix64.Zero, Fix64.One);
+            var toothTipStepSize = stepSize / 2 * tipPercentage;
 
-            var toothAngleStepSize = (stepSize - toothTipStepSize * 2f) / 2f;
+            var toothAngleStepSize = (stepSize - toothTipStepSize * 2) / 2;
 
             for (var i = numberOfTeeth - 1; i >= 0; --i)
             {
-                if (toothTipStepSize > 0f)
+                if (toothTipStepSize > Fix64.Zero)
                 {
                     vertices.Add(
                         new FVector2(radius *
-                                    Fix64.Cos(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize),
+                                    Fix64.Cos(stepSize * i + toothAngleStepSize * 2 + toothTipStepSize),
                             -radius *
-                            Fix64.Sin(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize)));
+                            Fix64.Sin(stepSize * i + toothAngleStepSize * 2 + toothTipStepSize)));
 
                     vertices.Add(
                         new FVector2((radius + toothHeight) *

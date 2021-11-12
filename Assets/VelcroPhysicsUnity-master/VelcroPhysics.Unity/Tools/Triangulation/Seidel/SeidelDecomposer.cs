@@ -34,9 +34,10 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         /// <param name="vertices">The polygon to decompose.</param>
         /// <param name="sheer">The sheer to use if you get bad results, try using a higher value.</param>
         /// <returns>A list of triangles</returns>
-        public static List<Vertices> ConvexPartition(Vertices vertices, Fix64 sheer = 0.001f)
+        public static List<Vertices> ConvexPartition(Vertices vertices, Fix64? holdSheer = null)
         {
-            Debug.Assert(vertices.Count > 3);
+            Fix64 sheer = holdSheer ?? FixedMath.C0p001;
+            UnityEngine.Debug.Assert(vertices.Count > 3);
 
             var compatList = new List<Point>(vertices.Count);
 
@@ -64,8 +65,9 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         /// <param name="vertices">The polygon to decompose.</param>
         /// <param name="sheer">The sheer to use if you get bad results, try using a higher value.</param>
         /// <returns>A list of trapezoids</returns>
-        public static List<Vertices> ConvexPartitionTrapezoid(Vertices vertices, Fix64 sheer = 0.001f)
+        public static List<Vertices> ConvexPartitionTrapezoid(Vertices vertices, Fix64? holdSheer = null)
         {
+            Fix64 sheer = holdSheer ?? FixedMath.C0p001;
             var compatList = new List<Point>(vertices.Count);
 
             foreach (var vertex in vertices) compatList.Add(new Point(vertex.x, vertex.y));

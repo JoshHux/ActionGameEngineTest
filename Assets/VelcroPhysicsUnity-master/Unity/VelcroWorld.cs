@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using FixMath.NET;
 using UnityEngine;
-using FixMath.NET;
 using VelcroPhysics.Dynamics;
+using FixMath.NET;
 
 public class VelcroWorld : MonoBehaviour
 {

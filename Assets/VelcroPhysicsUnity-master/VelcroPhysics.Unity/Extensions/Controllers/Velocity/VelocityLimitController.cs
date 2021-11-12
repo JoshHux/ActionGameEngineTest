@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
@@ -34,7 +33,7 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VelocityLimitController" /> class.
-        /// Pass in 0 or Fix64.MaxValue to disable the limit.
+        /// Pass in 0 or  Fix64.MaxValue to disable the limit.
         /// maxAngularVelocity = 0 will disable the angular velocity limit.
         /// </summary>
         /// <param name="maxLinearVelocity">The max linear velocity.</param>
@@ -42,10 +41,10 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
         public VelocityLimitController(Fix64 maxLinearVelocity, Fix64 maxAngularVelocity)
             : base(ControllerType.VelocityLimitController)
         {
-            if (maxLinearVelocity == 0 || maxLinearVelocity == Fix64.MaxValue)
+            if (maxLinearVelocity == 0 || maxLinearVelocity ==  Fix64.MaxValue)
                 LimitLinearVelocity = false;
 
-            if (maxAngularVelocity == 0 || maxAngularVelocity == Fix64.MaxValue)
+            if (maxAngularVelocity == 0 || maxAngularVelocity ==  Fix64.MaxValue)
                 LimitAngularVelocity = false;
 
             MaxLinearVelocity = maxLinearVelocity;
@@ -91,8 +90,10 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
                 {
                     //Translation
                     // Check for large velocities.
-                    var translationX = dt * body._linearVelocity.x;
-                    var translationY = dt * body._linearVelocity.y;
+                    var bodyVel = body._linearVelocity;
+
+                    var translationX = dt * bodyVel.x;
+                    var translationY = dt * bodyVel.y;
                     var result = translationX * translationX + translationY * translationY;
 
                     if (result > dt * _maxLinearSqared)
@@ -100,8 +101,12 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
                         var sq = Fix64.Sqrt(result);
 
                         var ratio = _maxLinearVelocity / sq;
-                        body._linearVelocity.x *= ratio;
-                        body._linearVelocity.y *= ratio;
+                        //body._linearVelocity.x *= ratio;
+                        //body._linearVelocity.y *= ratio;
+                        var newX = bodyVel.x * ratio;
+                        var newY = bodyVel.y * ratio;
+                        FVector2 hold = new FVector2(newX, newY);
+                        body._linearVelocity = hold;
                     }
                 }
 

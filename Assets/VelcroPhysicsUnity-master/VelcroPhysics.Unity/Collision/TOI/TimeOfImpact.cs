@@ -21,12 +21,11 @@
 */
 
 using System;
-using UnityEngine;
 using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Shared;
-using VTransform = VelcroPhysics.Shared.VTransform;
 using FixMath.NET;
+using VTransform = VelcroPhysics.Shared.VTransform;
 
 namespace VelcroPhysics.Collision.TOI
 {
@@ -35,11 +34,13 @@ namespace VelcroPhysics.Collision.TOI
         // CCD via the local separating axis method. This seeks progression
         // by computing the largest time at which separation is maintained.
 
-        [ThreadStatic] public static int TOICalls,
+        [ThreadStatic]
+        public static int TOICalls,
             TOIIters,
             TOIMaxIters;
 
-        [ThreadStatic] public static int TOIRootIters,
+        [ThreadStatic]
+        public static int TOIRootIters,
             TOIMaxRootIters;
 
         /// <summary>
@@ -71,11 +72,12 @@ namespace VelcroPhysics.Collision.TOI
             var tMax = input.TMax;
 
             var totalRadius = input.ProxyA.Radius + input.ProxyB.Radius;
-            var target = Fix64.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
-            const Fix64 tolerance = 0.25f * Settings.LinearSlop;
-            Debug.Assert(target > tolerance);
+            var target = Fix64.Max(Settings.LinearSlop, totalRadius - 3 * Settings.LinearSlop);
+            //const Fix64 tolerance = 0.25f * Settings.LinearSlop;
+            Fix64 tolerance = FixedMath.C0p25 * Settings.LinearSlop;
+            UnityEngine.Debug.Assert(target > tolerance);
 
-            var t1 =Fix64.Zero;
+            var t1 = Fix64.Zero;
             const int k_maxIterations = 20;
             var iter = 0;
 
@@ -87,7 +89,7 @@ namespace VelcroPhysics.Collision.TOI
 
             // The outer loop progressively attempts to compute new separating axes.
             // This loop terminates when an axis is repeated (no progress is made).
-            for (;;)
+            for (; ; )
             {
                 VTransform xfA, xfB;
                 sweepA.GetVTransform(out xfA, t1);
@@ -102,11 +104,11 @@ namespace VelcroPhysics.Collision.TOI
                 DistanceGJK.ComputeDistance(ref distanceInput, out distanceOutput, out cache);
 
                 // If the shapes are overlapped, we give up on continuous collision.
-                if (distanceOutput.Distance <=Fix64.Zero)
+                if (distanceOutput.Distance <= Fix64.Zero)
                 {
                     // Failure!
                     output.State = TOIOutputState.Overlapped;
-                    output.T =Fix64.Zero;
+                    output.T = Fix64.Zero;
                     break;
                 }
 
@@ -126,7 +128,7 @@ namespace VelcroPhysics.Collision.TOI
                 var done = false;
                 var t2 = tMax;
                 var pushBackIter = 0;
-                for (;;)
+                for (; ; )
                 {
                     // Find the deepest point at t2. Store the witness point indices.
                     int indexA, indexB;
@@ -178,7 +180,7 @@ namespace VelcroPhysics.Collision.TOI
                     // Compute 1D root of: f(x) - target = 0
                     var rootIterCount = 0;
                     Fix64 a1 = t1, a2 = t2;
-                    for (;;)
+                    for (; ; )
                     {
                         // Use a mix of the secant rule and bisection.
                         Fix64 t;
@@ -187,7 +189,7 @@ namespace VelcroPhysics.Collision.TOI
                             t = a1 + (target - s1) * (a2 - a1) / (s2 - s1);
                         else
                             // Bisection to guarantee progress.
-                            t = 0.5f * (a1 + a2);
+                            t = FixedMath.C0p5 * (a1 + a2);
 
                         ++rootIterCount;
 
@@ -220,7 +222,7 @@ namespace VelcroPhysics.Collision.TOI
                     }
 
                     if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                        TOIMaxRootIters = Fix64.Max(TOIMaxRootIters, rootIterCount);
+                        TOIMaxRootIters = UnityEngine.Mathf.Max(TOIMaxRootIters, rootIterCount);
 
                     ++pushBackIter;
 
@@ -244,7 +246,7 @@ namespace VelcroPhysics.Collision.TOI
             }
 
             if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                TOIMaxIters = Fix64.Max(TOIMaxIters, iter);
+                TOIMaxIters = UnityEngine.Mathf.Max(TOIMaxIters, iter);
         }
     }
 }

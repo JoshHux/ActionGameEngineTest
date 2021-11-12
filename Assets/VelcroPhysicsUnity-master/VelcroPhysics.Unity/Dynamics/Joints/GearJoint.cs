@@ -109,16 +109,16 @@ namespace VelcroPhysics.Dynamics.VJoints
             VJointType = VJointType.Gear;
             BodyA = bodyA;
             BodyB = bodyB;
-            VJointA = VJointA;
-            VJointB = VJointB;
+            this.VJointA = VJointA;
+            this.VJointB = VJointB;
             Ratio = ratio;
 
             _typeA = VJointA.VJointType;
             _typeB = VJointB.VJointType;
 
-            Debug.Assert(_typeA == VJointType.Revolute || _typeA == VJointType.Prismatic ||
+            UnityEngine.Debug.Assert(_typeA == VJointType.Revolute || _typeA == VJointType.Prismatic ||
                          _typeA == VJointType.FixedRevolute || _typeA == VJointType.FixedPrismatic);
-            Debug.Assert(_typeB == VJointType.Revolute || _typeB == VJointType.Prismatic ||
+            UnityEngine.Debug.Assert(_typeB == VJointType.Revolute || _typeB == VJointType.Prismatic ||
                          _typeB == VJointType.FixedRevolute || _typeB == VJointType.FixedPrismatic);
 
             Fix64 coordinateA, coordinateB;
@@ -197,13 +197,13 @@ namespace VelcroPhysics.Dynamics.VJoints
         public override FVector2 WorldAnchorA
         {
             get => _bodyA.GetWorldPoint(_localAnchorA);
-            set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
+            set => UnityEngine.Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
         public override FVector2 WorldAnchorB
         {
             get => _bodyB.GetWorldPoint(_localAnchorB);
-            set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
+            set => UnityEngine.Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             get => _ratio;
             set
             {
-                Debug.Assert(MathUtils.IsValid(value));
+                UnityEngine.Debug.Assert(MathUtils.IsValid(value));
                 _ratio = value;
             }
         }
@@ -394,7 +394,8 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             Rot qA = new Rot(aA), qB = new Rot(aB), qC = new Rot(aC), qD = new Rot(aD);
 
-            const Fix64 linearError = Fix64.Zero;
+            //const Fix64 linearError = Fix64.Zero;
+            Fix64 linearError = Fix64.Zero;
 
             Fix64 coordinateA, coordinateB;
 

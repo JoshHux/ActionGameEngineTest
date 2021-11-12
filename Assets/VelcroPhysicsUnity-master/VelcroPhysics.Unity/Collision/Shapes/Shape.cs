@@ -48,10 +48,10 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         public MassData MassData;
 
-        protected Shape(ShapeType type, Fix64 radius = 0, Fix64 density = 0)
+        protected Shape(ShapeType type, Fix64 radius = new Fix64(), Fix64 density = new Fix64())
         {
-            Debug.Assert(radius >= 0);
-            Debug.Assert(density >= 0);
+            UnityEngine.Debug.Assert(radius >= 0);
+            UnityEngine.Debug.Assert(density >= 0);
 
             ShapeType = type;
             _radius = radius;
@@ -81,7 +81,7 @@ namespace VelcroPhysics.Collision.Shapes
             get => _density;
             set
             {
-                Debug.Assert(value >= 0);
+                UnityEngine.Debug.Assert(value >= 0);
 
                 _density = value;
                 ComputeProperties();
@@ -97,7 +97,7 @@ namespace VelcroPhysics.Collision.Shapes
             get => _radius;
             set
             {
-                Debug.Assert(value >= 0);
+                UnityEngine.Debug.Assert(value >= 0);
 
                 _radius = value;
                 _2radius = _radius * _radius;

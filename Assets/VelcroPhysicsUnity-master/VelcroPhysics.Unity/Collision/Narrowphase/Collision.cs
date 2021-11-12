@@ -59,7 +59,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             DistanceOutput output;
             DistanceGJK.ComputeDistance(ref input, out output, out cache);
 
-            return output.Distance < 10.0f * Settings.Epsilon;
+            return output.Distance < 10 * Settings.Epsilon;
         }
 
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,

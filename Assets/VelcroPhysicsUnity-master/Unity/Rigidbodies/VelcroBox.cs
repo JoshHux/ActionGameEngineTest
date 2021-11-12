@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using FixMath.NET;
 using UnityEngine;
-using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Collision;
+using FixMath.NET;
 
 public class VelcroBox : VelcroBody
 {
@@ -34,7 +33,7 @@ public class VelcroBox : VelcroBody
     protected override void InstantiateBody(BodyType type, World world)
     {
 
-        _rb = BodyFactory.CreateRectangle(world, _width, _height, _mass, new FVector2(transform.position.x, transform.position.y), transform.rotation.eulerAngles.z * Fix64.Deg2Rad, type);
+        _rb = BodyFactory.CreateRectangle(world, _width, _height, _mass, new FVector2((Fix64)transform.position.x, (Fix64)transform.position.y), (Fix64)transform.rotation.eulerAngles.z * FixedMath.Deg2Rad, type);
         //VelcroWorld.instance.world.AddBody(rb);
     }
 
@@ -48,6 +47,6 @@ public class VelcroBox : VelcroBody
 
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-        Gizmos.DrawWireCube(Vector3.zero, new FVector2(_width, _height));
+        Gizmos.DrawWireCube(Vector3.zero, new Vector2((float)_width, (float)_height));
     }
 }

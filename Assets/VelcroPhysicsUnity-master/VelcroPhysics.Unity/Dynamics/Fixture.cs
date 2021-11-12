@@ -19,8 +19,6 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
-
-using UnityEngine;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Filtering;
@@ -210,7 +208,7 @@ namespace VelcroPhysics.Dynamics
             get => _friction;
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value));
 
                 _friction = value;
             }
@@ -226,7 +224,7 @@ namespace VelcroPhysics.Dynamics
             get => _restitution;
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value));
 
                 _restitution = value;
             }
@@ -322,14 +320,14 @@ namespace VelcroPhysics.Dynamics
         /// <param name="childIndex">Index of the child.</param>
         public void GetAABB(out AABB aabb, int childIndex)
         {
-            Debug.Assert(0 <= childIndex && childIndex < ProxyCount);
+            UnityEngine.Debug.Assert(0 <= childIndex && childIndex < ProxyCount);
             aabb = Proxies[childIndex].AABB;
         }
 
         internal void Destroy()
         {
             // The proxies must be destroyed before calling this.
-            Debug.Assert(ProxyCount == 0);
+            UnityEngine.Debug.Assert(ProxyCount == 0);
 
             // Free the proxy array.
             Proxies = null;
@@ -354,7 +352,7 @@ namespace VelcroPhysics.Dynamics
         // These support body activation/deactivation.
         internal void CreateProxies(IBroadPhase broadPhase, ref VTransform xf)
         {
-            Debug.Assert(ProxyCount == 0);
+            UnityEngine.Debug.Assert(ProxyCount == 0);
 
             // Create proxies in the broad-phase.
             ProxyCount = Shape.ChildCount;

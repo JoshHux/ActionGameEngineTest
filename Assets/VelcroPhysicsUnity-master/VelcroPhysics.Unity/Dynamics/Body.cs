@@ -134,7 +134,7 @@ namespace VelcroPhysics.Dynamics
         /// Gets the total number revolutions the body has made.
         /// </summary>
         /// <value>The revolutions.</value>
-        public Fix64 Revolutions => Rotation / Fix64.PI;
+        public Fix64 Revolutions => Rotation / Fix64.Pi;
 
         /// <summary>
         /// Gets or sets the body type.
@@ -197,7 +197,7 @@ namespace VelcroPhysics.Dynamics
             get => _linearVelocity;
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value.x) && !Fix64.IsNaN(value.y));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value.x) && !Fix64.IsNaN(value.y));
 
                 if (_type == BodyType.Static)
                     return;
@@ -218,7 +218,7 @@ namespace VelcroPhysics.Dynamics
             get => _angularVelocity;
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value));
 
                 if (_type == BodyType.Static)
                     return;
@@ -380,7 +380,7 @@ namespace VelcroPhysics.Dynamics
                 else
                     _flags &= ~BodyFlags.FixedRotationFlag;
 
-                _angularVelocity = 0f;
+                _angularVelocity = 0;
                 ResetMassData();
             }
         }
@@ -414,7 +414,7 @@ namespace VelcroPhysics.Dynamics
             get => _xf.p;
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value.x) && !Fix64.IsNaN(value.y));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value.x) && !Fix64.IsNaN(value.y));
 
                 SetVTransform(ref value, Rotation);
             }
@@ -429,7 +429,7 @@ namespace VelcroPhysics.Dynamics
             get => _sweep.A;
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value));
 
                 SetVTransform(ref _xf.p, value);
             }
@@ -500,7 +500,7 @@ namespace VelcroPhysics.Dynamics
             get => _mass;
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value));
 
                 if (_type != BodyType.Dynamic)
                     return;
@@ -524,7 +524,7 @@ namespace VelcroPhysics.Dynamics
             get => _inertia + _mass * FVector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
             set
             {
-                Debug.Assert(!Fix64.IsNaN(value));
+                UnityEngine.Debug.Assert(!Fix64.IsNaN(value));
 
                 if (_type != BodyType.Dynamic)
                     return;
@@ -533,7 +533,7 @@ namespace VelcroPhysics.Dynamics
                 if (value > Fix64.Zero && !FixedRotation)
                 {
                     _inertia = value - _mass * FVector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
-                    Debug.Assert(_inertia > Fix64.Zero);
+                    UnityEngine.Debug.Assert(_inertia > Fix64.Zero);
                     _invI = Fix64.One / _inertia;
                 }
             }
@@ -689,13 +689,13 @@ namespace VelcroPhysics.Dynamics
             if (fixture == null)
                 return;
 
-            Debug.Assert(fixture.Body == this);
+            UnityEngine.Debug.Assert(fixture.Body == this);
 
             // Remove the fixture from this body's singly linked list.
-            Debug.Assert(FixtureList.Count > 0);
+            UnityEngine.Debug.Assert(FixtureList.Count > 0);
 
             // You tried to remove a fixture that not present in the fixturelist.
-            Debug.Assert(FixtureList.Contains(fixture));
+            UnityEngine.Debug.Assert(FixtureList.Contains(fixture));
 
             // Destroy any contacts associated with the fixture.
             var edge = ContactList;
@@ -821,10 +821,10 @@ namespace VelcroPhysics.Dynamics
         /// <param name="point">The world position of the point of application.</param>
         public void ApplyForce(ref FVector2 force, ref FVector2 point)
         {
-            Debug.Assert(!Fix64.IsNaN(force.x));
-            Debug.Assert(!Fix64.IsNaN(force.y));
-            Debug.Assert(!Fix64.IsNaN(point.x));
-            Debug.Assert(!Fix64.IsNaN(point.y));
+            UnityEngine.Debug.Assert(!Fix64.IsNaN(force.x));
+            UnityEngine.Debug.Assert(!Fix64.IsNaN(force.y));
+            UnityEngine.Debug.Assert(!Fix64.IsNaN(point.x));
+            UnityEngine.Debug.Assert(!Fix64.IsNaN(point.y));
 
             if (_type != BodyType.Dynamic)
                 return;
@@ -844,7 +844,7 @@ namespace VelcroPhysics.Dynamics
         /// <param name="torque">The torque about the z-axis (out of the screen), usually in N-m.</param>
         public void ApplyTorque(Fix64 torque)
         {
-            Debug.Assert(!Fix64.IsNaN(torque));
+            UnityEngine.Debug.Assert(!Fix64.IsNaN(torque));
 
             if (BodyType != BodyType.Dynamic)
                 return;
@@ -957,7 +957,7 @@ namespace VelcroPhysics.Dynamics
                 return;
             }
 
-            Debug.Assert(BodyType == BodyType.Dynamic || BodyType == BodyType.Static);
+            UnityEngine.Debug.Assert(BodyType == BodyType.Dynamic || BodyType == BodyType.Static);
 
             // Accumulate mass over all fixtures.
             var localCenter = FVector2.zero;
@@ -997,7 +997,7 @@ namespace VelcroPhysics.Dynamics
                 // Center the inertia about the center of mass.
                 _inertia -= _mass * FVector2.Dot(localCenter, localCenter);
 
-                Debug.Assert(_inertia > Fix64.Zero);
+                UnityEngine.Debug.Assert(_inertia > Fix64.Zero);
                 _invI = Fix64.One / _inertia;
             }
             else

@@ -44,10 +44,11 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="tolerance">The tolerance.</param>
-        public static List<Vertices> ConvexPartition(Vertices vertices, Fix64 tolerance = 0.001f)
+        public static List<Vertices> ConvexPartition(Vertices vertices, Fix64? holdTolerance = null)
         {
-            Debug.Assert(vertices.Count > 3);
-            Debug.Assert(!vertices.IsCounterClockWise());
+            Fix64 tolerance = holdTolerance ?? FixedMath.C0p001;
+            UnityEngine.Debug.Assert(vertices.Count > 3);
+            UnityEngine.Debug.Assert(!vertices.IsCounterClockWise());
 
             return TriangulatePolygon(vertices, tolerance);
         }
@@ -109,7 +110,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
             {
                 // Find an ear
                 var earIndex = -1;
-                var earMaxMinCross = -10.0f;
+                var earMaxMinCross = Fix64.One * -10;
                 for (var i = 0; i < vNum; ++i)
                     if (IsEar(i, xrem, yrem, vNum))
                     {

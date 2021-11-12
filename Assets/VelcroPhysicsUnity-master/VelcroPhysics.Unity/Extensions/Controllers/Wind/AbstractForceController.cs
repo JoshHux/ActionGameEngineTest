@@ -29,7 +29,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
 
         /// <summary>
         /// Forcetypes are used in the decay math to properly get the distance.
-        /// They are also used to draw a representation in DebugView
+        /// They are also used to draw a representation in UnityEngine.DebugView
         /// </summary>
         public enum ForceTypes
         {
@@ -85,24 +85,24 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         {
             Enabled = true;
 
-            Strength =Fix64.One;
+            Strength = Fix64.One;
             Position = new FVector2(0, 0);
-            MaximumSpeed = 100.0f;
+            MaximumSpeed = 100;
             TimingMode = TimingModes.Switched;
-            ImpulseTime =Fix64.Zero;
-            ImpulseLength =Fix64.One;
+            ImpulseTime = Fix64.Zero;
+            ImpulseLength = Fix64.One;
             Triggered = false;
             StrengthCurve = new Curve();
-            Variation =Fix64.Zero;
+            Variation = Fix64.Zero;
             DecayMode = DecayModes.None;
             DecayCurve = new Curve();
-            DecayStart =Fix64.Zero;
-            DecayEnd =Fix64.Zero;
+            DecayStart = Fix64.Zero;
+            DecayEnd = Fix64.Zero;
 
             StrengthCurve.Keys.Add(new CurveKey(0, 5));
-            StrengthCurve.Keys.Add(new CurveKey(0.1f, 5));
-            StrengthCurve.Keys.Add(new CurveKey(0.2f, -4));
-            StrengthCurve.Keys.Add(new CurveKey(1f, 0));
+            StrengthCurve.Keys.Add(new CurveKey(FixedMath.C0p1, 5));
+            StrengthCurve.Keys.Add(new CurveKey(FixedMath.C0p1 * 2, -4));
+            StrengthCurve.Keys.Add(new CurveKey(1, 0));
         }
 
         /// <summary>
@@ -211,40 +211,40 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             switch (DecayMode)
             {
                 case DecayModes.None:
-                {
-                    returnFix64.One;
-                }
+                    {
+                        return Fix64.One;
+                    }
                 case DecayModes.Step:
-                {
-                    if (distance < DecayEnd)
-                        returnFix64.One;
-                    else
-                        returnFix64.Zero;
-                }
+                    {
+                        if (distance < DecayEnd)
+                            return Fix64.One;
+                        else
+                            return Fix64.Zero;
+                    }
                 case DecayModes.Linear:
-                {
-                    if (distance < DecayStart)
-                        returnFix64.One;
-                    if (distance > DecayEnd)
-                        returnFix64.Zero;
-                    return DecayEnd - DecayStart / distance - DecayStart;
-                }
+                    {
+                        if (distance < DecayStart)
+                            return Fix64.One;
+                        if (distance > DecayEnd)
+                            return Fix64.Zero;
+                        return DecayEnd - DecayStart / distance - DecayStart;
+                    }
                 case DecayModes.InverseSquare:
-                {
-                    if (distance < DecayStart)
-                        returnFix64.One;
-                    else
-                        returnFix64.One / ((distance - DecayStart) * (distance - DecayStart));
-                }
+                    {
+                        if (distance < DecayStart)
+                            return Fix64.One;
+                        else
+                            return Fix64.One / ((distance - DecayStart) * (distance - DecayStart));
+                    }
                 case DecayModes.Curve:
-                {
-                    if (distance < DecayStart)
-                        returnFix64.One;
-                    else
-                        return DecayCurve.Evaluate(distance - DecayStart);
-                }
+                    {
+                        if (distance < DecayStart)
+                            return Fix64.One;
+                        else
+                            return DecayCurve.Evaluate(distance - DecayStart);
+                    }
                 default:
-                    returnFix64.One;
+                    return Fix64.One;
             }
         }
 
@@ -267,44 +267,44 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             switch (TimingMode)
             {
                 case TimingModes.Switched:
-                {
-                    if (Enabled) ApplyForce(dt, Strength);
-                    break;
-                }
+                    {
+                        if (Enabled) ApplyForce(dt, Strength);
+                        break;
+                    }
                 case TimingModes.Triggered:
-                {
-                    if (Enabled && Triggered)
                     {
-                        if (ImpulseTime < ImpulseLength)
+                        if (Enabled && Triggered)
                         {
-                            ApplyForce(dt, Strength);
-                            ImpulseTime += dt;
+                            if (ImpulseTime < ImpulseLength)
+                            {
+                                ApplyForce(dt, Strength);
+                                ImpulseTime += dt;
+                            }
+                            else
+                            {
+                                Triggered = false;
+                            }
                         }
-                        else
-                        {
-                            Triggered = false;
-                        }
-                    }
 
-                    break;
-                }
+                        break;
+                    }
                 case TimingModes.Curve:
-                {
-                    if (Enabled && Triggered)
                     {
-                        if (ImpulseTime < ImpulseLength)
+                        if (Enabled && Triggered)
                         {
-                            ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
-                            ImpulseTime += dt;
+                            if (ImpulseTime < ImpulseLength)
+                            {
+                                ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
+                                ImpulseTime += dt;
+                            }
+                            else
+                            {
+                                Triggered = false;
+                            }
                         }
-                        else
-                        {
-                            Triggered = false;
-                        }
-                    }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
 

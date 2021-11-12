@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using FixMath.NET;
 using UnityEngine;
-using FixMath.NET;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Dynamics;
+using FixMath.NET;
 
 public class VelcroWorldManager2D
 {
@@ -18,7 +17,7 @@ public class VelcroWorldManager2D
         instance = this;
         if (world == null)
         {
-            world = new World(new FVector2(0f, 0f));
+            world = new World(new FVector2(0, 0));
         }
         else
         {
@@ -33,7 +32,7 @@ public class VelcroWorldManager2D
     }
 
     public World GetWorld() { return world; }
-    public void Step() { world.Step(Time.fixedDeltaTime); }
+    public void Step() { world.Step((Fix64)Time.fixedDeltaTime); }
     public void AddBody(VelcroBody newBody)
     {
         Body body = newBody.GetBody();
@@ -48,8 +47,10 @@ public class VelcroWorldManager2D
             VelcroBody parentGo = newBody.transform.parent.GetComponentInParent<VelcroBody>();
             Body parent = parentGo.Body;
             newBody.parent = parent;
+            Vector3 difference = newBody.transform.position - parentGo.transform.position;
+            FVector2 offsetPos = new FVector2((Fix64)difference.x, (Fix64)difference.y);
 
-            body.constraint = new ParentConstraint(parent, body, (newBody.transform.position - parentGo.transform.position), (body.Rotation - parent.Rotation));
+            body.constraint = new ParentConstraint(parent, body, offsetPos, (body.Rotation - parent.Rotation));
         }
         world.ProcessChanges();
     }

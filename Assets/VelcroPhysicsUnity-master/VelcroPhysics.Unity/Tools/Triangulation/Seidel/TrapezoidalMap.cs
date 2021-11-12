@@ -20,7 +20,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         public TrapezoidalMap()
         {
             Map = new HashSet<Trapezoid>();
-            _margin = 50.0f;
+            _margin = 50;
             _bCross = null;
             _cross = null;
         }

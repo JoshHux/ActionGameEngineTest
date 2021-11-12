@@ -40,7 +40,8 @@ namespace VelcroPhysics.Collision.Narrowphase
             VTransform xf1, xf2;
             int edge1; // reference edge
             bool flip;
-            const Fix64 k_tol = 0.1f * Settings.LinearSlop;
+            //const Fix64 k_tol = FixedMath.C0p1 * Settings.LinearSlop;
+            Fix64 k_tol = FixedMath.C0p1 * Settings.LinearSlop;
 
             if (separationB > separationA + k_tol)
             {
@@ -79,7 +80,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             localTangent.Normalize();
 
             var localNormal = MathUtils.Cross(localTangent, Fix64.One);
-            var planePoint = 0.5f * (v11 + v12);
+            var planePoint = FixedMath.C0p5 * (v11 + v12);
 
             var tangent = MathUtils.Mul(ref xf1.q, localTangent);
             var normal = MathUtils.Cross(tangent, Fix64.One);
@@ -192,7 +193,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             var vertices2 = poly2.Vertices;
             var normals2 = poly2.Normals;
 
-            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
+            UnityEngine.Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
 
             // Get the normal of the reference edge in poly2's frame.
             var normal1 = MathUtils.MulT(ref xf2.q, MathUtils.Mul(ref xf1.q, normals1[edge1]));

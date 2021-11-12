@@ -1,4 +1,3 @@
-using UnityEngine;
 using FixMath.NET;
 
 namespace VelcroPhysics.Shared

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
@@ -12,7 +11,7 @@ namespace VelcroPhysics.Extensions.Controllers.Gravity
             : base(ControllerType.GravityController)
         {
             Strength = strength;
-            MaxRadius = Fix64.MaxValue;
+            MaxRadius =  Fix64.MaxValue;
             GravityType = GravityType.DistanceSquared;
             Points = new List<FVector2>();
             Bodies = new List<Body>();

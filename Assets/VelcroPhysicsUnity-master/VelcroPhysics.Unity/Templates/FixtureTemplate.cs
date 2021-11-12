@@ -48,7 +48,7 @@ namespace VelcroPhysics.Templates
 
         public void SetDefaults()
         {
-            Friction = 0.2f;
+            Friction = FixedMath.C0p01 * 2;
         }
     }
 }

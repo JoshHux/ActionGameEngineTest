@@ -28,8 +28,8 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
         /// <param name="vertices">The list of points describing the polygon</param>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            Debug.Assert(vertices.Count > 3);
-            Debug.Assert(vertices.IsCounterClockWise());
+            UnityEngine.Debug.Assert(vertices.Count > 3);
+            UnityEngine.Debug.Assert(vertices.IsCounterClockWise());
 
             var polygon = new int[vertices.Count];
 

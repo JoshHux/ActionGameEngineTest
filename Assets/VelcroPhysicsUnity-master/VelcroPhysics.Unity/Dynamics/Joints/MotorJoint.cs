@@ -87,9 +87,9 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             //Defaults
             //_angularOffset =Fix64.Zero;
-            _maxForce =Fix64.One;
-            _maxTorque =Fix64.One;
-            CorrectionFactor = 0.3f;
+            _maxForce = Fix64.One;
+            _maxTorque = Fix64.One;
+            CorrectionFactor = FixedMath.C0p1 * 3;
 
             _angularOffset = BodyB.Rotation - BodyA.Rotation;
         }
@@ -97,13 +97,13 @@ namespace VelcroPhysics.Dynamics.VJoints
         public override FVector2 WorldAnchorA
         {
             get => BodyA.Position;
-            set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
+            set => UnityEngine.Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
         public override FVector2 WorldAnchorB
         {
             get => BodyB.Position;
-            set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
+            set => UnityEngine.Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         {
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
+                UnityEngine.Debug.Assert(MathUtils.IsValid(value) && value >= Fix64.Zero);
                 _maxForce = value;
             }
             get => _maxForce;
@@ -126,7 +126,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         {
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
+                UnityEngine.Debug.Assert(MathUtils.IsValid(value) && value >= Fix64.Zero);
                 _maxTorque = value;
             }
             get => _maxTorque;
@@ -218,15 +218,18 @@ namespace VelcroPhysics.Dynamics.VJoints
             Fix64 iA = _invIA, iB = _invIB;
 
             var K = new Mat22();
-            K.ex.x = mA + mB + iA * _rA.y * _rA.y + iB * _rB.y * _rB.y;
-            K.ex.y = -iA * _rA.x * _rA.y - iB * _rB.x * _rB.y;
-            K.ey.x = K.ex.y;
-            K.ey.y = mA + mB + iA * _rA.x * _rA.x + iB * _rB.x * _rB.x;
+            var Kexx = mA + mB + iA * _rA.y * _rA.y + iB * _rB.y * _rB.y;
+            var Kexy = -iA * _rA.x * _rA.y - iB * _rB.x * _rB.y;
+            var Keyx = K.ex.y;
+            var Keyy = mA + mB + iA * _rA.x * _rA.x + iB * _rB.x * _rB.x;
+
+            K.ex = new FVector2(Kexx, Kexy);
+            K.ey = new FVector2(Keyx, Keyy);
 
             _linearMass = K.Inverse;
 
             _angularMass = iA + iB;
-            if (_angularMass >Fix64.Zero) _angularMass =Fix64.One / _angularMass;
+            if (_angularMass > Fix64.Zero) _angularMass = Fix64.One / _angularMass;
 
             _linearError = cB + _rB - cA - _rA - MathUtils.Mul(qA, _linearOffset);
             _angularError = aB - aA - _angularOffset;
@@ -247,7 +250,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             else
             {
                 _linearImpulse = FVector2.zero;
-                _angularImpulse =Fix64.Zero;
+                _angularImpulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;

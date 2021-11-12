@@ -39,8 +39,10 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// <param name="maxPolys">The maximun number of polygons to return.</param>
         /// <param name="tolerance">The tolerance</param>
         public static List<Vertices> PolygonizeTriangles(List<Vertices> triangles, int maxPolys = int.MaxValue,
-            Fix64 tolerance = 0.001f)
+            Fix64? holdTolerance = null)
         {
+            Fix64 tolerance = holdTolerance ?? FixedMath.C0p001;
+
             if (triangles.Count <= 0)
                 return triangles;
 
@@ -119,7 +121,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                         if (poly.Count >= 3)
                             polys.Add(new Vertices(poly));
                         else
-                            Debug.Log("Skipping corrupt poly.");
+                           UnityEngine.Debug.Log("Skipping corrupt poly.");
                     }
 
                     if (poly.Count >= 3)

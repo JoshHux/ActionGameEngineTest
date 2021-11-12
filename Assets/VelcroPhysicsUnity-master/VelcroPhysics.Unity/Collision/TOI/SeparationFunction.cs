@@ -14,7 +14,7 @@ namespace VelcroPhysics.Collision.TOI
             out SeparationFunctionType type)
         {
             int count = cache.Count;
-            Debug.Assert(0 < count && count < 3);
+            UnityEngine.Debug.Assert(0 < count && count < 3);
 
             VTransform xfA, xfB;
             sweepA.GetVTransform(out xfA, t1);
@@ -43,14 +43,14 @@ namespace VelcroPhysics.Collision.TOI
                 axis.Normalize();
                 var normal = MathUtils.Mul(ref xfB.q, axis);
 
-                localPoint = 0.5f * (localPointB1 + localPointB2);
+                localPoint = FixedMath.C0p5 * (localPointB1 + localPointB2);
                 var pointB = MathUtils.Mul(ref xfB, localPoint);
 
                 var localPointA = proxyA.Vertices[cache.IndexA[0]];
                 var pointA = MathUtils.Mul(ref xfA, localPointA);
 
                 var s = FVector2.Dot(pointA - pointB, normal);
-                if (s <Fix64.Zero) axis = -axis;
+                if (s < Fix64.Zero) axis = -axis;
             }
             else
             {
@@ -64,14 +64,14 @@ namespace VelcroPhysics.Collision.TOI
                 axis.Normalize();
                 var normal = MathUtils.Mul(ref xfA.q, axis);
 
-                localPoint = 0.5f * (localPointA1 + localPointA2);
+                localPoint = FixedMath.C0p5 * (localPointA1 + localPointA2);
                 var pointA = MathUtils.Mul(ref xfA, localPoint);
 
                 var localPointB = proxyB.Vertices[cache.IndexB[0]];
                 var pointB = MathUtils.Mul(ref xfB, localPointB);
 
                 var s = FVector2.Dot(pointB - pointA, normal);
-                if (s <Fix64.Zero) axis = -axis;
+                if (s < Fix64.Zero) axis = -axis;
             }
 
             //Velcro note: the returned value that used to be here has been removed, as it was not used.
@@ -88,62 +88,62 @@ namespace VelcroPhysics.Collision.TOI
             switch (type)
             {
                 case SeparationFunctionType.Points:
-                {
-                    var axisA = MathUtils.MulT(ref xfA.q, axis);
-                    var axisB = MathUtils.MulT(ref xfB.q, -axis);
+                    {
+                        var axisA = MathUtils.MulT(ref xfA.q, axis);
+                        var axisB = MathUtils.MulT(ref xfB.q, -axis);
 
-                    indexA = proxyA.GetSupport(axisA);
-                    indexB = proxyB.GetSupport(axisB);
+                        indexA = proxyA.GetSupport(axisA);
+                        indexB = proxyB.GetSupport(axisB);
 
-                    var localPointA = proxyA.Vertices[indexA];
-                    var localPointB = proxyB.Vertices[indexB];
+                        var localPointA = proxyA.Vertices[indexA];
+                        var localPointB = proxyB.Vertices[indexB];
 
-                    var pointA = MathUtils.Mul(ref xfA, localPointA);
-                    var pointB = MathUtils.Mul(ref xfB, localPointB);
+                        var pointA = MathUtils.Mul(ref xfA, localPointA);
+                        var pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                    var separation = FVector2.Dot(pointB - pointA, axis);
-                    return separation;
-                }
+                        var separation = FVector2.Dot(pointB - pointA, axis);
+                        return separation;
+                    }
 
                 case SeparationFunctionType.FaceA:
-                {
-                    var normal = MathUtils.Mul(ref xfA.q, axis);
-                    var pointA = MathUtils.Mul(ref xfA, localPoint);
+                    {
+                        var normal = MathUtils.Mul(ref xfA.q, axis);
+                        var pointA = MathUtils.Mul(ref xfA, localPoint);
 
-                    var axisB = MathUtils.MulT(ref xfB.q, -normal);
+                        var axisB = MathUtils.MulT(ref xfB.q, -normal);
 
-                    indexA = -1;
-                    indexB = proxyB.GetSupport(axisB);
+                        indexA = -1;
+                        indexB = proxyB.GetSupport(axisB);
 
-                    var localPointB = proxyB.Vertices[indexB];
-                    var pointB = MathUtils.Mul(ref xfB, localPointB);
+                        var localPointB = proxyB.Vertices[indexB];
+                        var pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                    var separation = FVector2.Dot(pointB - pointA, normal);
-                    return separation;
-                }
+                        var separation = FVector2.Dot(pointB - pointA, normal);
+                        return separation;
+                    }
 
                 case SeparationFunctionType.FaceB:
-                {
-                    var normal = MathUtils.Mul(ref xfB.q, axis);
-                    var pointB = MathUtils.Mul(ref xfB, localPoint);
+                    {
+                        var normal = MathUtils.Mul(ref xfB.q, axis);
+                        var pointB = MathUtils.Mul(ref xfB, localPoint);
 
-                    var axisA = MathUtils.MulT(ref xfA.q, -normal);
+                        var axisA = MathUtils.MulT(ref xfA.q, -normal);
 
-                    indexB = -1;
-                    indexA = proxyA.GetSupport(axisA);
+                        indexB = -1;
+                        indexA = proxyA.GetSupport(axisA);
 
-                    var localPointA = proxyA.Vertices[indexA];
-                    var pointA = MathUtils.Mul(ref xfA, localPointA);
+                        var localPointA = proxyA.Vertices[indexA];
+                        var pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                    var separation = FVector2.Dot(pointA - pointB, normal);
-                    return separation;
-                }
+                        var separation = FVector2.Dot(pointA - pointB, normal);
+                        return separation;
+                    }
 
                 default:
-                    Debug.Assert(false);
+                    UnityEngine.Debug.Assert(false);
                     indexA = -1;
                     indexB = -1;
-                    returnFix64.Zero;
+                    return Fix64.Zero;
             }
         }
 
@@ -158,41 +158,41 @@ namespace VelcroPhysics.Collision.TOI
             switch (type)
             {
                 case SeparationFunctionType.Points:
-                {
-                    var localPointA = proxyA.Vertices[indexA];
-                    var localPointB = proxyB.Vertices[indexB];
+                    {
+                        var localPointA = proxyA.Vertices[indexA];
+                        var localPointB = proxyB.Vertices[indexB];
 
-                    var pointA = MathUtils.Mul(ref xfA, localPointA);
-                    var pointB = MathUtils.Mul(ref xfB, localPointB);
-                    var separation = FVector2.Dot(pointB - pointA, axis);
+                        var pointA = MathUtils.Mul(ref xfA, localPointA);
+                        var pointB = MathUtils.Mul(ref xfB, localPointB);
+                        var separation = FVector2.Dot(pointB - pointA, axis);
 
-                    return separation;
-                }
+                        return separation;
+                    }
                 case SeparationFunctionType.FaceA:
-                {
-                    var normal = MathUtils.Mul(ref xfA.q, axis);
-                    var pointA = MathUtils.Mul(ref xfA, localPoint);
+                    {
+                        var normal = MathUtils.Mul(ref xfA.q, axis);
+                        var pointA = MathUtils.Mul(ref xfA, localPoint);
 
-                    var localPointB = proxyB.Vertices[indexB];
-                    var pointB = MathUtils.Mul(ref xfB, localPointB);
+                        var localPointB = proxyB.Vertices[indexB];
+                        var pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                    var separation = FVector2.Dot(pointB - pointA, normal);
-                    return separation;
-                }
+                        var separation = FVector2.Dot(pointB - pointA, normal);
+                        return separation;
+                    }
                 case SeparationFunctionType.FaceB:
-                {
-                    var normal = MathUtils.Mul(ref xfB.q, axis);
-                    var pointB = MathUtils.Mul(ref xfB, localPoint);
+                    {
+                        var normal = MathUtils.Mul(ref xfB.q, axis);
+                        var pointB = MathUtils.Mul(ref xfB, localPoint);
 
-                    var localPointA = proxyA.Vertices[indexA];
-                    var pointA = MathUtils.Mul(ref xfA, localPointA);
+                        var localPointA = proxyA.Vertices[indexA];
+                        var pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                    var separation = FVector2.Dot(pointA - pointB, normal);
-                    return separation;
-                }
+                        var separation = FVector2.Dot(pointA - pointB, normal);
+                        return separation;
+                    }
                 default:
-                    Debug.Assert(false);
-                    returnFix64.Zero;
+                    UnityEngine.Debug.Assert(false);
+                    return Fix64.Zero;
             }
         }
     }

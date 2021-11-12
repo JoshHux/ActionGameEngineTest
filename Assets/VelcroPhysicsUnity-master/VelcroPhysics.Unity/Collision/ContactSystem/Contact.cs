@@ -355,8 +355,8 @@ namespace VelcroPhysics.Collision.ContactSystem
             var type1 = fixtureA.Shape.ShapeType;
             var type2 = fixtureB.Shape.ShapeType;
 
-            Debug.Assert(ShapeType.Unknown < type1 && type1 < ShapeType.TypeCount);
-            Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
+            UnityEngine.Debug.Assert(ShapeType.Unknown < type1 && type1 < ShapeType.TypeCount);
+            UnityEngine.Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
             Contact c;
             var pool = fixtureA.Body._world._contactPool;

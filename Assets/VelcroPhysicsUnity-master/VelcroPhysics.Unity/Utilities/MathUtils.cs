@@ -40,9 +40,9 @@ namespace VelcroPhysics.Utilities
         }
 
         /// Perform the cross product on two vectors.
-        public static Vector3 Cross(Vector3 a, Vector3 b)
+        public static FVector3 Cross(FVector3 a, FVector3 b)
         {
-            return new Vector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+            return new FVector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
         }
 
         public static FVector2 Cross(FVector2 a, Fix64 s)
@@ -112,14 +112,16 @@ namespace VelcroPhysics.Utilities
         public static void MulT(ref Mat22 A, ref Mat22 B, out Mat22 C)
         {
             C = new Mat22();
-            C.ex.x = A.ex.x * B.ex.x + A.ex.y * B.ex.y;
-            C.ex.y = A.ey.x * B.ex.x + A.ey.y * B.ex.y;
-            C.ey.x = A.ex.x * B.ey.x + A.ex.y * B.ey.y;
-            C.ey.y = A.ey.x * B.ey.x + A.ey.y * B.ey.y;
+            var exX = A.ex.x * B.ex.x + A.ex.y * B.ex.y;
+            var exY = A.ey.x * B.ex.x + A.ey.y * B.ex.y;
+            var eyX = A.ex.x * B.ey.x + A.ex.y * B.ey.y;
+            var eyY = A.ey.x * B.ey.x + A.ey.y * B.ey.y;
+            C.ex = new FVector2(exX, exY);
+            C.ey = new FVector2(eyX, eyY);
         }
 
         /// Multiply a matrix times a vector.
-        public static Vector3 Mul(Mat33 A, Vector3 v)
+        public static FVector3 Mul(Mat33 A, FVector3 v)
         {
             return v.x * A.ex + v.y * A.ey + v.z * A.ez;
         }
@@ -249,20 +251,47 @@ namespace VelcroPhysics.Utilities
         /// <returns></returns>
         public static Fix64 InvSqrt(Fix64 x)
         {
+            //not using floats anymore, can't really use this...
+            //that sucks...
+            /*
             var convert = new Fix64Converter();
             convert.x = x;
-            var xhalf = 0.5f * x;
+            var xhalf = FixedMath.C0p5 * x;
             convert.i = 0x5f3759df - (convert.i >> 1);
             x = convert.x;
             x = x * (1.5f - xhalf * x * x);
+            */
+            x = 1 / Fix64.Sqrt(x);
             return x;
         }
 
         public static int Clamp(int a, int low, int high)
         {
-            return Fix64.Max(low, Fix64.Min(a, high));
+            return UnityEngine.Mathf.Max(low, UnityEngine.Mathf.Min(a, high));
         }
 
+        /// <summary>
+        /// Return the angle between two vectors on a plane The angle is from vector 1 to vector 2, positive anticlockwise
+        /// The result is between -pi -> pi
+        /// </summary>
+        public static Fix64 VectorAngle(ref FVector2 p1, ref FVector2 p2)
+        {
+            var theta1 = Fix64.Atan2(p1.y, p1.x);
+            var theta2 = Fix64.Atan2(p2.y, p2.x);
+            var dtheta = theta2 - theta1;
+
+            while (dtheta > Fix64.Pi)
+            {
+                dtheta -= Fix64.PiTimes2;
+            }
+
+            while (dtheta < -Fix64.Pi)
+            {
+                dtheta += Fix64.PiTimes2;
+            }
+
+            return dtheta;
+        }
         public static Fix64 Clamp(Fix64 a, Fix64 low, Fix64 high)
         {
             return Fix64.Max(low, Fix64.Min(a, high));
@@ -280,7 +309,7 @@ namespace VelcroPhysics.Utilities
         }
 
         /// Perform the dot product on two vectors.
-        public static Fix64 Dot(Vector3 a, Vector3 b)
+        public static Fix64 Dot(FVector3 a, FVector3 b)
         {
             return a.x * b.x + a.y * b.y + a.z * b.z;
         }
@@ -317,7 +346,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="c">Third vertex</param>
         /// <param name="tolerance">The tolerance</param>
         /// <returns></returns>
-        public static bool IsCollinear(ref FVector2 a, ref FVector2 b, ref FVector2 c, Fix64 tolerance = 0)
+        public static bool IsCollinear(ref FVector2 a, ref FVector2 b, ref FVector2 c, Fix64 tolerance = new Fix64())
         {
             return Fix64InRange(Area(ref a, ref b, ref c), -tolerance, tolerance);
         }

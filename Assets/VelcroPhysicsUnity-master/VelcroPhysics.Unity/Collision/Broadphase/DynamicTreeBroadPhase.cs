@@ -21,7 +21,6 @@
 */
 
 using System;
-using UnityEngine;
 using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
@@ -288,8 +287,8 @@ namespace VelcroPhysics.Collision.Broadphase
                 Array.Copy(oldBuffer, _pairBuffer, _pairCount);
             }
 
-            _pairBuffer[_pairCount].ProxyIdA = Fix64.Min(proxyId, _queryProxyId);
-            _pairBuffer[_pairCount].ProxyIdB = Fix64.Max(proxyId, _queryProxyId);
+            _pairBuffer[_pairCount].ProxyIdA = UnityEngine.Mathf.Min(proxyId, _queryProxyId);
+            _pairBuffer[_pairCount].ProxyIdB = UnityEngine.Mathf.Max(proxyId, _queryProxyId);
             ++_pairCount;
 
             return true;

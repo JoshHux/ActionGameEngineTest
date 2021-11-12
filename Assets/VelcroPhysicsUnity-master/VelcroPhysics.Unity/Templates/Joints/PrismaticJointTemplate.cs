@@ -69,7 +69,7 @@ namespace VelcroPhysics.Templates.VJoints
 
         public override void SetDefaults()
         {
-            LocalAxisA = new FVector2(1.0f,Fix64.Zero);
+            LocalAxisA = new FVector2(1, Fix64.Zero);
         }
     }
 }

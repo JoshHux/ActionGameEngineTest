@@ -32,8 +32,8 @@ namespace VelcroPhysics.Templates.VJoints
 
         public override void SetDefaults()
         {
-            LocalAnchorA = new FVector2(-1.0f,Fix64.Zero);
-            LocalAnchorB = new FVector2(1.0f,Fix64.Zero);
+            LocalAnchorA = new FVector2(-1, Fix64.Zero);
+            LocalAnchorB = new FVector2(1, Fix64.Zero);
         }
     }
 }

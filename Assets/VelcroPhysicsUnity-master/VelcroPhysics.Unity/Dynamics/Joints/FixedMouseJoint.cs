@@ -76,11 +76,11 @@ namespace VelcroPhysics.Dynamics.VJoints
             : base(body)
         {
             VJointType = VJointType.FixedMouse;
-            Frequency = 5.0f;
-            DampingRatio = 0.7f;
+            Frequency = 5;
+            DampingRatio = FixedMath.C0p1 * 7;
             MaxForce = 1000 * body.Mass;
 
-            Debug.Assert(worldAnchor.IsValid());
+            UnityEngine.Debug.Assert(worldAnchor.IsValid());
 
             _worldAnchor = worldAnchor;
             LocalAnchorA = MathUtils.MulT(BodyA._xf, worldAnchor);
@@ -117,7 +117,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             get => _maxForce;
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
+                UnityEngine.Debug.Assert(MathUtils.IsValid(value) && value >= Fix64.Zero);
                 _maxForce = value;
             }
         }
@@ -130,7 +130,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             get => _frequency;
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
+                UnityEngine.Debug.Assert(MathUtils.IsValid(value) && value >= Fix64.Zero);
                 _frequency = value;
             }
         }
@@ -143,7 +143,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             get => _dampingRatio;
             set
             {
-                Debug.Assert(MathUtils.IsValid(value) && value >=Fix64.Zero);
+                UnityEngine.Debug.Assert(MathUtils.IsValid(value) && value >= Fix64.Zero);
                 _dampingRatio = value;
             }
         }
@@ -155,7 +155,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         public override Fix64 GetReactionTorque(Fix64 invDt)
         {
-            return invDt *Fix64.Zero;
+            return invDt * Fix64.Zero;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
@@ -175,10 +175,10 @@ namespace VelcroPhysics.Dynamics.VJoints
             var mass = BodyA.Mass;
 
             // Frequency
-            var omega = 2.0f * Fix64.Pi * Frequency;
+            var omega = 2 * Fix64.Pi * Frequency;
 
             // Damping coefficient
-            var d = 2.0f * mass * DampingRatio * omega;
+            var d = 2 * mass * DampingRatio * omega;
 
             // Spring stiffness
             var k = mass * (omega * omega);
@@ -187,9 +187,9 @@ namespace VelcroPhysics.Dynamics.VJoints
             // gamma has units of inverse mass.
             // beta has units of inverse time.
             var h = data.Step.dt;
-            Debug.Assert(d + h * k > Settings.Epsilon);
+            UnityEngine.Debug.Assert(d + h * k > Settings.Epsilon);
             _gamma = h * (d + h * k);
-            if (_gamma !=Fix64.Zero) _gamma =Fix64.One / _gamma;
+            if (_gamma != Fix64.Zero) _gamma = Fix64.One / _gamma;
 
             _beta = h * k * _gamma;
 
@@ -200,10 +200,13 @@ namespace VelcroPhysics.Dynamics.VJoints
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y -r1.x*r1.y]
             //        [    0     1/m1+1/m2]           [-r1.x*r1.y r1.x*r1.x]           [-r1.x*r1.y r1.x*r1.x]
             var K = new Mat22();
-            K.ex.x = _invMassA + _invIA * _rA.y * _rA.y + _gamma;
-            K.ex.y = -_invIA * _rA.x * _rA.y;
-            K.ey.x = K.ex.y;
-            K.ey.y = _invMassA + _invIA * _rA.x * _rA.x + _gamma;
+            var Kexx = _invMassA + _invIA * _rA.y * _rA.y + _gamma;
+            var Kexy = -_invIA * _rA.x * _rA.y;
+            var Keyx = K.ex.y;
+            var Keyy = _invMassA + _invIA * _rA.x * _rA.x + _gamma;
+
+            K.ex = new FVector2(Kexx, Kexy);
+            K.ey = new FVector2(Keyx, Keyy);
 
             _mass = K.Inverse;
 
@@ -211,7 +214,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             _C *= _beta;
 
             // Cheat with some damping
-            wA *= 0.98f;
+            wA *= (FixedMath.C0p1 * 9 + FixedMath.C0p01 * 8);
 
             if (Settings.EnableWarmstarting)
             {

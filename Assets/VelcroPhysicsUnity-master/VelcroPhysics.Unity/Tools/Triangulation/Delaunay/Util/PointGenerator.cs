@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using FixMath.NET;
-using UnityEngine;
-using FixMath.NET;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
 {
@@ -11,7 +9,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
         {
             var points = new List<TriangulationPoint>();
             for (var i = 0; i < n; i++)
-                points.Add(new TriangulationPoint(scale * (0.5f - Random.value), scale * (0.5f - Random.value)));
+                points.Add(new TriangulationPoint(scale * (FixedMath.C0p5 - 0), scale * (FixedMath.C0p5 - 0)));
             return points;
         }
 
@@ -19,7 +17,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
         {
             Fix64 x = 0;
             var size = scale / n;
-            var halfScale = 0.5f * scale;
+            var halfScale = FixedMath.C0p5 * scale;
 
             var points = new List<TriangulationPoint>();
             for (var i = 0; i < n + 1; i++)

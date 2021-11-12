@@ -177,15 +177,18 @@ namespace VelcroPhysics.Dynamics.VJoints
             Fix64 iA = _invIA, iB = _invIB;
 
             var K = new Mat22();
-            K.ex.x = mA + mB + iA * _rA.y * _rA.y + iB * _rB.y * _rB.y;
-            K.ex.y = -iA * _rA.x * _rA.y - iB * _rB.x * _rB.y;
-            K.ey.x = K.ex.y;
-            K.ey.y = mA + mB + iA * _rA.x * _rA.x + iB * _rB.x * _rB.x;
+            var Kexx = mA + mB + iA * _rA.y * _rA.y + iB * _rB.y * _rB.y;
+            var Kexy = -iA * _rA.x * _rA.y - iB * _rB.x * _rB.y;
+            var Keyx = K.ex.y;
+            var Keyy = mA + mB + iA * _rA.x * _rA.x + iB * _rB.x * _rB.x;
 
+            K.ex = new FVector2(Kexx, Kexy);
+            K.ey = new FVector2(Keyx, Keyy);
+            
             _linearMass = K.Inverse;
 
             _angularMass = iA + iB;
-            if (_angularMass >Fix64.Zero) _angularMass =Fix64.One / _angularMass;
+            if (_angularMass > Fix64.Zero) _angularMass = Fix64.One / _angularMass;
 
             if (Settings.EnableWarmstarting)
             {
@@ -202,7 +205,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             else
             {
                 _linearImpulse = FVector2.zero;
-                _angularImpulse =Fix64.Zero;
+                _angularImpulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;

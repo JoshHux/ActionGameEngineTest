@@ -5,24 +5,24 @@ namespace VelcroPhysics.Utilities
 {
     public static class VectorUtils
     {
-        public static FVector2 VTransform(this FVector2 position, Matrix4x4 matrix)
+        public static FVector2 VTransform(this FVector2 position, FMatrix4x4 matrix)
         {
             VTransform(ref position, ref matrix, out position);
             return position;
         }
 
-        public static void VTransform(this ref FVector2 position, ref Matrix4x4 matrix, out FVector2 result)
+        public static void VTransform(this ref FVector2 position, ref FMatrix4x4 matrix, out FVector2 result)
         {
             result = new FVector2(position.x * matrix.m00 + position.y * matrix.m10 + matrix.m30,
                 position.x * matrix.m01 + position.y * matrix.m11 + matrix.m31);
         }
 
-        public static void VTransform(this FVector2[] sourceArray, ref Matrix4x4 matrix, FVector2[] destinationArray)
+        public static void VTransform(this FVector2[] sourceArray, ref FMatrix4x4 matrix, FVector2[] destinationArray)
         {
             throw new NotImplementedException();
         }
 
-        public static void VTransform(this FVector2[] sourceArray, int sourceIndex, ref Matrix4x4 matrix,
+        public static void VTransform(this FVector2[] sourceArray, int sourceIndex, ref FMatrix4x4 matrix,
             FVector2[] destinationArray, int destinationIndex, int length)
         {
             throw new NotImplementedException();
@@ -50,9 +50,9 @@ namespace VelcroPhysics.Utilities
             var amountSquared = amount * amount;
             var amountCubed = amountSquared * amount;
 
-            return (Fix64)(0.5 * (2.0 * value2 + (value3 - value1) * amount
-                                                + (2.0 * value1 - 5.0 * value2 + 4.0 * value3 - value4) * amountSquared
-                                                + (3.0 * value2 - value1 - 3.0 * value3 + value4) * amountCubed));
+            return (Fix64)(FixedMath.C0p5 * (2 * value2 + (value3 - value1) * amount
+                                                + (2 * value1 - 5 * value2 + 4 * value3 - value4) * amountSquared
+                                                + (3 * value2 - value1 - 3 * value3 + value4) * amountCubed));
         }
     }
 }

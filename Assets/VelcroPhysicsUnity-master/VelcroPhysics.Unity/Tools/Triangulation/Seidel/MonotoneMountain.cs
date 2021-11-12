@@ -6,7 +6,8 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
     internal class MonotoneMountain
     {
         // Almost Pi!
-        private const Fix64 PiSlop = Fix64.One * 3 + FixedMath.C0p1;
+        //private const Fix64 PiSlop = Fix64.One * 3 + FixedMath.C0p1;
+        private static Fix64 PiSlop = Fix64.One * 3 + FixedMath.C0p1;
 
         private HashSet<Point> _convexPoints;
         private Point _head;
@@ -125,7 +126,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
                     _convexPoints.Add(c);
             }
 
-            Debug.Assert(_size <= 3, "Triangulation bug, please report");
+            UnityEngine.Debug.Assert(_size <= 3, "Triangulation bug, please report");
         }
 
         private bool Valid(Point p)

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -38,15 +37,15 @@ public class AnimationReader : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (play && (f < fixedAnimations[0].frames.Length))
+        if (play && (f < fixedAnimations[0].GetLength()))
         {
             //Debug.Log(f);
-            this.ApplyPosData(this.transform, fixedAnimations[0].frames[f].deltaPos);
-            this.ApplyScaleData(this.transform, fixedAnimations[0].frames[f].deltaScale);
-            this.ApplyRotData(this.transform, fixedAnimations[0].frames[f].deltaRot);
+            this.ApplyPosData(this.transform, fixedAnimations[0].GetFrameAt(f).deltaPos);
+            this.ApplyScaleData(this.transform, fixedAnimations[0].GetFrameAt(f).deltaScale);
+            this.ApplyRotData(this.transform, fixedAnimations[0].GetFrameAt(f).deltaRot);
             f++;
 
-            if (f >= fixedAnimations[0].frames.Length) { ResetAnimation(); }
+            if (f >= fixedAnimations[0].GetLength()) { ResetAnimation(); }
         }
         else if (Keyboard.current.aKey.wasPressedThisFrame)
         {
@@ -97,7 +96,7 @@ public class AnimationReader : MonoBehaviour
             this.ApplyRotData(this.transform, allRotations);
 
             //list of deltas on each frame to be used to creat the new animation
-            List<AnimFrame> frameList = new List<AnimFrame>();
+            List<FixedFrame> frameList = new List<FixedFrame>();
 
 
             //get the individual "frames" of animation by sampling the time passed
@@ -123,7 +122,7 @@ public class AnimationReader : MonoBehaviour
                 Quaternion[] deltaRot = this.GetDeltaRot(curRot, prevRot);
 
                 //use deltas to create new frame
-                AnimFrame newFrame = new AnimFrame(deltaPos, deltaScale, deltaRot);
+                FixedFrame newFrame = new FixedFrame(deltaPos, deltaScale, deltaRot);
 
                 //add new frame to list
                 frameList.Add(newFrame);

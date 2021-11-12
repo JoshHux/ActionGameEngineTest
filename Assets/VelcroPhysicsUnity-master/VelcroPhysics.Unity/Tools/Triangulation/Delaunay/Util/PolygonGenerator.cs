@@ -37,7 +37,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
 {
     internal class PolygonGenerator
     {
-        private static Fix64 PI_2 = 2.0f * Fix64.PI;
+        private static Fix64 PI_2 = Fix64.PiTimes2;
 
         public static Polygon.Polygon RandomCircleSweep(Fix64 scale, int vertexCount)
         {
@@ -51,11 +51,11 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
                 do
                 {
                     if (i % 250 == 0)
-                        radius += scale / 2 * (0.5f - Random.value);
+                        radius += scale / 2 * (FixedMath.C0p5 - 0);
                     else if (i % 50 == 0)
-                        radius += scale / 5 * (0.5f - Random.value);
+                        radius += scale / 5 * (FixedMath.C0p5 - 0);
                     else
-                        radius += 25 * scale / vertexCount * (0.5f - Random.value);
+                        radius += 25 * scale / vertexCount * (FixedMath.C0p5 - 0);
                     radius = radius > scale / 2 ? scale / 2 : radius;
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);
@@ -79,7 +79,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
             {
                 do
                 {
-                    radius += scale / 5 * (0.5f - Random.value);
+                    radius += scale / 5 * (FixedMath.C0p5 - 0);
                     radius = radius > scale / 2 ? scale / 2 : radius;
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);

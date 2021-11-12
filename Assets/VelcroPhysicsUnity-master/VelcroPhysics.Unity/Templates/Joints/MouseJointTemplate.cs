@@ -38,8 +38,8 @@ namespace VelcroPhysics.Templates.VJoints
 
         public override void SetDefaults()
         {
-            FrequencyHz = 5.0f;
-            DampingRatio = 0.7f;
+            FrequencyHz = 5;
+            DampingRatio = FixedMath.C0p1 * 7;
         }
     }
 }

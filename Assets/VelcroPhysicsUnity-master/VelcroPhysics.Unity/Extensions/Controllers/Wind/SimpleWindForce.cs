@@ -55,12 +55,12 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
                     }
 
                     //TODO: Consider Divergence:
-                    //forceVector = FVector2.VTransform(forceVector, Matrix.CreateRotationZ((Fix64.PI - Fix64.PI/2) * (Fix64)Randomize.NextDouble()));
+                    //forceVector = FVector2.VTransform(forceVector, Matrix.CreateRotationZ((Fix64.Pi - Fix64.Pi/2) * (Fix64)Randomize.NextDouble()));
 
                     // Calculate random Variation
                     if (Variation != 0)
                     {
-                        var strengthVariation = Random.value * MathUtils.Clamp(Variation, 0, 1);
+                        var strengthVariation = 1 * MathUtils.Clamp(Variation, 0, 1);
                         forceVector.Normalize();
                         body.ApplyForce(forceVector * strength * decayMultiplier * strengthVariation);
                     }

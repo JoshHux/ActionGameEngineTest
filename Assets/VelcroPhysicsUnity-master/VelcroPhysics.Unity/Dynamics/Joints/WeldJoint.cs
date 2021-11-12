@@ -55,7 +55,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         private Fix64 _gamma;
 
         // Solver shared
-        private Vector3 _impulse;
+        private FVector3 _impulse;
 
         // Solver temp
         private int _indexA;
@@ -211,10 +211,10 @@ namespace VelcroPhysics.Dynamics.VJoints
                 var C = aB - aA - ReferenceAngle;
 
                 // Frequency
-                var omega = 2.0f * Fix64.Pi * FrequencyHz;
+                var omega =2 * Fix64.Pi * FrequencyHz;
 
                 // Damping coefficient
-                var d = 2.0f * m * DampingRatio * omega;
+                var d =2 * m * DampingRatio * omega;
 
                 // Spring stiffness
                 var k = m * omega * omega;
@@ -256,7 +256,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse = Vector3.zero;
+                _impulse = FVector3.zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -303,7 +303,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             {
                 var Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
                 var Cdot2 = wB - wA;
-                var Cdot = new Vector3(Cdot1.x, Cdot1.y, Cdot2);
+                var Cdot = new FVector3(Cdot1.x, Cdot1.y, Cdot2);
 
                 var impulse = -MathUtils.Mul(_mass, Cdot);
                 _impulse += impulse;
@@ -374,9 +374,9 @@ namespace VelcroPhysics.Dynamics.VJoints
                 positionError = C1.magnitude;
                 angularError = Fix64.Abs(C2);
 
-                var C = new Vector3(C1.x, C1.y, C2);
+                var C = new FVector3(C1.x, C1.y, C2);
 
-                Vector3 impulse;
+                FVector3 impulse;
                 if (K.ez.z >Fix64.Zero)
                 {
                     impulse = -K.Solve33(C);
@@ -384,7 +384,7 @@ namespace VelcroPhysics.Dynamics.VJoints
                 else
                 {
                     var impulse2 = -K.Solve22(C1);
-                    impulse = new Vector3(impulse2.x, impulse2.y,Fix64.Zero);
+                    impulse = new FVector3(impulse2.x, impulse2.y,Fix64.Zero);
                 }
 
                 var P = new FVector2(impulse.x, impulse.y);

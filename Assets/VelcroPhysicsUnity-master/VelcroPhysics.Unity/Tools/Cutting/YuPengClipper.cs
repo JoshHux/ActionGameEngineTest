@@ -12,7 +12,7 @@ namespace VelcroPhysics.Tools.Cutting
 
     public static class YuPengClipper
     {
-        private const Fix64 ClipperEpsilonSquared = 1.192092896e-07f;
+        private static Fix64 ClipperEpsilonSquared = Fix64.FromRaw(0x200);
 
         public static List<Vertices> Union(Vertices polygon1, Vertices polygon2, out PolyClipError error)
         {
@@ -53,7 +53,7 @@ namespace VelcroPhysics.Tools.Cutting
         private static List<Vertices> Execute(Vertices subject, Vertices clip, PolyClipType clipType,
             out PolyClipError error)
         {
-            Debug.Assert(subject.IsSimple() && clip.IsSimple(), "Non simple input!",
+            UnityEngine.Debug.AssertFormat(subject.IsSimple() && clip.IsSimple(), "Non simple input!",
                 "Input polygons must be simple (cannot intersect themselves).");
 
             // Copy polygons
@@ -106,7 +106,7 @@ namespace VelcroPhysics.Tools.Cutting
 
             // Reverse the polygon translation from the beginning
             // and remove collinear points from output
-            translate *= -1f;
+            translate *= -1;
             for (var i = 0; i < result.Count; ++i)
             {
                 result[i].Translate(ref translate);
@@ -152,7 +152,7 @@ namespace VelcroPhysics.Tools.Cutting
 
                         // Insert intersection point into first polygon
                         alpha = GetAlpha(a, b, intersectionPoint);
-                        if (alpha > 0f && alpha < 1f)
+                        if (alpha > 0 && alpha < 1)
                         {
                             var index = slicedPoly1.IndexOf(a) + 1;
                             while (index < slicedPoly1.Count &&
@@ -163,7 +163,7 @@ namespace VelcroPhysics.Tools.Cutting
 
                         // Insert intersection point into second polygon
                         alpha = GetAlpha(c, d, intersectionPoint);
-                        if (alpha > 0f && alpha < 1f)
+                        if (alpha > 0 && alpha < 1)
                         {
                             var index = slicedPoly2.IndexOf(c) + 1;
                             while (index < slicedPoly2.Count &&
@@ -232,9 +232,9 @@ namespace VelcroPhysics.Tools.Cutting
             {
                 Fix64 edgeCharacter = 0;
                 if (poly2Simplicies.Contains(poly1Simplicies[i]))
-                    edgeCharacter = 1f;
+                    edgeCharacter = 1;
                 else if (poly2Simplicies.Contains(-poly1Simplicies[i]) && clipType == PolyClipType.Union)
-                    edgeCharacter = 1f;
+                    edgeCharacter = 1;
                 else
                     for (var j = 0; j < poly2Simplicies.Count; ++j)
                         if (!poly2Simplicies.Contains(-poly1Simplicies[i]))
@@ -242,27 +242,27 @@ namespace VelcroPhysics.Tools.Cutting
                                 poly2Simplicies[j], poly2Coeff[j]);
                 if (clipType == PolyClipType.Intersect)
                 {
-                    if (edgeCharacter == 1f) resultSimplices.Add(poly1Simplicies[i]);
+                    if (edgeCharacter == 1) resultSimplices.Add(poly1Simplicies[i]);
                 }
                 else
                 {
-                    if (edgeCharacter == 0f) resultSimplices.Add(poly1Simplicies[i]);
+                    if (edgeCharacter == 0) resultSimplices.Add(poly1Simplicies[i]);
                 }
             }
 
             for (var i = 0; i < poly2Simplicies.Count; ++i)
             {
-                var edgeCharacter = 0f;
+                var edgeCharacter = Fix64.Zero;
                 if (!resultSimplices.Contains(poly2Simplicies[i]) &&
                     !resultSimplices.Contains(-poly2Simplicies[i]))
                 {
                     if (poly1Simplicies.Contains(-poly2Simplicies[i]) && clipType == PolyClipType.Union)
                     {
-                        edgeCharacter = 1f;
+                        edgeCharacter = 1;
                     }
                     else
                     {
-                        edgeCharacter = 0f;
+                        edgeCharacter = 0;
                         for (var j = 0; j < poly1Simplicies.Count; ++j)
                             if (!poly1Simplicies.Contains(poly2Simplicies[i]) &&
                                 !poly1Simplicies.Contains(-poly2Simplicies[i]))
@@ -270,11 +270,11 @@ namespace VelcroPhysics.Tools.Cutting
                                     poly1Simplicies[j], poly1Coeff[j]);
                         if (clipType == PolyClipType.Intersect || clipType == PolyClipType.Difference)
                         {
-                            if (edgeCharacter == 1f) resultSimplices.Add(-poly2Simplicies[i]);
+                            if (edgeCharacter == 1) resultSimplices.Add(-poly2Simplicies[i]);
                         }
                         else
                         {
-                            if (edgeCharacter == 0f) resultSimplices.Add(poly2Simplicies[i]);
+                            if (edgeCharacter == 0) resultSimplices.Add(poly2Simplicies[i]);
                         }
                     }
                 }
@@ -353,11 +353,11 @@ namespace VelcroPhysics.Tools.Cutting
         /// <remarks>Used by method <c>CalculateEdgeCharacter()</c>.</remarks>
         private static Fix64 CalculateBeta(FVector2 point, Edge e, Fix64 coefficient)
         {
-            var result = 0f;
+            var result = Fix64.Zero;
             if (PointInSimplex(point, e)) result = coefficient;
             if (PointOnLineSegment(FVector2.zero, e.EdgeStart, point) ||
                 PointOnLineSegment(FVector2.zero, e.EdgeEnd, point))
-                result = .5f * coefficient;
+                result = FixedMath.C0p5 * coefficient;
             return result;
         }
 
@@ -377,11 +377,11 @@ namespace VelcroPhysics.Tools.Cutting
         private static Fix64 CalculateSimplexCoefficient(FVector2 a, FVector2 b, FVector2 c)
         {
             var isLeft = MathUtils.Area(ref a, ref b, ref c);
-            if (isLeft < 0f) return -1f;
+            if (isLeft < 0) return -1;
 
-            if (isLeft > 0f) return 1f;
+            if (isLeft > 0) return 1;
 
-            return 0f;
+            return 0;
         }
 
         /// <summary>
@@ -409,9 +409,9 @@ namespace VelcroPhysics.Tools.Cutting
         private static bool PointOnLineSegment(FVector2 start, FVector2 end, FVector2 point)
         {
             var segment = end - start;
-            return MathUtils.Area(ref start, ref end, ref point) == 0f &&
-                   FVector2.Dot(point - start, segment) >= 0f &&
-                   FVector2.Dot(point - end, segment) <= 0f;
+            return MathUtils.Area(ref start, ref end, ref point) == 0 &&
+                   FVector2.Dot(point - start, segment) >= 0 &&
+                   FVector2.Dot(point - end, segment) <= 0;
         }
 
         private static bool VectorEqual(FVector2 vec1, FVector2 vec2)
@@ -435,7 +435,7 @@ namespace VelcroPhysics.Tools.Cutting
 
             public FVector2 GetCenter()
             {
-                return (EdgeStart + EdgeEnd) / 2f;
+                return (EdgeStart + EdgeEnd) / 2;
             }
 
             public static Edge operator -(Edge e)

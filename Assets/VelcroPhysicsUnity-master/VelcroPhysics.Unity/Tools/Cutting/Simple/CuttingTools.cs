@@ -69,7 +69,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
                     //If we switch from one shape to the other add the cut vertices.
                     if (last == 0)
                     {
-                        Debug.Assert(cutAdded[0] == -1);
+                        UnityEngine.Debug.Assert(cutAdded[0] == -1);
                         cutAdded[0] = newPolygon[last].Count;
                         newPolygon[last].Add(localExitPoint);
                         newPolygon[last].Add(localEntryPoint);
@@ -77,7 +77,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
 
                     if (last == 1)
                     {
-                        Debug.Assert(cutAdded[last] == -1);
+                        UnityEngine.Debug.Assert(cutAdded[last] == -1);
                         cutAdded[last] = newPolygon[last].Count;
                         newPolygon[last].Add(localEntryPoint);
                         newPolygon[last].Add(localExitPoint);

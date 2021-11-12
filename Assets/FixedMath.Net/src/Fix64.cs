@@ -105,6 +105,15 @@ namespace FixMath.NET
             return hasFractionalPart ? Floor(value) + One : value;
         }
 
+        //Spax's addition
+        /// <summary>
+        /// Same thing as the method above, just changed the name to make Velcro stop complaining.
+        /// </summary>
+        public static Fix64 Ceil(Fix64 value)
+        {
+            return Ceiling(value);
+        }
+
         /// <summary>
         /// Rounds a value to the nearest integral value.
         /// If the value is halfway between an even and an uneven value, returns the even value.
@@ -1041,6 +1050,11 @@ namespace FixMath.NET
         public static bool IsPositiveInfinity(Fix64 value)
         {
             return false;
+        }
+
+        public static bool IsInfinity(Fix64 value)
+        {
+            return IsPositiveInfinity(value)||IsNegativeInfinity(value);
         }
 
         public static implicit operator Fix64(int value)

@@ -133,7 +133,7 @@ namespace VelcroPhysics.Collision.Shapes
 
         protected sealed override void ComputeProperties()
         {
-            MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
+            MassData.Centroid = FixedMath.C0p5 * (_vertex1 + _vertex2);
         }
 
         public bool CompareTo(EdgeShape shape)

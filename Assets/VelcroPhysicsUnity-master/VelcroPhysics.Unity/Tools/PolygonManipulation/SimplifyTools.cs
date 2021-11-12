@@ -17,7 +17,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         /// <param name="vertices">The polygon that needs simplification.</param>
         /// <param name="collinearityTolerance">The collinearity tolerance.</param>
         /// <returns>A simplified polygon.</returns>
-        public static Vertices CollinearSimplify(Vertices vertices, Fix64 collinearityTolerance = 0)
+        public static Vertices CollinearSimplify(Vertices vertices, Fix64 collinearityTolerance = new Fix64())
         {
             if (vertices.Count <= 3)
                 return vertices;
@@ -75,7 +75,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             var a = vertices[i];
             var b = vertices[j];
 
-            var maxDistance = -1.0f;
+            var maxDistance = -Fix64.One;
             var maxIndex = i;
             for (var k = i + 1; k < j; k++)
             {
@@ -130,7 +130,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                 var norm0 = Fix64.Sqrt(dx0 * dx0 + dy0 * dy0);
                 var norm1 = Fix64.Sqrt(dx1 * dx1 + dy1 * dy1);
 
-                if (!(norm0 >Fix64.Zero && norm1 >Fix64.Zero) && newNVertices > 3)
+                if (!(norm0 > Fix64.Zero && norm1 > Fix64.Zero) && newNVertices > 3)
                 {
                     //Merge identical points
                     mergeMe[i] = true;
@@ -168,7 +168,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                 if (mergeMe[i] || currIndex == newNVertices)
                     continue;
 
-                Debug.Assert(currIndex < newNVertices);
+                UnityEngine.Debug.Assert(currIndex < newNVertices);
 
                 newVertices.Add(vertices[i]);
                 ++currIndex;

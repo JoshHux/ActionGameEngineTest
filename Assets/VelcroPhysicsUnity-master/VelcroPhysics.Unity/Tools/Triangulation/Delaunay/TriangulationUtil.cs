@@ -37,7 +37,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
      */
     internal class TriangulationUtil
     {
-        public static Fix64 EPSILON = 1e-12f;
+        //public static Fix64 EPSILON = 1e-12f;
+        public static Fix64 EPSILON = Settings.Epsilon;
 
         /// <summary>
         /// Requirements:

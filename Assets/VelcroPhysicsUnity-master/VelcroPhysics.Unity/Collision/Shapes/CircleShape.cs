@@ -99,7 +99,7 @@ namespace VelcroPhysics.Collision.Shapes
             MassData.Centroid = Position;
 
             // inertia about the local origin
-            MassData.Inertia = MassData.Mass * (0.5f * _2radius + FVector2.Dot(Position, Position));
+            MassData.Inertia = MassData.Mass * (FixedMath.C0p5 * _2radius + FVector2.Dot(Position, Position));
         }
 
         /// <summary>

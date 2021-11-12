@@ -92,7 +92,7 @@ namespace VelcroPhysics.Shared
                 area -= vi.y * vj.x;
             }
 
-            area /= 2.0f;
+            area /= (Fix64.Zero * 2);
             return area;
         }
 
@@ -113,13 +113,15 @@ namespace VelcroPhysics.Shared
         public FVector2 GetCentroid()
         {
             //The simplest polygon which can exist in the Euclidean plane has 3 sides.
+            //currently, this is not handled and will return a FVector2 with minimum values
             if (Count < 3)
-                return new FVector2(Fix64.NaN, Fix64.NaN);
+                return new FVector2(Fix64.MinValue, Fix64.MinValue);
 
             // Same algorithm is used by Box2D
             var c = FVector2.zero;
-            var area =Fix64.Zero;
-            const Fix64 inv3 =Fix64.One / 3.0f;
+            var area = Fix64.Zero;
+            //const Fix64 inv3 = Fix64.One / (Fix64.One * 3);
+            Fix64 inv3 = Fix64.One / (Fix64.One * 3);
 
             for (var i = 0; i < Count; ++i)
             {
@@ -127,7 +129,7 @@ namespace VelcroPhysics.Shared
                 var current = this[i];
                 var next = i + 1 < Count ? this[i + 1] : this[0];
 
-                var triangleArea = 0.5f * (current.x * next.y - current.y * next.x);
+                var triangleArea = FixedMath.C0p5 * (current.x * next.y - current.y * next.x);
                 area += triangleArea;
 
                 // Area weighted centroid
@@ -135,7 +137,7 @@ namespace VelcroPhysics.Shared
             }
 
             // Centroid
-            c *=Fix64.One / area;
+            c *= Fix64.One / area;
             return c;
         }
 
@@ -150,11 +152,18 @@ namespace VelcroPhysics.Shared
 
             for (var i = 0; i < Count; ++i)
             {
-                if (this[i].x < lowerBound.x) lowerBound.x = this[i].x;
-                if (this[i].x > upperBound.x) upperBound.x = this[i].x;
+                var lowX = lowerBound.x;
+                var lowY = lowerBound.y;
+                var upperX = lowerBound.x;
+                var upperY = lowerBound.y;
 
-                if (this[i].y < lowerBound.y) lowerBound.y = this[i].y;
-                if (this[i].y > upperBound.y) upperBound.y = this[i].y;
+                if (this[i].x < lowerBound.x) lowX = this[i].x;
+                if (this[i].x > upperBound.x) upperX = this[i].x;
+                if (this[i].y < lowerBound.y) lowY = this[i].y;
+                if (this[i].y > upperBound.y) upperY = this[i].y;
+
+                lowerBound = new FVector2(lowX, lowY);
+                upperBound = new FVector2(upperX, upperY);
             }
 
             aabb.LowerBound = lowerBound;
@@ -178,7 +187,7 @@ namespace VelcroPhysics.Shared
         /// <param name="value">The vector.</param>
         public void Translate(ref FVector2 value)
         {
-            Debug.Assert(!AttachedToBody,
+            UnityEngine.Debug.Assert(!AttachedToBody,
                 "Translating vertices that are used by a Body can result in unstable behavior. Use Body.Position instead.");
 
             for (var i = 0; i < Count; i++)
@@ -204,7 +213,7 @@ namespace VelcroPhysics.Shared
         /// <param name="value">The Value.</param>
         public void Scale(ref FVector2 value)
         {
-            Debug.Assert(!AttachedToBody, "Scaling vertices that are used by a Body can result in unstable behavior.");
+            UnityEngine.Debug.Assert(!AttachedToBody, "Scaling vertices that are used by a Body can result in unstable behavior.");
 
             for (var i = 0; i < Count; i++)
                 this[i] *= value;
@@ -222,7 +231,7 @@ namespace VelcroPhysics.Shared
         /// <param name="value">The amount to rotate by in radians.</param>
         public void Rotate(Fix64 value)
         {
-            Debug.Assert(!AttachedToBody, "Rotating vertices that are used by a Body can result in unstable behavior.");
+            UnityEngine.Debug.Assert(!AttachedToBody, "Rotating vertices that are used by a Body can result in unstable behavior.");
 
             var num1 = Fix64.Cos(value);
             var num2 = Fix64.Sin(value);
@@ -274,7 +283,7 @@ namespace VelcroPhysics.Shared
 
                     var s = edge.x * r.y - edge.y * r.x;
 
-                    if (s <=Fix64.Zero)
+                    if (s <= Fix64.Zero)
                         return false;
                 }
             }
@@ -292,7 +301,7 @@ namespace VelcroPhysics.Shared
             if (Count < 3)
                 return false;
 
-            return GetSignedArea() >Fix64.Zero;
+            return GetSignedArea() > Fix64.Zero;
         }
 
         /// <summary>
@@ -352,7 +361,7 @@ namespace VelcroPhysics.Shared
             if (!IsSimple())
                 return PolygonError.NotSimple;
 
-            if (GetArea() <= Fix64.Epsilon)
+            if (GetArea() <= Settings.Epsilon)
                 return PolygonError.AreaTooSmall;
 
             if (!IsConvex())
@@ -363,7 +372,7 @@ namespace VelcroPhysics.Shared
             {
                 var next = i + 1 < Count ? i + 1 : 0;
                 var edge = this[next] - this[i];
-                if (edge.sqrMagnitude <= Fix64.Epsilon * Fix64.Epsilon) return PolygonError.SideTooSmall;
+                if (edge.sqrMagnitude <= Settings.Epsilon * Settings.Epsilon) return PolygonError.SideTooSmall;
             }
 
             if (!IsCounterClockWise())
@@ -424,16 +433,16 @@ namespace VelcroPhysics.Shared
                 // Test if a point is directly on the edge
                 var edge = p2 - p1;
                 var area = MathUtils.Area(ref p1, ref p2, ref point);
-                if (area == 0f && FVector2.Dot(point - p1, edge) >= 0f && FVector2.Dot(point - p2, edge) <= 0f) return 0;
+                if (area == Fix64.Zero && FVector2.Dot(point - p1, edge) >= Fix64.Zero && FVector2.Dot(point - p2, edge) <= Fix64.Zero) return 0;
 
                 // Test edge for intersection with ray from point
                 if (p1.y <= point.y)
                 {
-                    if (p2.y > point.y && area > 0f) ++wn;
+                    if (p2.y > point.y && area > Fix64.Zero) ++wn;
                 }
                 else
                 {
-                    if (p2.y <= point.y && area < 0f) --wn;
+                    if (p2.y <= point.y && area < Fix64.Zero) --wn;
                 }
             }
 
@@ -456,10 +465,10 @@ namespace VelcroPhysics.Shared
                 var p1 = this[i] - point;
                 var p2 = this[NextIndex(i)] - point;
 
-                angle += FVector2.Angle(p1, p2);
+                angle += MathUtils.VectorAngle(ref p1, ref p2);
             }
 
-            if (Fix64.Abs(angle) < Fix64.PI) return false;
+            if (Fix64.Abs(angle) < Fix64.Pi) return false;
 
             return true;
         }
@@ -468,7 +477,7 @@ namespace VelcroPhysics.Shared
         /// VTransforms the polygon using the defined matrix.
         /// </summary>
         /// <param name="VTransform">The matrix to use as VTransformation.</param>
-        public void VTransform(ref Matrix4x4 VTransform)
+        public void VTransform(ref FMatrix4x4 VTransform)
         {
             // VTransform main polygon
             for (var i = 0; i < Count; i++)

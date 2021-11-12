@@ -58,9 +58,9 @@ namespace VelcroPhysics.Templates.VJoints
 
         public override void SetDefaults()
         {
-            LocalAxisA = new FVector2(1.0f,Fix64.Zero);
-            FrequencyHz = 2.0f;
-            DampingRatio = 0.7f;
+            LocalAxisA = new FVector2(1, Fix64.Zero);
+            FrequencyHz = 2;
+            DampingRatio = FixedMath.C0p1 * 7;
         }
     }
 }

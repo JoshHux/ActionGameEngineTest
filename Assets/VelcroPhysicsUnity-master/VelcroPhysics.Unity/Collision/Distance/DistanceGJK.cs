@@ -96,7 +96,7 @@ namespace VelcroPhysics.Collision.Distance
                         simplex.Solve3();
                         break;
                     default:
-                        Debug.Assert(false);
+                        UnityEngine.Debug.Assert(false);
                         break;
                 }
 
@@ -149,7 +149,7 @@ namespace VelcroPhysics.Collision.Distance
             }
 
             if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                GJKMaxIters = Fix64.Max(GJKMaxIters, iter);
+                GJKMaxIters = (int) UnityEngine.Mathf.Max(GJKMaxIters, iter);
 
             // Prepare output.
             simplex.GetWitnessPoints(out output.PointA, out output.PointB);
@@ -179,7 +179,7 @@ namespace VelcroPhysics.Collision.Distance
                 {
                     // Shapes are overlapped when radii are considered.
                     // Move the witness points to the middle.
-                    var p = 0.5f * (output.PointA + output.PointB);
+                    var p = FixedMath.C0p5 * (output.PointA + output.PointB);
                     output.PointA = p;
                     output.PointB = p;
                     output.Distance =Fix64.Zero;

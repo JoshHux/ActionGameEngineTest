@@ -3,7 +3,6 @@
 * Copyright (c) 2017 Ian Qvist
 */
 
-using UnityEngine;
 using FixMath.NET;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
@@ -11,7 +10,7 @@ using VTransform = VelcroPhysics.Shared.VTransform;
 
 namespace VelcroPhysics.Extensions.DebugView
 {
-    /// Implement and register this class with a World to provide debug drawing of physics
+    /// Implement and register this class with a World to provide UnityEngine.Debug drawing of physics
     /// entities in your game.
     public abstract class DebugViewBase
     {
@@ -23,7 +22,7 @@ namespace VelcroPhysics.Extensions.DebugView
         protected World World { get; }
 
         /// <summary>
-        /// Gets or sets the debug view flags.
+        /// Gets or sets the UnityEngine.Debug view flags.
         /// </summary>
         /// <value>The flags.</value>
         public DebugViewFlags Flags { get; set; }

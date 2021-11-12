@@ -14,8 +14,10 @@ namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
     public static class Triangulate
     {
         public static List<Vertices> ConvexPartition(Vertices vertices, TriangulationAlgorithm algorithm,
-            bool discardAndFixInvalid = true, Fix64 tolerance = 0.001f)
+            bool discardAndFixInvalid = true, Fix64? holdTolerance = null)
         {
+            Fix64 tolerance = holdTolerance ?? FixedMath.C0p001;
+
             if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
@@ -26,8 +28,8 @@ namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
                 case TriangulationAlgorithm.Earclip:
                     if (Settings.SkipSanityChecks)
                     {
-                        Debug.Assert(!vertices.IsCounterClockWise(),
-                            "The Ear-clip algorithm expects the polygon to be clockwise.");
+                        UnityEngine.Debug.Assert(!vertices.IsCounterClockWise(),
+                             "The Ear-clip algorithm expects the polygon to be clockwise.");
                     }
                     else
                     {
@@ -47,7 +49,7 @@ namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
                 case TriangulationAlgorithm.Bayazit:
                     if (Settings.SkipSanityChecks)
                     {
-                        Debug.Assert(vertices.IsCounterClockWise(),
+                        UnityEngine.Debug.Assert(vertices.IsCounterClockWise(),
                             "The polygon is not counter clockwise. This is needed for Bayazit to work correctly.");
                     }
                     else
@@ -68,7 +70,7 @@ namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
                 case TriangulationAlgorithm.Flipcode:
                     if (Settings.SkipSanityChecks)
                     {
-                        Debug.Assert(vertices.IsCounterClockWise(),
+                        UnityEngine.Debug.Assert(vertices.IsCounterClockWise(),
                             "The polygon is not counter clockwise. This is needed for Bayazit to work correctly.");
                     }
                     else

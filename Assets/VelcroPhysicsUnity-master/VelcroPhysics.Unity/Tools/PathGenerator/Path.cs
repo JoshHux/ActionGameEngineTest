@@ -109,7 +109,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// <param name="value">The amount to rotate by in radians.</param>
         public void Rotate(Fix64 value)
         {
-            var rotationMatrix = Matrix4x4.identity;
+            var rotationMatrix = FMatrix4x4.Identity;
 
             rotationMatrix.CreateRotationZ(value);
 
@@ -140,9 +140,9 @@ namespace VelcroPhysics.Tools.PathGenerator
         {
             var verts = new Vertices();
 
-            var timeStep = 1f / divisions;
+            var timeStep = 1 / divisions;
 
-            for (Fix64 i = 0; i < 1f; i += timeStep) verts.Add(GetPosition(i));
+            for (Fix64 i = 0; i < 1; i += timeStep) verts.Add(GetPosition(i));
 
             return verts;
         }
@@ -158,7 +158,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             {
                 Add(ControlPoints[0]);
 
-                _deltaT = 1f / (ControlPoints.Count - 1);
+                _deltaT = 1 / (ControlPoints.Count - 1);
 
                 var p = (int)(time / _deltaT);
 
@@ -219,7 +219,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// <returns>The normal.</returns>
         public FVector2 GetPositionNormal(Fix64 time)
         {
-            var offsetTime = time + 0.0001f;
+            var offsetTime = time + FixedMath.C0p001 / 10;
 
             var a = GetPosition(time);
             var b = GetPosition(offsetTime);
@@ -228,11 +228,11 @@ namespace VelcroPhysics.Tools.PathGenerator
 
             temp = a - b;
 
-#if (XBOX360 || WINDOWS_PHONE)
-output = new FVector2();
-#endif
-            output.x = -temp.y;
-            output.y = temp.x;
+            //#if (XBOX360 || WINDOWS_PHONE)
+            output = new FVector2(-temp.y, temp.x);
+            //#endif
+            //output.x = -temp.y;
+            //output.y = temp.x;
 
             output = output.normalized;
 
@@ -242,19 +242,19 @@ output = new FVector2();
         public void Add(FVector2 point)
         {
             ControlPoints.Add(point);
-            _deltaT = 1f / (ControlPoints.Count - 1);
+            _deltaT = 1 / (ControlPoints.Count - 1);
         }
 
         public void Remove(FVector2 point)
         {
             ControlPoints.Remove(point);
-            _deltaT = 1f / (ControlPoints.Count - 1);
+            _deltaT = 1 / (ControlPoints.Count - 1);
         }
 
         public void RemoveAt(int index)
         {
             ControlPoints.RemoveAt(index);
-            _deltaT = 1f / (ControlPoints.Count - 1);
+            _deltaT = 1 / (ControlPoints.Count - 1);
         }
 
         public Fix64 GetLength()
@@ -270,26 +270,26 @@ output = new FVector2();
             return length;
         }
 
-        public List<Vector3> SubdivideEvenly(int divisions)
+        public List<FVector3> SubdivideEvenly(int divisions)
         {
-            var verts = new List<Vector3>();
+            var verts = new List<FVector3>();
 
             var length = GetLength();
 
-            var deltaLength = length / divisions + 0.001f;
-            var t = 0.000f;
+            var deltaLength = length / divisions + FixedMath.C0p001;
+            var t = Fix64.Zero;
 
             // we always start at the first control point
             var start = ControlPoints[0];
             var end = GetPosition(t);
 
             // increment t until we are at half the distance
-            while (deltaLength * 0.5f >= FVector2.Distance(start, end))
+            while (deltaLength * FixedMath.C0p5 >= FVector2.Distance(start, end))
             {
                 end = GetPosition(t);
-                t += 0.0001f;
+                t += FixedMath.C0p001 / 10;
 
-                if (t >= 1f)
+                if (t >= 1)
                     break;
             }
 
@@ -301,19 +301,19 @@ output = new FVector2();
                 var normal = GetPositionNormal(t);
                 var angle = Fix64.Atan2(normal.y, normal.x);
 
-                verts.Add(new Vector3(end.x, end.y, angle));
+                verts.Add(new FVector3(end.x, end.y, angle));
 
                 // until we reach the correct distance down the curve
                 while (deltaLength >= FVector2.Distance(start, end))
                 {
                     end = GetPosition(t);
-                    t += 0.00001f;
+                    t += FixedMath.C0p001 / 100;
 
-                    if (t >= 1f)
+                    if (t >= 1)
                         break;
                 }
 
-                if (t >= 1f)
+                if (t >= 1)
                     break;
 
                 start = end;

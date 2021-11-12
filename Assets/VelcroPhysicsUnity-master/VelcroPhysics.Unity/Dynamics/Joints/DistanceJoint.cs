@@ -120,13 +120,13 @@ namespace VelcroPhysics.Dynamics.VJoints
         public sealed override FVector2 WorldAnchorA
         {
             get => BodyA.GetWorldPoint(LocalAnchorA);
-            set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
+            set => UnityEngine.Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
         public sealed override FVector2 WorldAnchorB
         {
             get => BodyB.GetWorldPoint(LocalAnchorB);
-            set => Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
+            set => UnityEngine.Debug.Assert(false, "You can't set the world anchor on this VJoint type.");
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace VelcroPhysics.Dynamics.VJoints
         /// <returns></returns>
         public override Fix64 GetReactionTorque(Fix64 invDt)
         {
-            returnFix64.Zero;
+            return Fix64.Zero;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
@@ -198,7 +198,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             // Handle singularity.
             var length = _u.magnitude;
             if (length > Settings.LinearSlop)
-                _u *=Fix64.One / length;
+                _u *= Fix64.One / length;
             else
                 _u = FVector2.zero;
 
@@ -207,17 +207,17 @@ namespace VelcroPhysics.Dynamics.VJoints
             var invMass = _invMassA + _invIA * crAu * crAu + _invMassB + _invIB * crBu * crBu;
 
             // Compute the effective mass matrix.
-            _mass = invMass !=Fix64.Zero ?Fix64.One / invMass :Fix64.Zero;
+            _mass = invMass != Fix64.Zero ? Fix64.One / invMass : Fix64.Zero;
 
-            if (Frequency >Fix64.Zero)
+            if (Frequency > Fix64.Zero)
             {
                 var C = length - Length;
 
                 // Frequency
-                var omega = 2.0f * Fix64.Pi * Frequency;
+                var omega = 2 * Fix64.Pi * Frequency;
 
                 // Damping coefficient
-                var d = 2.0f * _mass * DampingRatio * omega;
+                var d = 2 * _mass * DampingRatio * omega;
 
                 // Spring stiffness
                 var k = _mass * omega * omega;
@@ -225,16 +225,16 @@ namespace VelcroPhysics.Dynamics.VJoints
                 // magic formulas
                 var h = data.Step.dt;
                 _gamma = h * (d + h * k);
-                _gamma = _gamma !=Fix64.Zero ?Fix64.One / _gamma :Fix64.Zero;
+                _gamma = _gamma != Fix64.Zero ? Fix64.One / _gamma : Fix64.Zero;
                 _bias = C * h * k * _gamma;
 
                 invMass += _gamma;
-                _mass = invMass !=Fix64.Zero ?Fix64.One / invMass :Fix64.Zero;
+                _mass = invMass != Fix64.Zero ? Fix64.One / invMass : Fix64.Zero;
             }
             else
             {
-                _gamma =Fix64.Zero;
-                _bias =Fix64.Zero;
+                _gamma = Fix64.Zero;
+                _bias = Fix64.Zero;
             }
 
             if (Settings.EnableWarmstarting)
@@ -250,7 +250,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse =Fix64.Zero;
+                _impulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -288,7 +288,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            if (Frequency >Fix64.Zero)
+            if (Frequency > Fix64.Zero)
                 // There is no position correction for soft distance constraints.
                 return true;
 

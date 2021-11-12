@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using VelcroPhysics.Shared;
+﻿using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 using VTransform = VelcroPhysics.Shared.VTransform;
 using FixMath.NET;

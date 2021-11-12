@@ -58,7 +58,7 @@ namespace VelcroPhysics.Dynamics.Solver
         {
             BodyCapacity = bodyCapacity;
             ContactCapacity = contactCapacity;
-            VJointCapacity = VJointCapacity;
+            this.VJointCapacity = VJointCapacity;
             BodyCount = 0;
             ContactCount = 0;
             VJointCount = 0;
@@ -121,8 +121,8 @@ namespace VelcroPhysics.Dynamics.Solver
                     // v2 = exp(-c * dt) * v1
                     // Taylor expansion:
                     // v2 = (FixMath.One - c * dt) * v1
-                    v *= MathUtils.Clamp(FixMath.One - h * b.LinearDamping, Fix64.Zero, Fix64.One);
-                    w *= MathUtils.Clamp(FixMath.One - h * b.AngularDamping, Fix64.Zero, Fix64.One);
+                    v *= MathUtils.Clamp(Fix64.One - h * b.LinearDamping, Fix64.Zero, Fix64.One);
+                    w *= MathUtils.Clamp(Fix64.One - h * b.AngularDamping, Fix64.Zero, Fix64.One);
                 }
 
                 Positions[i].C = c;
@@ -246,7 +246,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
             if (Settings.EnableDiagnostics)
             {
-                VJointUpdateTime = _watch.ElapsedTicks;
+                VJointUpdateTime = (Fix64)_watch.ElapsedTicks;
                 _watch.Reset();
             }
 
@@ -384,20 +384,20 @@ namespace VelcroPhysics.Dynamics.Solver
 
         public void Add(Body body)
         {
-            Debug.Assert(BodyCount < BodyCapacity);
+            UnityEngine.Debug.Assert(BodyCount < BodyCapacity);
             body.IslandIndex = BodyCount;
             Bodies[BodyCount++] = body;
         }
 
         public void Add(Contact contact)
         {
-            Debug.Assert(ContactCount < ContactCapacity);
+            UnityEngine.Debug.Assert(ContactCount < ContactCapacity);
             _contacts[ContactCount++] = contact;
         }
 
         public void Add(VJoint VJoint)
         {
-            Debug.Assert(VJointCount < VJointCapacity);
+            UnityEngine.Debug.Assert(VJointCount < VJointCapacity);
             _VJoints[VJointCount++] = VJoint;
         }
 

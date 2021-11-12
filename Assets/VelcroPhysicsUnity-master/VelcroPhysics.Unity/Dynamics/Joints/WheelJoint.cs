@@ -153,7 +153,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             {
                 _axis = value;
                 LocalXAxis = BodyA.GetLocalVector(_axis);
-                _localYAxis = MathUtils.Cross(1.0f, LocalXAxis);
+                _localYAxis = MathUtils.Cross(1, LocalXAxis);
             }
         }
 
@@ -352,14 +352,14 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 _mass = mA + mB + iA * _sAy * _sAy + iB * _sBy * _sBy;
 
-                if (_mass >Fix64.Zero) _mass =Fix64.One / _mass;
+                if (_mass > Fix64.Zero) _mass = Fix64.One / _mass;
             }
 
             // Spring constraint
-            _springMass =Fix64.Zero;
-            _bias =Fix64.Zero;
-            _gamma =Fix64.Zero;
-            if (Frequency >Fix64.Zero)
+            _springMass = Fix64.Zero;
+            _bias = Fix64.Zero;
+            _gamma = Fix64.Zero;
+            if (Frequency > Fix64.Zero)
             {
                 _ax = MathUtils.Mul(qA, LocalXAxis);
                 _sAx = MathUtils.Cross(d1 + rA, _ax);
@@ -367,17 +367,17 @@ namespace VelcroPhysics.Dynamics.VJoints
 
                 var invMass = mA + mB + iA * _sAx * _sAx + iB * _sBx * _sBx;
 
-                if (invMass >Fix64.Zero)
+                if (invMass > Fix64.Zero)
                 {
-                    _springMass =Fix64.One / invMass;
+                    _springMass = Fix64.One / invMass;
 
                     var C = FVector2.Dot(d1, _ax);
 
                     // Frequency
-                    var omega = 2.0f * Fix64.Pi * Frequency;
+                    var omega =2 * Fix64.Pi * Frequency;
 
                     // Damping coefficient
-                    var d = 2.0f * _springMass * DampingRatio * omega;
+                    var d =2 * _springMass * DampingRatio * omega;
 
                     // Spring stiffness
                     var k = _springMass * omega * omega;
@@ -385,29 +385,29 @@ namespace VelcroPhysics.Dynamics.VJoints
                     // magic formulas
                     var h = data.Step.dt;
                     _gamma = h * (d + h * k);
-                    if (_gamma >Fix64.Zero) _gamma =Fix64.One / _gamma;
+                    if (_gamma > Fix64.Zero) _gamma = Fix64.One / _gamma;
 
                     _bias = C * h * k * _gamma;
 
                     _springMass = invMass + _gamma;
-                    if (_springMass >Fix64.Zero) _springMass =Fix64.One / _springMass;
+                    if (_springMass > Fix64.Zero) _springMass = Fix64.One / _springMass;
                 }
             }
             else
             {
-                _springImpulse =Fix64.Zero;
+                _springImpulse = Fix64.Zero;
             }
 
             // Rotational motor
             if (_enableMotor)
             {
                 _motorMass = iA + iB;
-                if (_motorMass >Fix64.Zero) _motorMass =Fix64.One / _motorMass;
+                if (_motorMass > Fix64.Zero) _motorMass = Fix64.One / _motorMass;
             }
             else
             {
-                _motorMass =Fix64.Zero;
-                _motorImpulse =Fix64.Zero;
+                _motorMass = Fix64.Zero;
+                _motorImpulse = Fix64.Zero;
             }
 
             if (Settings.EnableWarmstarting)
@@ -429,9 +429,9 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse =Fix64.Zero;
-                _springImpulse =Fix64.Zero;
-                _motorImpulse =Fix64.Zero;
+                _impulse = Fix64.Zero;
+                _springImpulse = Fix64.Zero;
+                _motorImpulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -527,10 +527,10 @@ namespace VelcroPhysics.Dynamics.VJoints
             var k = _invMassA + _invMassB + _invIA * _sAy * _sAy + _invIB * _sBy * _sBy;
 
             Fix64 impulse;
-            if (k !=Fix64.Zero)
+            if (k != Fix64.Zero)
                 impulse = -C / k;
             else
-                impulse =Fix64.Zero;
+                impulse = Fix64.Zero;
 
             var P = impulse * ay;
             var LA = impulse * sAy;

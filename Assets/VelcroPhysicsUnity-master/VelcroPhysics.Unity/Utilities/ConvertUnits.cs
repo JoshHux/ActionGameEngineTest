@@ -12,7 +12,7 @@ namespace VelcroPhysics.Utilities
     /// </summary>
     public static class ConvertUnits
     {
-        private static Fix64 _displayUnitsToSimUnitsRatio = 100f;
+        private static Fix64 _displayUnitsToSimUnitsRatio = 100;
         private static Fix64 _simUnitsToDisplayUnitsRatio = Fix64.One / _displayUnitsToSimUnitsRatio;
 
         public static void SetDisplayUnitToSimUnitRatio(Fix64 displayUnitsPerSimUnit)
@@ -41,7 +41,7 @@ namespace VelcroPhysics.Utilities
             displayUnits = simUnits * _displayUnitsToSimUnitsRatio;
         }
 
-        public static Vector3 ToDisplayUnits(Vector3 simUnits)
+        public static FVector3 ToDisplayUnits(FVector3 simUnits)
         {
             return simUnits * _displayUnitsToSimUnitsRatio;
         }
@@ -53,9 +53,10 @@ namespace VelcroPhysics.Utilities
 
         public static void ToDisplayUnits(Fix64 x, Fix64 y, out FVector2 displayUnits)
         {
-            displayUnits = FVector2.zero;
-            displayUnits.x = x * _displayUnitsToSimUnitsRatio;
-            displayUnits.y = y * _displayUnitsToSimUnitsRatio;
+            //displayUnits = FVector2.zero;
+            //displayUnits.x = x * _displayUnitsToSimUnitsRatio;
+            //displayUnits.y = y * _displayUnitsToSimUnitsRatio;
+            displayUnits = new FVector2(x * _displayUnitsToSimUnitsRatio, y * _displayUnitsToSimUnitsRatio);
         }
 
         public static Fix64 ToSimUnits(Fix64 displayUnits)
@@ -73,7 +74,7 @@ namespace VelcroPhysics.Utilities
             return displayUnits * _simUnitsToDisplayUnitsRatio;
         }
 
-        public static Vector3 ToSimUnits(Vector3 displayUnits)
+        public static FVector3 ToSimUnits(FVector3 displayUnits)
         {
             return displayUnits * _simUnitsToDisplayUnitsRatio;
         }
@@ -90,9 +91,10 @@ namespace VelcroPhysics.Utilities
 
         public static void ToSimUnits(Fix64 x, Fix64 y, out FVector2 simUnits)
         {
-            simUnits = FVector2.zero;
-            simUnits.x = x * _simUnitsToDisplayUnitsRatio;
-            simUnits.y = y * _simUnitsToDisplayUnitsRatio;
+            //simUnits = FVector2.zero;
+            //simUnits.x = x * _simUnitsToDisplayUnitsRatio;
+            //simUnits.y = y * _simUnitsToDisplayUnitsRatio;
+            simUnits = new FVector2(x * _simUnitsToDisplayUnitsRatio, y * _simUnitsToDisplayUnitsRatio);
         }
     }
 }

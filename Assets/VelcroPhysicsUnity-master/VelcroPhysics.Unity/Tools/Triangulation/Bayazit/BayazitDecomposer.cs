@@ -26,8 +26,8 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            Debug.Assert(vertices.Count > 3);
-            Debug.Assert(vertices.IsCounterClockWise());
+            UnityEngine.Debug.Assert(vertices.Count > 3);
+            UnityEngine.Debug.Assert(vertices.IsCounterClockWise());
 
             return TriangulatePolygon(vertices);
         }
@@ -44,7 +44,7 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
                 if (Reflex(i, vertices))
                 {
                     Fix64 upperDist;
-                    var lowerDist = upperDist = Fix64.MaxValue;
+                    var lowerDist = upperDist =  Fix64.MaxValue;
                     for (var j = 0; j < vertices.Count; ++j)
                     {
                         // if line intersects with an edge

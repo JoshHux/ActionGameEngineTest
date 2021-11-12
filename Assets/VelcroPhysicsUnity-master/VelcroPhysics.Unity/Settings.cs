@@ -37,7 +37,7 @@ namespace VelcroPhysics
         /// Enabling diagnostics causes the engine to gather timing information.
         /// You can see how much time it took to solve the contacts, solve CCD
         /// and update the controllers.
-        /// NOTE: If you are using a debug view that shows performance counters,
+        /// NOTE: If you are using a UnityEngine.Debug view that shows performance counters,
         /// you might want to enable this.
         /// </summary>
         public const bool EnableDiagnostics = true;
@@ -168,7 +168,7 @@ namespace VelcroPhysics
         public const int MaxGJKIterations = 20;
 
         /// <summary>
-        /// This is only for debugging the solver
+        /// This is only for UnityEngine.Debugging the solver
         /// </summary>
         public const bool EnableSubStepping = false;
 

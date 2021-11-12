@@ -115,12 +115,12 @@ namespace VelcroPhysics.Dynamics.VJoints
                 LengthB = dB.magnitude;
             }
 
-            Debug.Assert(ratio !=Fix64.Zero);
-            Debug.Assert(ratio > Settings.Epsilon);
+            UnityEngine.Debug.Assert(ratio != Fix64.Zero);
+            UnityEngine.Debug.Assert(ratio > Settings.Epsilon);
 
             Ratio = ratio;
             Constant = LengthA + ratio * LengthB;
-            _impulse =Fix64.Zero;
+            _impulse = Fix64.Zero;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
         public override Fix64 GetReactionTorque(Fix64 invDt)
         {
-            returnFix64.Zero;
+            return Fix64.Zero;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
@@ -238,13 +238,13 @@ namespace VelcroPhysics.Dynamics.VJoints
             var lengthA = _uA.magnitude;
             var lengthB = _uB.magnitude;
 
-            if (lengthA > 10.0f * Settings.LinearSlop)
-                _uA *=Fix64.One / lengthA;
+            if (lengthA > 10 * Settings.LinearSlop)
+                _uA *= Fix64.One / lengthA;
             else
                 _uA = FVector2.zero;
 
-            if (lengthB > 10.0f * Settings.LinearSlop)
-                _uB *=Fix64.One / lengthB;
+            if (lengthB > 10 * Settings.LinearSlop)
+                _uB *= Fix64.One / lengthB;
             else
                 _uB = FVector2.zero;
 
@@ -257,7 +257,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             _mass = mA + Ratio * Ratio * mB;
 
-            if (_mass >Fix64.Zero) _mass =Fix64.One / _mass;
+            if (_mass > Fix64.Zero) _mass = Fix64.One / _mass;
 
             if (Settings.EnableWarmstarting)
             {
@@ -275,7 +275,7 @@ namespace VelcroPhysics.Dynamics.VJoints
             }
             else
             {
-                _impulse =Fix64.Zero;
+                _impulse = Fix64.Zero;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -330,13 +330,13 @@ namespace VelcroPhysics.Dynamics.VJoints
             var lengthA = uA.magnitude;
             var lengthB = uB.magnitude;
 
-            if (lengthA > 10.0f * Settings.LinearSlop)
-                uA *=Fix64.One / lengthA;
+            if (lengthA > 10 * Settings.LinearSlop)
+                uA *= Fix64.One / lengthA;
             else
                 uA = FVector2.zero;
 
-            if (lengthB > 10.0f * Settings.LinearSlop)
-                uB *=Fix64.One / lengthB;
+            if (lengthB > 10 * Settings.LinearSlop)
+                uB *= Fix64.One / lengthB;
             else
                 uB = FVector2.zero;
 
@@ -349,7 +349,7 @@ namespace VelcroPhysics.Dynamics.VJoints
 
             var mass = mA + Ratio * Ratio * mB;
 
-            if (mass >Fix64.Zero) mass =Fix64.One / mass;
+            if (mass > Fix64.Zero) mass = Fix64.One / mass;
 
             var C = Constant - lengthA - Ratio * lengthB;
             var linearError = Fix64.Abs(C);

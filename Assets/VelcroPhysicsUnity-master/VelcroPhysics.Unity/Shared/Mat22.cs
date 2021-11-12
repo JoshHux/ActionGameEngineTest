@@ -1,4 +1,3 @@
-using UnityEngine;
 using FixMath.NET;
 
 namespace VelcroPhysics.Shared
@@ -40,14 +39,16 @@ namespace VelcroPhysics.Shared
             {
                 Fix64 a = ex.x, b = ey.x, c = ex.y, d = ey.y;
                 var det = a * d - b * c;
-                if (det !=Fix64.Zero) det =Fix64.One / det;
+                if (det != Fix64.Zero) det = Fix64.One / det;
 
                 var result = new Mat22();
-                result.ex.x = det * d;
-                result.ex.y = -det * c;
+                var rexx = det * d;
+                var rexy = -det * c;
+                var reyx = -det * b;
+                var reyy = det * a;
 
-                result.ey.x = -det * b;
-                result.ey.y = det * a;
+                result.ex = new FVector2(rexx, rexy);
+                result.ey = new FVector2(reyx, reyy);
 
                 return result;
             }
@@ -69,10 +70,12 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetIdentity()
         {
-            ex.x =Fix64.One;
-            ey.x =Fix64.Zero;
-            ex.y =Fix64.Zero;
-            ey.y =Fix64.One;
+            //ex.x =Fix64.One;
+            //ey.x =Fix64.Zero;
+            //ex.y =Fix64.Zero;
+            //ey.y =Fix64.One;
+            ex = new FVector2(1, 0);
+            ey = new FVector2(0, 1);
         }
 
         /// <summary>
@@ -80,10 +83,12 @@ namespace VelcroPhysics.Shared
         /// </summary>
         public void SetZero()
         {
-            ex.x =Fix64.Zero;
-            ey.x =Fix64.Zero;
-            ex.y =Fix64.Zero;
-            ey.y =Fix64.Zero;
+            //ex.x =Fix64.Zero;
+            //ey.x =Fix64.Zero;
+            //ex.y =Fix64.Zero;
+            //ey.y =Fix64.Zero;
+            ex = new FVector2();
+            ey = new FVector2();
         }
 
         /// <summary>
@@ -96,7 +101,7 @@ namespace VelcroPhysics.Shared
         {
             Fix64 a11 = ex.x, a12 = ey.x, a21 = ex.y, a22 = ey.y;
             var det = a11 * a22 - a12 * a21;
-            if (det !=Fix64.Zero) det =Fix64.One / det;
+            if (det != Fix64.Zero) det = Fix64.One / det;
 
             return new FVector2(det * (a22 * b.x - a12 * b.y), det * (a11 * b.y - a21 * b.x));
         }
