@@ -30,6 +30,7 @@ namespace ActionGameEngine.Gameplay
 
         protected override void InputUpdate()
         {
+            fromPlayer.MultX(status.facing);
             //so the input is recorded
             BufferInput();
         }

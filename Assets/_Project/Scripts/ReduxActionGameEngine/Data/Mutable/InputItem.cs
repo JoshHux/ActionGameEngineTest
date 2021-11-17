@@ -275,6 +275,21 @@ namespace ActionGameEngine.Input
             return dirCheck && btnCheck;
         }
 
+        public void MultX(int mult)
+        {
+            //get sign of the integer we want to multiply
+            int sign = mult >> 31;
+            //get the x value of the input
+            int xVal = this.m_rawValue >> 1;
+            //and the sign and the xVal to make sure we don't apply a sign change to 0
+            //both values should be 1 if we want a potential sign change
+            //should be 1 or 0
+            short newSign = (short)(sign & xVal);
+
+            //xor the sign bit, flips 0 to 1 (pos to neg), flips 1 to 0 (neg to pos)
+            m_rawValue ^= newSign;
+        }
+
         public static bool operator ==(InputItem x, InputItem y)
         {
             return x.m_rawValue == y.m_rawValue;

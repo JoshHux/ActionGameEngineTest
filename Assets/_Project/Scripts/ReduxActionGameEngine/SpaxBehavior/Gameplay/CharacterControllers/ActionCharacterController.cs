@@ -39,8 +39,8 @@ namespace ActionGameEngine
             if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.CAN_MOVE))
             {
                 //testing with 2d, only needs this for now
-                Fix64 accel = data.acceleration.x * fromPlayer.X();
-                Fix64 maxVel = data.maxVelocity.x * fromPlayer.X();
+                Fix64 accel = data.acceleration.x * fromPlayer.X() * status.facing;
+                Fix64 maxVel = data.maxVelocity.x * fromPlayer.X() * status.facing;
                 calcVel = new FVector2(GameplayHelper.ApplyAcceleration(calcVel.x, accel, maxVel), calcVel.y);
                 Debug.Log(fromPlayer.X());
 
@@ -118,6 +118,18 @@ namespace ActionGameEngine
             //if we need to face target when happens
             //if (EnumHelper.HasEnum((int)transitionEvents, (int)TransitionEvent.FACE_ENEMY)) { this.FaceTargetY(lockonTarget); }
 
+        }
+
+        protected override void ProcessFrameData(FrameData frame)
+        {
+            base.ProcessFrameData(frame);
+
+            //we currently don't want the character to correct their direction, so we use this flag to know when to flip left/right
+            if (EnumHelper.HasEnum((int)frame.flags, (int)FrameEventFlag.AUTO_TURN))
+            {
+                status.facing *= -1;
+                helper.facing = status.facing;
+            }
         }
 
         //TODO: tell enemy to block when this is called

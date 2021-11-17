@@ -4,6 +4,7 @@ namespace ActionGameEngine.Rendering
     public class RendererObject : RendererBehavior
     {
         private Animator animator;
+        private int lastKnownFacing = 1;
 
         protected override void OnStart()
         {
@@ -12,7 +13,15 @@ namespace ActionGameEngine.Rendering
             animator = anim.GetComponentInChildren<Animator>();
         }
 
-        protected override void PreRenderUpdate() { }
+        protected override void PreRenderUpdate()
+        {
+            int facingDir = helper.facing * lastKnownFacing;
+
+            Vector3 newScale = this.transform.localScale;
+            newScale.x = newScale.x * facingDir;
+
+            this.transform.localScale = newScale;
+        }
 
         protected override void RenderUpdate()
         {
@@ -43,6 +52,8 @@ namespace ActionGameEngine.Rendering
             animator.Update(Time.fixedDeltaTime * f);
             animator.speed = 0f;
         }
+
+
     }
 }
 

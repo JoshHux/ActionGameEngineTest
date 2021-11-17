@@ -56,6 +56,7 @@ namespace ActionGameEngine
             base.OnStart();
             rb = this.GetComponent<VelcroBody>();
             _renderer = this.GetComponent<RendererBehavior>();
+            status.facing = 1;
             AssignNewState(0);
         }
 

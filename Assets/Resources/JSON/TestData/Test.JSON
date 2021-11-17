@@ -46,6 +46,22 @@
             "cancelConditions": 0,
             "transitionFlag": 0,
             "transitionEvent": 0
+          },
+          {
+            "targetState": 3,
+            "cmdMotion": {
+              "commandInput": [
+                {
+                  "inputItem": {
+                    "m_rawValue": 3
+                  },
+                  "flags": 0
+                }
+              ]
+            },
+            "cancelConditions": 0,
+            "transitionFlag": 0,
+            "transitionEvent": 0
           }
         ],
         "frames": [],
@@ -86,6 +102,48 @@
           }
         ],
         "frames": [],
+        "animName": "a"
+      },
+      {
+        "stateID": 3,
+        "parentID": 0,
+        "duration": 5,
+        "stateConditions": 0,
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [
+          {
+            "atFrame": 4,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": "AUTO_TURN",
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [],
+            "hurtboxes": []
+          }
+        ],
         "animName": "a"
       }
     ]
