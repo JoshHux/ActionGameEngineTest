@@ -34,8 +34,8 @@ namespace ActionGameEngine.Data
         public bool Check(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond)
         {
             //UnityEngine.Debug.Log(playerInputs[0].frag.inputItem.m_rawValue);
-            bool passCancelConditions = EnumHelper.HasEnum((int)playerCond, (int)cancelConditions, true);
-            bool passTransitionFlags = EnumHelper.HasEnum((int)playerFlags, (int)transitionFlag, true);
+            bool passCancelConditions = EnumHelper.HasEnum((uint)playerCond, (uint)cancelConditions, true);
+            bool passTransitionFlags = EnumHelper.HasEnum((uint)playerFlags, (uint)transitionFlag, true);
             bool checkInput = cmdMotion.Check(playerInputs);
             return passCancelConditions && passTransitionFlags && checkInput;
         }

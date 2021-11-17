@@ -65,7 +65,7 @@
         "stateID": 2,
         "parentID": 0,
         "duration": 0,
-        "stateConditions": "APPLY_GRAV, APPLY_FRICTION, CAN_WALK",
+        "stateConditions": "GROUNDED, APPLY_GRAV, CAN_WALK, NO_PARENT_COND",
         "cancelConditions": 0,
         "transitions": [
           {
@@ -76,7 +76,7 @@
                   "inputItem": {
                     "m_rawValue": 2
                   },
-                  "flags": "RELEASED"
+                  "flags": "CHECK_IS_UP"
                 }
               ]
             },

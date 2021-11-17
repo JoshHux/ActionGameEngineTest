@@ -35,24 +35,24 @@ namespace ActionGameEngine.Input
             m_rawValue = 0;
 
             //if has a nonzero x value
-            if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.X_NONZERO))
+            if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.X_NONZERO))
             {
                 m_rawValue |= 1 << 1;
                 //if x value is negative
                 //don't need else since we only change the bit when it's negative
-                if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.X_NEGATIVE))
+                if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.X_NEGATIVE))
                 {
                     m_rawValue |= 1 << 0;
                 }
             }
 
             //if has a nonzero y value
-            if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.Y_NONZERO))
+            if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.Y_NONZERO))
             {
                 m_rawValue |= 1 << 3;
                 //if y value is negative
                 //don't need else since we only change the bit when it's negative
-                if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.Y_NEGATIVE))
+                if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.Y_NEGATIVE))
                 {
                     m_rawValue |= 1 << 2;
                 }
@@ -271,6 +271,33 @@ namespace ActionGameEngine.Input
 
             btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
 
+
+            return dirCheck && btnCheck;
+        }
+
+        public bool Check(InputItem other, bool read4way, bool checkNot)
+        {
+            bool dirCheck = false;
+            bool btnCheck = false;
+            if (checkNot)
+            {
+                dirCheck = (other.m_rawValue & this.m_rawValue) != this.m_rawValue;
+                btnCheck = (other.m_rawValue & this.m_rawValue) != this.m_rawValue;
+            }
+            else
+            {
+                if (read4way)
+                {
+                    dirCheck = ((this.X() * other.X()) > 0) || ((this.Y() * other.Y()) > 0);
+                }
+                else
+                {
+                    //strict match
+                    dirCheck = ((other.m_rawValue & this.m_rawValue) & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
+                }
+
+                btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
+            }
 
             return dirCheck && btnCheck;
         }

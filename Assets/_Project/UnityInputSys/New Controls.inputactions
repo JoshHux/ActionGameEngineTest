@@ -6,44 +6,69 @@
             "id": "208adfb1-aa48-4321-b860-8a018e2004e0",
             "actions": [
                 {
-                    "name": "Forwards",
-                    "type": "Button",
-                    "id": "a50ad648-3357-4a81-833d-68f3492a58ab",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Backwards",
-                    "type": "Button",
-                    "id": "99a6acb1-30ee-4736-88d9-7085852c91f7",
-                    "expectedControlType": "Button",
+                    "name": "Direction",
+                    "type": "Value",
+                    "id": "c7ed705a-d032-47d0-b6fd-b7621c0b1d9e",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
                 }
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "0b5cc24f-20ba-40b7-80d3-55a081ea2b1c",
-                    "path": "<Keyboard>/d",
+                    "name": "2D Vector",
+                    "id": "f407d213-1982-4310-a209-5b2014daac09",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Forwards",
-                    "isComposite": false,
+                    "action": "Direction",
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "083c7b53-32db-44be-8c9a-cb0af66a567d",
+                    "name": "up",
+                    "id": "5d995614-7367-4ca2-b74b-8c8c448e6f12",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "7607a2f3-d159-4c43-879d-c69aefa4f940",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "c263b215-1ef9-4dc3-874e-4d50d23c47fc",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Backwards",
+                    "action": "Direction",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "35c8618e-c84d-4280-b70a-66d86c045fb6",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

@@ -19,44 +19,69 @@ public class @NewControls : IInputActionCollection, IDisposable
             ""id"": ""208adfb1-aa48-4321-b860-8a018e2004e0"",
             ""actions"": [
                 {
-                    ""name"": ""Forwards"",
-                    ""type"": ""Button"",
-                    ""id"": ""a50ad648-3357-4a81-833d-68f3492a58ab"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Backwards"",
-                    ""type"": ""Button"",
-                    ""id"": ""99a6acb1-30ee-4736-88d9-7085852c91f7"",
-                    ""expectedControlType"": ""Button"",
+                    ""name"": ""Direction"",
+                    ""type"": ""Value"",
+                    ""id"": ""c7ed705a-d032-47d0-b6fd-b7621c0b1d9e"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": """",
-                    ""id"": ""0b5cc24f-20ba-40b7-80d3-55a081ea2b1c"",
-                    ""path"": ""<Keyboard>/d"",
+                    ""name"": ""2D Vector"",
+                    ""id"": ""f407d213-1982-4310-a209-5b2014daac09"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Forwards"",
-                    ""isComposite"": false,
+                    ""action"": ""Direction"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""083c7b53-32db-44be-8c9a-cb0af66a567d"",
+                    ""name"": ""up"",
+                    ""id"": ""5d995614-7367-4ca2-b74b-8c8c448e6f12"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Direction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""7607a2f3-d159-4c43-879d-c69aefa4f940"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Direction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""c263b215-1ef9-4dc3-874e-4d50d23c47fc"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Backwards"",
+                    ""action"": ""Direction"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""35c8618e-c84d-4280-b70a-66d86c045fb6"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Direction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -65,8 +90,7 @@ public class @NewControls : IInputActionCollection, IDisposable
 }");
         // TestPlayer
         m_TestPlayer = asset.FindActionMap("TestPlayer", throwIfNotFound: true);
-        m_TestPlayer_Forwards = m_TestPlayer.FindAction("Forwards", throwIfNotFound: true);
-        m_TestPlayer_Backwards = m_TestPlayer.FindAction("Backwards", throwIfNotFound: true);
+        m_TestPlayer_Direction = m_TestPlayer.FindAction("Direction", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -116,14 +140,12 @@ public class @NewControls : IInputActionCollection, IDisposable
     // TestPlayer
     private readonly InputActionMap m_TestPlayer;
     private ITestPlayerActions m_TestPlayerActionsCallbackInterface;
-    private readonly InputAction m_TestPlayer_Forwards;
-    private readonly InputAction m_TestPlayer_Backwards;
+    private readonly InputAction m_TestPlayer_Direction;
     public struct TestPlayerActions
     {
         private @NewControls m_Wrapper;
         public TestPlayerActions(@NewControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Forwards => m_Wrapper.m_TestPlayer_Forwards;
-        public InputAction @Backwards => m_Wrapper.m_TestPlayer_Backwards;
+        public InputAction @Direction => m_Wrapper.m_TestPlayer_Direction;
         public InputActionMap Get() { return m_Wrapper.m_TestPlayer; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -133,29 +155,22 @@ public class @NewControls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_TestPlayerActionsCallbackInterface != null)
             {
-                @Forwards.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnForwards;
-                @Forwards.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnForwards;
-                @Forwards.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnForwards;
-                @Backwards.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnBackwards;
-                @Backwards.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnBackwards;
-                @Backwards.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnBackwards;
+                @Direction.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnDirection;
+                @Direction.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnDirection;
+                @Direction.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnDirection;
             }
             m_Wrapper.m_TestPlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Forwards.started += instance.OnForwards;
-                @Forwards.performed += instance.OnForwards;
-                @Forwards.canceled += instance.OnForwards;
-                @Backwards.started += instance.OnBackwards;
-                @Backwards.performed += instance.OnBackwards;
-                @Backwards.canceled += instance.OnBackwards;
+                @Direction.started += instance.OnDirection;
+                @Direction.performed += instance.OnDirection;
+                @Direction.canceled += instance.OnDirection;
             }
         }
     }
     public TestPlayerActions @TestPlayer => new TestPlayerActions(this);
     public interface ITestPlayerActions
     {
-        void OnForwards(InputAction.CallbackContext context);
-        void OnBackwards(InputAction.CallbackContext context);
+        void OnDirection(InputAction.CallbackContext context);
     }
 }

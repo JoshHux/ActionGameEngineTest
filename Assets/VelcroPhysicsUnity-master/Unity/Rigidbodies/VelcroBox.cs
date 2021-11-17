@@ -8,8 +8,8 @@ using FixMath.NET;
 
 public class VelcroBox : VelcroBody
 {
-    [SerializeField] private Fix64 _height;
-    [SerializeField] private Fix64 _width;
+    [SerializeField] private Fix64 _height = 1;
+    [SerializeField] private Fix64 _width = 1;
     public Fix64 Height
     {
         get { return _height; }

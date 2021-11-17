@@ -20,11 +20,11 @@ namespace ActionGameEngine.Input
             flags = newFlags;
         }
 
-        public bool Check(InputFragment frag)
+        public bool Check(InputFragment frag, bool checkNot)
         {
-            bool has4Way = EnumHelper.HasEnum((int)this.flags, (int)InputFlags.DIR_AS_4WAY);
-            bool fragHasFlags = EnumHelper.HasEnum((int)frag.flags, (int)this.flags, true);
-            bool checkItem = this.inputItem.Check(frag.inputItem, has4Way);
+            bool has4Way = EnumHelper.HasEnum((uint)this.flags, (uint)InputFlags.DIR_AS_4WAY);
+            bool fragHasFlags = EnumHelper.HasEnum((uint)frag.flags, (uint)this.flags, true);
+            bool checkItem = this.inputItem.Check(frag.inputItem, has4Way, checkNot);
             //UnityEngine.Debug.Log("check :: " + this.inputItem.m_rawValue + " " + frag.inputItem.m_rawValue);
             return checkItem && fragHasFlags;
         }

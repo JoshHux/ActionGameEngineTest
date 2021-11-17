@@ -33,15 +33,21 @@ namespace ActionGameEngine.Input
                     {
                         RecorderElement input = playerInputs[i];
                         InputFragment inputFrag = input.frag;
-                        totalFramesPassed += input.framesHeld;
 
                         //special case where we only want to look at the currently held inputs by the player
                         //only check the first element if we don't have any flags
                         //in this case, we want to check the current inputs the player is pressing
-                        if (i == 0 && j == 0 && frag.flags == 0)
+                        if (i == 0 && j == 0 && (EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP) || (frag.flags == 0)))
                         {
+                            //fragment from the command to check against
+                            InputFragment toCheck = frag;
+                            toCheck.flags = 0;
+
+                            bool checkNot = EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP);
+
                             //UnityEngine.Debug.Log("pass currently held items");
-                            return frag.Check(inputFrag);
+                            //UnityEngine.Debug.Log(toCheck.inputItem.m_rawValue + " " + inputFrag.inputItem.m_rawValue + " | " + toCheck.flags + " " + inputFrag.flags);
+                            return toCheck.Check(inputFrag, checkNot);
                         }
 
                         if (totalFramesPassed > 10)
@@ -53,12 +59,12 @@ namespace ActionGameEngine.Input
 
 
                         //if there are any flags where we would want to rewind back in time to add leniency or make sure is correct
-                        if (EnumHelper.HasEnum((int)persisFlags, (int)InputFlags.NEED_PREV) && ((lenNested - i) > 1))
+                        if (EnumHelper.HasEnum((uint)persisFlags, (int)InputFlags.NEED_PREV) && ((lenNested - i) > 1))
                         {
                             RecorderElement inputPrev = playerInputs[i + 1];
                             InputFragment inputFragPrev = inputPrev.frag;
                             //if we need to press buttons simultaneously, give it a little leniency
-                            if (EnumHelper.HasEnum((int)persisFlags, (int)InputFlags.BTN_SIMUL_PRESS))
+                            if (EnumHelper.HasEnum((uint)persisFlags, (int)InputFlags.BTN_SIMUL_PRESS))
                             {
                                 if (Math.Abs(input.framesHeld - inputPrev.framesHeld) <= 3)
                                 {
@@ -69,7 +75,7 @@ namespace ActionGameEngine.Input
                             }
 
                             //if we want to see if there's an interrupt, just move back and compare
-                            if (EnumHelper.HasEnum((int)persisFlags, (int)InputFlags.NO_INTERRUPT))
+                            if (EnumHelper.HasEnum((uint)persisFlags, (int)InputFlags.NO_INTERRUPT))
                             {
                                 //only non-interrupt if the flagless items match, since we're only tracking change
                                 if (inputFrag.inputItem == inputFragPrev.inputItem)
@@ -80,23 +86,22 @@ namespace ActionGameEngine.Input
                             }
 
                             //if we want to see if there's a hold/charge, loop through and see if we can find it
-                            if (EnumHelper.HasEnum((int)persisFlags, (int)InputFlags.HELD))
+                            if (EnumHelper.HasEnum((uint)persisFlags, (int)InputFlags.HELD))
                             {
                                 //attatch the appropriate flag
                                 inputFrag.flags |= InputFlags.DIR_AS_4WAY;
                                 //calculate the appropriate charge time
                                 int minHeldTime = 0;
                                 int heldTime = 0;
-                                if (EnumHelper.HasEnum((int)persisFlags, (int)InputFlags.HELD_10F))
-                                { minHeldTime += 10; }
-                                if (EnumHelper.HasEnum((int)persisFlags, (int)InputFlags.HELD_20F))
+
+                                if (EnumHelper.HasEnum((uint)persisFlags, (int)InputFlags.HELD_20F))
                                 { minHeldTime += 20; }
-                                if (EnumHelper.HasEnum((int)persisFlags, (int)InputFlags.HELD_30F))
+                                if (EnumHelper.HasEnum((uint)persisFlags, (int)InputFlags.HELD_30F))
                                 { minHeldTime += 30; }
 
                                 //just to go through and check without charge flag to make sure the other inputs match
                                 InputFragment flaglessFrag = new InputFragment(frag.inputItem, frag.flags ^ (InputFlags.HELD & frag.flags));
-                                bool unbrokenCharge = flaglessFrag.Check(inputFrag);
+                                bool unbrokenCharge = flaglessFrag.Check(inputFrag, false);
                                 //remove flags to straight check the direction
                                 flaglessFrag.flags = 0;
 
@@ -109,7 +114,7 @@ namespace ActionGameEngine.Input
                                     InputFragment chargeFrag = input.frag;
 
                                     //free pass
-                                    unbrokenCharge = flaglessFrag.Check(chargeFrag) && ((chargeFrag.flags & InputFlags.PRESSED) > 0) && ((heldTime + charge.framesHeld) >= minHeldTime);
+                                    unbrokenCharge = flaglessFrag.Check(chargeFrag, false) && ((chargeFrag.flags & InputFlags.PRESSED) > 0) && ((heldTime + charge.framesHeld) >= minHeldTime);
                                     //charge time completed, break out of loop
                                     if (unbrokenCharge) { break; }
 
@@ -120,7 +125,7 @@ namespace ActionGameEngine.Input
                                         //if it's the same direction, and it's is going from released to pressed
                                         unbrokenCharge = !(((chargePrevFrag.inputItem.m_rawValue & 0b0000000000111111) == (chargeFrag.inputItem.m_rawValue & 0b0000000000111111)) && ((chargePrevFrag.flags & InputFlags.RELEASED) > 0) && ((chargeFrag.flags & InputFlags.PRESSED) > 0));
                                         //would make the check true if charge frag passes the check and there isn't a weird corner case where you press down->down
-                                        unbrokenCharge = flaglessFrag.Check(chargeFrag) && unbrokenCharge;
+                                        unbrokenCharge = flaglessFrag.Check(chargeFrag, false) && unbrokenCharge;
 
                                     }
                                     //check to make sure we didn't mark something like 2->1 as broken
@@ -151,7 +156,7 @@ namespace ActionGameEngine.Input
 
 
                         //check the flag to see if it checks out
-                        if (frag.Check(inputFrag))
+                        if (frag.Check(inputFrag, false))
                         {
                             //UnityEngine.Debug.Log(inputFrag.inputItem.m_rawValue + " " + frag.inputItem.m_rawValue);
 
@@ -169,6 +174,8 @@ namespace ActionGameEngine.Input
                         }
 
                         //only reached if we didn't find a matching input
+                        totalFramesPassed += input.framesHeld;
+
                     }
 
                 }

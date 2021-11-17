@@ -50,8 +50,9 @@ namespace ActionGameEngine.Data
             StateCondition ret = state.stateConditions;
 
             //recur to keep adding the parent's conditions if there is a parent
-            if (state.HasParent() && (stateID > -1))
+            if (state.HasParent() && (stateID > -1) && (!EnumHelper.HasEnum((uint)ret, (uint)StateCondition.NO_PARENT_COND)))
             {
+                //UnityEngine.Debug.Log(stateID + " " + (int)(ret & StateCondition.NO_PARENT_COND) + " " + ret);
                 ret |= this.GetConditionsFromState(state.parentID);
             }
 

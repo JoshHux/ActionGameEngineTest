@@ -7,7 +7,7 @@ namespace ActionGameEngine.Enum
     //2 bytes
     [System.Flags]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum StateCondition : int
+    public enum StateCondition : uint
     {
         GROUNDED = 1 << 0,
         AIRBORNE = 1 << 1,
@@ -42,7 +42,7 @@ namespace ActionGameEngine.Enum
         //don't look at parent transitions
         NO_PARENT_TRANS = 1 << 30,
         //don't look at parent StateCondition
-        NO_PARENT_COND = 1 << 31,
+        NO_PARENT_COND = (uint)1 << 31,
         INVULNERABLE = INVULNERABLE_STRIKE | INVULNERABLE_GRAB,
         GUARD_POINT = GUARD_POINT_LOW | GUARD_POINT_MID | GUARD_POINT_HIGH,
         BOUNCE = BOUNCE_WALL | BOUNCE_GROUND,

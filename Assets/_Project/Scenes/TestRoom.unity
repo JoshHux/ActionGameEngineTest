@@ -233,9 +233,9 @@ MonoBehaviour:
   IsStatic: 0
   lockRotation: 1
   _height:
-    m_rawValue: 4294967296
+    m_rawValue: 8589934592
   _width:
-    m_rawValue: 4294967296
+    m_rawValue: 8589934592
 --- !u!114 &203000869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,6 +300,7 @@ MonoBehaviour:
       animName: 
     currentHp: 0
     currentArmorHits: 0
+    checkState: 0
   calcVel:
     x:
       m_rawValue: 0
@@ -367,15 +368,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass:
-    m_rawValue: 0
+    m_rawValue: 4294967296
   IsTrigger: 1
   IsKinematic: 0
   IsStatic: 0
   lockRotation: 1
   _height:
-    m_rawValue: 0
+    m_rawValue: 4294967296
   _width:
-    m_rawValue: 0
+    m_rawValue: 4294967296
 --- !u!1 &246501715
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,15 +598,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass:
-    m_rawValue: 0
+    m_rawValue: 4294967296
   IsTrigger: 1
   IsKinematic: 0
   IsStatic: 0
   lockRotation: 1
   _height:
-    m_rawValue: 0
+    m_rawValue: 4294967296
   _width:
-    m_rawValue: 0
+    m_rawValue: 4294967296
 --- !u!1 &354679081
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,7 +722,7 @@ MonoBehaviour:
   _height:
     m_rawValue: 4294967296
   _width:
-    m_rawValue: 4294967296
+    m_rawValue: 429496729600
 --- !u!1 &907353875
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,7 +776,7 @@ MonoBehaviour:
   _height:
     m_rawValue: 4294967296
   _width:
-    m_rawValue: 4294967296
+    m_rawValue: 429496729600
 --- !u!1 &1034619618
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,7 +1340,7 @@ MonoBehaviour:
   _height:
     m_rawValue: 4294967296
   _width:
-    m_rawValue: 4294967296
+    m_rawValue: 429496729600
 --- !u!1 &1502120536
 GameObject:
   m_ObjectHideFlags: 0
@@ -3066,6 +3067,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1766093058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae50308ca00affc448a1d22529d9af03, type: 3}
+  m_Script: {fileID: 11500000, guid: 0f0667e26524628448966dad5af6d052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

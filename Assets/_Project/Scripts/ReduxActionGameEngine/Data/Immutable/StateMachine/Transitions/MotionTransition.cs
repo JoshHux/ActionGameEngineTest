@@ -23,7 +23,7 @@ namespace ActionGameEngine.Data
 
         public bool Check(RecorderElement[] playerInputs, CancelConditions playerCond)
         {
-            return EnumHelper.HasEnum((int)playerCond, (int)cancelConditions) && cmdMotion.Check(playerInputs);
+            return EnumHelper.HasEnum((uint)playerCond, (uint)cancelConditions) && cmdMotion.Check(playerInputs);
         }
     }
 }

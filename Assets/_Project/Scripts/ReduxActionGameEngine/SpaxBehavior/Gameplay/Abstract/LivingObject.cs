@@ -62,7 +62,7 @@ namespace ActionGameEngine
         protected override void StateUpdate()
         {
             //recordthe vlocity to do
-            //calcVel = rb.velocity;
+            calcVel = rb.Velocity;
             status.SetInHitstop(stopTimer.TickTimer());
 
             //if not in Hitstop, tick the gameplay state timers
@@ -218,13 +218,13 @@ namespace ActionGameEngine
         protected virtual void ProcessStateData(StateCondition curCond)
         {
             //apply gravity based on mass, clamps to max fall speed if exceeded
-            if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.APPLY_GRAV))
+            if (EnumHelper.HasEnum((uint)curCond, (int)StateCondition.APPLY_GRAV))
             {
                 calcVel = new FVector2(calcVel.x, GameplayHelper.ApplyAcceleration(calcVel.y, -data.mass, -data.maxVelocity.y));
             }
 
             //apply friction in corresponding direction
-            if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.APPLY_FRICTION))
+            if (EnumHelper.HasEnum((uint)curCond, (int)StateCondition.APPLY_FRICTION))
             {
                 FVector2 topDownVel = new FVector2(calcVel.x, 0);
 
@@ -233,16 +233,17 @@ namespace ActionGameEngine
                 { calcVel = new FVector2(0, calcVel.y); }
                 else
                 { calcVel -= (topDownVel.normalized * friction); }
+                //UnityEngine.Debug.Log(calcVel.x);
             }
         }
 
         protected virtual void ProcessTransitionEvents(TransitionEvent transitionEvents)
         {
             TransitionEvent te = transitionEvents;
-            if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_VEL))
+            if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_VEL))
             {
-                if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_X_VEL)) { new FVector2(0, calcVel.y); }
-                if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_Y_VEL)) { new FVector2(calcVel.x, 0); }
+                if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_X_VEL)) { new FVector2(0, calcVel.y); }
+                if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_Y_VEL)) { new FVector2(calcVel.x, 0); }
                 //if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_Z_VEL)) { calcVel.x = 0; }
             }
         }
@@ -250,16 +251,16 @@ namespace ActionGameEngine
         protected virtual void ProcessFrameData(FrameData frame)
         {
 
-            if (EnumHelper.HasEnum((int)frame.flags, (int)FrameEventFlag.SET_TIMER))
+            if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_TIMER))
             {
                 TimerEvent evnt = frame.timerEvent;
                 persistentTimer.StartTimer(evnt.TimerDuration);
                 status.SetPersistenConditions(evnt.conditions);
             }
 
-            if (EnumHelper.HasEnum((int)frame.flags, (int)FrameEventFlag.APPLY_VEL))
+            if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.APPLY_VEL))
             {
-                if (EnumHelper.HasEnum((int)frame.flags, (int)FrameEventFlag.SET_VEL))
+                if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_VEL))
                 { calcVel = frame.frameVelocity; }
                 else
                 { calcVel += frame.frameVelocity; }

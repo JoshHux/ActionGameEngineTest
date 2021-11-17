@@ -14,22 +14,22 @@ namespace FixedAnimationSystem
         {
             if (op == 0) { return true; }
 
-            if (EnumHelper.HasEnum((int)op, (int)CompareOperation.AS_FIXEDPOINT))
+            if (EnumHelper.HasEnum((uint)op, (uint)CompareOperation.AS_FIXEDPOINT))
             {
                 Fix64 p = Fix64.FromRaw(param);
-                if (EnumHelper.HasEnum((int)op, (int)CompareOperation.EQUALS))
+                if (EnumHelper.HasEnum((uint)op, (uint)CompareOperation.EQUALS))
                 {
                     return p == value;
                 }
                 else
-                if (EnumHelper.HasEnum((int)op, (int)CompareOperation.NOT_EQUALS))
+                if (EnumHelper.HasEnum((uint)op, (uint)CompareOperation.NOT_EQUALS))
                 {
                     return p != value;
 
                 }
                 else
 
-                if (EnumHelper.HasEnum((int)op, (int)CompareOperation.GREATER_THAN))
+                if (EnumHelper.HasEnum((uint)op, (uint)CompareOperation.GREATER_THAN))
                 {
                     return p > value;
 
@@ -37,16 +37,16 @@ namespace FixedAnimationSystem
                 return p < value;
             }
 
-            if (EnumHelper.HasEnum((int)op, (int)CompareOperation.EQUALS))
+            if (EnumHelper.HasEnum((uint)op, (uint)CompareOperation.EQUALS))
             {
                 return param == value.m_rawValue;
             }
-            else if (EnumHelper.HasEnum((int)op, (int)CompareOperation.NOT_EQUALS))
+            else if (EnumHelper.HasEnum((uint)op, (uint)CompareOperation.NOT_EQUALS))
             {
                 return param != value.m_rawValue;
 
             }
-            else if (EnumHelper.HasEnum((int)op, (int)CompareOperation.GREATER_THAN))
+            else if (EnumHelper.HasEnum((uint)op, (uint)CompareOperation.GREATER_THAN))
             {
                 return param > value.m_rawValue;
 

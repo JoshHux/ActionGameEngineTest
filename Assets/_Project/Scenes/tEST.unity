@@ -1959,7 +1959,7 @@ MonoBehaviour:
       - stateID: 2
         parentID: 0
         duration: 0
-        stateConditions: 524300
+        stateConditions: 2148007941
         cancelConditions: 0
         transitions:
         - targetState: 0
@@ -1967,7 +1967,7 @@ MonoBehaviour:
             commandInput:
             - inputItem:
                 m_rawValue: 2
-              flags: 2
+              flags: 32
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0

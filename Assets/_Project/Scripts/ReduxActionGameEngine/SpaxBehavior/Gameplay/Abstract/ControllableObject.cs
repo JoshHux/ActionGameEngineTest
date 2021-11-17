@@ -1,6 +1,7 @@
 using ActionGameEngine.Data;
 using ActionGameEngine.Input;
 using UnityEngine.InputSystem;
+using FixMath.NET;
 namespace ActionGameEngine.Gameplay
 {
     public abstract class ControllableObject : CombatObject
@@ -21,11 +22,9 @@ namespace ActionGameEngine.Gameplay
             //using the input system to do a little mapping, replace as soon as possible
             actions.Enable();
             //pressed events
-            actions["Forwards"].started += ctx => ApplyInput(0b0000000000000010, true);
-            actions["Backwards"].started += ctx => ApplyInput(0b0000000000000011, true);
+            actions["Direction"].started += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000010);
             //released events
-            actions["Forwards"].canceled += ctx => ApplyInput(0b0000000000000010, false);
-            actions["Backwards"].canceled += ctx => ApplyInput(0b0000000000000011, false);
+            actions["Direction"].canceled += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000011);
         }
 
         protected override void InputUpdate()
@@ -51,16 +50,31 @@ namespace ActionGameEngine.Gameplay
 
         }
 
-        private void ApplyInput(short input, bool pressed)
+        private void ApplyInput(UnityEngine.Vector2 dir, short input)
         {
-            if (pressed)
+            short newDir = 0;
+            FVector2 StickInput = new FVector2((Fix64)dir.x, (Fix64)dir.y);
+            Fix64 StickAngle = (Fix64.Atan2(StickInput.x, StickInput.y)) * Fix64.PiInv * (Fix64)180f;
+
+            if (dir.y < 0)
             {
-                fromPlayer.m_rawValue |= input;
+                newDir = 0b0000000000001100;
             }
-            else
+            else if (dir.y > 0)
             {
-                fromPlayer.m_rawValue ^= input;
+                newDir = 0b0000000000001000;
             }
+
+            if (dir.x < 0)
+            {
+                newDir |= 0b0000000000000011;
+            }
+            else if (dir.x > 0)
+            {
+                newDir |= 0b0000000000000010;
+            }
+
+            fromPlayer.m_rawValue = newDir;
         }
 
         protected void BufferInput()

@@ -36,13 +36,13 @@ namespace ActionGameEngine
         {
             base.ProcessStateData(curCond);
             //apply acceleration is given direction, clamps to max fall speed if exceeded
-            if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.CAN_MOVE))
+            if (EnumHelper.HasEnum((uint)curCond, (int)StateCondition.CAN_MOVE))
             {
                 //testing with 2d, only needs this for now
                 Fix64 accel = data.acceleration.x * fromPlayer.X();
                 Fix64 maxVel = data.maxVelocity.x * fromPlayer.X();
                 calcVel = new FVector2(GameplayHelper.ApplyAcceleration(calcVel.x, accel, maxVel), calcVel.y);
-                Debug.Log(fromPlayer.X());
+                //Debug.Log(GameplayHelper.ApplyAcceleration(calcVel.x, accel, maxVel));
 
                 //uncomment this section if working in 3d
                 /*
@@ -61,15 +61,15 @@ namespace ActionGameEngine
         public HitIndicator OnGetHit(int attackerID, HitboxData boxData)
         {
             HitType type = boxData.type;
-            bool onGround = EnumHelper.HasEnum((int)status.GetStateConditions(), (int)StateCondition.GROUNDED);
-            bool crouching = EnumHelper.HasEnum((int)status.GetStateConditions(), (int)StateCondition.CROUCHING);
+            bool onGround = EnumHelper.HasEnum((uint)status.GetStateConditions(), (int)StateCondition.GROUNDED);
+            bool crouching = EnumHelper.HasEnum((uint)status.GetStateConditions(), (int)StateCondition.CROUCHING);
             HitIndicator indicator = 0;
             //check to see if invuln matches
             //checks to see if hit is strike box
-            if (EnumHelper.HasEnum((int)type, (int)HitType.STRIKE))
+            if (EnumHelper.HasEnum((uint)type, (int)HitType.STRIKE))
             {
                 //checks to see if unblockable or not
-                if (!EnumHelper.HasEnum((int)type, (int)HitType.UNBLOCKABLE))
+                if (!EnumHelper.HasEnum((uint)type, (int)HitType.UNBLOCKABLE))
                 {
                     //blockable hit
 
@@ -85,7 +85,7 @@ namespace ActionGameEngine
                     }
                     else
                     {
-                        if (EnumHelper.HasEnum((int)type, (int)HitType.GRAB))
+                        if (EnumHelper.HasEnum((uint)type, (int)HitType.GRAB))
                         {
                             //this is where you would also put your operations for hitgrabs
                             indicator |= HitIndicator.GRABBED;
@@ -98,7 +98,7 @@ namespace ActionGameEngine
                 return indicator;
 
             }
-            else if (EnumHelper.HasEnum((int)type, (int)HitType.GRAB))
+            else if (EnumHelper.HasEnum((uint)type, (int)HitType.GRAB))
             {
                 //grab operations, like setting parent and the such
                 indicator |= HitIndicator.GRABBED;
