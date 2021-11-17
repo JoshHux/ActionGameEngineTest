@@ -16,8 +16,9 @@ namespace ActionGameEngine.Input.Drawer
             EditorGUI.BeginProperty(position, label, property);
 
             var rawProp = property.FindPropertyRelative("m_rawValue");
-            EditorGUI.IntField(position, label, rawProp.intValue);
+            var fromGUI = EditorGUI.IntField(position, label, rawProp.intValue);
 
+            rawProp.intValue = fromGUI;
 
             EditorGUI.EndProperty();
 

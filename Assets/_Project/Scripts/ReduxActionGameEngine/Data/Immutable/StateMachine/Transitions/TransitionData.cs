@@ -33,7 +33,11 @@ namespace ActionGameEngine.Data
 
         public bool Check(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond)
         {
-            return EnumHelper.HasEnum((int)playerCond, (int)cancelConditions) && EnumHelper.HasEnum((int)playerFlags, (int)transitionFlag, true) && cmdMotion.Check(playerInputs);
+            //UnityEngine.Debug.Log(playerInputs[0].frag.inputItem.m_rawValue);
+            bool passCancelConditions = EnumHelper.HasEnum((int)playerCond, (int)cancelConditions, true);
+            bool passTransitionFlags = EnumHelper.HasEnum((int)playerFlags, (int)transitionFlag, true);
+            bool checkInput = cmdMotion.Check(playerInputs);
+            return passCancelConditions && passTransitionFlags && checkInput;
         }
 
     }

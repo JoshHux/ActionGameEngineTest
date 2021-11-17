@@ -6,22 +6,22 @@ namespace ActionGameEngine.Input
     [System.Serializable]
     public struct InputItem
     {
-        //1<<0 x sign
-        //1<<1 x val
-        //1<<2 y sign
-        //1<<3 y val
-        //1<<4 x half
-        //1<<5 y half
-        //1<<6 btn A
-        //1<<7 btn B
-        //1<<8 btn C
-        //1<<9 btn D
-        //1<<10 btn E
-        //1<<11 btn F
-        //1<<12 btn G
-        //1<<13 btn H
-        //1<<14 btn start
-        //1<<15 btn select
+        //1<<0 x sign (1)
+        //1<<1 x val (2)
+        //1<<2 y sign (4)
+        //1<<3 y val (8)
+        //1<<4 x half (16)
+        //1<<5 y half (32)
+        //1<<6 btn A (64)
+        //1<<7 btn B (128)
+        //1<<8 btn C (256)
+        //1<<9 btn D (512)
+        //1<<10 btn E (1024)
+        //1<<11 btn F (2048)
+        //1<<12 btn G (4096)
+        //1<<13 btn H (8192)
+        //1<<14 btn start (16384)
+        //1<<15 btn select (32768)
         public short m_rawValue;
 
         public InputItem(short newRaw)
@@ -107,13 +107,13 @@ namespace ActionGameEngine.Input
         {
             Fix64 ret = Fix64.Zero;
             //x is nonzero
-            if ((m_rawValue & (1 << 3)) > 0)
+            if ((m_rawValue & (1 << 1)) > 0)
             {
                 ret = Fix64.One;
                 //halve y?
-                if ((m_rawValue & (1 << 5)) > 0)
+                if ((m_rawValue & (1 << 4)) > 0)
                 {
-                    ret *=  (Fix64)0.5;
+                    ret *= (Fix64)0.5;
                 }
                 //negative?
                 if ((m_rawValue & (1 << 0)) > 0)
@@ -133,9 +133,9 @@ namespace ActionGameEngine.Input
             {
                 ret = Fix64.One;
                 //halve y?
-                if ((m_rawValue & (1 << 4)) > 0)
+                if ((m_rawValue & (1 << 5)) > 0)
                 {
-                    ret *=  (Fix64)0.5;
+                    ret *= (Fix64)0.5;
                 }
                 //negative?
                 if ((m_rawValue & (1 << 2)) > 0)
@@ -149,23 +149,27 @@ namespace ActionGameEngine.Input
 
         public static InputItem FindReleased(InputItem current, InputItem previous)
         {
-            DigitalInput cur = current.ToDigitalInput();
-            DigitalInput prev = previous.ToDigitalInput();
+            //DigitalInput cur = current.ToDigitalInput();
+            int cur = current.m_rawValue;
+            //DigitalInput prev = previous.ToDigitalInput();
+            int prev = previous.m_rawValue;
             //get differences, then only get the difference from prev
-            DigitalInput part = (cur ^ prev) & prev;
+            int part = (cur ^ prev) & prev;
 
-            return new InputItem(part);
+            return new InputItem((short)part);
         }
 
 
         public static InputItem FindPressed(InputItem current, InputItem previous)
         {
-            DigitalInput cur = current.ToDigitalInput();
-            DigitalInput prev = previous.ToDigitalInput();
+            //DigitalInput cur = current.ToDigitalInput();
+            int cur = current.m_rawValue;
+            //DigitalInput prev = previous.ToDigitalInput();
+            int prev = previous.m_rawValue;
             //get differences, then only get the difference from cur
-            DigitalInput part = (cur ^ prev) & cur;
+            int part = (cur ^ prev) & cur;
 
-            return new InputItem(part);
+            return new InputItem((short)part);
         }
 
         public static DigitalInput ToDigInp(short rawVal)
@@ -199,7 +203,7 @@ namespace ActionGameEngine.Input
                 //halve y?
                 if ((rawVal & (1 << 4)) > 0)
                 {
-                    y *=  (Fix64)0.5;
+                    y *= (Fix64)0.5;
                 }
                 //negative?
                 if ((rawVal & (1 << 2)) > 0)
@@ -262,10 +266,10 @@ namespace ActionGameEngine.Input
             else
             {
                 //strict match
-                dirCheck = ((other.m_rawValue & this.m_rawValue) & (0b0000000000111111)) == (other.m_rawValue & (0b0000000000111111));
+                dirCheck = ((other.m_rawValue & this.m_rawValue) & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
             }
 
-            btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (other.m_rawValue & (0b1111111111000000));
+            btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
 
 
             return dirCheck && btnCheck;
@@ -303,7 +307,7 @@ namespace ActionGameEngine.Input
         public override int GetHashCode()
         {
             // TODO: write your implementation of GetHashCode() here
-            return m_rawValue;
+            return (int)m_rawValue;
         }
 
         //TODO: add method to convert the information in the short to DigitalInput

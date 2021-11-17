@@ -78,6 +78,8 @@ namespace ActionGameEngine.Data
             {
                 TransitionData transition = transitions[i];
 
+                //UnityEngine.Debug.Log(transition.cmdMotion.commandInput[0].inputItem.m_rawValue + " " + transition.cmdMotion.commandInput[0].flags);
+
                 if (transition.Check(playerInputs, playerFlags, playerCond))
                 {
                     return i;
@@ -90,7 +92,7 @@ namespace ActionGameEngine.Data
         //check if this is a node state
         //should not be assigned as a player state is true
         //if there are no frames, then this is a node state
-        public bool IsNodeState() { return frames.Length == 0; }
+        public bool IsNodeState() { return frames.Length == -2; }
         public bool HasParent() { return stateID != parentID; }
         public TransitionData GetTransitionFromIndex(int ind) { return transitions[ind]; }
     }

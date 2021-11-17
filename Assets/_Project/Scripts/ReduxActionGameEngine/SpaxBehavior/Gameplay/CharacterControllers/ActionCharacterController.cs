@@ -11,6 +11,13 @@ namespace ActionGameEngine
     public class ActionCharacterController : ControllableObject
     {
         //protected ShapeBase lockonTarget;
+        [SerializeField] private string path;
+
+        protected override void OnStart()
+        {
+            this.data = SpaxJSONSaver.LoadDataFromPath(path);
+            base.OnStart();
+        }
 
         protected override void StateCleanUpdate() { if (status.GetInHitstop()) { return; } }
         protected override void PreUpdate() { if (status.GetInHitstop()) { return; } }
@@ -32,9 +39,10 @@ namespace ActionGameEngine
             if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.CAN_MOVE))
             {
                 //testing with 2d, only needs this for now
-                Fix64 accel = data.GetForwardsAccel() * fromPlayer.X();
-                Fix64 maxVel = data.GetMaxForwardsVel() * fromPlayer.X();
+                Fix64 accel = data.acceleration.x * fromPlayer.X();
+                Fix64 maxVel = data.maxVelocity.x * fromPlayer.X();
                 calcVel = new FVector2(GameplayHelper.ApplyAcceleration(calcVel.x, accel, maxVel), calcVel.y);
+                Debug.Log(fromPlayer.X());
 
                 //uncomment this section if working in 3d
                 /*

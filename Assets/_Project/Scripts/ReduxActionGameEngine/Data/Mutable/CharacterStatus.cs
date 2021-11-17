@@ -5,9 +5,9 @@ namespace ActionGameEngine.Data
     public struct CharacterStatus
     {
         //int ID of the current state
-        private StateData currentState;
-        private int currentHp;
-        private int currentArmorHits;
+        [UnityEngine.SerializeField]private StateData currentState;
+        [UnityEngine.SerializeField]private int currentHp;
+        [UnityEngine.SerializeField]private int currentArmorHits;
         //conditions that are from the state and that we keep track of toggling
         //we don't want to change the current state's conditions, so we just copy them and manipulate that
         private StateCondition currentStateCond;

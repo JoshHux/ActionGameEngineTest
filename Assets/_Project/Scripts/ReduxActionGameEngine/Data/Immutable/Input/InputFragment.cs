@@ -22,9 +22,13 @@ namespace ActionGameEngine.Input
 
         public bool Check(InputFragment frag)
         {
-            return this.inputItem.Check(frag.inputItem, EnumHelper.HasEnum((int)this.flags, (int)InputFlags.DIR_AS_4WAY, true)) && EnumHelper.HasEnum((int)frag.flags, (int)this.flags, true);
+            bool has4Way = EnumHelper.HasEnum((int)this.flags, (int)InputFlags.DIR_AS_4WAY);
+            bool fragHasFlags = EnumHelper.HasEnum((int)frag.flags, (int)this.flags, true);
+            bool checkItem = this.inputItem.Check(frag.inputItem, has4Way);
+            //UnityEngine.Debug.Log("check :: " + this.inputItem.m_rawValue + " " + frag.inputItem.m_rawValue);
+            return checkItem && fragHasFlags;
         }
 
-        
+
     }
 }

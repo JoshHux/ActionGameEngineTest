@@ -14,26 +14,18 @@ namespace ActionGameEngine.Data
         public Fix64 mass;
         [Newtonsoft.Json.JsonProperty]
         [UnityEngine.SerializeField]
-        private Fix64 friction;
+        public Fix64 friction;
         [Newtonsoft.Json.JsonProperty]
         [UnityEngine.SerializeField]
-        private FVector2 maxVelocity;
+        public FVector2 maxVelocity;
         [Newtonsoft.Json.JsonProperty]
         [UnityEngine.SerializeField]
-        private FVector2 acceleration;
+        public FVector2 acceleration;
 
         [Newtonsoft.Json.JsonProperty]
         [UnityEngine.SerializeField]
-        private StateListWrapper stateList;
+        public StateListWrapper stateList;
         public CommandList moveList;
-
-        public Fix64 GetFriction() { return friction; }
-        public Fix64 GetForwardsAccel() { return acceleration.x; }
-        public Fix64 GetSideAccel() { return acceleration.x; }
-        public Fix64 GetBackAccel() { return acceleration.x; }
-        public Fix64 GetMaxForwardsVel() { return maxVelocity.x; }
-        public Fix64 GetMaxSideVel() { return maxVelocity.x; }
-        public Fix64 GetMaxBackVel() { return maxVelocity.x; }
 
         public CharacterData(int mhp, Fix64 m, Fix64 f, FVector2 mv, FVector2 a, StateListWrapper sl, CommandList cl)
         {

@@ -17,13 +17,14 @@ namespace ActionGameEngine.Input
         public bool Check(RecorderElement[] playerInputs)
         {
             int len = commandInput.Length;
+            int lenNested = playerInputs.Length;
             //if there are no elements to check, just pass it
-            if (len > 0)
+            if (len > 0 && lenNested > 0)
             {
                 int pos = 0;
-                int lenNested = playerInputs.Length;
                 for (int j = 0; j < len; j++)
                 {
+                    int totalFramesPassed = 0;
                     InputFragment frag = commandInput[j];
                     InputFlags persisFlags = frag.flags;
 
@@ -32,6 +33,23 @@ namespace ActionGameEngine.Input
                     {
                         RecorderElement input = playerInputs[i];
                         InputFragment inputFrag = input.frag;
+                        totalFramesPassed += input.framesHeld;
+
+                        //special case where we only want to look at the currently held inputs by the player
+                        //only check the first element if we don't have any flags
+                        //in this case, we want to check the current inputs the player is pressing
+                        if (i == 0 && j == 0 && frag.flags == 0)
+                        {
+                            //UnityEngine.Debug.Log("pass currently held items");
+                            return frag.Check(inputFrag);
+                        }
+
+                        if (totalFramesPassed > 10)
+                        {
+                            //UnityEngine.Debug.Log("too many frames passed");
+                            return false;
+                        }
+                        //UnityEngine.Debug.Log(inputFrag.flags + " -- " + inputFrag.inputItem.m_rawValue);
 
 
                         //if there are any flags where we would want to rewind back in time to add leniency or make sure is correct
@@ -135,6 +153,8 @@ namespace ActionGameEngine.Input
                         //check the flag to see if it checks out
                         if (frag.Check(inputFrag))
                         {
+                            //UnityEngine.Debug.Log(inputFrag.inputItem.m_rawValue + " " + frag.inputItem.m_rawValue);
+
                             //next starting position of the player's inputs
                             pos = i;
                             //breaks out of nested loop only
@@ -147,6 +167,8 @@ namespace ActionGameEngine.Input
                         {
                             return false;
                         }
+
+                        //only reached if we didn't find a matching input
                     }
 
                 }

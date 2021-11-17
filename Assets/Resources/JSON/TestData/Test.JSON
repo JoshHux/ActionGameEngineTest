@@ -1,0 +1,96 @@
+{
+  "maxHp": 500,
+  "mass": {
+    "m_rawValue": 4294967296
+  },
+  "friction": {
+    "m_rawValue": 4294967296
+  },
+  "maxVelocity": {
+    "x": {
+      "m_rawValue": 42949672960
+    },
+    "y": {
+      "m_rawValue": 42949672960
+    }
+  },
+  "acceleration": {
+    "x": {
+      "m_rawValue": 4294967296
+    },
+    "y": {
+      "m_rawValue": 4294967296
+    }
+  },
+  "stateList": {
+    "stateList": [
+      {
+        "stateID": 0,
+        "parentID": 0,
+        "duration": 0,
+        "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 2,
+            "cmdMotion": {
+              "commandInput": [
+                {
+                  "inputItem": {
+                    "m_rawValue": 2
+                  },
+                  "flags": 0
+                }
+              ]
+            },
+            "cancelConditions": 0,
+            "transitionFlag": 0,
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [],
+        "animName": "a"
+      },
+      {
+        "stateID": 1,
+        "parentID": 0,
+        "duration": 0,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
+        "cancelConditions": 0,
+        "transitions": [],
+        "frames": [],
+        "animName": "a"
+      },
+      {
+        "stateID": 2,
+        "parentID": 0,
+        "duration": 0,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION, CAN_WALK",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": [
+                {
+                  "inputItem": {
+                    "m_rawValue": 2
+                  },
+                  "flags": "RELEASED"
+                }
+              ]
+            },
+            "cancelConditions": 0,
+            "transitionFlag": 0,
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [],
+        "animName": "a"
+      }
+    ]
+  },
+  "moveList": {
+    "command": []
+  }
+}

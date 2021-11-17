@@ -1,8 +1,9 @@
+using System;
 
 namespace FixMath.NET
 {
     [System.Serializable]
-    public struct FVector3
+    public struct FVector3 : IEquatable<FVector3>
     {
 
         public Fix64 x;
@@ -80,9 +81,40 @@ namespace FixMath.NET
             return new FVector3(-a.x, -a.y, -a.z);
         }
 
+
+        public static bool operator ==(FVector3 a, FVector3 b)
+        {
+            bool matchX = a.x == b.x;
+            bool matchY = a.y == b.y;
+            bool matchZ = a.z == b.z;
+            bool ret = matchX && matchY && matchZ;
+            return ret;
+        }
+
+        public static bool operator !=(FVector3 a, FVector3 b)
+        {
+            bool matchX = a.x != b.x;
+            bool matchY = a.y != b.y;
+            bool matchZ = a.z != b.z;
+            bool ret = matchX || matchY || matchZ;
+            return ret;
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            return (obj is FVector3) && (((FVector3)obj) == this);
+        }
+
         public override int GetHashCode()
         {
             return x.GetHashCode() << 64 | y.GetHashCode() << 32 | z.GetHashCode();
+        }
+
+
+        public bool Equals(FVector3 other)
+        {
+            return other == this;
         }
 
     }

@@ -30,7 +30,14 @@ public abstract class VelcroBody : MonoBehaviour
     [SerializeField] protected bool lockRotation = false;
     public Body parent;
 
-    public FVector2 Velocity { get { return _rb.LinearVelocity; } set { _rb.LinearVelocity = value; } }
+    public FVector2 Velocity
+    {
+        get { return _rb.LinearVelocity; }
+        set
+        {
+            _rb.LinearVelocity = value;
+        }
+    }
     public FVector2 Position { get { return _rb.Position; } set { _rb.SetVTransformIgnoreContacts(ref value, 0); } }
     public FVector2 LocalPosition
     {
@@ -97,7 +104,7 @@ public abstract class VelcroBody : MonoBehaviour
         {
             //this.transform.localPosition = this.LocalPosition;
             this.transform.position = new Vector2((float)_rb.Position.x, (float)_rb.Position.y);
-            this.transform.rotation = Quaternion.Euler(0f,0, (float)(_rb.Rotation * FixedMath.Rad2Deg));
+            this.transform.rotation = Quaternion.Euler(0f, 0, (float)(_rb.Rotation * FixedMath.Rad2Deg));
         }
     }
 

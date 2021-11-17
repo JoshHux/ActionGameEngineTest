@@ -501,7 +501,7 @@ public class AnimationReader : MonoBehaviour
         Quaternion curRot = obj.localRotation;
         Quaternion newRot = new Quaternion((float)delta.x + curRot.x, (float)delta.y + curRot.y, (float)delta.z + curRot.z, (float)delta.w + curRot.w);
         obj.localRotation = newRot;
-        Debug.Log(obj.localRotation + " : " + newRot + " | " + obj.gameObject.name + " " + index);
+        //Debug.Log(obj.localRotation + " : " + newRot + " | " + obj.gameObject.name + " " + index);
         int len = obj.childCount;
         int childIndex = index;
         if (len > 0)

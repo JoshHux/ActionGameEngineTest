@@ -52,8 +52,18 @@ namespace ActionGameEngine.Input
 
         public RecorderElement[] GetInputArray()
         {
-            RecorderElement[] ret = new RecorderElement[inputChanges.Count];
+            RecorderElement[] ret = new RecorderElement[inputChanges.Count + 1];
+            //buffers the current element as the first item, so we can check the current state directly
             inputChanges.CopyTo(ret, 0);
+            System.Array.Reverse(ret);
+            ret[0] = new RecorderElement(prevItem);
+            /*string thing = "";
+            foreach (var item in ret)
+            {
+                thing += " , " + item.frag.flags + " " + item.frag.inputItem.m_rawValue + " " + item.framesHeld;
+            }
+            UnityEngine.Debug.Log(thing);
+            */
             return ret;
         }
 
@@ -69,6 +79,8 @@ namespace ActionGameEngine.Input
                 //if there is anything to buffer
                 if (!released.IsEmpty())
                 {
+                    //UnityEngine.Debug.Log("released :: " + prevItem.m_rawValue + " " + newItem.m_rawValue + " " + released.frag.inputItem.m_rawValue);
+
                     released.frag.flags |= InputFlags.RELEASED;
                     this.BufferElement(released);
                 }
@@ -77,7 +89,10 @@ namespace ActionGameEngine.Input
                 //if there is anything to buffer
                 if (!pressed.IsEmpty())
                 {
+                    //UnityEngine.Debug.Log(prevItem.m_rawValue + " " + newItem.m_rawValue + " " + pressed.frag.inputItem.m_rawValue);
+
                     pressed.frag.flags |= InputFlags.PRESSED;
+                    //UnityEngine.Debug.Log(pressed.frag.inputItem.m_rawValue);
                     this.BufferElement(pressed);
                 }
 
@@ -89,6 +104,11 @@ namespace ActionGameEngine.Input
         //responsible for buffering element
         private void BufferElement(RecorderElement newElem)
         {
+            //don't keep any invalid items
+            if (inputChanges.First.Value.frag.inputItem.m_rawValue == 0)
+            {
+                inputChanges.RemoveFirst();
+            }
             if (inputChanges.Count >= maxLen)
             {
                 //if there are too many elements, just remove the first element (represents the oldest input)

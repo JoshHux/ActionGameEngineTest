@@ -17,11 +17,12 @@
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
 */
-
+using System;
+using Newtonsoft.Json;
 namespace FixMath.NET
 {
-    [System.Serializable]
-    public struct FVector2
+    [Serializable]
+    public struct FVector2 : IEquatable<FVector2>
     {
         public static FVector2 zero { get { return new FVector2(Fix64.Zero, Fix64.Zero); } }
         public static FVector2 one { get { return new FVector2(Fix64.One, Fix64.One); } }
@@ -31,9 +32,12 @@ namespace FixMath.NET
             return (a.x * b.x) + (a.y * b.y);
         }
 
-        public readonly Fix64 x;
-        public readonly Fix64 y;
+        //public readonly Fix64 x;
+        //public readonly Fix64 y;
 
+        public Fix64 x;
+        public Fix64 y;
+        [JsonIgnore]
         public Fix64 sqrMagnitude
         {
             get
@@ -42,6 +46,7 @@ namespace FixMath.NET
             }
         }
 
+        [JsonIgnore]
         public Fix64 magnitude
         {
             get
@@ -50,6 +55,7 @@ namespace FixMath.NET
             }
         }
 
+        [JsonIgnore]
         public FVector2 normalized
         {
             get
@@ -165,7 +171,12 @@ namespace FixMath.NET
 
         public override int GetHashCode()
         {
-            return x.GetHashCode()<<32|y.GetHashCode();
+            return x.GetHashCode() << 32 | y.GetHashCode();
+        }
+
+        public bool Equals(FVector2 other)
+        {
+            return other == this;
         }
     }
 }

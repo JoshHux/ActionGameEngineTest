@@ -21,7 +21,7 @@ namespace ActionGameEngine.Input
 
         public bool IsEmpty()
         {
-            return item.m_rawValue != 0;
+            return item.m_rawValue == 0;
         }
     }
 }

@@ -17,9 +17,9 @@ namespace ActionGameEngine
         //overall data about our character, stuff like all states and movelist
         protected CharacterData data;
         //rigidbody that we will use to move around and collide with the environment
-        //protected VolatileBody rb;
+        protected VelcroBody rb;
         //current status about the character, state, persistent state conditions, current hp, etc.
-        protected CharacterStatus status;
+        [UnityEngine.SerializeField] protected CharacterStatus status;
 
         //hitstop timer
         protected CallbackTimer stopTimer;
@@ -28,7 +28,7 @@ namespace ActionGameEngine
         //timer that keeps track of whether or not we get rid of persistent state conditions
         protected CallbackTimer persistentTimer;
         //velocity calculated that we will apply to our rigidbody
-        protected FVector2 calcVel;
+        [UnityEngine.SerializeField] protected FVector2 calcVel;
         //for things such as setting velocity, makes sure that that velocity is always being applied
         protected FVector2 storedVel;
 
@@ -49,14 +49,14 @@ namespace ActionGameEngine
             stateTimer.OnEnd += ctx => status.AddTransitionFlags(TransitionFlag.STATE_END);
             persistentTimer.OnEnd += ctx => ResetPersistentConditions();
 
-            AssignNewState(0);
         }
 
         protected override void OnStart()
         {
             base.OnStart();
-            //rb = this.GetComponent<VolatileBody>();
+            rb = this.GetComponent<VelcroBody>();
             _renderer = this.GetComponent<RendererBehavior>();
+            AssignNewState(0);
         }
 
         protected override void StateUpdate()
@@ -91,7 +91,9 @@ namespace ActionGameEngine
             //get the current state conditions
             StateCondition curCond = status.GetStateConditions();
             ProcessStateData(curCond);
-            //rb.velocity = calcVel;
+            //set the rgidbody's velocity to the new calculated value
+            rb.Velocity = calcVel;
+
         }
 
 
@@ -218,7 +220,7 @@ namespace ActionGameEngine
             //apply gravity based on mass, clamps to max fall speed if exceeded
             if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.APPLY_GRAV))
             {
-                calcVel = new FVector2(calcVel.x, GameplayHelper.ApplyAcceleration(calcVel.y, -data.mass, -GameplayHelper.TerminalVel));
+                calcVel = new FVector2(calcVel.x, GameplayHelper.ApplyAcceleration(calcVel.y, -data.mass, -data.maxVelocity.y));
             }
 
             //apply friction in corresponding direction
@@ -226,9 +228,9 @@ namespace ActionGameEngine
             {
                 FVector2 topDownVel = new FVector2(calcVel.x, 0);
 
-                Fix64 friction = data.GetFriction();
+                Fix64 friction = data.friction;
                 if ((topDownVel.magnitude - friction) < 0)
-                { calcVel = FVector2.zero; }
+                { calcVel = new FVector2(0, calcVel.y); }
                 else
                 { calcVel -= (topDownVel.normalized * friction); }
             }
