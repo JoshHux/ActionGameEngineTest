@@ -1935,17 +1935,8 @@ MonoBehaviour:
         parentID: 0
         duration: 0
         stateConditions: 13
-        cancelConditions: 0
+        cancelConditions: 268435461
         transitions:
-        - targetState: 2
-          cmdMotion:
-            commandInput:
-            - inputItem:
-                m_rawValue: 2
-              flags: 0
-          cancelConditions: 0
-          transitionFlag: 0
-          transitionEvent: 0
         - targetState: 3
           cmdMotion:
             commandInput:
@@ -1955,44 +1946,74 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
+        - targetState: 2
+          cmdMotion:
+            commandInput:
+            - inputItem:
+                m_rawValue: 2
+              flags: 0
+          cancelConditions: 0
+          transitionFlag: 0
+          transitionEvent: 0
+        - targetState: 1
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 2
+          transitionEvent: 0
         frames: []
-        animName: a
+        animName: idle
       - stateID: 1
-        parentID: 0
+        parentID: 1
         duration: 0
-        stateConditions: 12
-        cancelConditions: 0
-        transitions: []
+        stateConditions: 6
+        cancelConditions: 2
+        transitions:
+        - targetState: 0
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 1
+          transitionEvent: 0
         frames: []
-        animName: a
+        animName: airborne
       - stateID: 2
         parentID: 0
         duration: 0
-        stateConditions: 524300
-        cancelConditions: 0
+        stateConditions: 1074266117
+        cancelConditions: 5
         transitions:
         - targetState: 0
           cmdMotion:
             commandInput:
             - inputItem:
                 m_rawValue: 2
-              flags: 2
+              flags: 96
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
         frames: []
-        animName: a
+        animName: walk
       - stateID: 3
         parentID: 0
         duration: 5
-        stateConditions: 0
-        cancelConditions: 0
+        stateConditions: 1073741837
+        cancelConditions: 4
         transitions:
         - targetState: 0
           cmdMotion:
             commandInput: []
           cancelConditions: 0
           transitionFlag: 8
+          transitionEvent: 0
+        - targetState: 0
+          cmdMotion:
+            commandInput:
+            - inputItem:
+                m_rawValue: 3
+              flags: 32
+          cancelConditions: 0
+          transitionFlag: 0
           transitionEvent: 0
         frames:
         - atFrame: 4
@@ -2010,9 +2031,88 @@ MonoBehaviour:
               m_rawValue: 0
           hitboxes: []
           hurtboxes: []
-        animName: a
+        animName: turnaround
+      - stateID: 4
+        parentID: 1
+        duration: 5
+        stateConditions: 536870916
+        cancelConditions: 0
+        transitions:
+        - targetState: 5
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 8
+          transitionEvent: 0
+        frames: []
+        animName: prejump
+      - stateID: 5
+        parentID: 1
+        duration: 5
+        stateConditions: 1610612736
+        cancelConditions: 0
+        transitions:
+        - targetState: 1
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 8
+          transitionEvent: 0
+        frames:
+        - atFrame: 0
+          toggleStateConditions: 0
+          toggleCancelConditions: 0
+          timerEvent:
+            TimerDuration: 0
+            conditions: 0
+            isPersistent: 0
+          flags: 1
+          frameVelocity:
+            x:
+              m_rawValue: 0
+            y:
+              m_rawValue: 42949672960
+          hitboxes: []
+          hurtboxes: []
+        animName: neutraljump
+      - stateID: 6
+        parentID: 6
+        duration: 0
+        stateConditions: 0
+        cancelConditions: 0
+        transitions: []
+        frames: []
+        animName: 
+      - stateID: 7
+        parentID: 6
+        duration: 26
+        stateConditions: 12
+        cancelConditions: 0
+        transitions:
+        - targetState: 0
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 8
+          transitionEvent: 0
+        frames: []
+        animName: strike
     moveList:
-      command: []
+      command:
+      - targetState: 4
+        cancelConditions: 5
+        cmdMotion:
+          commandInput:
+          - inputItem:
+              m_rawValue: 1024
+            flags: 1
+      - targetState: 7
+        cancelConditions: 268435457
+        cmdMotion:
+          commandInput:
+          - inputItem:
+              m_rawValue: 256
+            flags: 1
   fromSave:
     maxHp: 0
     mass:

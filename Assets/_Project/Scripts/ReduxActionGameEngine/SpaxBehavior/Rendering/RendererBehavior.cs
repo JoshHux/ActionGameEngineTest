@@ -17,6 +17,7 @@ namespace ActionGameEngine
                 SpaxManager manager = managers[0];
                 if (manager != null)
                 {
+                    manager.PreRender += (() => PreRenderUpdate());
                     manager.RenderUpdate += (() => RenderUpdate());
                     //Debug.Log("starting: " + gameObject.name);
                 }
@@ -25,7 +26,7 @@ namespace ActionGameEngine
 
         public void AssignHelper(RendererHelper help)
         {
-            help = helper;
+            helper = help;
         }
 
         protected abstract void PreRenderUpdate();

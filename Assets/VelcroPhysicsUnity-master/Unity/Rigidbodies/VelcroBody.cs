@@ -38,7 +38,7 @@ public abstract class VelcroBody : MonoBehaviour
             _rb.LinearVelocity = value;
         }
     }
-    public FVector2 Position { get { return _rb.Position; } set { _rb.SetVTransformIgnoreContacts(ref value, 0); } }
+    public FVector2 Position { get { return _rb.Position; } set { _rb.SetVTransform(ref value, 0); } }
     public FVector2 LocalPosition
     {
         get
@@ -95,7 +95,9 @@ public abstract class VelcroBody : MonoBehaviour
         //set the collision layer
         Category layer = (Category)(1 << (this.gameObject.layer));
         _rb.CollisionCategories = layer;
-        _rb.IgnoreCCDWith = (Category)VelcroWorld.instance.GetCollisions(this.gameObject.layer);
+        //_rb.IgnoreCCDWith = (Category)VelcroWorld.instance.GetCollisions(this.gameObject.layer);
+        _rb.CollidesWith = VelcroWorld.instance.GetCollisions(this.gameObject.layer);
+        //Debug.Log(this.gameObject.name + ": " + this.gameObject.layer + " results in category : " + _rb.FixtureList[0]._collisionCategories + ", collides with : " + _rb.FixtureList[0]._collidesWith);
     }
 
     void Update()

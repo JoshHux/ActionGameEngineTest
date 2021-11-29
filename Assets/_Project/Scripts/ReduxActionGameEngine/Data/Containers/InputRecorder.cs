@@ -29,7 +29,8 @@ namespace ActionGameEngine.Input
         {
 
             bool ret = false;
-
+            //if (newInput.m_rawValue > 0)
+            //    UnityEngine.Debug.Log(prevItem.m_rawValue + " " + newInput.m_rawValue);
             //do we need to buffer change?
             if (prevItem != newInput)
             {

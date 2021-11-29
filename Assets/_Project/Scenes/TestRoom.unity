@@ -248,6 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd7e928378ddada488d009e471f5b4cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastKnownFacing: 1
 --- !u!114 &203000870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,6 +302,8 @@ MonoBehaviour:
     currentHp: 0
     currentArmorHits: 0
     facing: 0
+    currentTransitionFlags: 0
+    checkState: 0
   calcVel:
     x:
       m_rawValue: 0
@@ -309,7 +312,7 @@ MonoBehaviour:
   fromPlayer:
     m_rawValue: 0
   actions: {fileID: -944628639613478452, guid: 8c47bb0ab1ab45e418c7916162600bc4, type: 3}
-  path: /Resources/JSON/TestData/Test.json
+  path: Assets/Resources/JSON/TestData/Test.json
 --- !u!1 &224830393
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +324,7 @@ GameObject:
   - component: {fileID: 224830394}
   - component: {fileID: 224830395}
   - component: {fileID: 224830396}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -829,7 +832,7 @@ MonoBehaviour:
   _height:
     m_rawValue: 4294967296
   _width:
-    m_rawValue: 4294967296
+    m_rawValue: 17179869184
 --- !u!1 &1083849213
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,6 +936,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1188289079}
   - component: {fileID: 1188289080}
+  - component: {fileID: 1188289081}
   m_Layer: 9
   m_Name: GroundedTrigger
   m_TagString: Untagged
@@ -947,7 +951,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1188289078}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -976,6 +980,18 @@ MonoBehaviour:
     m_rawValue: 4294967296
   _width:
     m_rawValue: 4294967296
+--- !u!114 &1188289081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188289078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237a7009e67a9fe479346bed3ff430dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1246150364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,7 +1381,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502120536}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.2099991, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1188289079}
@@ -1382,7 +1398,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1727474743}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Environment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3070,3 +3086,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae50308ca00affc448a1d22529d9af03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionMatrix: 

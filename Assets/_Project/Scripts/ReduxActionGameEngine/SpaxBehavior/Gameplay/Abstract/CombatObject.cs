@@ -35,14 +35,14 @@ namespace ActionGameEngine.Gameplay
                     indicator = box.QueryHitboxCollisions();
                     HitboxData potenBoxData = box.GetHitboxData();
                     //record hitbox for later if attack connectes
-                    if ((potenBoxData.priority > boxData.priority) && (!EnumHelper.HasEnum((int)indicator, (int)HitIndicator.WHIFFED)))
+                    if ((potenBoxData.priority > boxData.priority) && (!EnumHelper.HasEnum((uint)indicator, (int)HitIndicator.WHIFFED)))
                     { boxData = box.GetHitboxData(); }
                 }
             }
 
             //we connected with a hitbox
             //aka. we didn't whiff
-            if (!EnumHelper.HasEnum((int)indicator, (int)HitIndicator.WHIFFED))
+            if (!EnumHelper.HasEnum((uint)indicator, (int)HitIndicator.WHIFFED))
             {
                 status.AddCancelConditions(boxData.GetCancelConditions(indicator));
             }
@@ -61,9 +61,9 @@ namespace ActionGameEngine.Gameplay
             base.ProcessTransitionEvents(te);
 
             //deactivate our active hitboxes
-            if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.CLEAN_HITBOXES)) { this.DeactivateHitboxes(); }
+            if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.CLEAN_HITBOXES)) { this.DeactivateHitboxes(); }
             //we may want other enemy to block
-            if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.FLAG_BLOCK)) { this.FlagBlockToOthers(); }
+            if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.FLAG_BLOCK)) { this.FlagBlockToOthers(); }
         }
 
 

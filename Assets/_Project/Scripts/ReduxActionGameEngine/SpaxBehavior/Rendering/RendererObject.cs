@@ -4,13 +4,15 @@ namespace ActionGameEngine.Rendering
     public class RendererObject : RendererBehavior
     {
         private Animator animator;
-        private int lastKnownFacing = 1;
+        [SerializeField] private int lastKnownFacing = 1;
 
         protected override void OnStart()
         {
             base.OnStart();
             GameObject anim = ObjectFinder.FindChildWithTag(this.gameObject, "Rendering");
             animator = anim.GetComponentInChildren<Animator>();
+            lastKnownFacing = 1;
+            helper.facing = 1;
         }
 
         protected override void PreRenderUpdate()
@@ -20,7 +22,11 @@ namespace ActionGameEngine.Rendering
             Vector3 newScale = this.transform.localScale;
             newScale.x = newScale.x * facingDir;
 
+            //Debug.Log(helper.facing);
+
             this.transform.localScale = newScale;
+
+            lastKnownFacing = helper.facing;
         }
 
         protected override void RenderUpdate()

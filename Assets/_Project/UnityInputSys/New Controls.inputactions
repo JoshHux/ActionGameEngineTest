@@ -6,17 +6,49 @@
             "id": "208adfb1-aa48-4321-b860-8a018e2004e0",
             "actions": [
                 {
-                    "name": "Forwards",
+                    "name": "Direction",
+                    "type": "Value",
+                    "id": "c7ed705a-d032-47d0-b6fd-b7621c0b1d9e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Punch",
                     "type": "Button",
-                    "id": "a50ad648-3357-4a81-833d-68f3492a58ab",
+                    "id": "83702c10-ae4e-4bd2-b0ff-ccc4fd1bc9b0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
                 {
-                    "name": "Backwards",
+                    "name": "Kick",
                     "type": "Button",
-                    "id": "99a6acb1-30ee-4736-88d9-7085852c91f7",
+                    "id": "a3e8de3c-0ea3-4eae-ab98-20e4f8895e2c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Slash",
+                    "type": "Button",
+                    "id": "4e89d383-c9e1-4554-87c2-f860c3a6714c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Dust",
+                    "type": "Button",
+                    "id": "12bc5104-5a0d-479e-bf45-a844b32cb604",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "4c333ec4-cd69-45e2-a6b7-0e0ce2046606",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -24,24 +56,112 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "0b5cc24f-20ba-40b7-80d3-55a081ea2b1c",
+                    "name": "2D Vector",
+                    "id": "f407d213-1982-4310-a209-5b2014daac09",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Direction",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "5d995614-7367-4ca2-b74b-8c8c448e6f12",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "7607a2f3-d159-4c43-879d-c69aefa4f940",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "c263b215-1ef9-4dc3-874e-4d50d23c47fc",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "35c8618e-c84d-4280-b70a-66d86c045fb6",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Forwards",
+                    "action": "Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e9648e88-34ec-4af0-a38b-7ad73c3c6b2e",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Punch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "083c7b53-32db-44be-8c9a-cb0af66a567d",
-                    "path": "<Keyboard>/a",
+                    "id": "4a48e29e-1e21-42fa-9ce2-570c2c5c08e3",
+                    "path": "<Keyboard>/k",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Backwards",
+                    "action": "Kick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "56d4937e-f196-4313-900e-9cb79564fa0b",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Slash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b022a629-f59d-4571-9e46-545bb2bc2558",
+                    "path": "<Keyboard>/semicolon",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dust",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d686fdfe-febb-48a3-b2a6-a84ac2346add",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

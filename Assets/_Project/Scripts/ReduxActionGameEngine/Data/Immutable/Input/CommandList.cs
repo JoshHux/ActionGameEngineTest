@@ -16,13 +16,13 @@ namespace ActionGameEngine.Data
         }
 
         //-1 if state is not found
-        public int Check(RecorderElement[] playerInputs, CancelConditions cond)
+        public int Check(RecorderElement[] playerInputs, CancelConditions cond, int facing)
         {
             int len = command.Length;
             for (int i = 0; i < len; i++)
             {
                 MotionTransition cmd = command[i];
-                bool found = cmd.Check(playerInputs, cond);
+                bool found = cmd.Check(playerInputs, cond, facing);
                 if (found)
                 {
                     return cmd.targetState;

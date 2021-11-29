@@ -79,9 +79,9 @@ namespace ActionGameEngine.Gameplay
         protected void AddPotentialHitbox(int attackerID, HitboxData boxData, HitIndicator indicator)
         {
             //last hitbox grabbed us
-            bool justGrabbed = EnumHelper.HasEnum((int)indicator, 16);
+            bool justGrabbed = EnumHelper.HasEnum((uint)indicator, 16);
             //we were hit by a grab hitbox
-            bool wasGrabbed = EnumHelper.HasEnum((int)hitIndicator, 16);
+            bool wasGrabbed = EnumHelper.HasEnum((uint)hitIndicator, 16);
             //if we get grabbed, ignore every other hitbox
             if ((!wasGrabbed) || justGrabbed)
             {

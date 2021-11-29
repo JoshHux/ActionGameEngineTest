@@ -25,6 +25,6 @@ public class ParentConstraint
     {
         FVector2 newPos = childOffset + parent.Position;
         Fix64 newRot = childRotation + parent.Rotation;
-        child.SetVTransformIgnoreContacts(ref newPos, newRot);
+        child.SetVTransform(ref newPos, newRot);
     }
 }

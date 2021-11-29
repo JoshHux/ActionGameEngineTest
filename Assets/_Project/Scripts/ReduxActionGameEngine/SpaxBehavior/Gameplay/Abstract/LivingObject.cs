@@ -54,26 +54,34 @@ namespace ActionGameEngine
         protected override void OnStart()
         {
             base.OnStart();
+            //get the necessary components for gameplay
             rb = this.GetComponent<VelcroBody>();
             _renderer = this.GetComponent<RendererBehavior>();
+            //set the facing direction
             status.facing = 1;
+            helper.facing = 1;
             AssignNewState(0);
+            //set correct status values
+            //by default, the player should have the airborne flag
+            //COMES AFTER DEFAULT STATE ASSIGNMENT -> this is so that our flags aren't over
+            status.AddTransitionFlags(TransitionFlag.AIRBORNE);
         }
 
         protected override void StateUpdate()
         {
             //recordthe vlocity to do
-            //calcVel = rb.velocity;
+            calcVel = rb.Velocity;
             status.SetInHitstop(stopTimer.TickTimer());
 
             //if not in Hitstop, tick the gameplay state timers
             if (!status.GetInHitstop())
             {
                 stateTimer.TickTimer();
+                //UnityEngine.Debug.Log("time elapsed in state :: " + stateTimer.GetTimeElapsed());
                 persistentTimer.TickTimer();
 
                 //check new state because of whatever reason
-                if (status.GetCheckState())
+                if (status.checkState)
                 {
                     TryTransitionState();
                 }
@@ -174,9 +182,11 @@ namespace ActionGameEngine
             status.SetNewState(newState);
             status.SetNewStateConditions(data.GetConditionsFromState(newStateID));
             status.SetNewCancelConditions(newState.cancelConditions);
+            //status.SetNewTransitionFlags(0);
+            status.RemoveTransitionFlags(TransitionFlag.STATE_END);
 
             //reset state timer
-            stateTimer.SetTime(newState.duration);
+            stateTimer.StartTimer(newState.duration);
 
             //tell helper about the new state
             helper.newState = true;
@@ -205,7 +215,7 @@ namespace ActionGameEngine
         protected virtual void TryTransitionState()
         {
             //get a transition, valid if we found a new state to transition to
-            TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), status.GetCancelConditions(), status.GetTransitionFlags());
+            TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), status.GetCancelConditions(), status.GetTransitionFlags(), status.facing);
             if (transition.IsValid())
             {
                 int newStateID = transition.targetState;
@@ -214,18 +224,22 @@ namespace ActionGameEngine
                 //process the TransitionEvent flags that are set
                 ProcessTransitionEvents(transition.transitionEvent);
             }
+            else
+            {
+                status.checkState = false;
+            }
         }
 
         protected virtual void ProcessStateData(StateCondition curCond)
         {
             //apply gravity based on mass, clamps to max fall speed if exceeded
-            if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.APPLY_GRAV))
+            if (EnumHelper.HasEnum((uint)curCond, (int)StateCondition.APPLY_GRAV))
             {
                 calcVel = new FVector2(calcVel.x, GameplayHelper.ApplyAcceleration(calcVel.y, -data.mass, -data.maxVelocity.y));
             }
 
             //apply friction in corresponding direction
-            if (EnumHelper.HasEnum((int)curCond, (int)StateCondition.APPLY_FRICTION))
+            if (EnumHelper.HasEnum((uint)curCond, (int)StateCondition.APPLY_FRICTION))
             {
                 FVector2 topDownVel = new FVector2(calcVel.x, 0);
 
@@ -234,16 +248,17 @@ namespace ActionGameEngine
                 { calcVel = new FVector2(0, calcVel.y); }
                 else
                 { calcVel -= (topDownVel.normalized * friction); }
+                //UnityEngine.Debug.Log(calcVel.x);
             }
         }
 
         protected virtual void ProcessTransitionEvents(TransitionEvent transitionEvents)
         {
             TransitionEvent te = transitionEvents;
-            if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_VEL))
+            if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_VEL))
             {
-                if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_X_VEL)) { new FVector2(0, calcVel.y); }
-                if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_Y_VEL)) { new FVector2(calcVel.x, 0); }
+                if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_X_VEL)) { new FVector2(0, calcVel.y); }
+                if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_Y_VEL)) { new FVector2(calcVel.x, 0); }
                 //if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_Z_VEL)) { calcVel.x = 0; }
             }
         }
@@ -251,16 +266,16 @@ namespace ActionGameEngine
         protected virtual void ProcessFrameData(FrameData frame)
         {
 
-            if (EnumHelper.HasEnum((int)frame.flags, (int)FrameEventFlag.SET_TIMER))
+            if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_TIMER))
             {
                 TimerEvent evnt = frame.timerEvent;
                 persistentTimer.StartTimer(evnt.TimerDuration);
                 status.SetPersistenConditions(evnt.conditions);
             }
 
-            if (EnumHelper.HasEnum((int)frame.flags, (int)FrameEventFlag.APPLY_VEL))
+            if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.APPLY_VEL))
             {
-                if (EnumHelper.HasEnum((int)frame.flags, (int)FrameEventFlag.SET_VEL))
+                if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_VEL, true))
                 { calcVel = frame.frameVelocity; }
                 else
                 { calcVel += frame.frameVelocity; }

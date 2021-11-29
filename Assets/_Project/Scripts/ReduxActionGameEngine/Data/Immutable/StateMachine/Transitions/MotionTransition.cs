@@ -21,9 +21,9 @@ namespace ActionGameEngine.Data
             cmdMotion = cmd;
         }
 
-        public bool Check(RecorderElement[] playerInputs, CancelConditions playerCond)
+        public bool Check(RecorderElement[] playerInputs, CancelConditions playerCond, int facing)
         {
-            return EnumHelper.HasEnum((int)playerCond, (int)cancelConditions) && cmdMotion.Check(playerInputs);
+            return EnumHelper.HasEnum((uint)playerCond, (uint)cancelConditions) && cmdMotion.Check(playerInputs, facing);
         }
     }
 }

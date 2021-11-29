@@ -42,13 +42,13 @@ public class SpaxJSONSaver : MonoBehaviour
         //json = JsonUtility.ToJson(toSave, true);
         json = JsonConvert.SerializeObject(toSave, Formatting.Indented);
 
+
+        //System.IO.File.WriteAllText(Application.persistentDataPath + "/Assets/Resources/JSON/TestData/Test.json", json);
+        System.IO.File.WriteAllText(path, json);
         //refresh to correctly see the changes to json
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
 #endif
-        //System.IO.File.WriteAllText(Application.persistentDataPath + "/Assets/Resources/JSON/TestData/Test.json", json);
-        System.IO.File.WriteAllText(path, json);
-
         fromSave = LoadDataFromPath(path);
 
         prevInputs = new LinkedList<RecorderElement>();

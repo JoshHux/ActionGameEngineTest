@@ -70,7 +70,7 @@ namespace ActionGameEngine.Data
         }
 
         //returns the index of the transition if true, -1 otherwise
-        public int CheckTransitions(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond)
+        public int CheckTransitions(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond, int facing)
         {
             int len = transitions.Length;
 
@@ -80,7 +80,7 @@ namespace ActionGameEngine.Data
 
                 //UnityEngine.Debug.Log(transition.cmdMotion.commandInput[0].inputItem.m_rawValue + " " + transition.cmdMotion.commandInput[0].flags);
 
-                if (transition.Check(playerInputs, playerFlags, playerCond))
+                if (transition.Check(playerInputs, playerFlags, playerCond, facing))
                 {
                     return i;
                 }

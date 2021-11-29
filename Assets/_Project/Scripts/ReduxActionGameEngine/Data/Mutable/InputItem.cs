@@ -12,14 +12,14 @@ namespace ActionGameEngine.Input
         //1<<3 y val (8)
         //1<<4 x half (16)
         //1<<5 y half (32)
-        //1<<6 btn A (64)
-        //1<<7 btn B (128)
-        //1<<8 btn C (256)
-        //1<<9 btn D (512)
-        //1<<10 btn E (1024)
-        //1<<11 btn F (2048)
-        //1<<12 btn G (4096)
-        //1<<13 btn H (8192)
+        //1<<6 btn A (64) face west btn
+        //1<<7 btn B (128) face north btn
+        //1<<8 btn C (256) r1
+        //1<<9 btn D (512) r2
+        //1<<10 btn W (1024) face south btn
+        //1<<11 btn X (2048) face east btn
+        //1<<12 btn Y (4096) l1
+        //1<<13 btn Z (8192) l2
         //1<<14 btn start (16384)
         //1<<15 btn select (32768)
         public short m_rawValue;
@@ -35,24 +35,24 @@ namespace ActionGameEngine.Input
             m_rawValue = 0;
 
             //if has a nonzero x value
-            if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.X_NONZERO))
+            if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.X_NONZERO))
             {
                 m_rawValue |= 1 << 1;
                 //if x value is negative
                 //don't need else since we only change the bit when it's negative
-                if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.X_NEGATIVE))
+                if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.X_NEGATIVE))
                 {
                     m_rawValue |= 1 << 0;
                 }
             }
 
             //if has a nonzero y value
-            if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.Y_NONZERO))
+            if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.Y_NONZERO))
             {
                 m_rawValue |= 1 << 3;
                 //if y value is negative
                 //don't need else since we only change the bit when it's negative
-                if (EnumHelper.HasEnum((int)npt, (int)DigitalInput.Y_NEGATIVE))
+                if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.Y_NEGATIVE))
                 {
                     m_rawValue |= 1 << 2;
                 }
@@ -288,6 +288,49 @@ namespace ActionGameEngine.Input
 
             //xor the sign bit, flips 0 to 1 (pos to neg), flips 1 to 0 (neg to pos)
             m_rawValue ^= newSign;
+        }
+
+        public bool Check(InputItem other, bool read4way, bool checkNot, bool superStrict = false)
+        {
+            bool dirCheck = false;
+            bool btnCheck = false;
+            if (checkNot)
+            {
+                if (superStrict)
+                {
+                    dirCheck = ((other.m_rawValue & 0b0000000000111111) != (this.m_rawValue & 0b0000000000111111)) || ((this.m_rawValue & 0b0000000000111111) == 0);
+                    btnCheck = ((other.m_rawValue & 0b1111111111000000) != (this.m_rawValue & 0b1111111111000000)) || ((this.m_rawValue & 0b1111111111000000) == 0);
+                }
+                else
+                {
+                    dirCheck = (other.m_rawValue & this.m_rawValue) != this.m_rawValue;
+                    btnCheck = (other.m_rawValue & this.m_rawValue) != this.m_rawValue;
+                    //UnityEngine.Debug.Log(((other.m_rawValue & this.m_rawValue) != this.m_rawValue) + " | " + (other.m_rawValue & this.m_rawValue) + " " + this.m_rawValue);
+                }
+            }
+            else
+            {
+                if (read4way)
+                {
+                    dirCheck = ((this.X() * other.X()) > 0) || ((this.Y() * other.Y()) > 0);
+                }
+                else if (superStrict)
+                {
+                    dirCheck = (other.m_rawValue & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
+                }
+                else
+                {
+                    //strict match
+                    dirCheck = ((other.m_rawValue & this.m_rawValue) & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
+                }
+
+                btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
+            }
+
+            bool ret = dirCheck && btnCheck;
+
+            return ret;
+
         }
 
         public static bool operator ==(InputItem x, InputItem y)

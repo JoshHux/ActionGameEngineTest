@@ -29,8 +29,24 @@
         "parentID": 0,
         "duration": 0,
         "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION",
-        "cancelConditions": 0,
+        "cancelConditions": "JUMP, NORM_LV3",
         "transitions": [
+          {
+            "targetState": 3,
+            "cmdMotion": {
+              "commandInput": [
+                {
+                  "inputItem": {
+                    "m_rawValue": 3
+                  },
+                  "flags": 0
+                }
+              ]
+            },
+            "cancelConditions": 0,
+            "transitionFlag": 0,
+            "transitionEvent": 0
+          },
           {
             "targetState": 2,
             "cmdMotion": {
@@ -48,41 +64,44 @@
             "transitionEvent": 0
           },
           {
-            "targetState": 3,
+            "targetState": 1,
             "cmdMotion": {
-              "commandInput": [
-                {
-                  "inputItem": {
-                    "m_rawValue": 3
-                  },
-                  "flags": 0
-                }
-              ]
+              "commandInput": []
             },
             "cancelConditions": 0,
-            "transitionFlag": 0,
+            "transitionFlag": "AIRBORNE",
             "transitionEvent": 0
           }
         ],
         "frames": [],
-        "animName": "a"
+        "animName": "idle"
       },
       {
         "stateID": 1,
-        "parentID": 0,
+        "parentID": 1,
         "duration": 0,
-        "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
+        "stateConditions": "AIRBORNE, APPLY_GRAV",
         "cancelConditions": 0,
-        "transitions": [],
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "GROUNDED",
+            "transitionEvent": 0
+          }
+        ],
         "frames": [],
-        "animName": "a"
+        "animName": "airborne"
       },
       {
         "stateID": 2,
         "parentID": 0,
         "duration": 0,
-        "stateConditions": "APPLY_GRAV, APPLY_FRICTION, CAN_WALK",
-        "cancelConditions": 0,
+        "stateConditions": "GROUNDED, APPLY_GRAV, CAN_WALK, NO_PARENT_COND",
+        "cancelConditions": "JUMP",
         "transitions": [
           {
             "targetState": 0,
@@ -92,7 +111,7 @@
                   "inputItem": {
                     "m_rawValue": 2
                   },
-                  "flags": "RELEASED"
+                  "flags": "CHECK_IS_UP, STRICT"
                 }
               ]
             },
@@ -102,14 +121,14 @@
           }
         ],
         "frames": [],
-        "animName": "a"
+        "animName": "walk"
       },
       {
         "stateID": 3,
         "parentID": 0,
         "duration": 5,
-        "stateConditions": 0,
-        "cancelConditions": 0,
+        "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION, NO_PARENT_COND",
+        "cancelConditions": "JUMP",
         "transitions": [
           {
             "targetState": 0,
@@ -118,6 +137,22 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          },
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": [
+                {
+                  "inputItem": {
+                    "m_rawValue": 3
+                  },
+                  "flags": "CHECK_IS_UP"
+                }
+              ]
+            },
+            "cancelConditions": 0,
+            "transitionFlag": 0,
             "transitionEvent": 0
           }
         ],
@@ -144,11 +179,132 @@
             "hurtboxes": []
           }
         ],
-        "animName": "a"
+        "animName": "turnaround"
+      },
+      {
+        "stateID": 4,
+        "parentID": 1,
+        "duration": 5,
+        "stateConditions": "APPLY_GRAV, NO_PARENT_TRANS",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 5,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [],
+        "animName": "prejump"
+      },
+      {
+        "stateID": 5,
+        "parentID": 1,
+        "duration": 5,
+        "stateConditions": "NO_PARENT_TRANS, NO_PARENT_COND",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 1,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [
+          {
+            "atFrame": 0,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": "APPLY_VEL",
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 42949672960
+              }
+            },
+            "hitboxes": [],
+            "hurtboxes": []
+          }
+        ],
+        "animName": "neutraljump"
+      },
+      {
+        "stateID": 6,
+        "parentID": 6,
+        "duration": 0,
+        "stateConditions": 0,
+        "cancelConditions": 0,
+        "transitions": [],
+        "frames": [],
+        "animName": ""
+      },
+      {
+        "stateID": 7,
+        "parentID": 6,
+        "duration": 26,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [],
+        "animName": "strike"
       }
     ]
   },
   "moveList": {
-    "command": []
+    "command": [
+      {
+        "targetState": 4,
+        "cancelConditions": "JUMP",
+        "cmdMotion": {
+          "commandInput": [
+            {
+              "inputItem": {
+                "m_rawValue": 1024
+              },
+              "flags": "PRESSED"
+            }
+          ]
+        }
+      },
+      {
+        "targetState": 7,
+        "cancelConditions": "NORM_LV3",
+        "cmdMotion": {
+          "commandInput": [
+            {
+              "inputItem": {
+                "m_rawValue": 256
+              },
+              "flags": "PRESSED"
+            }
+          ]
+        }
+      }
+    ]
   }
 }

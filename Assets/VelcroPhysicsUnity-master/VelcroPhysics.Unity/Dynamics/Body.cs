@@ -737,6 +737,9 @@ namespace VelcroPhysics.Dynamics
         {
             SetVTransformIgnoreContacts(ref position, rotation);
 
+            //we need to set this to awake if we want collisions to be calculated
+            //after we vhange positions -Spax
+            if (!Awake) Awake = true;
             //Velcro: We check for new contacts after a body has been moved.
             _world.ContactManager.FindNewContacts();
         }

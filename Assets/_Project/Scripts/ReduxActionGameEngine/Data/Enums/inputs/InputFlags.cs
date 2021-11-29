@@ -15,10 +15,10 @@ namespace ActionGameEngine.Enum
         BTN_SIMUL_PRESS = 1 << 3,
         //there are no other 
         NO_INTERRUPT = 1 << 4,
-        HELD_10F = 1 << 5,
-        HELD_20F = 1 << 6,
+        CHECK_IS_UP = 1 << 5,
+        STRICT = 1 << 6,
         HELD_30F = 1 << 7,
-        HELD = HELD_10F | HELD_20F | HELD_30F,
+        HELD = HELD_30F,
         NEED_PREV = HELD | BTN_SIMUL_PRESS | NO_INTERRUPT,
 
     }

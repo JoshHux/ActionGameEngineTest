@@ -50,8 +50,9 @@ namespace ActionGameEngine.Data
             StateCondition ret = state.stateConditions;
 
             //recur to keep adding the parent's conditions if there is a parent
-            if (state.HasParent() && (stateID > -1))
+            if (state.HasParent() && (stateID > -1) && (!EnumHelper.HasEnum((uint)ret, (uint)StateCondition.NO_PARENT_COND)))
             {
+                //UnityEngine.Debug.Log(stateID + " " + (int)(ret & StateCondition.NO_PARENT_COND) + " " + ret);
                 ret |= this.GetConditionsFromState(state.parentID);
             }
 
@@ -60,33 +61,35 @@ namespace ActionGameEngine.Data
 
         //returns index of transition if true
         //version without input for non-controllable object
-        public TransitionData TryTransitionState(int fromState, CancelConditions playerCond, TransitionFlag playerFlags)
+        public TransitionData TryTransitionState(int fromState, CancelConditions playerCond, TransitionFlag playerFlags, int facing)
         {
             RecorderElement[] playerInputs = new RecorderElement[1];
-            return TryTransitionState(fromState, playerInputs, playerCond, playerFlags);
+            return TryTransitionState(fromState, playerInputs, playerCond, playerFlags, facing);
         }
 
         //returns index of transition if true
-        public TransitionData TryTransitionState(int fromState, RecorderElement[] playerInputs, CancelConditions playerCond, TransitionFlag playerFlags)
+        public TransitionData TryTransitionState(int fromState, RecorderElement[] playerInputs, CancelConditions playerCond, TransitionFlag playerFlags, int facing)
         {
             StateData state = stateList[fromState];
-            int check = state.CheckTransitions(playerInputs, playerFlags, playerCond);
+            int check = state.CheckTransitions(playerInputs, playerFlags, playerCond, facing);
 
+            //we found a valid transition, make final checks and prep data for player script to process
             if (check > -1)
             {
                 TransitionData potenTransition = state.GetTransitionFromIndex(check);
                 int potenStateID = potenTransition.targetState;
                 StateData potenState = stateList[potenStateID];
 
-                //check if it's a node state, if so, then check transitions on that
-                //we should NEVER return a transition TO a node state
+                //check if target state is a node state, if so, then check transitions in that state
+                //we should NEVER return a transition to a node state
                 if (potenState.IsNodeState())
                 {
-                    return TryTransitionState(potenStateID, playerInputs, playerCond, playerFlags);
+                    return TryTransitionState(potenStateID, playerInputs, playerCond, playerFlags, facing);
                 }
 
                 return potenTransition;
             }
+            //we didn't find a valid transition from the state's transitions
 
             //make invalid transition by setting the target state to -1
             TransitionData ret = new TransitionData();
@@ -94,6 +97,14 @@ namespace ActionGameEngine.Data
             return ret;
         }
 
+        public int TryMoveList(RecorderElement[] playerInputs, CancelConditions playerCond, int facing)
+        {
+            //search the movelist for a valid transition
+            //integer of the target state
+            int ret = moveList.Check(playerInputs, playerCond, facing);
 
+            return ret;
+
+        }
     }
 }

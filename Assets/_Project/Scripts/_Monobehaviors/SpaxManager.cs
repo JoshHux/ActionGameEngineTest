@@ -19,6 +19,7 @@ namespace Spax
         public delegate void RenderUpdateEventHandler();
         public delegate void SpaxUpdateEventHandler();
         public delegate void RenderPrepEventHandler();
+        public delegate void PreRenderEventHandler();
         public event InputUpdateEventHandler InputUpdate;
         public event StateUpdateEventHandler StateUpdate;
         public event StateCleanUpdateEventHandler StateCleanUpdate;
@@ -29,6 +30,7 @@ namespace Spax
         public event PostUpdateEventHandler PostUpdate;
         public event RenderUpdateEventHandler RenderUpdate;
         public event RenderPrepEventHandler PrepRender;
+        public event RenderPrepEventHandler PreRender;
         public event SpaxUpdateEventHandler SpaxUpdate;
 
         //for initializing the physics and filtering collisions
@@ -63,6 +65,7 @@ namespace Spax
         private void RendererUpdate()
         {
             PrepRender?.Invoke();
+            PreRender?.Invoke();
             RenderUpdate?.Invoke();
         }
 

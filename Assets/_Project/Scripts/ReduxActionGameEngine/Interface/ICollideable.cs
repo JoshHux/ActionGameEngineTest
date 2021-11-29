@@ -1,9 +1,10 @@
+using ActionGameEngine;
 
 namespace ActionGameEngine.Interfaces
 {
     public interface ICollideable
     {
-        void TriggerCollided(object sender);
-        void TriggerExitCollided(object sender);
+        void TriggerCollided(EnvironmentDetector sender);
+        void TriggerExitCollided(EnvironmentDetector sender);
     }
 }

@@ -32,13 +32,14 @@ namespace ActionGameEngine.Gameplay
 
         private void SetPaused(bool tf) { paused = tf; }
         public void PauseTimer() { this.SetPaused(true); }
-        public void PlayTimer() { this.SetPaused(false); }
+        public void PlayTimer() { this.SetPaused(timeRemaining == 0); }
 
         //returns true if timer is able to and does tick
         public bool TickTimer()
         {
             if (!paused)
             {
+                //UnityEngine.Debug.Log("ticked");
                 //ends if the time remaining is 0
                 //guarantees at least one tick if timer is set to 1
                 if (timeRemaining > 0)
@@ -73,7 +74,6 @@ namespace ActionGameEngine.Gameplay
         protected virtual void OnTimerEnd()
         {
             this.PauseTimer();
-            this.OnTimerEnd();
         }
 
     }

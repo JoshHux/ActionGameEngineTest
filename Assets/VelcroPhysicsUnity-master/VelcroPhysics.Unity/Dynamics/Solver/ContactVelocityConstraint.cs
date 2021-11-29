@@ -6,7 +6,7 @@ namespace VelcroPhysics.Dynamics.Solver
     public sealed class ContactVelocityConstraint
     {
         public int ContactIndex;
-        public Fix64 Friction;
+        public Fix64 Friction = 0;
         public int IndexA;
         public int IndexB;
         public Fix64 InvIA, InvIB;

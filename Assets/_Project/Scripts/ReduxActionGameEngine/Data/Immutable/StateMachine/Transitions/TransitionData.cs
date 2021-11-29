@@ -31,12 +31,12 @@ namespace ActionGameEngine.Data
             return targetState > -1;
         }
 
-        public bool Check(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond)
+        public bool Check(RecorderElement[] playerInputs, TransitionFlag playerFlags, CancelConditions playerCond, int facing)
         {
             //UnityEngine.Debug.Log(playerInputs[0].frag.inputItem.m_rawValue);
-            bool passCancelConditions = EnumHelper.HasEnum((int)playerCond, (int)cancelConditions, true);
-            bool passTransitionFlags = EnumHelper.HasEnum((int)playerFlags, (int)transitionFlag, true);
-            bool checkInput = cmdMotion.Check(playerInputs);
+            bool passCancelConditions = EnumHelper.HasEnum((uint)playerCond, (uint)cancelConditions, true);
+            bool passTransitionFlags = EnumHelper.HasEnum((uint)playerFlags, (uint)transitionFlag, true);
+            bool checkInput = cmdMotion.Check(playerInputs, facing);
             return passCancelConditions && passTransitionFlags && checkInput;
         }
 

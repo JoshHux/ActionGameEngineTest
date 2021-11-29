@@ -38,7 +38,7 @@ namespace ActionGameEngine.Data
 
         public CancelConditions GetCancelConditions(HitIndicator indicator)
         {
-            bool isCounterHit = EnumHelper.HasEnum((int)indicator, (int)HitIndicator.COUNTER_HIT);
+            bool isCounterHit = EnumHelper.HasEnum((uint)indicator, (uint)HitIndicator.COUNTER_HIT);
             if (isCounterHit)
             {
                 return counterHitCancel;
@@ -52,10 +52,10 @@ namespace ActionGameEngine.Data
         {
             AttackLevelVal val = GetAttackLevelVal();
             HitboxDataHolder ret = new HitboxDataHolder();
-            bool isGrounded = EnumHelper.HasEnum((int)indicator, (int)HitIndicator.GROUNDED);
-            bool isCrouching = EnumHelper.HasEnum((int)indicator, (int)HitIndicator.CROUCHING);
-            bool isCounterHit = EnumHelper.HasEnum((int)indicator, (int)HitIndicator.COUNTER_HIT);
-            bool isBlocking = EnumHelper.HasEnum((int)indicator, (int)HitIndicator.BLOCKED);
+            bool isGrounded = EnumHelper.HasEnum((uint)indicator, (uint)HitIndicator.GROUNDED);
+            bool isCrouching = EnumHelper.HasEnum((uint)indicator, (uint)HitIndicator.CROUCHING);
+            bool isCounterHit = EnumHelper.HasEnum((uint)indicator, (uint)HitIndicator.COUNTER_HIT);
+            bool isBlocking = EnumHelper.HasEnum((uint)indicator, (uint)HitIndicator.BLOCKED);
 
 
             ret.hitStopEnemy = val.GetHitstopEnemy(isCounterHit);
