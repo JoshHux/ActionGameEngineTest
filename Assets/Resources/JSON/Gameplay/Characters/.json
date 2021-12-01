@@ -29,7 +29,7 @@
         "parentID": 0,
         "duration": 0,
         "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION",
-        "cancelConditions": "JUMP, NORM_LV3",
+        "cancelConditions": "GROUNDED, JUMP, NORM_LV3",
         "transitions": [
           {
             "targetState": 3,
@@ -81,7 +81,7 @@
         "parentID": 1,
         "duration": 0,
         "stateConditions": "AIRBORNE, APPLY_GRAV",
-        "cancelConditions": 0,
+        "cancelConditions": "AIRBORNE",
         "transitions": [
           {
             "targetState": 0,
@@ -101,7 +101,7 @@
         "parentID": 0,
         "duration": 0,
         "stateConditions": "GROUNDED, APPLY_GRAV, CAN_WALK, NO_PARENT_COND",
-        "cancelConditions": "JUMP",
+        "cancelConditions": "GROUNDED, JUMP",
         "transitions": [
           {
             "targetState": 0,
@@ -270,7 +270,29 @@
             "transitionEvent": 0
           }
         ],
-        "frames": [],
+        "frames": [
+          {
+            "atFrame": 0,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "timerEvent": {
+              "TimerDuration": 500,
+              "conditions": "GUARD_POINT_MID",
+              "isPersistent": false
+            },
+            "flags": "SET_TIMER",
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [],
+            "hurtboxes": []
+          }
+        ],
         "animName": "strike"
       }
     ]
@@ -279,7 +301,7 @@
     "command": [
       {
         "targetState": 4,
-        "cancelConditions": "JUMP",
+        "cancelConditions": "GROUNDED, JUMP",
         "cmdMotion": {
           "commandInput": [
             {
@@ -293,7 +315,7 @@
       },
       {
         "targetState": 7,
-        "cancelConditions": "NORM_LV3",
+        "cancelConditions": "GROUNDED, NORM_LV3",
         "cmdMotion": {
           "commandInput": [
             {

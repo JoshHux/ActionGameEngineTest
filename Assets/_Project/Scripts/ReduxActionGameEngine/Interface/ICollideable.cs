@@ -1,4 +1,3 @@
-using ActionGameEngine;
 
 namespace ActionGameEngine.Interfaces
 {

@@ -30,7 +30,7 @@ namespace ActionGameEngine.Gameplay
             for (int i = 0; i < len; i++)
             {
                 Hitbox box = hitboxes[i];
-                if (box.IsActiveBox())
+                if (box.IsActive())
                 {
                     indicator = box.QueryHitboxCollisions();
                     HitboxData potenBoxData = box.GetHitboxData();
@@ -93,7 +93,7 @@ namespace ActionGameEngine.Gameplay
             {
                 Hitbox box = hitboxes[i];
                 //deactivate any active hitboxes
-                if (box.IsActiveBox()) { box.DeactivateBox(); }
+                if (box.IsActive()) { box.DeactivateBox(); }
             }
         }
 

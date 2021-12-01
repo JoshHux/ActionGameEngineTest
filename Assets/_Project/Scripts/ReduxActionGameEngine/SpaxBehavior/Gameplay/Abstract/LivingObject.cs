@@ -26,7 +26,7 @@ namespace ActionGameEngine
         //for keeping track of out state
         protected CallbackTimer stateTimer;
         //timer that keeps track of whether or not we get rid of persistent state conditions
-        protected CallbackTimer persistentTimer;
+        protected CtxCallbackTimer<StateCondition> persistentTimer;
         //velocity calculated that we will apply to our rigidbody
         [UnityEngine.SerializeField] protected FVector2 calcVel;
         //for things such as setting velocity, makes sure that that velocity is always being applied
@@ -41,13 +41,14 @@ namespace ActionGameEngine
             base.OnAwake();
             stopTimer = new CallbackTimer();
             stateTimer = new CallbackTimer();
-            persistentTimer = new CallbackTimer();
+            persistentTimer = new CtxCallbackTimer<StateCondition>();
             calcVel = new FVector2();
             storedVel = new FVector2();
 
             //when state timer ends, add the STATE_END flag to the transition flags
             stateTimer.OnEnd += ctx => status.AddTransitionFlags(TransitionFlag.STATE_END);
-            persistentTimer.OnEnd += ctx => ResetPersistentConditions();
+            persistentTimer.OnEnd += ctx => status.RemovePersistenConditions(persistentTimer.GetData());
+            //persistentTimer.OnEnd += ctx => ResetPersistentConditions();
 
         }
 
@@ -63,7 +64,7 @@ namespace ActionGameEngine
             AssignNewState(0);
             //set correct status values
             //by default, the player should have the airborne flag
-            //COMES AFTER DEFAULT STATE ASSIGNMENT -> this is so that our flags aren't over
+            //COMES AFTER DEFAULT STATE ASSIGNMENT -> this is so that our flags aren't overwritten
             status.AddTransitionFlags(TransitionFlag.AIRBORNE);
         }
 
@@ -83,6 +84,7 @@ namespace ActionGameEngine
                 //check new state because of whatever reason
                 if (status.checkState)
                 {
+                    //try to transition to new state
                     TryTransitionState();
                 }
 
@@ -96,6 +98,7 @@ namespace ActionGameEngine
 
         protected override void SpaxUpdate()
         {
+            //just return if we're in hitstop
             if (status.GetInHitstop()) { return; }
             //get the current state conditions
             StateCondition curCond = status.GetStateConditions();
@@ -120,6 +123,12 @@ namespace ActionGameEngine
             helper.newState = false;
             helper.renderFrames = 0;
         }
+
+        //----------/PUBLIC METHODS/----------//
+
+        //only relavent for 2d games, returns the direction we are facing
+        //facing right by default
+        public int GetFacing() { return status.facing; }
 
 
         //----------/PROTECTED METHODS/----------//
@@ -269,8 +278,10 @@ namespace ActionGameEngine
             if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_TIMER))
             {
                 TimerEvent evnt = frame.timerEvent;
-                persistentTimer.StartTimer(evnt.TimerDuration);
-                status.SetPersistenConditions(evnt.conditions);
+                int time = evnt.TimerDuration;
+                StateCondition cond = evnt.conditions;
+                persistentTimer.StartTimer(time, cond);
+                status.AddPersistenConditions(cond);
             }
 
             if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.APPLY_VEL))

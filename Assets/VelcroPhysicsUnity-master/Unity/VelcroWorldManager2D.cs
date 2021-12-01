@@ -28,7 +28,6 @@ public class VelcroWorldManager2D
 
         world.ContactManager.BeginContact += CollisionEnter;
         world.ContactManager.EndContact += CollisionExit;
-
     }
 
     public World GetWorld() { return world; }

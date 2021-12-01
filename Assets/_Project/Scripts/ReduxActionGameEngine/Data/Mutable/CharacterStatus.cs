@@ -5,22 +5,22 @@ namespace ActionGameEngine.Data
     public struct CharacterStatus
     {
         //int ID of the current state
-        [UnityEngine.SerializeField] private StateData currentState;
-        [UnityEngine.SerializeField] private int currentHp;
-        [UnityEngine.SerializeField] private int currentArmorHits;
+        public StateData currentState;
+        public int currentHp;
+        public int currentArmorHits;
         public int facing;
 
         //conditions that are from the state and that we keep track of toggling
         //we don't want to change the current state's conditions, so we just copy them and manipulate that
-        private StateCondition currentStateCond;
-        private CancelConditions currentCancelCond;
+        public StateCondition currentStateCond;
+        public CancelConditions currentCancelCond;
         public TransitionFlag currentTransitionFlags;
 
         //conditions that last despite transitioning to another state
-        private StateCondition persistentCond;
+        public StateCondition persistentCond;
         //if we need to check for a new state because of a new input
         public bool checkState;
-        private bool inHitstop;
+        public bool inHitstop;
         public void SetNewState(StateData newState)
         {
             checkState = true;
@@ -29,6 +29,8 @@ namespace ActionGameEngine.Data
         public void SetNewStateConditions(StateCondition newCond) { currentStateCond = newCond; }
         public void ToggleStateConditions(StateCondition newCond) { currentStateCond ^= newCond; }
         public void SetPersistenConditions(StateCondition newCond) { persistentCond = newCond; }
+        public void AddPersistenConditions(StateCondition newCond) { persistentCond |= newCond; }
+        public void RemovePersistenConditions(StateCondition newCond) { persistentCond &= (~newCond); }
         public void SetNewCancelConditions(CancelConditions newCond)
         {
             checkState = true;

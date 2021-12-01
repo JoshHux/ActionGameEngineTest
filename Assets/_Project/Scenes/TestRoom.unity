@@ -302,8 +302,12 @@ MonoBehaviour:
     currentHp: 0
     currentArmorHits: 0
     facing: 0
+    currentStateCond: 0
+    currentCancelCond: 0
     currentTransitionFlags: 0
+    persistentCond: 0
     checkState: 0
+    inHitstop: 0
   calcVel:
     x:
       m_rawValue: 0
@@ -312,7 +316,6 @@ MonoBehaviour:
   fromPlayer:
     m_rawValue: 0
   actions: {fileID: -944628639613478452, guid: 8c47bb0ab1ab45e418c7916162600bc4, type: 3}
-  path: Assets/Resources/JSON/TestData/Test.json
 --- !u!1 &224830393
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +361,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curCollidingGo: []
+  curColliding: []
+  wasColliding: []
+  diffColliders: []
 --- !u!114 &224830396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3059,7 +3065,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39900fca76dd28a498ba6158e9be677f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: {fileID: 11400000, guid: fbd71c9317609a44b9de8a987c086743, type: 2}
 --- !u!4 &1766093060
 Transform:
   m_ObjectHideFlags: 0

@@ -17,6 +17,8 @@ namespace ActionGameEngine
 
         protected override void OnEnterTrigger(GameObject other)
         {
+            //Debug.Log("collided -- " + this.name);
+
             //Debug.Log(other.name);
             colObj.TriggerCollided(this);
         }

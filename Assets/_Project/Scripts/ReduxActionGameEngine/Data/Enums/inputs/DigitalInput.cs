@@ -6,6 +6,7 @@ namespace ActionGameEngine.Enum
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DigitalInput : ushort
     {
+        NONE = 0,
         _1 = 1 << 0,
         _2 = 1 << 1,
         _3 = 1 << 2,
@@ -18,10 +19,10 @@ namespace ActionGameEngine.Enum
         B = 1 << 9,
         C = 1 << 10,
         D = 1 << 11,
-        E = 1 << 12,
-        F = 1 << 13,
-        G = 1 << 14,
-        H = 1 << 15,
+        W = 1 << 12,
+        X = 1 << 13,
+        Y = 1 << 14,
+        Z = 1 << 15,
         X_NONZERO = _1 | _4 | _7 | _3 | _6 | _9,
         Y_NONZERO = _1 | _2 | _3 | _7 | _8 | _9,
         X_POSITIVE = _3 | _6 | _9,
@@ -30,5 +31,6 @@ namespace ActionGameEngine.Enum
         Y_NEGATIVE = _1 | _2 | _3,
         X_ZERO = _2 | _8,
         Y_ZERO = _4 | _6,
+        BUTTONS = A | B | C | D | W | X | Y | Z,
     }
 }

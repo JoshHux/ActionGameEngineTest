@@ -13,11 +13,11 @@ namespace ActionGameEngine
     public class ActionCharacterController : ControllableObject, ICollideable
     {
         //protected ShapeBase lockonTarget;
-        [SerializeField] private string path;
+        //[SerializeField] private string path;
 
         protected override void OnStart()
         {
-            this.data = SpaxJSONSaver.LoadDataFromPath(path);
+            this.data = SpaxJSONSaver.LoadCharacterData("Test");
             base.OnStart();
             rb.Body._flags |= BodyFlags.BulletFlag;
         }

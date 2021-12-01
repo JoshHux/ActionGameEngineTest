@@ -180,11 +180,11 @@ namespace ActionGameEngine.Input
 
 
             //x is nonzero
-            if ((rawVal & (1 << 3)) > 0)
+            if ((rawVal & (1 << 1)) > 0)
             {
                 x = Fix64.One;
                 //halve y?
-                if ((rawVal & (1 << 5)) > 0)
+                if ((rawVal & (1 << 4)) > 0)
                 {
                     x *= (Fix64)0.5;
                 }
@@ -201,7 +201,7 @@ namespace ActionGameEngine.Input
             {
                 y = Fix64.One;
                 //halve y?
-                if ((rawVal & (1 << 4)) > 0)
+                if ((rawVal & (1 << 5)) > 0)
                 {
                     y *= (Fix64)0.5;
                 }
@@ -213,44 +213,77 @@ namespace ActionGameEngine.Input
 
             }
 
+            DigitalInput xVal = DigitalInput.X_ZERO;
             //x is nonzero
             if (x != 0)
             {
-                ret = DigitalInput.X_NONZERO;
+                xVal = DigitalInput.X_NONZERO;
                 //x is positive
                 if (x > 0)
                 {
-                    ret &= DigitalInput.X_POSITIVE;
+                    xVal &= DigitalInput.X_POSITIVE;
                 }
                 else
                 {
-                    ret &= DigitalInput.X_NEGATIVE;
+                    xVal &= DigitalInput.X_NEGATIVE;
                 }
-            }
-            else
-            {
-                ret = DigitalInput.X_ZERO;
             }
 
+            DigitalInput yVal = DigitalInput.Y_ZERO;
             //y is nonzero
-            if (x != 0)
+            if (y != 0)
             {
-                ret |= DigitalInput.Y_NONZERO;
+                yVal = DigitalInput.Y_NONZERO;
                 //y is positive
-                if (x > 0)
+                if (y > 0)
                 {
-                    ret &= DigitalInput.Y_POSITIVE;
+                    yVal &= DigitalInput.Y_POSITIVE;
                 }
                 else
                 {
-                    ret &= DigitalInput.Y_NEGATIVE;
+                    yVal &= DigitalInput.Y_NEGATIVE;
                 }
             }
-            else
-            {
-                ret &= DigitalInput.Y_ZERO;
-            }
+
+            ushort btnMask = 0b1111111111000000;
+            short btn = (short)((rawVal & btnMask) << 2);
+
+            ret |= yVal & xVal | (DigitalInput)btn;
+
             return ret;
+        }
+
+        public static short DigToRaw(DigitalInput npt)
+        {
+            short m_rawValue = 0;
+
+            //if has a nonzero x value
+            if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.X_NONZERO))
+            {
+                m_rawValue |= 1 << 1;
+                //if x value is negative
+                //don't need else since we only change the bit when it's negative
+                if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.X_NEGATIVE))
+                {
+                    m_rawValue |= 1 << 0;
+                }
+            }
+
+            //if has a nonzero y value
+            if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.Y_NONZERO))
+            {
+                m_rawValue |= 1 << 3;
+                //if y value is negative
+                //don't need else since we only change the bit when it's negative
+                if (EnumHelper.HasEnum((uint)npt, (int)DigitalInput.Y_NEGATIVE))
+                {
+                    m_rawValue |= 1 << 2;
+                }
+            }
+
+            m_rawValue |= (short)((int)(npt & DigitalInput.BUTTONS) >> 2);
+
+            return m_rawValue;
         }
 
 

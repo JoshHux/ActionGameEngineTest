@@ -16,7 +16,7 @@ public class VelcroBox : VelcroBody
         set
         {
             _height = value;
-            this.AssignTransform(new FVector2(_width, _height));
+            VelcroWorld.instance.AddBody(this);
         }
     }
 
@@ -26,8 +26,17 @@ public class VelcroBox : VelcroBody
         set
         {
             _width = value;
-            this.AssignTransform(new FVector2(_width, _height));
+            //this.AssignTransform(new FVector2(_width, _height));
+            VelcroWorld.instance.AddBody(this);
         }
+    }
+
+    public override void SetDimensions(FVector2 scale)
+    {
+        this._width = scale.x;
+        this._height = scale.y;
+
+        VelcroWorld.instance.AddBody(this);
     }
 
     protected override void InstantiateBody(BodyType type, World world)
@@ -43,7 +52,7 @@ public class VelcroBox : VelcroBody
     }
     private void OnDrawGizmos()
     {
-        Gizmos.color = (!IsKinematic && !IsStatic) ? Color.green : Color.red;
+        Gizmos.color = (!IsKinematic && !IsStatic) ? Color.blue : Color.yellow;
 
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    

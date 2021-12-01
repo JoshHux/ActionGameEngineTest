@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FixedAnimationSystem;
+using ActionGameEngine;
+
 namespace Spax
 {
     public class SpaxManager : MonoBehaviour
     {
-        public FixedAnimationController test;
+        //public FixedAnimationController test;
         private static SpaxManager SpaxInstance;
 
         public delegate void InputUpdateEventHandler();
@@ -33,6 +34,9 @@ namespace Spax
         public event RenderPrepEventHandler PreRender;
         public event SpaxUpdateEventHandler SpaxUpdate;
 
+        private List<LivingObject> entities;
+        private List<ActionCharacterController> players;
+
         //for initializing the physics and filtering collisions
         //private CollisionGroup[] groups;
 
@@ -40,7 +44,9 @@ namespace Spax
         {
             SpaxInstance = this;
             Application.targetFrameRate = 60;
-            test.Initialize();
+            //test.Initialize();
+            entities = new List<LivingObject>();
+            players = new List<ActionCharacterController>();
         }
 
         void FixedUpdate()
@@ -67,6 +73,18 @@ namespace Spax
             PrepRender?.Invoke();
             PreRender?.Invoke();
             RenderUpdate?.Invoke();
+        }
+
+        public void TrackObject(LivingObject obj)
+        {
+            entities.Add(obj);
+            switch (obj)
+            {
+                case ActionCharacterController actionChar:
+                    players.Add(actionChar);
+                    break;
+            }
+
         }
 
     }

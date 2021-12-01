@@ -43,7 +43,7 @@ public abstract class VelcroBody : MonoBehaviour
     {
         get
         {
-            if (_rb.constraint == null)
+            if (_rb.constraint != null)
             {
                 return _rb.constraint.childOffset;
             }
@@ -111,9 +111,10 @@ public abstract class VelcroBody : MonoBehaviour
     }
 
     public Body GetBody() { return _rb; }
-
+    public virtual void SetDimensions(FVector2 scale) { }
     protected abstract void InstantiateBody(BodyType type, World world);
     protected abstract void AssignTransform(FVector2 size);
+
 
 
 
