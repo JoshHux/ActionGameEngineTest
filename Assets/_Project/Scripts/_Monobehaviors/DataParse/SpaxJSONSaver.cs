@@ -13,6 +13,13 @@ public class SpaxJSONSaver : MonoBehaviour
     {
         data = LoadCharacterData(characterName);
     }
+
+    //call to make the states in the state list have their ID's match their index in the list
+    //helps prevent states with the same ID
+    public void CorrectStateID()
+    {
+        data.CorrectStateID();
+    }
 #endif
 
     public static CharacterData LoadCharacterData(string characterName)

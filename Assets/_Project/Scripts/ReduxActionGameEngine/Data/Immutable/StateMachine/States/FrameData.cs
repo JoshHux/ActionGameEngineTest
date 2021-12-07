@@ -13,7 +13,9 @@ namespace ActionGameEngine.Data
         //conditions to toggle for the rest of the state
         public StateCondition toggleStateConditions;
         public CancelConditions toggleCancelConditions;
+        public bool thing;
 
+        //[ShowWhen("flags", FrameEventFlag.SET_TIMER)]
         public TimerEvent timerEvent;
 
         //flags for whatever event the frame might haves
@@ -26,6 +28,7 @@ namespace ActionGameEngine.Data
 
         public FrameData(int f, StateCondition sc, CancelConditions cc, TimerEvent te, FrameEventFlag ff, FVector2 fv, HitboxData[] hib, HurtboxData[] hub)
         {
+            thing = true;
             atFrame = f;
             toggleStateConditions = sc;
             toggleCancelConditions = cc;

@@ -9,6 +9,12 @@ namespace ActionGameEngine.Data.Helpers.Wrappers
         public StateData this[int key]
         {
             get => stateList[key];
+            set => stateList[key] = value;
+        }
+
+        public int Length
+        {
+            get => stateList.Length;
         }
 
     }

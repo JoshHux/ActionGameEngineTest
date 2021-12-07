@@ -86,7 +86,14 @@
           {
             "targetState": 0,
             "cmdMotion": {
-              "commandInput": []
+              "commandInput": [
+                {
+                  "inputItem": {
+                    "m_rawValue": 0
+                  },
+                  "flags": 0
+                }
+              ]
             },
             "cancelConditions": 0,
             "transitionFlag": "GROUNDED",
@@ -161,6 +168,7 @@
             "atFrame": 4,
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
+            "thing": false,
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
@@ -223,6 +231,7 @@
             "atFrame": 0,
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
+            "thing": false,
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
@@ -251,7 +260,7 @@
         "cancelConditions": 0,
         "transitions": [],
         "frames": [],
-        "animName": ""
+        "animName": "attackNode"
       },
       {
         "stateID": 7,
@@ -275,6 +284,179 @@
             "atFrame": 11,
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
+            "thing": false,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": 0,
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [
+              {
+                "localPos": {
+                  "x": {
+                    "m_rawValue": 4294967296
+                  },
+                  "y": {
+                    "m_rawValue": 4294967296
+                  }
+                },
+                "localRot": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
+                },
+                "localDim": {
+                  "x": {
+                    "m_rawValue": 12884901888
+                  },
+                  "y": {
+                    "m_rawValue": 12884901888
+                  }
+                },
+                "launchAngle": {
+                  "m_rawValue": 4294967296
+                },
+                "launchForce": {
+                  "m_rawValue": 0
+                },
+                "duration": 7,
+                "damage": 0,
+                "chipDamage": 0,
+                "priority": 0,
+                "attackLv": 0,
+                "hitCause": 0,
+                "counterHitCause": 0,
+                "hitCancel": 0,
+                "counterHitCancel": 0,
+                "type": 0
+              }
+            ],
+            "hurtboxes": []
+          }
+        ],
+        "animName": "punch"
+      },
+      {
+        "stateID": 8,
+        "parentID": 6,
+        "duration": 26,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [
+          {
+            "atFrame": 11,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "thing": false,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": 0,
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [
+              {
+                "localPos": {
+                  "x": {
+                    "m_rawValue": 4294967296
+                  },
+                  "y": {
+                    "m_rawValue": 4294967296
+                  }
+                },
+                "localRot": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
+                },
+                "localDim": {
+                  "x": {
+                    "m_rawValue": 12884901888
+                  },
+                  "y": {
+                    "m_rawValue": 12884901888
+                  }
+                },
+                "launchAngle": {
+                  "m_rawValue": 4294967296
+                },
+                "launchForce": {
+                  "m_rawValue": 0
+                },
+                "duration": 7,
+                "damage": 0,
+                "chipDamage": 0,
+                "priority": 0,
+                "attackLv": 0,
+                "hitCause": 0,
+                "counterHitCause": 0,
+                "hitCancel": 0,
+                "counterHitCancel": 0,
+                "type": 0
+              }
+            ],
+            "hurtboxes": []
+          }
+        ],
+        "animName": "kick"
+      },
+      {
+        "stateID": 9,
+        "parentID": 6,
+        "duration": 26,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [
+          {
+            "atFrame": 11,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "thing": false,
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
@@ -337,8 +519,95 @@
           }
         ],
         "animName": "strike"
+      },
+      {
+        "stateID": 10,
+        "parentID": 6,
+        "duration": 26,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [
+          {
+            "atFrame": 10,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "thing": false,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": "SET_TIMER",
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [
+              {
+                "localPos": {
+                  "x": {
+                    "m_rawValue": 4294967296
+                  },
+                  "y": {
+                    "m_rawValue": 4294967296
+                  }
+                },
+                "localRot": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
+                },
+                "localDim": {
+                  "x": {
+                    "m_rawValue": 12884901888
+                  },
+                  "y": {
+                    "m_rawValue": 12884901888
+                  }
+                },
+                "launchAngle": {
+                  "m_rawValue": 4294967296
+                },
+                "launchForce": {
+                  "m_rawValue": 0
+                },
+                "duration": 7,
+                "damage": 0,
+                "chipDamage": 0,
+                "priority": 0,
+                "attackLv": 0,
+                "hitCause": 0,
+                "counterHitCause": 0,
+                "hitCancel": 0,
+                "counterHitCancel": 0,
+                "type": 0
+              }
+            ],
+            "hurtboxes": []
+          }
+        ],
+        "animName": "duress"
       }
-    ]
+    ],
+    "Length": 11
   },
   "moveList": {
     "command": [
@@ -357,7 +626,7 @@
         }
       },
       {
-        "targetState": 7,
+        "targetState": 9,
         "cancelConditions": "GROUNDED, NORM_LV3",
         "cmdMotion": {
           "commandInput": [

@@ -37,6 +37,25 @@ namespace ActionGameEngine.Data
             stateList = sl;
             moveList = cl;
         }
+#if UNITY_EDITOR
+
+        //call to make the states in the state list have their ID's match their index in the list
+        //helps prevent states with the same ID
+        public void CorrectStateID()
+        {
+            int len = stateList.Length;
+            //while loop instead of for no particular reason
+            int i = 0;
+            while (i < len)
+            {
+                //structs automatically make deep copies, reassign after manipulation
+                StateData hold = stateList[i];
+                hold.stateID = i;
+                stateList[i] = hold;
+                i++;
+            }
+        }
+#endif
 
         public StateData GetStateFromID(int stateID)
         {

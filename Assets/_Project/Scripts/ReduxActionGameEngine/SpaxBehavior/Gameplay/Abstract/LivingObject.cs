@@ -275,6 +275,8 @@ namespace ActionGameEngine
         protected virtual void ProcessFrameData(FrameData frame)
         {
 
+            int flags = (int)frame.flags;
+
             if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_TIMER))
             {
                 TimerEvent evnt = frame.timerEvent;
@@ -284,6 +286,12 @@ namespace ActionGameEngine
                 status.AddPersistenConditions(cond);
             }
 
+            //should only be 1 or 0
+            //1 if flag exists
+            //0 if flag does not exist
+            int applyVel = ((int)FrameEventFlag.APPLY_VEL & flags) / (int)FrameEventFlag.APPLY_VEL;
+            //same as above, but should still be 0 if only apply vel flag exists, since that flag's int value is smaller that set vel
+            int setVel = ((int)FrameEventFlag.SET_VEL & flags) / (int)FrameEventFlag.SET_VEL;
             if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.APPLY_VEL))
             {
                 if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_VEL, true))

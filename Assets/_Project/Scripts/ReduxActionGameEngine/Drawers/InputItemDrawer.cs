@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using ActionGameEngine.Enum;
+#if UNITY_EDITOR
 
 namespace ActionGameEngine.Input.Drawer
 {
@@ -14,7 +15,7 @@ namespace ActionGameEngine.Input.Drawer
             EditorGUI.BeginProperty(position, label, property);
 
             var rawProp = property.FindPropertyRelative("m_rawValue");
-            var fromGUI = (DigitalInput)EditorGUI.EnumPopup(position, label, InputItem.ToDigInp((short)rawProp.intValue));
+            var fromGUI = (DigitalInput)EditorGUI.EnumFlagsField(position, label, InputItem.ToDigInp((short)rawProp.intValue));
 
             rawProp.intValue = InputItem.DigToRaw(fromGUI);
 
@@ -32,3 +33,4 @@ namespace ActionGameEngine.Input.Drawer
         }
     }
 }
+#endif

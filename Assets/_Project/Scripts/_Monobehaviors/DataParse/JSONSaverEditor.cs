@@ -26,6 +26,12 @@ public class JSONSaverEditor : Editor
             saver.SaveCharacterData(characterName);
         }
         EditorGUILayout.EndHorizontal();
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Auto-Assign State Id's"))
+        {
+            saver.CorrectStateID();
+        }
 
         EditorGUILayout.Space(10);
         DrawDefaultInspector();

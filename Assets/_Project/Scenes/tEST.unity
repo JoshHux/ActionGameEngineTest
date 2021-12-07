@@ -1823,6 +1823,7 @@ MonoBehaviour:
         - atFrame: 4
           toggleStateConditions: 0
           toggleCancelConditions: 0
+          thing: 0
           timerEvent:
             TimerDuration: 0
             conditions: 0
@@ -1866,6 +1867,7 @@ MonoBehaviour:
         - atFrame: 0
           toggleStateConditions: 0
           toggleCancelConditions: 0
+          thing: 0
           timerEvent:
             TimerDuration: 0
             conditions: 0
@@ -1886,7 +1888,7 @@ MonoBehaviour:
         cancelConditions: 0
         transitions: []
         frames: []
-        animName: 
+        animName: attackNode
       - stateID: 7
         parentID: 6
         duration: 26
@@ -1903,6 +1905,7 @@ MonoBehaviour:
         - atFrame: 11
           toggleStateConditions: 0
           toggleCancelConditions: 0
+          thing: 0
           timerEvent:
             TimerDuration: 0
             conditions: 0
@@ -1944,7 +1947,184 @@ MonoBehaviour:
             counterHitCancel: 0
             type: 0
           hurtboxes: []
+        animName: punch
+      - stateID: 8
+        parentID: 6
+        duration: 26
+        stateConditions: 12
+        cancelConditions: 0
+        transitions:
+        - targetState: 0
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 8
+          transitionEvent: 0
+        frames:
+        - atFrame: 11
+          toggleStateConditions: 0
+          toggleCancelConditions: 0
+          thing: 0
+          timerEvent:
+            TimerDuration: 0
+            conditions: 0
+            isPersistent: 0
+          flags: 0
+          frameVelocity:
+            x:
+              m_rawValue: 0
+            y:
+              m_rawValue: 0
+          hitboxes:
+          - localPos:
+              x:
+                m_rawValue: 4294967296
+              y:
+                m_rawValue: 4294967296
+            localRot:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
+            localDim:
+              x:
+                m_rawValue: 12884901888
+              y:
+                m_rawValue: 12884901888
+            launchAngle:
+              m_rawValue: 4294967296
+            launchForce:
+              m_rawValue: 0
+            duration: 7
+            damage: 0
+            chipDamage: 0
+            priority: 0
+            attackLv: 0
+            hitCause: 0
+            counterHitCause: 0
+            hitCancel: 0
+            counterHitCancel: 0
+            type: 0
+          hurtboxes: []
+        animName: kick
+      - stateID: 9
+        parentID: 6
+        duration: 26
+        stateConditions: 12
+        cancelConditions: 0
+        transitions:
+        - targetState: 0
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 8
+          transitionEvent: 0
+        frames:
+        - atFrame: 11
+          toggleStateConditions: 0
+          toggleCancelConditions: 0
+          thing: 0
+          timerEvent:
+            TimerDuration: 0
+            conditions: 0
+            isPersistent: 0
+          flags: 8
+          frameVelocity:
+            x:
+              m_rawValue: 0
+            y:
+              m_rawValue: 0
+          hitboxes:
+          - localPos:
+              x:
+                m_rawValue: 4294967296
+              y:
+                m_rawValue: 4294967296
+            localRot:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
+            localDim:
+              x:
+                m_rawValue: 12884901888
+              y:
+                m_rawValue: 12884901888
+            launchAngle:
+              m_rawValue: 4294967296
+            launchForce:
+              m_rawValue: 0
+            duration: 7
+            damage: 0
+            chipDamage: 0
+            priority: 0
+            attackLv: 0
+            hitCause: 0
+            counterHitCause: 0
+            hitCancel: 0
+            counterHitCancel: 0
+            type: 0
+          hurtboxes: []
         animName: strike
+      - stateID: 10
+        parentID: 6
+        duration: 26
+        stateConditions: 12
+        cancelConditions: 0
+        transitions:
+        - targetState: 0
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 8
+          transitionEvent: 0
+        frames:
+        - atFrame: 10
+          toggleStateConditions: 0
+          toggleCancelConditions: 0
+          thing: 0
+          timerEvent:
+            TimerDuration: 0
+            conditions: 0
+            isPersistent: 0
+          flags: 4
+          frameVelocity:
+            x:
+              m_rawValue: 0
+            y:
+              m_rawValue: 0
+          hitboxes:
+          - localPos:
+              x:
+                m_rawValue: 4294967296
+              y:
+                m_rawValue: 4294967296
+            localRot:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
+            localDim:
+              x:
+                m_rawValue: 12884901888
+              y:
+                m_rawValue: 12884901888
+            launchAngle:
+              m_rawValue: 4294967296
+            launchForce:
+              m_rawValue: 0
+            duration: 7
+            damage: 0
+            chipDamage: 0
+            priority: 0
+            attackLv: 0
+            hitCause: 0
+            counterHitCause: 0
+            hitCancel: 0
+            counterHitCancel: 0
+            type: 0
+          hurtboxes: []
+        animName: duress
     moveList:
       command:
       - targetState: 4
@@ -1954,7 +2134,7 @@ MonoBehaviour:
           - inputItem:
               m_rawValue: 1024
             flags: 1
-      - targetState: 7
+      - targetState: 9
         cancelConditions: 268435457
         cmdMotion:
           commandInput:

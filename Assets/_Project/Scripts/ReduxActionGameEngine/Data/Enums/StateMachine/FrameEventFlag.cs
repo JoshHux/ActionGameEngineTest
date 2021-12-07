@@ -11,6 +11,8 @@ namespace ActionGameEngine.Enum
         SET_VEL = APPLY_VEL | 1 << 1,
         //tells character that there is a TimerEvent to look at
         SET_TIMER = 1 << 2,
+        ACTIVATE_HITBOXES = 1 << 3,
+        ACTIVATE_HURTBOXES = 1 << 4,
         //for 2d games, reaching tells the character to turn and face the other direction
         AUTO_TURN = 1 << 7
     }
