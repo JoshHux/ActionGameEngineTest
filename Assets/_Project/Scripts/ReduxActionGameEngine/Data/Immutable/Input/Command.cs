@@ -52,7 +52,8 @@ namespace ActionGameEngine.Input
                             return toCheck.Check(inputFrag, checkNot, isStrict);
                         }
 
-                        if (totalFramesPassed > 10)
+                        //the input is not fast enough, held too long or something like that
+                        if (input.framesHeld > 10)
                         {
                             //UnityEngine.Debug.Log("too many frames passed");
                             return false;

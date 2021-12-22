@@ -28,7 +28,7 @@ namespace VelcroPhysics
     public static class Settings
     {
         public static Fix64 MaxFix64 = Fix64.MaxValue;
-        public static Fix64 Epsilon = Fix64.FromRaw(0x200);
+        public static Fix64 Epsilon = FixedMath.C0p001; //Fix64.FromRaw(0x200);
         public static Fix64 Pi = Fix64.Pi;
 
         // Common
@@ -83,7 +83,7 @@ namespace VelcroPhysics
         /// A small length used as a collision and constraint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
         /// </summary>
-        public static Fix64 LinearSlop = FixedMath.C0p001 * 5;
+        public static Fix64 LinearSlop = FixedMath.C0p001 * 1;
 
         /// <summary>
         /// A small angle used as a collision and constraint tolerance. Usually it is
@@ -109,7 +109,7 @@ namespace VelcroPhysics
         /// A velocity threshold for elastic collisions. Any collision with a relative linear
         /// velocity below this threshold will be treated as inelastic.
         /// </summary>
-        public static Fix64 VelocityThreshold = Fix64.One;
+        public static Fix64 VelocityThreshold = FixedMath.C0p01;
 
         /// <summary>
         /// The maximum linear position correction used when solving constraints. This helps to

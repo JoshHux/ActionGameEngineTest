@@ -289,6 +289,12 @@ namespace VelcroPhysics.Collision.ContactSystem
                 if (!Enabled)
                     touching = false;
             }
+            //Spax's addition
+            else if (touching)
+            {
+                FixtureA.ContCollision?.Invoke(FixtureA, FixtureB, this);
+                FixtureB.ContCollision?.Invoke(FixtureB, FixtureA, this);
+            }
 
             if (wasTouching == true && touching == false)
             {

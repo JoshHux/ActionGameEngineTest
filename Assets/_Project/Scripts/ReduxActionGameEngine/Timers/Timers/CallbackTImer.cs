@@ -13,5 +13,12 @@ namespace ActionGameEngine.Gameplay
             base.OnTimerEnd();
             OnEnd?.Invoke(this);
         }
+
+        public void Invoke()
+        {
+            OnEnd?.Invoke(this);
+            UnityEngine.Debug.Log("invoking ");
+
+        }
     }
 }

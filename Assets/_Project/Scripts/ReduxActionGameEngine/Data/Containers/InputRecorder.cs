@@ -32,7 +32,7 @@ namespace ActionGameEngine.Input
             //if (newInput.m_rawValue > 0)
             //    UnityEngine.Debug.Log(prevItem.m_rawValue + " " + newInput.m_rawValue);
             //do we need to buffer change?
-            if (prevItem != newInput)
+            if ((prevItem != newInput))// || !inputChanges.Last.Value.frag.Check(new InputFragment(newInput), true))
             {
                 //yes
                 //let's buffer
@@ -73,6 +73,8 @@ namespace ActionGameEngine.Input
         {
             if (inputChanges.Count > 0)
             {
+
+
                 //remember the last whole item and compare that to the new item
 
                 //find the released inputs

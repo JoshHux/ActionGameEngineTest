@@ -57,6 +57,8 @@ public abstract class VelcroBody : MonoBehaviour
 
     public Fix64 Mass { get { return _mass; } set { _mass = value; } }
 
+    public bool Enabled { get { return _rb.Enabled; } set { _rb.Enabled = value; } }
+
     void Start()
     {
         VelcroWorld.instance.AddBody(this);
@@ -86,18 +88,7 @@ public abstract class VelcroBody : MonoBehaviour
 
         InstantiateBody(type, world);
 
-        if (lockRotation)
-        {
-            _rb._invI = 0;
-        }
-        _rb.IsSensor = IsTrigger;
-
-        //set the collision layer
-        Category layer = (Category)(1 << (this.gameObject.layer));
-        _rb.CollisionCategories = layer;
-        //_rb.IgnoreCCDWith = (Category)VelcroWorld.instance.GetCollisions(this.gameObject.layer);
-        _rb.CollidesWith = VelcroWorld.instance.GetCollisions(this.gameObject.layer);
-        //Debug.Log(this.gameObject.name + ": " + this.gameObject.layer + " results in category : " + _rb.FixtureList[0]._collisionCategories + ", collides with : " + _rb.FixtureList[0]._collidesWith);
+        ResolveColliderType();
     }
 
     void Update()
@@ -110,11 +101,52 @@ public abstract class VelcroBody : MonoBehaviour
         }
     }
 
+    public void PrepColliderType()
+    {
+        BodyType type = BodyType.Dynamic;
+        if (IsKinematic)
+        {
+            type = BodyType.Kinematic;
+        }
+        else if (IsStatic)
+        {
+            type = BodyType.Static;
+        }
+    }
+
+    public void ResolveColliderType()
+    {
+        if (lockRotation)
+        {
+            _rb._invI = 0;
+        }
+        _rb.IsSensor = IsTrigger;
+
+        //set the collision layer
+        Category layer = (Category)(1 << (this.gameObject.layer));
+        _rb.CollisionCategories = layer;
+        //_rb.IgnoreCCDWith = (Category)VelcroWorld.instance.GetCollisions(this.gameObject.layer);
+        _rb.CollidesWith = VelcroWorld.instance.GetCollisions(this.gameObject.layer);
+        //Debug.Log(this.gameObject.name + ": " + this.gameObject.layer + " results in category : " + _rb.FixtureList[0]._collisionCategories + ", collides with : " + _rb.FixtureList[0]._collidesWith);
+        _rb.gameObject = this.gameObject;
+    }
+
+    public void MakeForRemoval()
+    {
+        VelcroWorldManager2D.instance.RemoveBody(this);
+        _rb = null;
+        //Debug.Log(_rb == null);
+        //VelcroWorldManager2D.instance.RemoveBody(this);
+
+    }
+
+
+
     public Body GetBody() { return _rb; }
     public virtual void SetDimensions(FVector2 scale) { }
     protected abstract void InstantiateBody(BodyType type, World world);
     protected abstract void AssignTransform(FVector2 size);
-
+    public void FindNewContacts() { _rb.FindNewContacts(); }
 
 
 

@@ -12,29 +12,32 @@ namespace ActionGameEngine.Gameplay
 
         //Unity's input mapping, replace when given the opportunity
         public InputActionAsset actions;
+        public bool controllable = true;
 
 
         protected override void OnAwake()
         {
             base.OnAwake();
             inputRecorder = new InputRecorder();
-
-            //using the input system to do a little mapping, replace as soon as possible
-            actions.Enable();
-            //pressed events
-            actions["Direction"].started += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, false, true);
-            actions["Punch"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, false, false);
-            actions["Kick"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000010000000, false, false);
-            actions["Slash"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, false, false);
-            actions["Dust"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, false, false);
-            actions["Jump"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, false, false);
-            //released events
-            actions["Direction"].canceled += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, true, true);
-            actions["Punch"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, true, false);
-            actions["Kick"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000010000000, true, false);
-            actions["Slash"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, true, false);
-            actions["Dust"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, true, false);
-            actions["Jump"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, true, false);
+            if (controllable)
+            {
+                //using the input system to do a little mapping, replace as soon as possible
+                actions.Enable();
+                //pressed events
+                actions["Direction"].started += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, false, true);
+                actions["Punch"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, false, false);
+                actions["Kick"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000010000000, false, false);
+                actions["Slash"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, false, false);
+                actions["Dust"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, false, false);
+                actions["Jump"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, false, false);
+                //released events
+                actions["Direction"].canceled += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, true, true);
+                actions["Punch"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, true, false);
+                actions["Kick"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000010000000, true, false);
+                actions["Slash"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, true, false);
+                actions["Dust"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, true, false);
+                actions["Jump"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, true, false);
+            }
         }
 
         protected override void InputUpdate()
@@ -52,14 +55,15 @@ namespace ActionGameEngine.Gameplay
             if (transition.IsValid())
             {
                 int newStateID = transition.targetState;
-
-                AssignNewState(newStateID);
-                //process the TransitionEvent flags that are set
+                //process the TransitionEvent flags that are set before you set the new state
                 ProcessTransitionEvents(transition.transitionEvent);
+                AssignNewState(newStateID);
+
             }
-            //we didn't find a valid transition
+            //we didn't find a valid transition, try looking in the movelist
             else
             {
+                //get new state ID from the movelist
                 int newState = data.TryMoveList(inputRecorder.GetInputArray(), status.GetCancelConditions(), status.facing);
 
                 //check if it's valid

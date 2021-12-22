@@ -68,6 +68,13 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         public OnCollisionHandler OnCollision;
 
+        //spax's addition
+        /// <summary>
+        /// Fires when two shapes collide and a contact exists between them.
+        /// Will always fire for as long as contact exists
+        /// </summary>
+        public OnCollisionHandler ContCollision;
+
         /// <summary>
         /// Fires when two shapes separate and a contact is removed between them.
         /// Note: This can in some cases be called multiple times, as a fixture can have multiple contacts.
@@ -279,7 +286,7 @@ namespace VelcroPhysics.Dynamics
             Body.FixtureList.Add(this);
 
             // Adjust mass properties if needed.
-            if (Shape._density >Fix64.Zero) Body.ResetMassData();
+            if (Shape._density > Fix64.Zero) Body.ResetMassData();
 
             // Let the world know we have a new fixture. This will cause new contacts
             // to be created at the beginning of the next time step.

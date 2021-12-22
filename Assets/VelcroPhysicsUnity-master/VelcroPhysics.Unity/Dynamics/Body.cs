@@ -641,6 +641,9 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
+        //spax's addition
+        public UnityEngine.GameObject gameObject;
+
         /// <summary>
         /// Resets the dynamics of this body.
         /// Sets torque, force and linear/angular velocity to 0
@@ -726,6 +729,43 @@ namespace VelcroPhysics.Dynamics
             ResetMassData();
         }
 
+        //Spax's additions
+        public void DestroyContactsOnFixture(Fixture fixture)
+        {
+            if (fixture == null)
+                return;
+
+            //UnityEngine.Debug.Assert(fixture.Body == this);
+
+            // Remove the fixture from this body's singly linked list.
+            UnityEngine.Debug.Assert(FixtureList.Count > 0);
+
+            // You tried to remove a fixture that not present in the fixturelist.
+            UnityEngine.Debug.Assert(FixtureList.Contains(fixture));
+
+            // Destroy any contacts associated with the fixture.
+            var edge = ContactList;
+            while (edge != null)
+            {
+                var c = edge.Contact;
+                edge = edge.Next;
+
+                var fixtureA = c.FixtureA;
+                var fixtureB = c.FixtureB;
+
+                if (fixture == fixtureA || fixture == fixtureB)
+                    // This destroys the contact and removes it from
+                    // this body's contact list.
+                    _world.ContactManager.Destroy(c);
+            }
+
+            if (Enabled)
+            {
+                var broadPhase = _world.ContactManager.BroadPhase;
+                fixture.DestroyProxies(broadPhase);
+            }
+        }
+
         /// <summary>
         /// Set the position of the body's origin and rotation.
         /// This breaks any contacts and wakes the other bodies.
@@ -733,12 +773,20 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetVTransform(ref FVector2 position, Fix64 rotation)
+        public void SetVTransform(ref FVector2 position, Fix64 rotation, bool clearContacts = false)
         {
             SetVTransformIgnoreContacts(ref position, rotation);
 
+            //spax's addition
+
+            FindNewContacts();
+        }
+
+        //spax's addition
+        public void FindNewContacts()
+        {
             //we need to set this to awake if we want collisions to be calculated
-            //after we vhange positions -Spax
+            //after we change positions -Spax
             if (!Awake) Awake = true;
             //Velcro: We check for new contacts after a body has been moved.
             _world.ContactManager.FindNewContacts();
@@ -1209,6 +1257,19 @@ namespace VelcroPhysics.Dynamics
             remove
             {
                 foreach (var f in FixtureList) f.OnSeparation -= value;
+            }
+        }
+
+        //spax's additions
+        public event OnCollisionHandler ContCollision
+        {
+            add
+            {
+                foreach (var f in FixtureList) f.ContCollision += value;
+            }
+            remove
+            {
+                foreach (var f in FixtureList) f.ContCollision -= value;
             }
         }
     }

@@ -19,5 +19,22 @@ namespace ActionGameEngine.Enum
 
             return (val & compare) > 0;
         }
+
+        //checks to see if val has the compare enums
+        public static int HasEnumInt(uint val, uint compare)
+        {
+            //should be 0 if enum isn't there and 1 if it is
+            uint check = (val & compare) / compare;
+            int ret = (int)check;
+            return ret;
+        }
+
+        //checks to see if val has the compare enums
+        public static int HasEnumInt(int val, int compare)
+        {
+            //should be 0 if enum isn't there and 1 if it is
+            int ret = (val & compare) / compare;
+            return ret;
+        }
     }
 }

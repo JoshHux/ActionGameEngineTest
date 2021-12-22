@@ -5,11 +5,11 @@ namespace ActionGameEngine.Gameplay
     public abstract class FrameTimer
     {
         //timer ends when this hits 0
-        private int timeRemaining = 0;
+        [UnityEngine.SerializeField] private int timeRemaining = 0;
         //timer ends when this hits 0
-        private int timeElapsed = 0;
+        [UnityEngine.SerializeField] private int timeElapsed = 0;
         //true if we want to pause the timer
-        private bool paused = true;
+        [UnityEngine.SerializeField] private bool paused = true;
 
         public FrameTimer()
         {

@@ -25,29 +25,29 @@ MonoBehaviour:
     m_Scopes: []
     m_IsDefault: 1
     m_Capabilities: 7
-  - m_Id: scoped:jilleJr
-    m_Name: jilleJr
+  - m_Id: scoped:Packages from jillejr
+    m_Name: Packages from jillejr
     m_Url: https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity
     m_Scopes:
-    - jillejr.newtonsoft.json-for-unity
+    - jillejr
     m_IsDefault: 0
     m_Capabilities: 0
-  m_UserSelectedRegistryName: jilleJr
+  m_UserSelectedRegistryName: Packages from jillejr
   m_UserAddingNewScopedRegistry: 0
   m_RegistryInfoDraft:
     m_ErrorMessage: 
     m_Original:
-      m_Id: scoped:jilleJr
-      m_Name: jilleJr
+      m_Id: scoped:Packages from jillejr
+      m_Name: Packages from jillejr
       m_Url: https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity
       m_Scopes:
-      - jillejr.newtonsoft.json-for-unity
+      - jillejr
       m_IsDefault: 0
       m_Capabilities: 0
     m_Modified: 0
-    m_Name: jilleJr
+    m_Name: Packages from jillejr
     m_Url: https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity
     m_Scopes:
-    - jillejr.newtonsoft.json-for-unity
+    - jillejr
     m_SelectedScopeIndex: 0
   m_LoadAssets: 0

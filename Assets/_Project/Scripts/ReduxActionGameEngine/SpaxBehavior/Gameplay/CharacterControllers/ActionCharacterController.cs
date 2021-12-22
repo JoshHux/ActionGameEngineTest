@@ -7,6 +7,7 @@ using ActionGameEngine.Enum;
 using ActionGameEngine.Interfaces;
 using VelcroPhysics.Dynamics;
 using FixMath.NET;
+using Spax;
 
 namespace ActionGameEngine
 {
@@ -14,12 +15,13 @@ namespace ActionGameEngine
     {
         //protected ShapeBase lockonTarget;
         //[SerializeField] private string path;
-
         protected override void OnStart()
         {
+            SpaxManager.SpaxInstance.TrackObject(this);
+            allignment = SpaxManager.SpaxInstance.GetTrackingIndexOf(this);
             this.data = SpaxJSONSaver.LoadCharacterData("Test");
             base.OnStart();
-            rb.Body._flags |= BodyFlags.BulletFlag;
+            //rb.Body._flags |= BodyFlags.BulletFlag;
         }
 
         protected override void StateCleanUpdate() { if (status.GetInHitstop()) { return; } }
@@ -27,9 +29,9 @@ namespace ActionGameEngine
 
         //returns a value describing what happened when we get hit
         //called by attacker hitbox
-        public override HitIndicator GetHit(int attackerID, HitboxData boxData)
+        public override HitIndicator GetHit(int attackerID, HitboxData boxData, int dir)
         {
-            return OnGetHit(attackerID, boxData);
+            return OnGetHit(attackerID, boxData, dir);
         }
 
         //TODO: what to do when we connect hit with enemy
@@ -64,7 +66,7 @@ namespace ActionGameEngine
 
         }
 
-        public HitIndicator OnGetHit(int attackerID, HitboxData boxData)
+        public HitIndicator OnGetHit(int attackerID, HitboxData boxData, int dir)
         {
             HitType type = boxData.type;
             bool onGround = EnumHelper.HasEnum((uint)status.GetStateConditions(), (int)StateCondition.GROUNDED);
@@ -79,14 +81,14 @@ namespace ActionGameEngine
                 {
                     //blockable hit
 
-                    //replace with block operations like checking if they're blocking the right way
-                    bool isBlocking = true;
+                    //replace with block operations like checking if they're blocking the *right* way
+                    bool isBlocking = EnumHelper.HasEnum((uint)status.currentState.stateConditions, (uint)StateCondition.GUARD_POINT);
 
                     if (isBlocking)
                     {
                         //set chip, blockstun, blockstop, etc.
 
-                        AddPotentialHitbox(attackerID, boxData, HitIndicator.BLOCKED);
+                        AddPotentialHitbox(attackerID, boxData, HitIndicator.BLOCKED, dir);
                         return indicator;
                     }
                     else
@@ -99,7 +101,7 @@ namespace ActionGameEngine
                     }
                 }
                 //set damage, hitstun, hitstop, etc.
-                AddPotentialHitbox(attackerID, boxData, indicator);
+                AddPotentialHitbox(attackerID, boxData, indicator, dir);
 
                 return indicator;
 
@@ -108,7 +110,7 @@ namespace ActionGameEngine
             {
                 //grab operations, like setting parent and the such
                 indicator |= HitIndicator.GRABBED;
-                AddPotentialHitbox(attackerID, boxData, indicator);
+                AddPotentialHitbox(attackerID, boxData, indicator, dir);
                 return indicator;
             }
 
@@ -142,14 +144,20 @@ namespace ActionGameEngine
         protected override void FlagBlockToOthers() { }
 
         //being hit, process data
-        protected override void ProcessHitbox(HitboxData boxData)
+        protected override void ProcessHitbox(HitboxData boxData, int dir)
         {
             HitboxDataHolder hold = boxData.GetHolder(hitIndicator);
             //knockback force
             //BepuVector3 force = boxData.launchForce * new BepuVector3(0, Fix64.Sin(boxData.launchAngle), Fix64.Cos(boxData.launchAngle) * -1).Normalized();
+            FVector2 force = (new FVector2(boxData.launchDir.x * dir, boxData.launchDir.y).normalized) * boxData.launchForce;
+            //Debug.Log("knockback x val :: " + (dir));
+            rb.Velocity = force;
 
             DamageHealth(boxData.damage);
             ApplyHitstop(hold.hitStopEnemy);
+            status.AddTransitionFlags(TransitionFlag.GOT_HIT);
+
+            Debug.Log("processing hit - x :: " + boxData.launchDir.x + ", y :: " + boxData.launchDir.y + "; " + boxData.launchForce + " | " + boxData.damage + " | " + hold.hitStopEnemy);
 
         }
 

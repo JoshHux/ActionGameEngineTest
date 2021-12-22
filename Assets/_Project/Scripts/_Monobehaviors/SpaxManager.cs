@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ActionGameEngine;
@@ -8,7 +9,7 @@ namespace Spax
     public class SpaxManager : MonoBehaviour
     {
         //public FixedAnimationController test;
-        private static SpaxManager SpaxInstance;
+        public static SpaxManager SpaxInstance;
 
         public delegate void InputUpdateEventHandler();
         public delegate void PreUpdateEventHandler();
@@ -37,6 +38,8 @@ namespace Spax
         private List<LivingObject> entities;
         private List<ActionCharacterController> players;
 
+        private VelcroWorld world;
+
         //for initializing the physics and filtering collisions
         //private CollisionGroup[] groups;
 
@@ -47,6 +50,11 @@ namespace Spax
             //test.Initialize();
             entities = new List<LivingObject>();
             players = new List<ActionCharacterController>();
+        }
+
+        void Start()
+        {
+            world = GetComponent<VelcroWorld>();
         }
 
         void FixedUpdate()
@@ -64,6 +72,7 @@ namespace Spax
             SpaxUpdate?.Invoke();
             //m_space.Update();
             //UpdatePhysics();
+            world.PhysUpdate();
             HitQueryUpdate?.Invoke();
             HurtQueryUpdate?.Invoke();
             PostUpdate?.Invoke();
@@ -85,6 +94,18 @@ namespace Spax
                     break;
             }
 
+        }
+
+        public int GetTrackingIndexOf(LivingObject obj)
+        {
+            int ret = -1;
+            switch (obj)
+            {
+                case ActionCharacterController actionChar:
+                    ret = players.FindIndex(a => a == actionChar);
+                    break;
+            }
+            return ret;
         }
 
     }

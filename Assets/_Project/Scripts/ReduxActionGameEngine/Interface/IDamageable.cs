@@ -4,6 +4,6 @@ namespace ActionGameEngine.Interfaces
 {
     public interface IDamageable
     {
-        HitIndicator GetHit(int attackerID, HitboxData boxData);
+        HitIndicator GetHit(int attackerID, HitboxData boxData, int dir);
     }
 }

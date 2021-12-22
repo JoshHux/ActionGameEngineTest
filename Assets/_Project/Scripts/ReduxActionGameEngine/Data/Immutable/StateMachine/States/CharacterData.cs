@@ -87,12 +87,18 @@ namespace ActionGameEngine.Data
         }
 
         //returns index of transition if true
+        //state's transitions are checked before movelist's
         public TransitionData TryTransitionState(int fromState, RecorderElement[] playerInputs, CancelConditions playerCond, TransitionFlag playerFlags, int facing)
         {
             StateData state = stateList[fromState];
             int check = state.CheckTransitions(playerInputs, playerFlags, playerCond, facing);
 
+            //make invalid transition by setting the target state to -1
+            TransitionData ret = new TransitionData();
+            ret.targetState = -1;
+
             //we found a valid transition, make final checks and prep data for player script to process
+            //check is the index of the transition if found            
             if (check > -1)
             {
                 TransitionData potenTransition = state.GetTransitionFromIndex(check);
@@ -103,16 +109,45 @@ namespace ActionGameEngine.Data
                 //we should NEVER return a transition to a node state
                 if (potenState.IsNodeState())
                 {
-                    return TryTransitionState(potenStateID, playerInputs, playerCond, playerFlags, facing);
+                    ret = TryTransitionState(potenStateID, playerInputs, playerCond, playerFlags, facing);
                 }
-
-                return potenTransition;
+                //we only transition if we go to another state, ID mismatch *OR* it's okay to transition to self
+                //if ID mimatch failed, then we know the ID are the same
+                else if ((fromState != potenStateID) || EnumHelper.HasEnum((uint)state.stateConditions, (uint)StateCondition.CAN_TRANSITION_TO_SELF))
+                {
+                    ret = potenTransition;
+                }
             }
             //we didn't find a valid transition from the state's transitions
 
-            //make invalid transition by setting the target state to -1
-            TransitionData ret = new TransitionData();
-            ret.targetState = -1;
+            //check if state has parent (parent id != state's id)
+            bool hasParent = state.stateID != state.parentID;
+
+            //should we check the parent's transitions
+            //but ONLY IF we haven't found a valid transition yet
+            if (!ret.IsValid() && hasParent && !EnumHelper.HasEnum((uint)state.stateConditions, (uint)StateCondition.NO_PARENT_COND))
+            {
+                //check the parent's transitions
+                //recur with passing the parent's ID
+                ret = TryTransitionState(state.parentID, playerInputs, playerCond, playerFlags, facing);
+            }
+
+            //last check before we return
+
+            //did we get hit?
+            bool gotHit = EnumHelper.HasEnum((uint)playerFlags, (uint)TransitionFlag.GOT_HIT);
+            //does the transition we get care about if we got hit or not?
+            bool caresAbtHit = EnumHelper.HasEnum((uint)ret.transitionFlag, (uint)TransitionFlag.GOT_HIT);
+
+            //only override to go into stun state if we got hit and the transition doesn't care about that
+            //also, we found a transition we found is valid
+            if (gotHit && ret.IsValid() && !caresAbtHit)
+            {
+                //all stun states should be attached to the default state
+                ret = TryTransitionState(0, playerInputs, playerCond, playerFlags, facing);
+            }
+
+
             return ret;
         }
 

@@ -59,7 +59,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             DistanceOutput output;
             DistanceGJK.ComputeDistance(ref input, out output, out cache);
 
-            return output.Distance < 10 * Settings.Epsilon;
+            return output.Distance < 1 * Settings.Epsilon;
         }
 
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
@@ -131,11 +131,11 @@ namespace VelcroPhysics.Collision.Narrowphase
             var distance1 = FVector2.Dot(normal, vIn.Value1.V) - offset;
 
             // If the points are behind the plane
-            if (distance0 <=Fix64.Zero) vOut[numOut++] = vIn.Value0;
-            if (distance1 <=Fix64.Zero) vOut[numOut++] = vIn.Value1;
+            if (distance0 <= Fix64.Zero) vOut[numOut++] = vIn.Value0;
+            if (distance1 <= Fix64.Zero) vOut[numOut++] = vIn.Value1;
 
             // If the points are on different sides of the plane
-            if (distance0 * distance1 <Fix64.Zero)
+            if (distance0 * distance1 < Fix64.Zero)
             {
                 // Find intersection point of edge and plane
                 var interp = distance0 / (distance0 - distance1);
@@ -144,7 +144,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 cv.V = vIn.Value0.V + interp * (vIn.Value1.V - vIn.Value0.V);
 
                 // VertexA is hitting edgeB.
-                cv.ID.ContactFeature.IndexA = (byte) vertexIndexA;
+                cv.ID.ContactFeature.IndexA = (byte)vertexIndexA;
                 cv.ID.ContactFeature.IndexB = vIn.Value0.ID.ContactFeature.IndexB;
                 cv.ID.ContactFeature.TypeA = ContactFeatureType.Vertex;
                 cv.ID.ContactFeature.TypeB = ContactFeatureType.Face;

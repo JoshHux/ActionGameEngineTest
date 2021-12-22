@@ -8,7 +8,7 @@ namespace ActionGameEngine.Gameplay
 {
     public class Hurtbox : TriggerDetector, IAlligned
     {
-        private int _allignment;
+        [ReadOnly, SerializeField] private int _allignment;
         //what to send hit signal to when this is hit
         private IDamageable damageable;
 
@@ -16,10 +16,15 @@ namespace ActionGameEngine.Gameplay
         private HurtboxData data;
         private VulnerableObject owner;
 
-        protected override void OnStart()
+        //protected override void OnStart()
+        //{
+        //    base.OnStart();
+        //}
+
+        public void Initialize()
         {
-            base.OnStart();
             owner = this.transform.parent.parent.gameObject.GetComponent<VulnerableObject>();
+            damageable = owner;
             _allignment = owner.GetAllignment();
         }
 
@@ -36,13 +41,14 @@ namespace ActionGameEngine.Gameplay
             int facing = owner.GetFacing();
             newPos.x *= facing;
 
-            trigger.LocalPosition = newPos;
             trigger.SetDimensions(data.localDim);
+            trigger.LocalPosition = newPos;
         }
 
-        public HitIndicator HitThisBox(int attackerID, HitboxData boxData)
+        public HitIndicator HitThisBox(int attackerID, HitboxData boxData, int dir)
         {
-            return damageable.GetHit(attackerID, boxData);
+            //sends signal to owner
+            return damageable.GetHit(attackerID, boxData, dir);
         }
 
         public void SetAllignment(int allignment) { this._allignment = allignment; }
@@ -56,11 +62,14 @@ namespace ActionGameEngine.Gameplay
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.green;
+            //Gizmos.color = Color.green;
+
+            Gizmos.color = new Color(0, 1, 0, 0.5f);
 
             Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-            Gizmos.DrawCube(Vector3.zero, new Vector2((float)data.localDim.x, (float)data.localDim.y));
+            if (trigger != null)
+                Gizmos.DrawCube(Vector3.zero, new Vector2((float)(trigger as VelcroBox).Width * 0.8f, (float)(trigger as VelcroBox).Height * 0.8f));
         }
 #endif
     }

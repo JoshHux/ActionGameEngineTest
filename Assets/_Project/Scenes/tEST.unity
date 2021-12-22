@@ -1734,7 +1734,7 @@ MonoBehaviour:
       stateList:
       - stateID: 0
         parentID: 0
-        duration: 0
+        duration: 1
         stateConditions: 13
         cancelConditions: 268435461
         transitions:
@@ -1762,7 +1762,44 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 2
           transitionEvent: 0
-        frames: []
+        - targetState: 11
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 32
+          transitionEvent: 8
+        frames:
+        - atFrame: 0
+          toggleStateConditions: 0
+          toggleCancelConditions: 0
+          thing: 0
+          timerEvent:
+            TimerDuration: 0
+            conditions: 0
+            isPersistent: 0
+          flags: 16
+          frameVelocity:
+            x:
+              m_rawValue: 0
+            y:
+              m_rawValue: 0
+          hitboxes: []
+          hurtboxes:
+          - localPos:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
+            localRot:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
+            localDim:
+              x:
+                m_rawValue: 8589934592
+              y:
+                m_rawValue: 8589934592
         animName: idle
       - stateID: 1
         parentID: 1
@@ -1932,8 +1969,11 @@ MonoBehaviour:
                 m_rawValue: 12884901888
               y:
                 m_rawValue: 12884901888
-            launchAngle:
-              m_rawValue: 4294967296
+            launchDir:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
             launchForce:
               m_rawValue: 0
             duration: 7
@@ -1991,8 +2031,11 @@ MonoBehaviour:
                 m_rawValue: 12884901888
               y:
                 m_rawValue: 12884901888
-            launchAngle:
-              m_rawValue: 4294967296
+            launchDir:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
             launchForce:
               m_rawValue: 0
             duration: 7
@@ -2037,7 +2080,7 @@ MonoBehaviour:
           hitboxes:
           - localPos:
               x:
-                m_rawValue: 4294967296
+                m_rawValue: 12884901888
               y:
                 m_rawValue: 4294967296
             localRot:
@@ -2050,10 +2093,13 @@ MonoBehaviour:
                 m_rawValue: 12884901888
               y:
                 m_rawValue: 12884901888
-            launchAngle:
-              m_rawValue: 4294967296
+            launchDir:
+              x:
+                m_rawValue: 4294967296
+              y:
+                m_rawValue: 0
             launchForce:
-              m_rawValue: 0
+              m_rawValue: 8589934592
             duration: 7
             damage: 0
             chipDamage: 0
@@ -2063,7 +2109,7 @@ MonoBehaviour:
             counterHitCause: 0
             hitCancel: 0
             counterHitCancel: 0
-            type: 0
+            type: 4
           hurtboxes: []
         animName: strike
       - stateID: 10
@@ -2109,8 +2155,11 @@ MonoBehaviour:
                 m_rawValue: 12884901888
               y:
                 m_rawValue: 12884901888
-            launchAngle:
-              m_rawValue: 4294967296
+            launchDir:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
             launchForce:
               m_rawValue: 0
             duration: 7
@@ -2125,6 +2174,68 @@ MonoBehaviour:
             type: 0
           hurtboxes: []
         animName: duress
+      - stateID: 11
+        parentID: 11
+        duration: -1
+        stateConditions: 28
+        cancelConditions: 0
+        transitions:
+        - targetState: 0
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 8
+          transitionEvent: 0
+        frames:
+        - atFrame: 10
+          toggleStateConditions: 0
+          toggleCancelConditions: 0
+          thing: 0
+          timerEvent:
+            TimerDuration: 0
+            conditions: 0
+            isPersistent: 0
+          flags: 4
+          frameVelocity:
+            x:
+              m_rawValue: 0
+            y:
+              m_rawValue: 0
+          hitboxes:
+          - localPos:
+              x:
+                m_rawValue: 4294967296
+              y:
+                m_rawValue: 4294967296
+            localRot:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
+            localDim:
+              x:
+                m_rawValue: 12884901888
+              y:
+                m_rawValue: 12884901888
+            launchDir:
+              x:
+                m_rawValue: 0
+              y:
+                m_rawValue: 0
+            launchForce:
+              m_rawValue: 0
+            duration: 7
+            damage: 0
+            chipDamage: 0
+            priority: 0
+            attackLv: 0
+            hitCause: 0
+            counterHitCause: 0
+            hitCancel: 0
+            counterHitCancel: 0
+            type: 0
+          hurtboxes: []
+        animName: Hitstun-Ground
     moveList:
       command:
       - targetState: 4
@@ -2261,6 +2372,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2

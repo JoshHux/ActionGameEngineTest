@@ -27,7 +27,7 @@
       {
         "stateID": 0,
         "parentID": 0,
-        "duration": 0,
+        "duration": 1,
         "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION",
         "cancelConditions": "GROUNDED, JUMP, NORM_LV3",
         "transitions": [
@@ -71,9 +71,68 @@
             "cancelConditions": 0,
             "transitionFlag": "AIRBORNE",
             "transitionEvent": 0
+          },
+          {
+            "targetState": 11,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "GOT_HIT",
+            "transitionEvent": "FACE_ENEMY"
           }
         ],
-        "frames": [],
+        "frames": [
+          {
+            "atFrame": 0,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "thing": false,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": "ACTIVATE_HURTBOXES",
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [],
+            "hurtboxes": [
+              {
+                "localPos": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
+                },
+                "localRot": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
+                },
+                "localDim": {
+                  "x": {
+                    "m_rawValue": 8589934592
+                  },
+                  "y": {
+                    "m_rawValue": 8589934592
+                  }
+                }
+              }
+            ]
+          }
+        ],
         "animName": "idle"
       },
       {
@@ -325,8 +384,13 @@
                     "m_rawValue": 12884901888
                   }
                 },
-                "launchAngle": {
-                  "m_rawValue": 4294967296
+                "launchDir": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
                 },
                 "launchForce": {
                   "m_rawValue": 0
@@ -411,8 +475,13 @@
                     "m_rawValue": 12884901888
                   }
                 },
-                "launchAngle": {
-                  "m_rawValue": 4294967296
+                "launchDir": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
                 },
                 "launchForce": {
                   "m_rawValue": 0
@@ -462,7 +531,7 @@
               "conditions": 0,
               "isPersistent": false
             },
-            "flags": 0,
+            "flags": "ACTIVATE_HITBOXES",
             "frameVelocity": {
               "x": {
                 "m_rawValue": 0
@@ -475,7 +544,7 @@
               {
                 "localPos": {
                   "x": {
-                    "m_rawValue": 4294967296
+                    "m_rawValue": 12884901888
                   },
                   "y": {
                     "m_rawValue": 4294967296
@@ -497,11 +566,16 @@
                     "m_rawValue": 12884901888
                   }
                 },
-                "launchAngle": {
-                  "m_rawValue": 4294967296
+                "launchDir": {
+                  "x": {
+                    "m_rawValue": 4294967296
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
                 },
                 "launchForce": {
-                  "m_rawValue": 0
+                  "m_rawValue": 8589934592
                 },
                 "duration": 7,
                 "damage": 0,
@@ -512,7 +586,7 @@
                 "counterHitCause": 0,
                 "hitCancel": 0,
                 "counterHitCancel": 0,
-                "type": 0
+                "type": "STRIKE_MIDDLE"
               }
             ],
             "hurtboxes": []
@@ -583,8 +657,13 @@
                     "m_rawValue": 12884901888
                   }
                 },
-                "launchAngle": {
-                  "m_rawValue": 4294967296
+                "launchDir": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
                 },
                 "launchForce": {
                   "m_rawValue": 0
@@ -605,9 +684,100 @@
           }
         ],
         "animName": "duress"
+      },
+      {
+        "stateID": 11,
+        "parentID": 11,
+        "duration": -1,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION, STUNNED",
+        "cancelConditions": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [
+          {
+            "atFrame": 10,
+            "toggleStateConditions": 0,
+            "toggleCancelConditions": 0,
+            "thing": false,
+            "timerEvent": {
+              "TimerDuration": 0,
+              "conditions": 0,
+              "isPersistent": false
+            },
+            "flags": "SET_TIMER",
+            "frameVelocity": {
+              "x": {
+                "m_rawValue": 0
+              },
+              "y": {
+                "m_rawValue": 0
+              }
+            },
+            "hitboxes": [
+              {
+                "localPos": {
+                  "x": {
+                    "m_rawValue": 4294967296
+                  },
+                  "y": {
+                    "m_rawValue": 4294967296
+                  }
+                },
+                "localRot": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
+                },
+                "localDim": {
+                  "x": {
+                    "m_rawValue": 12884901888
+                  },
+                  "y": {
+                    "m_rawValue": 12884901888
+                  }
+                },
+                "launchDir": {
+                  "x": {
+                    "m_rawValue": 0
+                  },
+                  "y": {
+                    "m_rawValue": 0
+                  }
+                },
+                "launchForce": {
+                  "m_rawValue": 0
+                },
+                "duration": 7,
+                "damage": 0,
+                "chipDamage": 0,
+                "priority": 0,
+                "attackLv": 0,
+                "hitCause": 0,
+                "counterHitCause": 0,
+                "hitCancel": 0,
+                "counterHitCancel": 0,
+                "type": 0
+              }
+            ],
+            "hurtboxes": []
+          }
+        ],
+        "animName": "Hitstun-Ground"
       }
     ],
-    "Length": 11
+    "Length": 12
   },
   "moveList": {
     "command": [

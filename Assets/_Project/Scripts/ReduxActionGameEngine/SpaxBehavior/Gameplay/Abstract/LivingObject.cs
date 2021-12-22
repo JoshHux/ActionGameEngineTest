@@ -5,10 +5,14 @@ using ActionGameEngine.Gameplay;
 using FixMath.NET;
 namespace ActionGameEngine
 {
+    //state end delegate
+    public delegate void StateExitEventHandler();
+
     //object that can move around and detect physics
     [System.Serializable]
     public abstract class LivingObject : GameplayBehavior
     {
+        //renderer to animate everything
         private RendererBehavior _renderer;
         //assign to RendererObject at end of each main update
         protected RendererHelper helper;
@@ -22,15 +26,18 @@ namespace ActionGameEngine
         [UnityEngine.SerializeField] protected CharacterStatus status;
 
         //hitstop timer
-        protected CallbackTimer stopTimer;
+        [UnityEngine.SerializeField] protected CallbackTimer stopTimer;
         //for keeping track of out state
-        protected CallbackTimer stateTimer;
+        [UnityEngine.SerializeField] protected CallbackTimer stateTimer;
         //timer that keeps track of whether or not we get rid of persistent state conditions
         protected CtxCallbackTimer<StateCondition> persistentTimer;
         //velocity calculated that we will apply to our rigidbody
         [UnityEngine.SerializeField] protected FVector2 calcVel;
         //for things such as setting velocity, makes sure that that velocity is always being applied
         protected FVector2 storedVel;
+
+        //for callbacks to latch onto so they're called when we exit a state
+        public StateExitEventHandler onStateExit;
 
 
         //----------/OVERRIDE METHODS/----------//
@@ -66,13 +73,21 @@ namespace ActionGameEngine
             //by default, the player should have the airborne flag
             //COMES AFTER DEFAULT STATE ASSIGNMENT -> this is so that our flags aren't overwritten
             status.AddTransitionFlags(TransitionFlag.AIRBORNE);
+            status.persistentCond = 0;
         }
 
         protected override void StateUpdate()
         {
-            //recordthe vlocity to do
+            //record the velocity to do
             calcVel = rb.Velocity;
             status.SetInHitstop(stopTimer.TickTimer());
+
+            //check new state because of whatever reason
+            if (status.checkState)
+            {
+                //try to transition to new state
+                TryTransitionState();
+            }
 
             //if not in Hitstop, tick the gameplay state timers
             if (!status.GetInHitstop())
@@ -81,15 +96,9 @@ namespace ActionGameEngine
                 //UnityEngine.Debug.Log("time elapsed in state :: " + stateTimer.GetTimeElapsed());
                 persistentTimer.TickTimer();
 
-                //check new state because of whatever reason
-                if (status.checkState)
-                {
-                    //try to transition to new state
-                    TryTransitionState();
-                }
-
+                //get the next frame to process
                 FrameData frame = status.GetFrame(stateTimer.GetTimeElapsed());
-                if (frame.isValid())
+                if (stateTimer.IsTicking() && frame.isValid())
                 {
                     ProcessFrameData(frame);
                 }
@@ -186,16 +195,25 @@ namespace ActionGameEngine
         //assigns new state
         protected void AssignNewState(int newStateID)
         {
+            //we're assigning a new state, so we're exiting the previous state, call the delegate
+            onStateExit?.Invoke();
+
+            //get the new state we want to enter
             StateData newState = data.GetStateFromID(newStateID);
             //setting new state information to CharacterStatus
             status.SetNewState(newState);
             status.SetNewStateConditions(data.GetConditionsFromState(newStateID));
             status.SetNewCancelConditions(newState.cancelConditions);
+            //new state found, remove transition flags
             //status.SetNewTransitionFlags(0);
             status.RemoveTransitionFlags(TransitionFlag.STATE_END);
+            status.RemoveTransitionFlags(TransitionFlag.GOT_HIT);
 
             //reset state timer
             stateTimer.StartTimer(newState.duration);
+
+            //any housekeeping or exceptions we need to cover
+            CleanUpNewState();
 
             //tell helper about the new state
             helper.newState = true;
@@ -220,7 +238,8 @@ namespace ActionGameEngine
 
         //----------/VIRTUAL METHODS/----------//
 
-
+        //call when we assign a new state, takes care of any housekeeping or special cases we need to cover
+        protected virtual void CleanUpNewState() { return; }
         protected virtual void TryTransitionState()
         {
             //get a transition, valid if we found a new state to transition to
@@ -229,9 +248,10 @@ namespace ActionGameEngine
             {
                 int newStateID = transition.targetState;
 
-                AssignNewState(newStateID);
-                //process the TransitionEvent flags that are set
+                //process the TransitionEvent flags that are set before you transition to the new state
                 ProcessTransitionEvents(transition.transitionEvent);
+                AssignNewState(newStateID);
+
             }
             else
             {
@@ -263,21 +283,64 @@ namespace ActionGameEngine
 
         protected virtual void ProcessTransitionEvents(TransitionEvent transitionEvents)
         {
-            TransitionEvent te = transitionEvents;
-            if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_VEL))
-            {
-                if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_X_VEL)) { new FVector2(0, calcVel.y); }
-                if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_Y_VEL)) { new FVector2(calcVel.x, 0); }
-                //if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_Z_VEL)) { calcVel.x = 0; }
-            }
+            //TransitionEvent te = transitionEvents;
+            //if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_VEL))
+            //{
+            //    if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_X_VEL)) { new FVector2(0, calcVel.y); }
+            //    if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_Y_VEL)) { new FVector2(calcVel.x, 0); }
+            //if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_Z_VEL)) { calcVel.x = 0; }
+            //}
+
+            /*branchless velocity killing (I'm proud of this)*/
+
+            //int version of event flags to look at
+            int te = (int)transitionEvents;
+
+            //int mask for the kill velocity flags
+            int killXFlag = (int)TransitionEvent.KILL_X_VEL;
+            int killYFlag = (int)TransitionEvent.KILL_Y_VEL;
+            //int killZFlag=(int)TransitionEvent.KILL_Z_VEL;
+
+            //do we have the flags? 1 or 0
+            int killXVel = EnumHelper.HasEnumInt(te, killXFlag);
+            int killYVel = EnumHelper.HasEnumInt(te, killYFlag);
+            //int killZVel=EnumHelper.HasEnumInt(te,killZFlag);
+
+            //flip 1 and 0, since we want to set 0 if true (aka 1)
+            int keepX = killXVel ^ 1;
+            int keepY = killYVel ^ 1;
+            //int keepZ=killZVel^1;
+
+            //record the old velcity
+            Fix64 oldXVel = calcVel.x;
+            Fix64 oldYVel = calcVel.y;
+            //Fix64 oldZVel=calcVel.z;
+
+            //multiply by 1 or 0 depending on if we want to keep or kill the velocity
+            Fix64 newXVel = oldXVel * keepX;
+            Fix64 newYVel = oldYVel * keepY;
+            //Fix64 newZVel=oldZVel*kee[Z;
+
+            //make the new velocity vector
+            //FVector3 newVel = new FVector3(newXVel, newYVel, newZVel);
+            FVector2 newVel = new FVector2(newXVel, newYVel);
+
+            //set the new velocity
+            calcVel = newVel;
+
         }
 
         protected virtual void ProcessFrameData(FrameData frame)
         {
-
+            //flags from frame, casted as an int
             int flags = (int)frame.flags;
+            //velocity from frame
+            FVector2 frameVel = frame.frameVelocity;
+            //Set and Apply Velocity flags as ints
+            int applyVelFlag = (int)FrameEventFlag.APPLY_VEL;
+            int setVelFlag = (int)FrameEventFlag.SET_VEL;
 
-            if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_TIMER))
+            if (EnumHelper.HasEnum((uint)flags, (int)FrameEventFlag.SET_TIMER))
             {
                 TimerEvent evnt = frame.timerEvent;
                 int time = evnt.TimerDuration;
@@ -286,19 +349,40 @@ namespace ActionGameEngine
                 status.AddPersistenConditions(cond);
             }
 
+
+            /*branchless velocity application (I'm also proud of this)*/
+
             //should only be 1 or 0
             //1 if flag exists
             //0 if flag does not exist
-            int applyVel = ((int)FrameEventFlag.APPLY_VEL & flags) / (int)FrameEventFlag.APPLY_VEL;
+            int applyVel = EnumHelper.HasEnumInt(flags, applyVelFlag);
+
             //same as above, but should still be 0 if only apply vel flag exists, since that flag's int value is smaller that set vel
-            int setVel = ((int)FrameEventFlag.SET_VEL & flags) / (int)FrameEventFlag.SET_VEL;
-            if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.APPLY_VEL))
-            {
-                if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_VEL, true))
-                { calcVel = frame.frameVelocity; }
-                else
-                { calcVel += frame.frameVelocity; }
-            }
+            int setVel = EnumHelper.HasEnumInt(flags, setVelFlag);
+
+            //1 if setVel is 0 and 0 if setVel is 1
+            //a flip of 0 to 1 and 1 to 0
+            int keepVel = setVel ^ 1;
+
+            //multiplied so that if we don't want to apply velocity, we don't
+            FVector2 impulse = frameVel * applyVel;
+
+            //if we want to set the velocity, we just multiply the velocity we have now by 0
+            FVector2 keptVel = calcVel * keepVel;
+
+            //we then add the two vectors together to get the new velocity, set it and we're done!
+            FVector2 newVel = impulse + keptVel;
+
+            //set new velocity
+            calcVel = newVel;
+
+            //if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.APPLY_VEL))
+            //{
+            //    if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_VEL, true))
+            //    { calcVel = frame.frameVelocity; }
+            //    else
+            //    { calcVel += frame.frameVelocity; }
+            //}
 
         }
 

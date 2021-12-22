@@ -41,8 +41,10 @@ public class VelcroWorldManager2D
         newBody.Initialize(world);
         body = newBody.GetBody();
         goBodDict.Add(body, newBody.gameObject);
+        //if (newBody.name == "Hitbox") { UnityEngine.Debug.Log("asfdkadsfbjadsfdfj"); }
         if (newBody.transform.transform.parent != null && newBody.transform.parent.GetComponentInParent<VelcroBody>() != null)
         {
+
             VelcroBody parentGo = newBody.transform.parent.GetComponentInParent<VelcroBody>();
             Body parent = parentGo.Body;
             newBody.parent = parent;
@@ -56,10 +58,14 @@ public class VelcroWorldManager2D
     public void RemoveBody(VelcroBody newBody)
     {
         Body body = newBody.GetBody();
-        if (goBodDict.ContainsKey(body)) { goBodDict.Remove(body); }
-        world.RemoveBody(body);
+        if (goBodDict.ContainsKey(body))
+        {
+            goBodDict.Remove(body);
+            world.RemoveBody(body);
 
-        world.ProcessChanges();
+            world.ProcessChanges();
+        }
+
     }
 
 

@@ -20,9 +20,11 @@ namespace ActionGameEngine.Enum
         HIT_CONFIRM = 1 << 4,
         //When a character is hit by another character
         GOT_HIT = 1 << 5,
+        //When a character is grabbed by another character
+        GOT_GRABBED = 1 << 6,
         //When a character that was previously installed, has their install timer run out
-        UNINSTALL = 1 << 6,
+        UNINSTALL = 1 << 7,
         //When you want the player to guard, IE for proximity block
-        GUARD = 1 << 7,
+        GUARD = 1 << 8,
     }
 }

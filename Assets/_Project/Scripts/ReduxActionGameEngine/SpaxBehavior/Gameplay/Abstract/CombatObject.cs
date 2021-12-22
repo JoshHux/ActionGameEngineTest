@@ -17,6 +17,15 @@ namespace ActionGameEngine.Gameplay
             base.OnStart();
             GameObject hitHolder = ObjectFinder.FindChildWithTag(this.gameObject, "Hitboxes");
             hitboxes = hitHolder.GetComponentsInChildren<Hitbox>();
+
+            //initialize our boxes
+            int len = hitboxes.Length;
+            for (int i = 0; i < len; i++)
+            {
+                Hitbox box = hitboxes[i];
+
+                box.Initialize();
+            }
         }
 
         protected override void HitboxQueryUpdate()
@@ -37,6 +46,12 @@ namespace ActionGameEngine.Gameplay
                     //record hitbox for later if attack connectes
                     if ((potenBoxData.priority > boxData.priority) && (!EnumHelper.HasEnum((uint)indicator, (int)HitIndicator.WHIFFED)))
                     { boxData = box.GetHitboxData(); }
+
+                    if (!status.inHitstop)
+                    {
+                        //Debug.Log("ticking hitbox");
+                        box.TickTimer();
+                    }
                 }
             }
 

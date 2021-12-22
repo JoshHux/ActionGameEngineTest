@@ -836,6 +836,10 @@ namespace VelcroPhysics.Dynamics
 
             if (!_bodyAddList.Contains(body))
                 _bodyAddList.Add(body);
+
+            //spax's addition
+            //UnityEngine.Debug.Log(body.Awake + " " + body.Enabled);
+            //this.ContactManager.FindNewContacts();
         }
 
         /// <summary>
@@ -847,6 +851,7 @@ namespace VelcroPhysics.Dynamics
         {
             UnityEngine.Debug.Assert(!_bodyRemoveList.Contains(body),
                 "The body is already marked for removal. You are removing the body more than once.");
+            //UnityEngine.Debug.Assert((!_bodyAddList.Contains(body)) && (!_bodyRemoveList.Contains(body)), "You are adding the same body more than once.");
 
             if (!_bodyRemoveList.Contains(body))
                 _bodyRemoveList.Add(body);

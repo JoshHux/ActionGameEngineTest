@@ -16,6 +16,7 @@ namespace ActionGameEngine
         {
             trigger = this.GetComponent<VelcroBody>();
             triggeredWith = 0;
+            //Debug.Log("called");
             //trigger.GetEntity().CollisionInformation.Events.ContactCreated += OnBepuTriggerEnter;
             //trigger.GetEntity().CollisionInformation.Events.RemovingContact += OnBepuTriggerExit;
 

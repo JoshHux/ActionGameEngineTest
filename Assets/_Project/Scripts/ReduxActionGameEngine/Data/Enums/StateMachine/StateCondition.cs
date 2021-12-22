@@ -17,7 +17,9 @@ namespace ActionGameEngine.Enum
         //for grabs, makes sure you're only hit by the hit that knocks you out of the grab
         //can also be used for cinematic supers
         STUNNED_SPECIAL = 1 << 5,
+        //stunned and are on the ground
         STUNNED_OTG = 1 << 6,
+        //whether or not we can tech
         AIR_TECHABLE = 1 << 7,
         GRAB_TECHABLE = 1 << 8,
         COUNTER_HIT = 1 << 9,
@@ -26,6 +28,7 @@ namespace ActionGameEngine.Enum
         GUARD_POINT_LOW = 1 << 12,
         GUARD_POINT_MID = 1 << 13,
         GUARD_POINT_HIGH = 1 << 14,
+        //if we can parry or not
         PARRY = 1 << 15,
         BOUNCE_WALL = 1 << 16,
         BOUNCE_GROUND = 1 << 17,
