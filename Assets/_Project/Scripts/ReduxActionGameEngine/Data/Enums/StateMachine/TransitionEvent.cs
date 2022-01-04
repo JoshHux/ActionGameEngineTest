@@ -14,6 +14,8 @@ namespace ActionGameEngine.Enum
         FACE_ENEMY = 1 << 3,
         //deactivate any still-active hitboxes
         CLEAN_HITBOXES = 1 << 4,
+        //indicates that we've exited a stun state
+        RESET_STUN = 1 << 5,
         //to flag enemy to block (if using something like proximity blocking)
         FLAG_BLOCK = 1 << 7,
         KILL_VEL = KILL_X_VEL | KILL_Y_VEL | KILL_Z_VEL,

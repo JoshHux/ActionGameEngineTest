@@ -1,4 +1,5 @@
 using ActionGameEngine.Data;
+using ActionGameEngine.Enum;
 using ActionGameEngine.Input;
 using UnityEngine.InputSystem;
 using FixMath.NET;
@@ -30,6 +31,7 @@ namespace ActionGameEngine.Gameplay
                 actions["Slash"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, false, false);
                 actions["Dust"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, false, false);
                 actions["Jump"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, false, false);
+                actions["Block"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000100000000000, false, false);
                 //released events
                 actions["Direction"].canceled += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, true, true);
                 actions["Punch"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, true, false);
@@ -37,6 +39,7 @@ namespace ActionGameEngine.Gameplay
                 actions["Slash"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, true, false);
                 actions["Dust"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, true, false);
                 actions["Jump"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, true, false);
+                actions["Block"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000100000000000, true, false);
             }
         }
 
@@ -55,9 +58,22 @@ namespace ActionGameEngine.Gameplay
             if (transition.IsValid())
             {
                 int newStateID = transition.targetState;
-                //process the TransitionEvent flags that are set before you set the new state
+
+                //get the current state before the transition
+                StateData curState = status.currentState;
+                //process the exitEvents flags before transitioning
+                TransitionEvent exitEvents = curState.exitEvents;
+                ProcessTransitionEvents(exitEvents);
+
+                //process the TransitionEvent flags that are set before you transition to the new state
                 ProcessTransitionEvents(transition.transitionEvent);
                 AssignNewState(newStateID);
+
+                //we assign it again since we know that the current state should be the new state 
+                curState = status.currentState;
+                //process the enterEvents flags before transitioning
+                TransitionEvent enterEvents = curState.enterEvents;
+                ProcessTransitionEvents(enterEvents);
 
             }
             //we didn't find a valid transition, try looking in the movelist
@@ -69,17 +85,33 @@ namespace ActionGameEngine.Gameplay
                 //check if it's valid
                 if (newState != -1)
                 {
-                    AssignNewState(newState);
-                }
+                    //get the current state before the transition
+                    StateData curState = status.currentState;
+                    //process the exitEvents flags before transitioning
+                    TransitionEvent exitEvents = curState.exitEvents;
+                    ProcessTransitionEvents(exitEvents);
 
-                status.checkState = false;
+                    //assign the new state
+                    AssignNewState(newState);
+
+                    //we assign it again since we know that the current state should be the new state 
+                    curState = status.currentState;
+                    //process the enterEvents flags before transitioning
+                    TransitionEvent enterEvents = curState.enterEvents;
+                    ProcessTransitionEvents(enterEvents);
+                }
+                else
+                {
+
+                    status.checkState = false;
+                }
             }
 
         }
 
-        private void ApplyInput(UnityEngine.Vector2 dir, short input, bool released, bool isDIr)
+        protected void ApplyInput(UnityEngine.Vector2 dir, short input, bool released, bool isDIr)
         {
-            ushort newDir = (ushort)fromPlayer.m_rawValue;
+            ushort newDir = fromPlayer.m_rawValue;
 
             FVector2 StickInput = new FVector2((Fix64)dir.x, (Fix64)dir.y);
             Fix64 StickAngle = (Fix64.Atan2(StickInput.x, StickInput.y)) * Fix64.PiInv * (Fix64)180f;
@@ -123,7 +155,7 @@ namespace ActionGameEngine.Gameplay
                 }
             }
 
-            fromPlayer.m_rawValue = (short)newDir;
+            fromPlayer.m_rawValue = newDir;
         }
 
         protected void BufferInput()
@@ -132,7 +164,10 @@ namespace ActionGameEngine.Gameplay
             bool buffered = inputRecorder.BufferInput(fromPlayer);
             //if ((fromPlayer.m_rawValue & (1 << 10)) > 0) { UnityEngine.Debug.Log(buffered); }
             //UnityEngine.Debug.Log("buffered :: " + buffered);
-            status.SetCheckState(buffered);
+
+
+            //make sure to keep any previous reason for checking a state
+            status.SetCheckState(buffered || status.checkState);
         }
     }
 }

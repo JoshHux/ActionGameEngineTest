@@ -52,6 +52,7 @@ namespace ActionGameEngine
             calcVel = new FVector2();
             storedVel = new FVector2();
 
+            stopTimer.OnEnd += ctx => this.EndHitstop();
             //when state timer ends, add the STATE_END flag to the transition flags
             stateTimer.OnEnd += ctx => status.AddTransitionFlags(TransitionFlag.STATE_END);
             persistentTimer.OnEnd += ctx => status.RemovePersistenConditions(persistentTimer.GetData());
@@ -78,23 +79,38 @@ namespace ActionGameEngine
 
         protected override void StateUpdate()
         {
-            //record the velocity to do
-            calcVel = rb.Velocity;
-            status.SetInHitstop(stopTimer.TickTimer());
+            //if not in Hitstop, tick the gameplay state timers, start of new frame, tick relevant timers forwards by 1 frame
+            //WE SHOULD NOT BE REFERENCING OR TICKING THE TIMERS FORWARDS ANYWHERE ELSE
 
-            //check new state because of whatever reason
+            //we tick the timers here to prevent a scenario where we exit hitstun, and begin ticking the state/stun timer
+            //and "losing"  a frame of stun
+            //this way, when hitstop ends, we still get at least one frame of stun/state
+            if (!status.GetInHitstop())
+            {
+
+                stateTimer.TickTimer();
+                //UnityEngine.Debug.Log("time elapsed in state :: " + stateTimer.GetTimeElapsed());
+                persistentTimer.TickTimer();
+            }
+            //record the velocity to do
+            //status.SetInHitstop(stopTimer.TickTimer());
+            stopTimer.TickTimer();
+
+
+            //check new state because of whatever reason, will apply frame and tick timers forwards when hitstop ends
+            //new state is assigned, but doesn't have frame 1 processed until 
             if (status.checkState)
             {
                 //try to transition to new state
                 TryTransitionState();
             }
 
+
+
             //if not in Hitstop, tick the gameplay state timers
             if (!status.GetInHitstop())
             {
-                stateTimer.TickTimer();
-                //UnityEngine.Debug.Log("time elapsed in state :: " + stateTimer.GetTimeElapsed());
-                persistentTimer.TickTimer();
+                calcVel = rb.Velocity;
 
                 //get the next frame to process
                 FrameData frame = status.GetFrame(stateTimer.GetTimeElapsed());
@@ -102,6 +118,7 @@ namespace ActionGameEngine
                 {
                     ProcessFrameData(frame);
                 }
+
             }
         }
 
@@ -183,6 +200,9 @@ namespace ActionGameEngine
         protected void ApplyHitstop(int time)
         {
             //rb.velocity = BepuVector3.Zero;
+            calcVel = rb.Velocity;
+            rb.Velocity = FVector2.zero;
+            status.inHitstop = true;
             stopTimer.StartTimer(time);
         }
 
@@ -197,7 +217,7 @@ namespace ActionGameEngine
         {
             //we're assigning a new state, so we're exiting the previous state, call the delegate
             onStateExit?.Invoke();
-
+            //UnityEngine.Debug.Log("transitioning to : " + newStateID + " " + status.GetTransitionFlags());
             //get the new state we want to enter
             StateData newState = data.GetStateFromID(newStateID);
             //setting new state information to CharacterStatus
@@ -215,6 +235,9 @@ namespace ActionGameEngine
             //any housekeeping or exceptions we need to cover
             CleanUpNewState();
 
+            //flag to check new state, just in case
+            status.checkState = true;
+
             //tell helper about the new state
             helper.newState = true;
             helper.renderFrames = 0;
@@ -223,7 +246,13 @@ namespace ActionGameEngine
 
 
         //----------/PRIVATE METHODS/----------//
-
+        //what to do when hitstop ends
+        private void EndHitstop()
+        {
+            UnityEngine.Debug.Log("ending hitstop " + rb.gameObject.name);
+            status.inHitstop = false;
+            rb.Velocity = this.calcVel;
+        }
 
         //callback to reset persistent state conditions
         private void ResetPersistentConditions() { status.SetPersistenConditions(0); }
@@ -248,10 +277,21 @@ namespace ActionGameEngine
             {
                 int newStateID = transition.targetState;
 
+                //get the current state before the transition
+                StateData curState = status.currentState;
+                //process the exitEvents flags before transitioning
+                TransitionEvent exitEvents = curState.exitEvents;
+                ProcessTransitionEvents(exitEvents);
+
                 //process the TransitionEvent flags that are set before you transition to the new state
                 ProcessTransitionEvents(transition.transitionEvent);
                 AssignNewState(newStateID);
 
+                //we assign it again since we know that the current state should be the new state 
+                curState = status.currentState;
+                //process the enterEvents flags before transitioning
+                TransitionEvent enterEvents = curState.enterEvents;
+                ProcessTransitionEvents(enterEvents);
             }
             else
             {
@@ -259,12 +299,13 @@ namespace ActionGameEngine
             }
         }
 
+        //reads the state conditions and applies certain effects based on that
         protected virtual void ProcessStateData(StateCondition curCond)
         {
             //apply gravity based on mass, clamps to max fall speed if exceeded
             if (EnumHelper.HasEnum((uint)curCond, (int)StateCondition.APPLY_GRAV))
             {
-                calcVel = new FVector2(calcVel.x, GameplayHelper.ApplyAcceleration(calcVel.y, -data.mass, -data.maxVelocity.y));
+                calcVel = new FVector2(calcVel.x, GameplayHelper.ApplyAcceleration2(calcVel.y, -data.mass, -data.maxVelocity.y));
             }
 
             //apply friction in corresponding direction
@@ -359,6 +400,8 @@ namespace ActionGameEngine
 
             //same as above, but should still be 0 if only apply vel flag exists, since that flag's int value is smaller that set vel
             int setVel = EnumHelper.HasEnumInt(flags, setVelFlag);
+            //UnityEngine.Debug.Log("frame detected");
+            if (applyVel > 0) { UnityEngine.Debug.Log("applying velocity"); }
 
             //1 if setVel is 0 and 0 if setVel is 1
             //a flip of 0 to 1 and 1 to 0

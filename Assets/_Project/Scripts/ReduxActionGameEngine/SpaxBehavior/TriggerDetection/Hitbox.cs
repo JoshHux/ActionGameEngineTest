@@ -22,7 +22,7 @@ namespace ActionGameEngine.Gameplay
     {
 
         //record from CombatObject
-        private int _ownerID = 0;
+        [ReadOnly, SerializeField] private int _ownerID = 0;
 
         private bool isActive = false;
         [ReadOnly, SerializeField] private int _allignment = 0;
@@ -210,7 +210,10 @@ namespace ActionGameEngine.Gameplay
                     if ((hurtbox != null) && (hurtbox.GetAllignment() != _allignment))
                     {
                         clash = false;
-                        ret = hurtbox.HitThisBox(_ownerID, data, owner.GetFacing());
+
+                        //has a sign to denote what direction the attacker was facing when we were hit
+                        int signedID = owner.GetFacing() * _ownerID;
+                        ret = hurtbox.HitThisBox(signedID, data);
                         //Debug.Log("hit with hitbox :: " + gameObject.name+" "+ret);
                         //  player.OnHit(data, box.GetHit());
                         //Debug.Log("found");

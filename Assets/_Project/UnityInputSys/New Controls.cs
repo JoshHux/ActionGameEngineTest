@@ -65,6 +65,54 @@ public class @NewControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Block"",
+                    ""type"": ""Button"",
+                    ""id"": ""a5f8ad23-a14a-490c-a163-265bd0838d4b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""4153de9c-f583-4205-8e41-a4ef2891f2d1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""New action1"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e04d8c1-507b-4a5e-965c-8cd62ad6570c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""New action2"",
+                    ""type"": ""Button"",
+                    ""id"": ""a409c9b6-ca65-4ac7-aa88-f45e25accc15"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""New action3"",
+                    ""type"": ""Button"",
+                    ""id"": ""67bb105b-d249-4e55-8da0-1d34022edc0c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""New action4"",
+                    ""type"": ""Button"",
+                    ""id"": ""bee96b46-13eb-47de-8bd6-2a33b9d6e820"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -177,6 +225,72 @@ public class @NewControls : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aec1293b-b49a-4199-8588-eee8d64e8926"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8d5566ea-bfcc-4d97-9a72-e863b0b46df0"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a5ec9e0-9833-4245-b044-6682f2198cf5"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7575db81-1361-455e-b1bd-f6fac91adae3"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87f35ce5-7ad0-48f0-aed4-c60bd22eb979"",
+                    ""path"": ""<Keyboard>/rightShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7583370-a6ad-4ef8-adbe-3bf166a46ce7"",
+                    ""path"": ""<Keyboard>/leftBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -191,6 +305,12 @@ public class @NewControls : IInputActionCollection, IDisposable
         m_TestPlayer_Slash = m_TestPlayer.FindAction("Slash", throwIfNotFound: true);
         m_TestPlayer_Dust = m_TestPlayer.FindAction("Dust", throwIfNotFound: true);
         m_TestPlayer_Jump = m_TestPlayer.FindAction("Jump", throwIfNotFound: true);
+        m_TestPlayer_Block = m_TestPlayer.FindAction("Block", throwIfNotFound: true);
+        m_TestPlayer_Newaction = m_TestPlayer.FindAction("New action", throwIfNotFound: true);
+        m_TestPlayer_Newaction1 = m_TestPlayer.FindAction("New action1", throwIfNotFound: true);
+        m_TestPlayer_Newaction2 = m_TestPlayer.FindAction("New action2", throwIfNotFound: true);
+        m_TestPlayer_Newaction3 = m_TestPlayer.FindAction("New action3", throwIfNotFound: true);
+        m_TestPlayer_Newaction4 = m_TestPlayer.FindAction("New action4", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -246,6 +366,12 @@ public class @NewControls : IInputActionCollection, IDisposable
     private readonly InputAction m_TestPlayer_Slash;
     private readonly InputAction m_TestPlayer_Dust;
     private readonly InputAction m_TestPlayer_Jump;
+    private readonly InputAction m_TestPlayer_Block;
+    private readonly InputAction m_TestPlayer_Newaction;
+    private readonly InputAction m_TestPlayer_Newaction1;
+    private readonly InputAction m_TestPlayer_Newaction2;
+    private readonly InputAction m_TestPlayer_Newaction3;
+    private readonly InputAction m_TestPlayer_Newaction4;
     public struct TestPlayerActions
     {
         private @NewControls m_Wrapper;
@@ -256,6 +382,12 @@ public class @NewControls : IInputActionCollection, IDisposable
         public InputAction @Slash => m_Wrapper.m_TestPlayer_Slash;
         public InputAction @Dust => m_Wrapper.m_TestPlayer_Dust;
         public InputAction @Jump => m_Wrapper.m_TestPlayer_Jump;
+        public InputAction @Block => m_Wrapper.m_TestPlayer_Block;
+        public InputAction @Newaction => m_Wrapper.m_TestPlayer_Newaction;
+        public InputAction @Newaction1 => m_Wrapper.m_TestPlayer_Newaction1;
+        public InputAction @Newaction2 => m_Wrapper.m_TestPlayer_Newaction2;
+        public InputAction @Newaction3 => m_Wrapper.m_TestPlayer_Newaction3;
+        public InputAction @Newaction4 => m_Wrapper.m_TestPlayer_Newaction4;
         public InputActionMap Get() { return m_Wrapper.m_TestPlayer; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -283,6 +415,24 @@ public class @NewControls : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnJump;
+                @Block.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnBlock;
+                @Block.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnBlock;
+                @Block.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnBlock;
+                @Newaction.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction;
+                @Newaction.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction;
+                @Newaction.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction;
+                @Newaction1.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction1;
+                @Newaction1.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction1;
+                @Newaction1.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction1;
+                @Newaction2.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction2;
+                @Newaction2.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction2;
+                @Newaction2.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction2;
+                @Newaction3.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction3;
+                @Newaction3.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction3;
+                @Newaction3.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction3;
+                @Newaction4.started -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction4;
+                @Newaction4.performed -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction4;
+                @Newaction4.canceled -= m_Wrapper.m_TestPlayerActionsCallbackInterface.OnNewaction4;
             }
             m_Wrapper.m_TestPlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -305,6 +455,24 @@ public class @NewControls : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Block.started += instance.OnBlock;
+                @Block.performed += instance.OnBlock;
+                @Block.canceled += instance.OnBlock;
+                @Newaction.started += instance.OnNewaction;
+                @Newaction.performed += instance.OnNewaction;
+                @Newaction.canceled += instance.OnNewaction;
+                @Newaction1.started += instance.OnNewaction1;
+                @Newaction1.performed += instance.OnNewaction1;
+                @Newaction1.canceled += instance.OnNewaction1;
+                @Newaction2.started += instance.OnNewaction2;
+                @Newaction2.performed += instance.OnNewaction2;
+                @Newaction2.canceled += instance.OnNewaction2;
+                @Newaction3.started += instance.OnNewaction3;
+                @Newaction3.performed += instance.OnNewaction3;
+                @Newaction3.canceled += instance.OnNewaction3;
+                @Newaction4.started += instance.OnNewaction4;
+                @Newaction4.performed += instance.OnNewaction4;
+                @Newaction4.canceled += instance.OnNewaction4;
             }
         }
     }
@@ -317,5 +485,11 @@ public class @NewControls : IInputActionCollection, IDisposable
         void OnSlash(InputAction.CallbackContext context);
         void OnDust(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnBlock(InputAction.CallbackContext context);
+        void OnNewaction(InputAction.CallbackContext context);
+        void OnNewaction1(InputAction.CallbackContext context);
+        void OnNewaction2(InputAction.CallbackContext context);
+        void OnNewaction3(InputAction.CallbackContext context);
+        void OnNewaction4(InputAction.CallbackContext context);
     }
 }

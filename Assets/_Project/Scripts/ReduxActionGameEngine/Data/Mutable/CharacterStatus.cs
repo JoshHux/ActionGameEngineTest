@@ -1,4 +1,5 @@
 using ActionGameEngine.Enum;
+using FixMath.NET;
 namespace ActionGameEngine.Data
 {
     [System.Serializable]
@@ -21,6 +22,12 @@ namespace ActionGameEngine.Data
         //if we need to check for a new state because of a new input
         public bool checkState;
         public bool inHitstop;
+
+        //proration to be applied to damage
+        public Fix64 proration;
+        //how many hits WE took in the current combo
+        public int comboCount;
+
         public void SetNewState(StateData newState)
         {
             checkState = true;

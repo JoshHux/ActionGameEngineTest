@@ -22,9 +22,9 @@ namespace ActionGameEngine.Input
         //1<<13 btn Z (8192) l2
         //1<<14 btn start (16384)
         //1<<15 btn select (32768)
-        public short m_rawValue;
+        public ushort m_rawValue;
 
-        public InputItem(short newRaw)
+        public InputItem(ushort newRaw)
         {
             m_rawValue = newRaw;
         }
@@ -156,7 +156,7 @@ namespace ActionGameEngine.Input
             //get differences, then only get the difference from prev
             int part = (cur ^ prev) & prev;
 
-            return new InputItem((short)part);
+            return new InputItem((ushort)part);
         }
 
 
@@ -169,7 +169,7 @@ namespace ActionGameEngine.Input
             //get differences, then only get the difference from cur
             int part = (cur ^ prev) & cur;
 
-            return new InputItem((short)part);
+            return new InputItem((ushort)part);
         }
 
         public static DigitalInput ToDigInp(short rawVal)
@@ -317,7 +317,7 @@ namespace ActionGameEngine.Input
             //and the sign and the xVal to make sure we don't apply a sign change to 0
             //both values should be 1 if we want a potential sign change
             //should be 1 or 0
-            short newSign = (short)(sign & xVal);
+            ushort newSign = (ushort)(sign & xVal);
 
             //xor the sign bit, flips 0 to 1 (pos to neg), flips 1 to 0 (neg to pos)
             m_rawValue ^= newSign;
@@ -346,18 +346,21 @@ namespace ActionGameEngine.Input
                 if (read4way)
                 {
                     dirCheck = ((this.X() * other.X()) > 0) || ((this.Y() * other.Y()) > 0);
+                    btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
                 }
                 else if (superStrict)
                 {
                     dirCheck = (other.m_rawValue & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
+                    btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
                 }
                 else
                 {
                     //strict match
                     dirCheck = ((other.m_rawValue & this.m_rawValue) & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
+                    //lenient buttons
+                    btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) > 0;
                 }
 
-                btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
             }
 
             bool ret = dirCheck && btnCheck;

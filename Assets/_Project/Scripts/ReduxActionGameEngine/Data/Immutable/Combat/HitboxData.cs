@@ -15,10 +15,17 @@ namespace ActionGameEngine.Data
         public int duration;
         public int damage;
         public int chipDamage;
+        public int minDamage;
         //higher priority means that it'll override hitboxes from the same entity with lower priority
         public int priority;
 
         public int attackLv;
+
+        //proration only applies to attacks that come after this one in a combo
+        //scaling on damage if it was first move in combo
+        public Fix64 initProration;
+        //scaling on damage not matter what point in combo
+        public Fix64 forcedProration;
 
         //when you hit a move, what to apply to the hit entity
         public StateCondition hitCause;

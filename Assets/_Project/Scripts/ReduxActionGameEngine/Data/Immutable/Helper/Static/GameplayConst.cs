@@ -20,5 +20,15 @@ namespace ActionGameEngine.Data.Helpers.Static
             { ret += accel; }
             return ret;
         }
+
+        public static Fix64 ApplyAcceleration2(Fix64 curVel, Fix64 accel, Fix64 maxSpd)
+        {
+            Fix64 ret = curVel;
+            if ((ret + accel) < (maxSpd))
+            { ret = maxSpd; }
+            else
+            { ret += accel; }
+            return ret;
+        }
     }
 }

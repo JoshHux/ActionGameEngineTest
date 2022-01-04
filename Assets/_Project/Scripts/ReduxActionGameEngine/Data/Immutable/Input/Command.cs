@@ -34,6 +34,15 @@ namespace ActionGameEngine.Input
                         RecorderElement input = playerInputs[i];
                         input.frag.inputItem.MultX(facing);
                         InputFragment inputFrag = input.frag;
+                        //It's strict if we don't have the lenient flag
+                        bool isStrict = !EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.ANY_IS_OKAY);
+                        //UnityEngine.Debug.Log(isStrict + " " + j);
+
+                        //add a flag to the checked flag, makes it so it passes the flag check
+                        if (!isStrict)
+                        {
+                            inputFrag.flags |= InputFlags.ANY_IS_OKAY;
+                        }
 
                         //special case where we only want to look at the currently held inputs by the player
                         //only check the first element if we don't have any flags
@@ -45,7 +54,6 @@ namespace ActionGameEngine.Input
                             toCheck.flags = 0;
 
                             bool checkNot = EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP);
-                            bool isStrict = EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.STRICT);
 
                             //UnityEngine.Debug.Log("pass currently held items");
                             //UnityEngine.Debug.Log(toCheck.inputItem.m_rawValue + " " + inputFrag.inputItem.m_rawValue + " | " + toCheck.flags + " " + inputFrag.flags);
@@ -71,7 +79,7 @@ namespace ActionGameEngine.Input
                             {
                                 if (Math.Abs(input.framesHeld - inputPrev.framesHeld) <= 3)
                                 {
-                                    inputFrag.inputItem.m_rawValue |= (short)(inputFragPrev.inputItem.m_rawValue & (0b1111111111000000));
+                                    inputFrag.inputItem.m_rawValue |= (ushort)(inputFragPrev.inputItem.m_rawValue & (0b1111111111000000));
                                 }
                                 //attatch the appropriate flag
                                 inputFrag.flags |= InputFlags.BTN_SIMUL_PRESS;
@@ -102,7 +110,7 @@ namespace ActionGameEngine.Input
 
                                 //just to go through and check without charge flag to make sure the other inputs match
                                 InputFragment flaglessFrag = new InputFragment(frag.inputItem, frag.flags ^ (InputFlags.HELD & frag.flags));
-                                bool unbrokenCharge = flaglessFrag.Check(inputFrag, false);
+                                bool unbrokenCharge = flaglessFrag.Check(inputFrag, false, isStrict);
                                 //remove flags to straight check the direction
                                 flaglessFrag.flags = 0;
 
@@ -115,7 +123,7 @@ namespace ActionGameEngine.Input
                                     InputFragment chargeFrag = input.frag;
 
                                     //free pass
-                                    unbrokenCharge = flaglessFrag.Check(chargeFrag, false) && ((chargeFrag.flags & InputFlags.PRESSED) > 0) && ((heldTime + charge.framesHeld) >= minHeldTime);
+                                    unbrokenCharge = flaglessFrag.Check(chargeFrag, false, isStrict) && ((chargeFrag.flags & InputFlags.PRESSED) > 0) && ((heldTime + charge.framesHeld) >= minHeldTime);
                                     //charge time completed, break out of loop
                                     if (unbrokenCharge) { break; }
 
@@ -126,7 +134,7 @@ namespace ActionGameEngine.Input
                                         //if it's the same direction, and it's is going from released to pressed
                                         unbrokenCharge = !(((chargePrevFrag.inputItem.m_rawValue & 0b0000000000111111) == (chargeFrag.inputItem.m_rawValue & 0b0000000000111111)) && ((chargePrevFrag.flags & InputFlags.RELEASED) > 0) && ((chargeFrag.flags & InputFlags.PRESSED) > 0));
                                         //would make the check true if charge frag passes the check and there isn't a weird corner case where you press down->down
-                                        unbrokenCharge = flaglessFrag.Check(chargeFrag, false) && unbrokenCharge;
+                                        unbrokenCharge = flaglessFrag.Check(chargeFrag, false, isStrict) && unbrokenCharge;
 
                                     }
                                     //check to make sure we didn't mark something like 2->1 as broken
@@ -157,7 +165,7 @@ namespace ActionGameEngine.Input
 
 
                         //check the flag to see if it checks out
-                        if (frag.Check(inputFrag, false))
+                        if (frag.Check(inputFrag, false, isStrict))
                         {
                             //UnityEngine.Debug.Log(inputFrag.inputItem.m_rawValue + " " + frag.inputItem.m_rawValue);
 

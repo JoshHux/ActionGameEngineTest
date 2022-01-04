@@ -20,7 +20,10 @@ namespace ActionGameEngine.Data
         public StateCondition stateConditions;
         //what it can cancel into
         public CancelConditions cancelConditions;
-
+        //what events occur when we enter this state
+        public TransitionEvent enterEvents;
+        //what events occur when we exit this state
+        public TransitionEvent exitEvents;
         //possible transitions
         public TransitionData[] transitions;
 
@@ -29,16 +32,21 @@ namespace ActionGameEngine.Data
 
         public string animName;
 
-        public StateData(int sID, int pID, int d, StateCondition sc, CancelConditions cc, TransitionData[] td, FrameData[] fd, string an)
+        public string stateName;
+
+        public StateData(int sID, int pID, int d, StateCondition sc, CancelConditions cc, TransitionEvent ene, TransitionEvent exe, TransitionData[] td, FrameData[] fd, string an, string sn)
         {
             stateID = sID;
             parentID = pID;
             duration = d;
             stateConditions = sc;
             cancelConditions = cc;
+            enterEvents = ene;
+            exitEvents = exe;
             transitions = td;
-            frames = new FrameData[0];
+            frames = fd;
             animName = an;
+            stateName = sn;
         }
 
         public FrameData GetFrameAt(int f)

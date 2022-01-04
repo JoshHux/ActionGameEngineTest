@@ -125,11 +125,19 @@ namespace ActionGameEngine.Data
 
             //should we check the parent's transitions
             //but ONLY IF we haven't found a valid transition yet
-            if (!ret.IsValid() && hasParent && !EnumHelper.HasEnum((uint)state.stateConditions, (uint)StateCondition.NO_PARENT_COND))
+            if (!ret.IsValid() && hasParent && !EnumHelper.HasEnum((uint)state.stateConditions, (uint)StateCondition.NO_PARENT_TRANS))
             {
                 //check the parent's transitions
                 //recur with passing the parent's ID
-                ret = TryTransitionState(state.parentID, playerInputs, playerCond, playerFlags, facing);
+                TransitionData potenTransition = TryTransitionState(state.parentID, playerInputs, playerCond, playerFlags, facing);
+                int potenStateID = potenTransition.targetState;
+
+                //we only transition if we go to another state, ID mismatch *OR* it's okay to transition to self
+                //if ID mimatch failed, then we know the ID are the same
+                if (potenTransition.IsValid() && ((fromState != potenStateID) || EnumHelper.HasEnum((uint)state.stateConditions, (uint)StateCondition.CAN_TRANSITION_TO_SELF)))
+                {
+                    ret = potenTransition;
+                }
             }
 
             //last check before we return
@@ -138,11 +146,13 @@ namespace ActionGameEngine.Data
             bool gotHit = EnumHelper.HasEnum((uint)playerFlags, (uint)TransitionFlag.GOT_HIT);
             //does the transition we get care about if we got hit or not?
             bool caresAbtHit = EnumHelper.HasEnum((uint)ret.transitionFlag, (uint)TransitionFlag.GOT_HIT);
+            //UnityEngine.Debug.Log(gotHit + " - " + caresAbtHit);
 
             //only override to go into stun state if we got hit and the transition doesn't care about that
             //also, we found a transition we found is valid
-            if (gotHit && ret.IsValid() && !caresAbtHit)
+            if (gotHit && !caresAbtHit && (fromState != 0))
             {
+                UnityEngine.Debug.Log("attempting to find stun state");
                 //all stun states should be attached to the default state
                 ret = TryTransitionState(0, playerInputs, playerCond, playerFlags, facing);
             }

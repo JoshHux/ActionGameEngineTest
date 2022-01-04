@@ -15,11 +15,13 @@ namespace ActionGameEngine
     {
         //protected ShapeBase lockonTarget;
         //[SerializeField] private string path;
+
+        [SerializeField] private string characterName;
         protected override void OnStart()
         {
             SpaxManager.SpaxInstance.TrackObject(this);
             allignment = SpaxManager.SpaxInstance.GetTrackingIndexOf(this);
-            this.data = SpaxJSONSaver.LoadCharacterData("Test");
+            this.data = SpaxJSONSaver.LoadCharacterData(characterName);
             base.OnStart();
             //rb.Body._flags |= BodyFlags.BulletFlag;
         }
@@ -29,9 +31,9 @@ namespace ActionGameEngine
 
         //returns a value describing what happened when we get hit
         //called by attacker hitbox
-        public override HitIndicator GetHit(int attackerID, HitboxData boxData, int dir)
+        public override HitIndicator GetHit(int attackerID, HitboxData boxData)
         {
-            return OnGetHit(attackerID, boxData, dir);
+            return OnGetHit(attackerID, boxData);
         }
 
         //TODO: what to do when we connect hit with enemy
@@ -66,7 +68,7 @@ namespace ActionGameEngine
 
         }
 
-        public HitIndicator OnGetHit(int attackerID, HitboxData boxData, int dir)
+        public HitIndicator OnGetHit(int attackerID, HitboxData boxData)
         {
             HitType type = boxData.type;
             bool onGround = EnumHelper.HasEnum((uint)status.GetStateConditions(), (int)StateCondition.GROUNDED);
@@ -74,6 +76,14 @@ namespace ActionGameEngine
             HitIndicator indicator = 0;
             //check to see if invuln matches
             //checks to see if hit is strike box
+
+            //check behind
+            //from top-down
+            //ePos=normalized enemy pos
+            //cPos=normalized character pos
+            //angle=atan(ePos.y*cPos.x-ePos.x*cPos.y, ePos.x*cPos.x-ePos.y*cPos.y)
+            //if abs(angle) is larger than pi/2 rad, then the enemy is behind us
+
             if (EnumHelper.HasEnum((uint)type, (int)HitType.STRIKE))
             {
                 //checks to see if unblockable or not
@@ -88,7 +98,7 @@ namespace ActionGameEngine
                     {
                         //set chip, blockstun, blockstop, etc.
 
-                        AddPotentialHitbox(attackerID, boxData, HitIndicator.BLOCKED, dir);
+                        AddPotentialHitbox(attackerID, boxData, HitIndicator.BLOCKED);
                         return indicator;
                     }
                     else
@@ -101,7 +111,7 @@ namespace ActionGameEngine
                     }
                 }
                 //set damage, hitstun, hitstop, etc.
-                AddPotentialHitbox(attackerID, boxData, indicator, dir);
+                AddPotentialHitbox(attackerID, boxData, indicator);
 
                 return indicator;
 
@@ -110,7 +120,7 @@ namespace ActionGameEngine
             {
                 //grab operations, like setting parent and the such
                 indicator |= HitIndicator.GRABBED;
-                AddPotentialHitbox(attackerID, boxData, indicator, dir);
+                AddPotentialHitbox(attackerID, boxData, indicator);
                 return indicator;
             }
 
@@ -153,11 +163,16 @@ namespace ActionGameEngine
             //Debug.Log("knockback x val :: " + (dir));
             rb.Velocity = force;
 
-            DamageHealth(boxData.damage);
-            ApplyHitstop(hold.hitStopEnemy);
+            //send the box data to have damage and scaling applied
+            DamageHealth(boxData);
+
+            //we're apply "getting hit" hitstop when we assign hitstun so that we don't lose any frames of hitstop
+            //look at CleanUpNewState in the VulnerableObject script to see when we apply it
+
+            //ApplyHitstop(hold.hitStopEnemy);
             status.AddTransitionFlags(TransitionFlag.GOT_HIT);
 
-            Debug.Log("processing hit - x :: " + boxData.launchDir.x + ", y :: " + boxData.launchDir.y + "; " + boxData.launchForce + " | " + boxData.damage + " | " + hold.hitStopEnemy);
+            Debug.Log("processing hit - x :: " + boxData.launchDir.x * dir + ", y :: " + boxData.launchDir.y + "; " + boxData.launchForce + " | " + boxData.damage + " | " + hold.hitStopEnemy);
 
         }
 

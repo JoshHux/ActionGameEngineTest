@@ -6,7 +6,7 @@ using UnityEditor;
 [CustomEditor(typeof(SpaxJSONSaver))]
 public class JSONSaverEditor : Editor
 {
-    private string characterName = "Test";
+    private string characterName;
     public override void OnInspectorGUI()
     {
         SpaxJSONSaver saver = (SpaxJSONSaver)target;

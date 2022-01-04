@@ -2,6 +2,7 @@ using UnityEngine;
 using ActionGameEngine.Interfaces;
 using ActionGameEngine.Enum;
 using ActionGameEngine.Data;
+using Spax;
 
 namespace ActionGameEngine.Gameplay
 {
@@ -15,6 +16,11 @@ namespace ActionGameEngine.Gameplay
         protected override void OnStart()
         {
             base.OnStart();
+            //assignment of combat id based on what index we were added, should be nonzero
+            //I'll probably change this later, it's better to keep this for now
+            combatID = SpaxManager.SpaxInstance.GetTrackingIndexOf(this) + 1;
+
+
             GameObject hitHolder = ObjectFinder.FindChildWithTag(this.gameObject, "Hitboxes");
             hitboxes = hitHolder.GetComponentsInChildren<Hitbox>();
 
@@ -26,6 +32,8 @@ namespace ActionGameEngine.Gameplay
 
                 box.Initialize();
             }
+
+
         }
 
         protected override void HitboxQueryUpdate()

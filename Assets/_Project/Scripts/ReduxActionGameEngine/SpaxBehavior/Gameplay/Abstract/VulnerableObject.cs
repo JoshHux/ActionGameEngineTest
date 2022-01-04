@@ -22,15 +22,23 @@ namespace ActionGameEngine.Gameplay
         //dictionary of attackerID and hitbox it put forward to process
         protected Dictionary<int, HitboxData> opposingBoxes;
 
+        //this is proration that is stored and not yet applied
+        //proration will apply on moves that come after it, so we're storing it here for now
+        private Fix64 storedProration;
+        //these are the number of hits to be added to the combo counter, not taken into account when scaling the damage
+        private int storedComboCount;
+
         //NOTE: PHASE OUT BY USING EITHER POSITIVE OR NEGATIVE ID FOR LEFT OR RIGHT FACING
         //dictionary of attackerID and direction they were facing
-        protected Dictionary<int, int> opposingDir;
+        //protected Dictionary<int, int> opposingDir;
 
         protected override void OnAwake()
         {
             base.OnAwake();
             opposingBoxes = new Dictionary<int, HitboxData>();
-            opposingDir = new Dictionary<int, int>();
+            storedProration = Fix64.One;
+            storedComboCount = 0;
+            //opposingDir = new Dictionary<int, int>();
         }
 
         protected override void OnStart()
@@ -60,15 +68,21 @@ namespace ActionGameEngine.Gameplay
             //if the length is nonzero, then we know that we were hit and should look for a hitbox to process
             if (opposingBoxes.Count > 0)
             {
-                Debug.Log("possible reassigning of state duration");
-                //of the state's duration is negative, we should assign the duration ourselves
+                //if the state's duration is negative, we should assign the duration ourselves
 
+                //hitbox's data is still here in case we want to look at it still
+                HitboxData hold = this.GetHitboxData();
                 //hold the Data Holder, which has the stun values
-                HitboxDataHolder hitData = this.GetHitboxData();
+                HitboxDataHolder hitData = hold.GetHolder(hitIndicator);
 
+                //Debug.Log("before bit operations");
                 //1 or 0 section
                 //1 if the duration is negative, 0 if positive
-                int curStateDur = status.currentState.duration >> 31;
+                uint unsignedDur = (uint)status.currentState.duration;
+                uint signedBit = unsignedDur >> 31;
+                int curStateDur = (int)signedBit;
+                //Debug.Log("after bit operations");
+
                 //flip of the int above, just to make numerical stuff easier
                 int isPos = curStateDur ^ 1;
 
@@ -79,20 +93,46 @@ namespace ActionGameEngine.Gameplay
                 //new duration value to set to the timer
                 int newDur = stunDur + stateDur;
 
+                //whether we're airborne or not
+                //bool isAirborne = EnumHelper.HasEnum((uint)status.GetStateConditions(), (uint)StateCondition.AIRBORNE);
+
+                //TODO (maybe): make branchless, setting the untech flag and/or either timer durations to zero based on the airborne flag
+
+                //if we're airborne, then we set the timer to untech time instead of hitstun
+                //we don't care about setting the state timer, since there shouldn't be an automatic transition from air hitstun when the duration ends
+                /*if (isAirborne)
+                {
+                    persistentTimer.StartTimer(newDur, StateCondition.AIR_UNTECHABLE);
+                    status.AddPersistenConditions(StateCondition.AIR_UNTECHABLE);
+                }*/
+
+                //EPIPHANY: STATE dURATION IS UNTECH TIMER FOR AIRBORNE HITSUN
+                //ON END CANCEL CONDITION WITH INPUT REQUIREMENTS PREVENTS UNWANTED TECHING
                 //assign new state duration
                 stateTimer.StartTimer(newDur);
 
+                //apply hitstop, we're doing this here so that we prevent a scenario where we lose a frame of hitstop
+                //this would occur becuase the start of hitstop is at the end of the a frame
+                //and the ticking of hitstop is at the start of the frame
+                ApplyHitstop(hitData.hitStopEnemy);
+
                 //processed the hitboxes, clear the hitboxes
                 opposingBoxes.Clear();
+                Debug.Log("possible reassigning of state duration of " + status.currentState.stateName + " to " + newDur + "\n" + hitIndicator);
 
                 //I wanna delete this so bad
-                opposingDir.Clear();
+                //opposingDir.Clear();
             }
 
         }
 
         protected override void HurtboxQueryUpdate()
         {
+            //reset storedProration to 1
+            this.storedProration = Fix64.One;
+            //reset storedComboCount to 0
+            this.storedComboCount = 0;
+
             //only run if the dictionary is not empty
             if (opposingBoxes.Count > 0)
             {
@@ -104,12 +144,31 @@ namespace ActionGameEngine.Gameplay
                 for (int i = 0; i < len; i++)
                 {
                     HitboxData boxData = opposingBoxes.ElementAt(i).Value;
-                    int dir = opposingDir.ElementAt(i).Value;
+                    //int dir = opposingDir.ElementAt(i).Value;F
+                    int key = opposingBoxes.ElementAt(i).Key;
 
+                    //another branchless thing I'm proud of
+                    //passing -1 if attacker was facing left and 1 if attacker was facing right
+                    //IMPORTANT NOTE: SIGNED INT LEFT SHIFT IS ARITHMATIC YOU MUST CONVERT TO UINT TO GET LOGICAL SHIFT
+                    uint unsignedKey = (uint)key;
+                    uint signedBit = unsignedKey >> 31;
+                    int isNegative = (int)signedBit;
+                    //-2 if the integer is negative, 0 if positive
+                    int negativePass = -2 * isNegative;
+                    //attacker facing direction
+                    //adds -2+1 if the key is negative, resulting in -1
+                    //or 0+1 if the key is positive, resulting in 1
+                    int dir = negativePass + 1;
+                    Debug.Log("key :: " + key + " | negative shift :: " + isNegative + " | -2 multiplication :: " + negativePass + " | concluded direction :: " + dir);
                     ProcessHitbox(boxData, dir);
                 }
                 //we don't clear hitboxes here since we need them to determine how long the stun state lasts for
             }
+
+            //apply storedProration to the overall proration, we aren't doing more damage calcs
+            status.proration *= this.storedProration;
+            //apply storedComboCount to the overall combo count
+            status.comboCount += this.storedComboCount;
         }
 
         protected override void ProcessFrameData(FrameData frame)
@@ -121,15 +180,22 @@ namespace ActionGameEngine.Gameplay
         }
 
         //call to get the appropriate hitbox's AttackLevelVal
-        private HitboxDataHolder GetHitboxData()
+        private HitboxData GetHitboxData()
         {
-            HitboxDataHolder ret = opposingBoxes[0].GetHolder(hitIndicator);
-            //TODO: 
+            HitboxData ret = opposingBoxes.ToArray<KeyValuePair<int, HitboxData>>()[0].Value;
+            //TODO: implement algorithm to find and prioritize hitboxes with the highest priority
             return ret;
         }
 
         protected void ActivateHurtboxes(HurtboxData[] boxData)
         {
+            //TODO: REDO HIT/HURTBOX ACTIVATION
+            //each hurt/hitbox (will be reffered to as "box" or "boxes" from now on) will each have an id
+            //that will correspond to its index in the below loop
+            //the ActivateHurtboxes function will be a callback that each box will have their hooks in
+            //the handler will accept an array of box-data that each box will draw from based on its id
+            //if the list is shorter than the id, then the box is deactivated
+
             int len = boxData.Length;
             for (int i = 0; i < len; i++)
             {
@@ -140,7 +206,7 @@ namespace ActionGameEngine.Gameplay
             }
         }
 
-        protected void AddPotentialHitbox(int attackerID, HitboxData boxData, HitIndicator indicator, int dir)
+        protected void AddPotentialHitbox(int attackerID, HitboxData boxData, HitIndicator indicator)
         {
             Debug.Log("potentially adding hitbox");
             //last hitbox grabbed us
@@ -184,10 +250,9 @@ namespace ActionGameEngine.Gameplay
                 //we haven't received a hitbox from that attacker
                 else
                 {
-                    Debug.Log("adding hitbox");
+                    //Debug.Log("adding hitbox :: " + attackerID);
                     //add the new key-value pair to the dictionary
                     opposingBoxes.Add(attackerID, boxData);
-                    opposingDir.Add(attackerID, dir);
                 }
                 hitIndicator = indicator;
             }
@@ -201,9 +266,70 @@ namespace ActionGameEngine.Gameplay
         }
 
         //call to subtract damage from our currentHp
-        protected void DamageHealth(int damage)
+        protected void DamageHealth(HitboxData data)
         {
+            //1 if we blocked
+            int wasBlocked = EnumHelper.HasEnumInt((uint)hitIndicator, (uint)HitIndicator.BLOCKED);
+            //1 if we didn't block
+            int wasHit = wasBlocked ^ 1;
+
+
+            //each damage value, recorded and multiplied by a "boolean"
+            int chip = wasBlocked * data.chipDamage;
+            int hit = wasHit * data.damage;
+
+            //Some maths so that proration applies only on hit and not block
+            Fix64 fPro = (wasHit * data.forcedProration) + (wasBlocked * Fix64.One);
+            Fix64 iPro = (wasHit * data.initProration) + (wasBlocked * Fix64.One);
+
+            //Either the chip or the on hit damage
+            int rawDamage = chip + hit;
+
+            //damage scaled using the proration accumulated so far
+            //if the hit is blocked, then fPro and iPro are set to 1, making the scaling irrelavent
+            int scaledDamage = this.ApplyProration(rawDamage, fPro, iPro);
+
+            //if the hit is blocked, then this is se to 0
+            int minDamage = data.minDamage * wasHit;
+
+            //gets at least the minimum damage if the proration is too high
+            //if the hit is blocked, then we'll get the chip damage or 0 (minDamage is 0 when the hit is blocked)
+            int damage = System.Math.Max(scaledDamage, minDamage);
+
+            //add to the stored combo hits if we aren't blocking
+            this.storedComboCount += 1 * wasHit;
+
+            //change our current hp value based on the final damage calculations
             status.SubtractCurrentHP(damage);
+        }
+
+        //call to apply and store proration
+        private int ApplyProration(int rawDamage, Fix64 forcedPro, Fix64 initPro)
+        {
+            //recording the basic relevant damage values
+            int ret = rawDamage;
+            //the current proration applied to this hit
+            Fix64 curPro = status.proration;
+            //proration for the current hit in a combo
+            //TODO: make a method to determine the scaling based on the current combo count
+            Fix64 comboPro = Fix64.One;
+            Fix64 fPro = forcedPro;
+            Fix64 iPro = initPro;
+
+            //makes initial proration irrelavent if the hit wasn't the first hit in a combo
+            if (status.comboCount > 0) { iPro = Fix64.One; }
+
+            //combines the prorations
+            Fix64 boxPro = fPro * iPro;
+
+            //store the proration to be used later
+            this.storedProration *= boxPro;
+
+
+            //scales the damage
+            ret = (int)(ret * curPro * comboPro);
+
+            return ret;
         }
 
         //call to subtract damage from our currentHp
@@ -218,7 +344,7 @@ namespace ActionGameEngine.Gameplay
             status.SetCurrentHP(data.maxHp);
         }
 
-        public abstract HitIndicator GetHit(int attackerID, HitboxData boxData, int dir);
+        public abstract HitIndicator GetHit(int attackerID, HitboxData boxData);
 
         //call to process whatever HitboxData we recieve
         protected abstract void ProcessHitbox(HitboxData boxData, int dir);
