@@ -318,8 +318,20 @@ namespace VelcroPhysics.Collision.ContactSystem
                 fixtureA.CollisionGroup != 0)
                 return fixtureA.CollisionGroup > 0;
 
-            var collide = (fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 &&
-                          (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0;
+
+            //var collide = (fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 &&
+            //              (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0;
+            //Spax's additions
+            var calc3d = true;
+            var checkCategories = ((fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 &&
+                                      (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0);
+            var checkPushBox =//if at least one is not a pushbox, calculate collisions anyway
+                                      ((!fixtureA.isPushBox || !fixtureB.isPushBox) ||
+                                      //the idea is that both are false when not a pushbox
+                                      ((fixtureA.isPushBox == fixtureA.isActivePushbox) &&
+                                      (fixtureB.isPushBox == fixtureB.isActivePushbox)));
+            var collide = calc3d && checkCategories && checkPushBox;
+            //end of Spax's additions
 
             return collide;
         }

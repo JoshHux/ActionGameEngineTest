@@ -276,6 +276,12 @@ namespace VelcroPhysics.Collision.ContactSystem
                 _flags |= ContactFlags.TouchingFlag;
             else
                 _flags &= ~ContactFlags.TouchingFlag;
+            //Spax's addition
+            if (touching)
+            {
+                FixtureA.ContCollision?.Invoke(FixtureA, FixtureB, this);
+                FixtureB.ContCollision?.Invoke(FixtureB, FixtureA, this);
+            }
 
             if (wasTouching == false && touching)
             {
@@ -283,24 +289,23 @@ namespace VelcroPhysics.Collision.ContactSystem
                 FixtureB.OnCollision?.Invoke(FixtureB, FixtureA, this);
                 contactManager.BeginContact?.Invoke(this);
 
+                UnityEngine.Debug.Log("------------------entered contact-------------------");
+
                 // Velcro: If the user disabled the contact (needed to exclude it in TOI solver) at any point by
                 // any of the callbacks, we need to mark it as not touching and call any separation
                 // callbacks for fixtures that didn't explicitly disable the collision.
                 if (!Enabled)
                     touching = false;
             }
-            //Spax's addition
-            else if (touching)
-            {
-                FixtureA.ContCollision?.Invoke(FixtureA, FixtureB, this);
-                FixtureB.ContCollision?.Invoke(FixtureB, FixtureA, this);
-            }
+
 
             if (wasTouching == true && touching == false)
             {
                 FixtureA?.OnSeparation?.Invoke(FixtureA, FixtureB, this);
                 FixtureB?.OnSeparation?.Invoke(FixtureB, FixtureA, this);
                 contactManager.EndContact?.Invoke(this);
+
+                UnityEngine.Debug.Log("------------------exited contact-------------------");
             }
 
             if (sensor)

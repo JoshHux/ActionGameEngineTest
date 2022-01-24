@@ -57,6 +57,8 @@ namespace ActionGameEngine.Gameplay
                 box.Initialize();
             }
             ResetHealth();
+            this.allignment = SpaxManager.SpaxInstance.GetTrackingIndexOf(this);
+
         }
 
         protected override void CleanUpNewState()
@@ -176,6 +178,24 @@ namespace ActionGameEngine.Gameplay
             base.ProcessFrameData(frame);
 
             if (frame.HasHurtboxes()) { ActivateHurtboxes(frame.hurtboxes); }
+
+        }
+
+        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents)
+        {
+            base.ProcessTransitionEvents(transitionEvents);
+
+            int exitedStun = EnumHelper.HasEnumInt((uint)transitionEvents, (uint)TransitionEvent.RESET_STUN);
+            int notExitStun = exitedStun ^ 1;
+
+            int curComboCount = status.comboCount;
+            int comboCount = curComboCount * notExitStun;
+
+            Fix64 curProration = status.proration;
+            Fix64 proration = (curProration * notExitStun) + (Fix64.One * exitedStun);
+
+            status.comboCount = comboCount;
+            status.proration = proration;
 
         }
 

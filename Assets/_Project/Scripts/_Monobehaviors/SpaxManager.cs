@@ -108,5 +108,9 @@ namespace Spax
             return ret;
         }
 
+        public VelcroWorld GetWorld()
+        {
+            return this.world;
+        }
     }
 }

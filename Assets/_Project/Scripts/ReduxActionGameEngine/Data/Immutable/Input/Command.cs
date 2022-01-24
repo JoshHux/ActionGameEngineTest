@@ -44,6 +44,16 @@ namespace ActionGameEngine.Input
                             inputFrag.flags |= InputFlags.ANY_IS_OKAY;
                         }
 
+                        //from the actual command, not from player
+                        bool _4way = EnumHelper.HasEnum((uint)persisFlags, (uint)InputFlags.DIR_AS_4WAY);
+                        //UnityEngine.Debug.Log(isStrict + " " + j);
+
+                        //add a flag to the checked flag, makes it so it passes the flag check
+                        if (_4way)
+                        {
+                            inputFrag.flags |= InputFlags.DIR_AS_4WAY;
+                        }
+
                         //special case where we only want to look at the currently held inputs by the player
                         //only check the first element if we don't have any flags
                         //in this case, we want to check the current inputs the player is pressing

@@ -138,27 +138,23 @@ namespace ActionGameEngine.Gameplay
             FVector2 newPos = data.localPos;
             int facing = owner.GetFacing();
             newPos.x *= facing;
+            trigger.Enabled = false;
 
             trigger.SetDimensions(data.localDim);
-            //trigger.PrepColliderType();
-            //var rectangleVertices = PolygonUtils.CreateRectangle(data.localDim.x / 2, data.localDim.y / 2);
-            //FixtureFactory.AttachPolygon(rectangleVertices, 1, trigger.GetBody());
-            //trigger.ResolveColliderType();
-            //Debug.Log(trigger.GetBody().FixtureList.Count);
-            //trigger.Body.OnCollision += (a, b, c) => Test(c);
+
+
             trigger.Body.ContCollision += (a, b, c) => Test(c);
-            //trigger.Body.ContCollision += (a, b, c) => test();
+            trigger.Body.OnCollision += (a, b, c) => Test(c);
+
 
             //trigger.Position = FVector2.zero;
-            //trigger.FindNewContacts();
 
-            //'FVector2 prevPos = trigger.Position;
-            //trigger.Position = prevPos + FVector2.one * facing * 100;
-            //trigger.Position = prevPos;
+
             trigger.LocalPosition = newPos;
             //trigger.FindNewContacts();
             //we need to set this after we jiggle the hitbox's location so that it doesn't add hitboxes  that aren't there
-            //trigger.Enabled = true;
+            trigger.Enabled = true;
+            //trigger.FindNewContacts();
 
 
         }
@@ -231,25 +227,15 @@ namespace ActionGameEngine.Gameplay
             wasColliding.Clear();
             diffColliders.Clear();
 
-            //trigger.Enabled = false;
+            trigger.Enabled = false;
 
             if (activeTimer.IsTicking())
             {
                 activeTimer.EndTimer();
             }
             trigger.Body.OnCollision -= (a, b, c) => Test(c);
-            //var fixtureList = trigger.GetBody().FixtureList;
 
-            /*while (trigger.Body.FixtureList.Count > 0)
-            {
-                trigger.Body.DestroyFixture(trigger.Body.FixtureList[0]);
-            }*/
-
-            //trigger.SetDimensions(FVector2.one);
-            //trigger.LocalPosition = FVector2.zero;
-            //trigger.Body.ContCollision -= (a, b, c) => test();
-
-            trigger.MakeForRemoval();
+            //trigger.MakeForRemoval();
 
             Debug.Log("Deactivating Hitbox :: " + gameObject.name + " " + " " + curCollidingGo.Count + " " + curColliding.Count + " " + wasColliding.Count);
 
@@ -281,7 +267,7 @@ namespace ActionGameEngine.Gameplay
                 Gizmos.matrix = Matrix4x4.TRS(trigger.transform.position, Quaternion.identity, Vector3.one);
                 //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
                 if (trigger.GetBody() != null)
-                    Gizmos.DrawCube(Vector3.zero, new Vector2((float)(trigger as VelcroBox).Width * 0.8f, (float)(trigger as VelcroBox).Height * 0.8f));
+                    Gizmos.DrawCube(trigger.transform.position, new Vector2((float)(trigger as VelcroBox).Width * 0.8f, (float)(trigger as VelcroBox).Height * 0.8f));
             }
         }
 #endif

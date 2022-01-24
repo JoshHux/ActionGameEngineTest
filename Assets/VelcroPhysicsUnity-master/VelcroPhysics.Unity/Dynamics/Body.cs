@@ -643,6 +643,39 @@ namespace VelcroPhysics.Dynamics
 
         //spax's addition
         public UnityEngine.GameObject gameObject;
+        public bool IsPushBox
+        {
+            set
+            {
+                for (var i = 0; i < FixtureList.Count; i++)
+                {
+                    var f = FixtureList[i];
+                    f.isPushBox = value;
+                }
+
+
+            }
+        }
+
+
+        public bool IsActivePushbox
+        {
+            set
+            {
+                if (FixtureList[0].isActivePushbox != value)
+                {
+                    this.Enabled = false;
+                    this.Enabled = true;
+                }
+                for (var i = 0; i < FixtureList.Count; i++)
+                {
+                    var f = FixtureList[i];
+                    f.isActivePushbox = value;
+                }
+
+            }
+        }
+        //end of Spax's additons
 
         /// <summary>
         /// Resets the dynamics of this body.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Collision;
+using VelcroPhysics.Utilities;
 using FixMath.NET;
 
 public class VelcroBox : VelcroBody
@@ -39,7 +39,15 @@ public class VelcroBox : VelcroBody
         this._width = scale.x;
         this._height = scale.y;
         //Debug.Log(gameObject.name + " rescaled");
-        VelcroWorld.instance.AddBody(this);
+        //VelcroWorld.instance.AddBody(this);
+
+        //gets the new polygon vertices to attach to the body
+        var polyVert = PolygonUtils.CreateRectangle(this._width / 2, this._height / 2);
+        //attach the new verticies to body
+        FixtureFactory.AttachPolygon(polyVert, this._mass, this._rb);
+
+        //resolve any extra collider shenanigans
+        ResolveColliderType();
     }
 
 

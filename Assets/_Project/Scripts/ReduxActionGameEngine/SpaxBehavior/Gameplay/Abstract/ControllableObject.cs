@@ -25,13 +25,13 @@ namespace ActionGameEngine.Gameplay
                 //using the input system to do a little mapping, replace as soon as possible
                 actions.Enable();
                 //pressed events
-                actions["Direction"].started += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, false, true);
-                actions["Punch"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, false, false);
-                actions["Kick"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000010000000, false, false);
-                actions["Slash"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, false, false);
-                actions["Dust"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, false, false);
-                actions["Jump"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, false, false);
-                actions["Block"].started += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000100000000000, false, false);
+                actions["Direction"].performed += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, false, true);
+                actions["Punch"].performed += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, false, false);
+                actions["Kick"].performed += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000010000000, false, false);
+                actions["Slash"].performed += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000100000000, false, false);
+                actions["Dust"].performed += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000001000000000, false, false);
+                actions["Jump"].performed += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000010000000000, false, false);
+                actions["Block"].performed += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000100000000000, false, false);
                 //released events
                 actions["Direction"].canceled += ctx => ApplyInput(ctx.ReadValue<UnityEngine.Vector2>(), 0b0000000000000000, true, true);
                 actions["Punch"].canceled += ctx => ApplyInput(new UnityEngine.Vector2(), 0b0000000001000000, true, false);

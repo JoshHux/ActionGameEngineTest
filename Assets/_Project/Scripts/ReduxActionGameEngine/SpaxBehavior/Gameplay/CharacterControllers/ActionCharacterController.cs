@@ -161,6 +161,8 @@ namespace ActionGameEngine
             //BepuVector3 force = boxData.launchForce * new BepuVector3(0, Fix64.Sin(boxData.launchAngle), Fix64.Cos(boxData.launchAngle) * -1).Normalized();
             FVector2 force = (new FVector2(boxData.launchDir.x * dir, boxData.launchDir.y).normalized) * boxData.launchForce;
             //Debug.Log("knockback x val :: " + (dir));
+
+            //has to be assigned directly to velocity to dodge hitstop starting from cancelling it out
             rb.Velocity = force;
 
             //send the box data to have damage and scaling applied

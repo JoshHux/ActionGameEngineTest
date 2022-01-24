@@ -3,6 +3,7 @@ using ActionGameEngine.Data;
 using ActionGameEngine.Data.Helpers.Static;
 using ActionGameEngine.Gameplay;
 using FixMath.NET;
+using Spax;
 namespace ActionGameEngine
 {
     //state end delegate
@@ -66,6 +67,8 @@ namespace ActionGameEngine
             //get the necessary components for gameplay
             rb = this.GetComponent<VelcroBody>();
             _renderer = this.GetComponent<RendererBehavior>();
+            SpaxManager.SpaxInstance.TrackObject(this);
+
             //set the facing direction
             status.facing = 1;
             helper.facing = 1;

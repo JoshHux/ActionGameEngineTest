@@ -52,6 +52,7 @@ public abstract class VelcroBody : MonoBehaviour
         set
         {
             _rb.constraint.childOffset = value;
+            _rb.constraint.ParentUpdate();
         }
     }
 

@@ -85,6 +85,10 @@ namespace VelcroPhysics.Dynamics
         public FixtureProxy[] Proxies;
         public int ProxyCount;
 
+        //Spax's additions
+        public bool isPushBox;
+        public bool isActivePushbox;
+        //end of Spax's additions
         internal Fixture()
         {
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
