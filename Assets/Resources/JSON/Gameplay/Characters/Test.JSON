@@ -30,6 +30,8 @@
         "duration": 1,
         "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION",
         "cancelConditions": "GROUNDED, JUMP, GUARD, NORM_LV3",
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 13,
@@ -41,7 +43,7 @@
             "transitionEvent": "FACE_ENEMY"
           },
           {
-            "targetState": 11,
+            "targetState": 12,
             "cmdMotion": {
               "commandInput": []
             },
@@ -151,6 +153,8 @@
         "duration": 0,
         "stateConditions": "AIRBORNE, APPLY_GRAV",
         "cancelConditions": "AIRBORNE",
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -172,6 +176,8 @@
         "duration": 0,
         "stateConditions": "GROUNDED, APPLY_GRAV, CAN_WALK, NO_PARENT_COND",
         "cancelConditions": "GROUNDED, JUMP",
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -200,6 +206,8 @@
         "duration": 5,
         "stateConditions": "GROUNDED, APPLY_GRAV, APPLY_FRICTION, NO_PARENT_COND",
         "cancelConditions": "JUMP",
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -260,6 +268,8 @@
         "duration": 5,
         "stateConditions": "AIRBORNE, APPLY_GRAV, NO_PARENT_TRANS",
         "cancelConditions": "AIRBORNE",
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 5,
@@ -281,6 +291,8 @@
         "duration": 1,
         "stateConditions": "NO_PARENT_TRANS, NO_PARENT_COND",
         "cancelConditions": "AIRBORNE",
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 1,
@@ -325,6 +337,8 @@
         "duration": -2,
         "stateConditions": 0,
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [],
         "frames": [],
         "animName": "attackNode",
@@ -336,6 +350,8 @@
         "duration": 26,
         "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -435,6 +451,8 @@
         "duration": 26,
         "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -534,6 +552,8 @@
         "duration": 26,
         "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -633,6 +653,8 @@
         "duration": 26,
         "stateConditions": "APPLY_GRAV, APPLY_FRICTION",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -650,31 +672,12 @@
       },
       {
         "stateID": 11,
-        "parentID": 11,
-        "duration": -1,
-        "stateConditions": "APPLY_GRAV, APPLY_FRICTION, STUNNED",
-        "cancelConditions": 0,
-        "transitions": [
-          {
-            "targetState": 0,
-            "cmdMotion": {
-              "commandInput": []
-            },
-            "cancelConditions": 0,
-            "transitionFlag": "STATE_END",
-            "transitionEvent": 0
-          }
-        ],
-        "frames": [],
-        "animName": "Hitstun-Ground",
-        "stateName": "Hitstun"
-      },
-      {
-        "stateID": 12,
         "parentID": 0,
         "duration": 1,
         "stateConditions": "GUARD_POINT_MID, GUARD_POINT_HIGH",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,
@@ -707,11 +710,36 @@
         "stateName": "Block"
       },
       {
+        "stateID": 12,
+        "parentID": 12,
+        "duration": -1,
+        "stateConditions": "APPLY_GRAV, APPLY_FRICTION, STUNNED",
+        "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
+        "transitions": [
+          {
+            "targetState": 0,
+            "cmdMotion": {
+              "commandInput": []
+            },
+            "cancelConditions": 0,
+            "transitionFlag": "STATE_END",
+            "transitionEvent": 0
+          }
+        ],
+        "frames": [],
+        "animName": "Hitstun-Ground",
+        "stateName": "Hitstun"
+      },
+      {
         "stateID": 13,
         "parentID": 13,
         "duration": -1,
         "stateConditions": "AIRBORNE, APPLY_GRAV, STUNNED",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 14,
@@ -749,6 +777,8 @@
         "duration": 15,
         "stateConditions": "AIRBORNE",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 1,
@@ -793,6 +823,8 @@
         "duration": -1,
         "stateConditions": "NO_PARENT_TRANS",
         "cancelConditions": 0,
+        "enterEvents": 0,
+        "exitEvents": 0,
         "transitions": [
           {
             "targetState": 0,

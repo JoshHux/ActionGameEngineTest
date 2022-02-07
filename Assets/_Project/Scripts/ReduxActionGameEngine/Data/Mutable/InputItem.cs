@@ -329,7 +329,14 @@ namespace ActionGameEngine.Input
             bool btnCheck = false;
             if (checkNot)
             {
-                if (superStrict)
+
+                if (read4way)
+                {
+                    //UnityEngine.Debug.Log("doing something - " + ((this.X() * other.X()) > 0) + " - " + ((this.Y() * other.Y()) > 0) + " btn - " + (((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000))));
+                    dirCheck = ((this.X() * other.X()) <= 0) && ((this.Y() * other.Y()) <= 0);
+                    btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
+                }
+                else if (superStrict)
                 {
                     dirCheck = ((other.m_rawValue & 0b0000000000111111) != (this.m_rawValue & 0b0000000000111111)) || ((this.m_rawValue & 0b0000000000111111) == 0);
                     btnCheck = ((other.m_rawValue & 0b1111111111000000) != (this.m_rawValue & 0b1111111111000000)) || ((this.m_rawValue & 0b1111111111000000) == 0);
@@ -345,6 +352,7 @@ namespace ActionGameEngine.Input
             {
                 if (read4way)
                 {
+                    //UnityEngine.Debug.Log("doing something - " + ((this.X() * other.X()) > 0) + " - " + ((this.Y() * other.Y()) > 0) + " btn - " + (((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000))));
                     dirCheck = ((this.X() * other.X()) > 0) || ((this.Y() * other.Y()) > 0);
                     btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) == (this.m_rawValue & (0b1111111111000000));
                 }
@@ -355,10 +363,14 @@ namespace ActionGameEngine.Input
                 }
                 else
                 {
+                    //UnityEngine.Debug.Log("lenient input check");
                     //strict match
+                    //dirCheck = ((other.m_rawValue & this.m_rawValue) & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
                     dirCheck = ((other.m_rawValue & this.m_rawValue) & (0b0000000000111111)) == (this.m_rawValue & (0b0000000000111111));
+
                     //lenient buttons
                     btnCheck = ((other.m_rawValue & this.m_rawValue) & (0b1111111111000000)) > 0;
+                    UnityEngine.Debug.Log(dirCheck + " " + btnCheck);
                 }
 
             }

@@ -33,8 +33,19 @@ public class VelcroCircle : VelcroBody
     {
         Gizmos.color = (!IsKinematic && !IsStatic) ? Color.green : Color.red;
 
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-        //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-        Gizmos.DrawWireSphere(Vector2.zero, (float)_radius);
+
+        if (Application.isPlaying)
+        {
+            Vector3 pos = new Vector3((float)this._rb.Position.x, (float)this._rb.Position.y, 0f);
+            Gizmos.matrix = Matrix4x4.TRS(pos, transform.rotation, Vector3.one);
+            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
+            Gizmos.DrawWireSphere(Vector2.zero, (float)_radius);
+        }
+        else
+        {
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
+            Gizmos.DrawWireSphere(Vector2.zero, (float)_radius);
+        }
     }
 }

@@ -22,6 +22,8 @@ namespace ActionGameEngine.Enum
         HELD_30F = 1 << 7,
         HELD = HELD_30F,
         NEED_PREV = HELD | BTN_SIMUL_PRESS | NO_INTERRUPT,
+        //for when we only have one check to pass
+        IS_ONLY_CHECK = PRESSED | RELEASED
 
 
     }

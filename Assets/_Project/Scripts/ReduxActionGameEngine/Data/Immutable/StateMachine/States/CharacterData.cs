@@ -44,16 +44,130 @@ namespace ActionGameEngine.Data
         public void CorrectStateID()
         {
             int len = stateList.Length;
+            //make array to record the old state ID
+            int[] oldID = new int[len];
             //while loop instead of for no particular reason
             int i = 0;
             while (i < len)
             {
                 //structs automatically make deep copies, reassign after manipulation
                 StateData hold = stateList[i];
+
+                //record the old ID in Array
+                oldID[i] = hold.stateID;
+
+                //assign the new ID based on index
                 hold.stateID = i;
+                //reassign the state (deep copy)
                 stateList[i] = hold;
+
+                //increment the while loop
                 i++;
             }
+
+            //go through and correct the parent ID for the states
+            i = 0;
+            while (i < len)
+            {
+                //structs automatically make deep copies, reassign after manipulation
+                StateData hold = stateList[i];
+
+                //record the old ID for the parent
+                int oldPID = hold.parentID;
+
+                //get the new parent ID
+                int newPID = FindNewID(oldPID, oldID);
+
+                //assign the new parent ID based on what was returned
+                hold.parentID = newPID;
+
+                //get the array of transitions from the state for ease of access
+                TransitionData[] transitions = hold.transitions;
+                //length of transition array in state
+                int transLen = transitions.Length;
+                //go through and correct the parent ID for the states
+                int j = 0;
+                while (j < transLen)
+                {
+                    //structs automatically make deep copies, reassign after manipulation
+                    TransitionData holdTrans = transitions[j];
+
+                    //record the old ID for the target state
+                    int oldTID = holdTrans.targetState;
+
+                    //get the new target ID
+                    int newTID = FindNewID(oldTID, oldID);
+
+                    //assign the new parent ID based on what was returned
+                    holdTrans.targetState = newTID;
+
+                    //reassign the state (deep copy)
+                    transitions[j] = holdTrans;
+
+                    //increment the while loop
+                    j++;
+                }
+                //reassign the transition list because deep copy
+                hold.transitions = transitions;
+
+
+                //reassign the state (deep copy)
+                stateList[i] = hold;
+
+                //increment the while loop
+                i++;
+            }
+
+            //to make sure movelist also has reassigned state ID
+            //store the movelist for ease of access
+            MotionTransition[] cmdList = moveList.command;
+            //length of command list
+            len = cmdList.Length;
+            //while loop instead of for no particular reason
+            i = 0;
+            while (i < len)
+            {
+                //structs automatically make deep copies, reassign after manipulation
+                MotionTransition hold = cmdList[i];
+
+                //record the old ID for the target state
+                int oldTID = hold.targetState;
+
+                //get the new target ID
+                int newTID = this.FindNewID(oldTID, oldID);
+
+                //assign the new parent ID based on what was returned
+                hold.targetState = newTID;
+
+                //reassign the state (deep copy)
+                cmdList[i] = hold;
+
+                //increment the while loop
+                i++;
+            }
+            //reassign command list (deep copy)
+            moveList.command = cmdList;
+        }
+
+        private int FindNewID(int oldID, int[] arrOldID)
+        {
+            int len = arrOldID.Length;
+            //while loop instead of for no particular reason
+            int i = 0;
+            while (i < len)
+            {
+                //structs automatically make deep copies, reassign after manipulation
+                int hold = arrOldID[i];
+
+                //old ID was found at index i, return the new ID of that state
+                if (oldID == hold) { return stateList[i].stateID; }
+
+                //increment while loop
+                i++;
+            }
+
+            //the new state was not found
+            return -1;
         }
 #endif
 

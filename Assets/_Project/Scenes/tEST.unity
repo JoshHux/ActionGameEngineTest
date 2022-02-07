@@ -1736,28 +1736,16 @@ MonoBehaviour:
         parentID: 0
         duration: 1
         stateConditions: 13
-        cancelConditions: 268435477
+        cancelConditions: 268435461
         enterEvents: 0
         exitEvents: 0
         transitions:
-        - targetState: 13
-          cmdMotion:
-            commandInput: []
-          cancelConditions: 2
-          transitionFlag: 32
-          transitionEvent: 8
-        - targetState: 11
-          cmdMotion:
-            commandInput: []
-          cancelConditions: 1
-          transitionFlag: 32
-          transitionEvent: 8
         - targetState: 3
           cmdMotion:
             commandInput:
             - inputItem:
                 m_rawValue: 3
-              flags: 0
+              flags: 3
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
@@ -1766,7 +1754,7 @@ MonoBehaviour:
             commandInput:
             - inputItem:
                 m_rawValue: 2
-              flags: 0
+              flags: 3
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
@@ -1776,6 +1764,12 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 2
           transitionEvent: 0
+        - targetState: 11
+          cmdMotion:
+            commandInput: []
+          cancelConditions: 0
+          transitionFlag: 32
+          transitionEvent: 8
         frames:
         - atFrame: 0
           toggleStateConditions: 0
@@ -1840,12 +1834,12 @@ MonoBehaviour:
             commandInput:
             - inputItem:
                 m_rawValue: 2
-              flags: 96
+              flags: 35
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
         frames: []
-        animName: walk
+        animName: Run
         stateName: Forward Walk
       - stateID: 3
         parentID: 0
@@ -1866,7 +1860,7 @@ MonoBehaviour:
             commandInput:
             - inputItem:
                 m_rawValue: 3
-              flags: 32
+              flags: 35
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
@@ -1892,8 +1886,8 @@ MonoBehaviour:
       - stateID: 4
         parentID: 1
         duration: 5
-        stateConditions: 536870918
-        cancelConditions: 2
+        stateConditions: 1610612742
+        cancelConditions: 0
         enterEvents: 0
         exitEvents: 0
         transitions:
@@ -1904,7 +1898,7 @@ MonoBehaviour:
           transitionFlag: 8
           transitionEvent: 0
         frames: []
-        animName: prejump
+        animName: Pre_Jump
         stateName: Prejump
       - stateID: 5
         parentID: 1
@@ -1937,7 +1931,7 @@ MonoBehaviour:
               m_rawValue: 128849018880
           hitboxes: []
           hurtboxes: []
-        animName: neutraljump
+        animName: Airborne
         stateName: Neutral Jump
       - stateID: 6
         parentID: 6
@@ -2158,7 +2152,7 @@ MonoBehaviour:
             counterHitCancel: 0
             type: 4
           hurtboxes: []
-        animName: strike
+        animName: B
         stateName: Strike
       - stateID: 10
         parentID: 6
@@ -2195,116 +2189,22 @@ MonoBehaviour:
         animName: Hitstun-Ground
         stateName: Hitstun
       - stateID: 12
-        parentID: 0
-        duration: 1
-        stateConditions: 24576
-        cancelConditions: 0
-        enterEvents: 0
-        exitEvents: 0
-        transitions:
-        - targetState: 0
-          cmdMotion:
-            commandInput:
-            - inputItem:
-                m_rawValue: 2048
-              flags: 32
-          cancelConditions: 0
-          transitionFlag: 8
-          transitionEvent: 0
-        - targetState: 15
-          cmdMotion:
-            commandInput: []
-          cancelConditions: 0
-          transitionFlag: 32
-          transitionEvent: 0
-        frames: []
-        animName: Block
-        stateName: Block
-      - stateID: 13
-        parentID: 13
-        duration: -1
-        stateConditions: 22
-        cancelConditions: 0
-        enterEvents: 0
-        exitEvents: 0
-        transitions:
-        - targetState: 14
-          cmdMotion:
-            commandInput:
-            - inputItem:
-                m_rawValue: 16320
-              flags: 65
-          cancelConditions: 0
-          transitionFlag: 8
-          transitionEvent: 0
-        - targetState: 0
-          cmdMotion:
-            commandInput: []
-          cancelConditions: 0
-          transitionFlag: 1
-          transitionEvent: 0
-        frames: []
-        animName: Hitstun-Air
-        stateName: Air Stun
-      - stateID: 14
-        parentID: 1
-        duration: 15
-        stateConditions: 2
-        cancelConditions: 0
-        enterEvents: 0
-        exitEvents: 0
-        transitions:
-        - targetState: 1
-          cmdMotion:
-            commandInput: []
-          cancelConditions: 0
-          transitionFlag: 8
-          transitionEvent: 0
-        frames:
-        - atFrame: 0
-          toggleStateConditions: 0
-          toggleCancelConditions: 0
-          thing: 0
-          timerEvent:
-            TimerDuration: 0
-            conditions: 0
-            isPersistent: 0
-          flags: 1
-          frameVelocity:
-            x:
-              m_rawValue: -4294967296
-            y:
-              m_rawValue: 42949672960
-          hitboxes: []
-          hurtboxes: []
-        animName: Hitstun-Air
-        stateName: Air Tech
-      - stateID: 15
         parentID: 12
-        duration: -1
-        stateConditions: 536870912
+        duration: 1
+        stateConditions: 28
         cancelConditions: 0
         enterEvents: 0
         exitEvents: 0
         transitions:
         - targetState: 0
           cmdMotion:
-            commandInput:
-            - inputItem:
-                m_rawValue: 2048
-              flags: 32
-          cancelConditions: 0
-          transitionFlag: 8
-          transitionEvent: 0
-        - targetState: 12
-          cmdMotion:
             commandInput: []
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
         frames: []
-        animName: Block
-        stateName: Block Stun
+        animName: Blocking
+        stateName: Block
     moveList:
       command:
       - targetState: 4
@@ -2321,13 +2221,6 @@ MonoBehaviour:
           - inputItem:
               m_rawValue: 256
             flags: 1
-      - targetState: 12
-        cancelConditions: 17
-        cmdMotion:
-          commandInput:
-          - inputItem:
-              m_rawValue: 2048
-            flags: 0
 --- !u!4 &1395958343
 Transform:
   m_ObjectHideFlags: 0

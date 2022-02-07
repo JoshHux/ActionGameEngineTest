@@ -39,7 +39,7 @@ namespace ActionGameEngine.Input
                         //UnityEngine.Debug.Log(isStrict + " " + j);
 
                         //add a flag to the checked flag, makes it so it passes the flag check
-                        if (!isStrict)
+                        if (isStrict)
                         {
                             inputFrag.flags |= InputFlags.ANY_IS_OKAY;
                         }
@@ -54,15 +54,27 @@ namespace ActionGameEngine.Input
                             inputFrag.flags |= InputFlags.DIR_AS_4WAY;
                         }
 
+                        //from the actual command, not from player
+                        bool isUp = EnumHelper.HasEnum((uint)persisFlags, (uint)InputFlags.CHECK_IS_UP);
+                        //UnityEngine.Debug.Log(isStrict + " " + j);
+
+                        //add a flag to the checked flag, makes it so it passes the flag check
+                        if (isUp)
+                        {
+                            inputFrag.flags |= InputFlags.CHECK_IS_UP;
+                        }
+
+
                         //special case where we only want to look at the currently held inputs by the player
                         //only check the first element if we don't have any flags
                         //in this case, we want to check the current inputs the player is pressing
-                        if (i == 0 && j == 0 && (EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP) || (frag.flags == 0)))
+                        if (i == 0 && j == 0 && (EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.IS_ONLY_CHECK, true) || EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP) || (frag.flags == 0)))
                         {
                             //fragment from the command to check against
                             InputFragment toCheck = frag;
-                            toCheck.flags = 0;
-
+                            //toCheck.flags = 0;
+                            //ADD THE FLAG TO SATISFY THE CHECK I AM AN IDIOT
+                            inputFrag.flags |= InputFlags.IS_ONLY_CHECK;
                             bool checkNot = EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP);
 
                             //UnityEngine.Debug.Log("pass currently held items");

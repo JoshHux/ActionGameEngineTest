@@ -39,23 +39,26 @@ public class VelcroBox : VelcroBody
         this._width = scale.x;
         this._height = scale.y;
         //Debug.Log(gameObject.name + " rescaled");
-        //VelcroWorld.instance.AddBody(this);
+        VelcroWorld.instance.AddBody(this);
 
         //gets the new polygon vertices to attach to the body
-        var polyVert = PolygonUtils.CreateRectangle(this._width / 2, this._height / 2);
+        //var polyVert = PolygonUtils.CreateRectangle(this._width / 2, this._height / 2);
         //attach the new verticies to body
-        FixtureFactory.AttachPolygon(polyVert, this._mass, this._rb);
+        //FixtureFactory.AttachPolygon(polyVert, this._mass, this._rb);
 
         //resolve any extra collider shenanigans
-        ResolveColliderType();
+        //ResolveColliderType();
     }
 
 
 
     protected override void InstantiateBody(BodyType type, World world)
     {
+
+        var rawTransRot = (Fix64)transform.rotation.eulerAngles.z * -1;
+
         // if (this.name == "Hitbox") { Debug.Log("addddddddddddddding"); }
-        _rb = BodyFactory.CreateRectangle(world, _width, _height, _mass, new FVector2((Fix64)transform.position.x, (Fix64)transform.position.y), (Fix64)transform.rotation.eulerAngles.z * FixedMath.Deg2Rad, type);
+        _rb = BodyFactory.CreateRectangle(world, _width, _height, _mass, new FVector2((Fix64)transform.position.x, (Fix64)transform.position.y), rawTransRot * FixedMath.Deg2Rad, type);
         //VelcroWorld.instance.world.AddBody(rb);
         //Debug.Log("fixture count:" + _rb.FixtureList.Count);
 
@@ -67,23 +70,40 @@ public class VelcroBox : VelcroBody
     }
     private void OnDrawGizmos()
     {
-        ActionGameEngine.Gameplay.Hitbox thing;
-        ActionGameEngine.Gameplay.Hurtbox thing2;
-        if (this.TryGetComponent<ActionGameEngine.Gameplay.Hitbox>(out thing))
+        if (this._rb != null)
         {
-            Gizmos.color = Color.red;
-        }
-        else
-        if (this.TryGetComponent<ActionGameEngine.Gameplay.Hurtbox>(out thing2))
-        {
-            Gizmos.color = Color.green;
-        }
-        else
-        {
+            ActionGameEngine.Gameplay.Hitbox thing;
+            ActionGameEngine.Gameplay.Hurtbox thing2;
+            if (this.TryGetComponent<ActionGameEngine.Gameplay.Hitbox>(out thing))
+            {
+                Gizmos.color = Color.red;
+            }
+            else
+            if (this.TryGetComponent<ActionGameEngine.Gameplay.Hurtbox>(out thing2))
+            {
+                Gizmos.color = Color.green;
+            }
+
+
+            //else
+            //{
+
+            Vector2 hold = new Vector2((float)this._rb.Position.x, (float)this._rb.Position.y);
             Gizmos.color = (!IsKinematic && !IsStatic) ? Color.blue : Color.yellow;
+            Gizmos.matrix = Matrix4x4.TRS(hold, Quaternion.Euler(0f, (float)((_rb.Rotation * FixedMath.Rad2Deg) * -1), 0f), Vector3.one);
+            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3((float)_width, 1f, (float)_height));
+
+            //}
         }
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-        //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-        Gizmos.DrawWireCube(Vector3.zero, new Vector2((float)_width, (float)_height));
+        else if (this.IsStatic)
+        {
+
+            Vector3 hold = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+            Gizmos.color = (!IsKinematic && !IsStatic) ? Color.blue : Color.yellow;
+            Gizmos.matrix = Matrix4x4.TRS(hold, Quaternion.Euler(transform.rotation.eulerAngles.x, (float)(transform.rotation.eulerAngles.z), transform.rotation.eulerAngles.z), Vector3.one);
+            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3((float)_width, 1f, (float)_height));
+        }
     }
 }

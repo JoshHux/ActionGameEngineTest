@@ -102,6 +102,13 @@ namespace FixMath.NET
             return ret;
         }
 
+        internal static FVector2 Transform(FVector2 v, FlatPhysics.FlatTransform transform)
+        {
+            return new FVector2(
+                transform.Cos * v.x - transform.Sin * v.y + transform.PositionX,
+                transform.Sin * v.x + transform.Cos * v.y + transform.PositionY);
+        }
+
         public static FVector2 operator *(FVector2 a, FVector2 b)
         {
             return new FVector2(a.x * b.x, a.y * b.y);

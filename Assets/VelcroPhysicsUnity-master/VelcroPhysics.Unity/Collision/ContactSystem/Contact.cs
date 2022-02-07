@@ -289,7 +289,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                 FixtureB.OnCollision?.Invoke(FixtureB, FixtureA, this);
                 contactManager.BeginContact?.Invoke(this);
 
-                UnityEngine.Debug.Log("------------------entered contact-------------------");
+                //UnityEngine.Debug.Log("------------------entered contact-------------------");
 
                 // Velcro: If the user disabled the contact (needed to exclude it in TOI solver) at any point by
                 // any of the callbacks, we need to mark it as not touching and call any separation
@@ -305,7 +305,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                 FixtureB?.OnSeparation?.Invoke(FixtureB, FixtureA, this);
                 contactManager.EndContact?.Invoke(this);
 
-                UnityEngine.Debug.Log("------------------exited contact-------------------");
+                //UnityEngine.Debug.Log("------------------exited contact-------------------");
             }
 
             if (sensor)

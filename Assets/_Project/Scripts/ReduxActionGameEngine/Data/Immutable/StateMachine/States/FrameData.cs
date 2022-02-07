@@ -40,7 +40,7 @@ namespace ActionGameEngine.Data
         }
 
         public bool isValid() { return (atFrame > 0) || (flags > 0) || HasHitboxes() || HasHurtboxes(); }
-        public bool HasHitboxes() { return hitboxes != null; }
-        public bool HasHurtboxes() { return hurtboxes != null; }
+        public bool HasHitboxes() { return EnumHelper.HasEnum((uint)flags, (uint)FrameEventFlag.ACTIVATE_HITBOXES); }
+        public bool HasHurtboxes() { return EnumHelper.HasEnum((uint)flags, (uint)FrameEventFlag.ACTIVATE_HURTBOXES); }
     }
 }

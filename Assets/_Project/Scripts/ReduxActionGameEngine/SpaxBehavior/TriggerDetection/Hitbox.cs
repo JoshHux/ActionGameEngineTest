@@ -100,12 +100,12 @@ namespace ActionGameEngine.Gameplay
         private void Test(Contact c)
         {
             GameObject other = c.FixtureB.Body.gameObject;
-            //Debug.Log("triggered -- " + this.name);
             if (isActive)// && (other != null))
             {
                 IAlligned otherObj = other.GetComponent<IAlligned>();
 
                 int otherAllignment = otherObj.GetAllignment();
+                //Debug.Log("triggered " + this.name + " with " + other.name);
 
                 if (otherAllignment != this._allignment)
                 {
@@ -138,22 +138,24 @@ namespace ActionGameEngine.Gameplay
             FVector2 newPos = data.localPos;
             int facing = owner.GetFacing();
             newPos.x *= facing;
-            trigger.Enabled = false;
+            //trigger.Enabled = false;
 
             trigger.SetDimensions(data.localDim);
 
 
             trigger.Body.ContCollision += (a, b, c) => Test(c);
-            trigger.Body.OnCollision += (a, b, c) => Test(c);
+            //trigger.Body.OnCollision += (a, b, c) => Test(c);
 
 
             //trigger.Position = FVector2.zero;
 
 
             trigger.LocalPosition = newPos;
+
+            trigger.Body.constraint.childRotation = FixedMath.C0p5;
             //trigger.FindNewContacts();
             //we need to set this after we jiggle the hitbox's location so that it doesn't add hitboxes  that aren't there
-            trigger.Enabled = true;
+            //trigger.Enabled = true;
             //trigger.FindNewContacts();
 
 
@@ -235,7 +237,7 @@ namespace ActionGameEngine.Gameplay
             }
             trigger.Body.OnCollision -= (a, b, c) => Test(c);
 
-            //trigger.MakeForRemoval();
+            trigger.MakeForRemoval();
 
             Debug.Log("Deactivating Hitbox :: " + gameObject.name + " " + " " + curCollidingGo.Count + " " + curColliding.Count + " " + wasColliding.Count);
 
