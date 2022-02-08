@@ -62,14 +62,6 @@ namespace ActionGameEngine.Gameplay
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            //Gizmos.color = Color.green;
-
-            Gizmos.color = new Color(0, 1, 0, 0.5f);
-
-            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-            if (trigger != null)
-                Gizmos.DrawCube(Vector3.zero, new Vector2((float)(trigger as VelcroBox).Width * 0.8f, (float)(trigger as VelcroBox).Height * 0.8f));
         }
 #endif
     }

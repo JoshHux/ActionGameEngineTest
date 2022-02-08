@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using FixMath.NET;
+using FlatPhysics;
+using FlatPhysics.Unity;
+using FlatPhysics.Filter;
 using ActionGameEngine;
 
 namespace Spax
@@ -9,7 +11,7 @@ namespace Spax
     public class SpaxManager : MonoBehaviour
     {
         //public FixedAnimationController test;
-        public static SpaxManager SpaxInstance;
+        public static SpaxManager instance;
 
         public delegate void InputUpdateEventHandler();
         public delegate void PreUpdateEventHandler();
@@ -38,24 +40,42 @@ namespace Spax
         private List<LivingObject> entities;
         private List<ActionCharacterController> players;
 
-        private VelcroWorld world;
+        private FlatWorld _world;
+        private Fix64 _timeStep;
+        private CollisionLayer[] _collisionMatrix;
 
         //for initializing the physics and filtering collisions
         //private CollisionGroup[] groups;
 
         void Awake()
         {
-            SpaxInstance = this;
+            instance = this;
             Application.targetFrameRate = 60;
             //test.Initialize();
             entities = new List<LivingObject>();
             players = new List<ActionCharacterController>();
+
+            //initialize physics world stuff
+            //collision layer stuff
+            this._collisionMatrix = new CollisionLayer[16];
+            int len = 16;
+            for (int i = 0; i < len; i++)
+            {
+                for (int j = 0; j < len; j++)
+                {
+                    bool collides = !Physics.GetIgnoreLayerCollision(i, j);
+
+                    if (collides)
+                    {
+                        this._collisionMatrix[i] |= (CollisionLayer)(1 << j);
+                    }
+                }
+            }
+            //asssign world
+            this._world = new FlatWorld();
+            this._timeStep = (Fix64)1 / (Fix64)60;
         }
 
-        void Start()
-        {
-            world = GetComponent<VelcroWorld>();
-        }
 
         void FixedUpdate()
         {
@@ -72,7 +92,8 @@ namespace Spax
             SpaxUpdate?.Invoke();
             //m_space.Update();
             //UpdatePhysics();
-            world.PhysUpdate();
+            //world.PhysUpdate();
+            this._world.Step(this._timeStep, 128);
             HitQueryUpdate?.Invoke();
             HurtQueryUpdate?.Invoke();
             PostUpdate?.Invoke();
@@ -108,9 +129,13 @@ namespace Spax
             return ret;
         }
 
-        public VelcroWorld GetWorld()
+
+        public void AddBody(FRigidbody rb)
         {
-            return this.world;
+            this._world.AddBody(rb.Body);
         }
+
+        public CollisionLayer GetCollisions(int layer) { return this._collisionMatrix[layer]; }
+
     }
 }

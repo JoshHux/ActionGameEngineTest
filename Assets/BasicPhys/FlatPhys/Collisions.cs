@@ -5,6 +5,14 @@ namespace FlatPhysics
 {
     public static class Collisions
     {
+        public static bool CheckAABB(FlatAABB a, FlatAABB b)
+        {
+            var d1 = a.Min - b.Max;
+            var d2 = b.Min - b.Max;
+
+            return d1.x <= 0 && d1.y <= 0 && d2.x <= 0 && d2.y <= 0;
+        }
+
         public static bool IntersectCirclePolygon(FVector2 circleCenter, Fix64 circleRadius,
                                                     FVector2 polygonCenter, FVector2[] vertices,
                                                     out FVector2 normal, out Fix64 depth)

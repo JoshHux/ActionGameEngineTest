@@ -7,10 +7,12 @@ namespace ActionGameEngine
     public class EnvironmentDetector : TriggerDetector
     {
         private ICollideable colObj;
+        private bool _prevStatus;
 
         protected override void OnStart()
         {
             base.OnStart();
+            this._prevStatus = false;
             colObj = transform.parent.parent.gameObject.GetComponent<ActionGameEngine.ActionCharacterController>();
             //Debug.Log(transform.parent.parent.gameObject);
         }

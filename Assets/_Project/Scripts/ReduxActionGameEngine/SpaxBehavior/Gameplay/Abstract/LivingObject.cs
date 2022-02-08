@@ -3,6 +3,7 @@ using ActionGameEngine.Data;
 using ActionGameEngine.Data.Helpers.Static;
 using ActionGameEngine.Gameplay;
 using FixMath.NET;
+using FlatPhysics.Unity;
 using Spax;
 namespace ActionGameEngine
 {
@@ -22,7 +23,7 @@ namespace ActionGameEngine
         //overall data about our character, stuff like all states and movelist
         protected CharacterData data;
         //rigidbody that we will use to move around and collide with the environment
-        protected VelcroBody rb;
+        protected FBox rb;
         //current status about the character, state, persistent state conditions, current hp, etc.
         [UnityEngine.SerializeField] protected CharacterStatus status;
 
@@ -65,9 +66,9 @@ namespace ActionGameEngine
         {
             base.OnStart();
             //get the necessary components for gameplay
-            rb = this.GetComponent<VelcroBody>();
+            rb = this.GetComponent<FBox>();
             _renderer = this.GetComponent<RendererBehavior>();
-            SpaxManager.SpaxInstance.TrackObject(this);
+            SpaxManager.instance.TrackObject(this);
 
             //set the facing direction
             status.facing = 1;

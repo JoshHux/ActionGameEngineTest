@@ -18,7 +18,7 @@ namespace ActionGameEngine.Gameplay
             base.OnStart();
             //assignment of combat id based on what index we were added, should be nonzero
             //I'll probably change this later, it's better to keep this for now
-            combatID = SpaxManager.SpaxInstance.GetTrackingIndexOf(this) + 1;
+            combatID = SpaxManager.instance.GetTrackingIndexOf(this) + 1;
 
 
             GameObject hitHolder = ObjectFinder.FindChildWithTag(this.gameObject, "Hitboxes");

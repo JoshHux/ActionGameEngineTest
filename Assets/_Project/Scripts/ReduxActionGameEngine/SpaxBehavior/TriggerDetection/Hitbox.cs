@@ -1,15 +1,9 @@
 using System;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
-using VelcroPhysics.Tools.Triangulation.TriangulationBase;
-using VelcroPhysics.Utilities;
-using VelcroPhysics.Factories;
+using FlatPhysics.Unity;
+using FlatPhysics.Contact;
 
 using System.Linq;
 using System.Collections.Generic;
-using VelcroPhysics.Collision.ContactSystem;
 using UnityEngine;
 using ActionGameEngine.Data;
 using ActionGameEngine.Enum;
@@ -33,20 +27,20 @@ namespace ActionGameEngine.Gameplay
         //currently colliding with, but the parent gameobject, to prevent multi-hits when we don't want them
         [SerializeField] private List<GameObject> curCollidingGo;
         //currently colliding with
-        [SerializeField] private List<VelcroBody> curColliding;
+        [SerializeField] private List<FRigidbody> curColliding;
         //previously collided with
-        [SerializeField] private List<VelcroBody> wasColliding;
+        [SerializeField] private List<FRigidbody> wasColliding;
         //what gets queried, difference between the two previous lists
-        [SerializeField] private List<VelcroBody> diffColliders;
+        [SerializeField] private List<FRigidbody> diffColliders;
 
         protected override void OnAwake()
         {
             base.OnAwake();
             activeTimer = new CallbackTimer();
             curCollidingGo = new List<GameObject>();
-            curColliding = new List<VelcroBody>();
-            wasColliding = new List<VelcroBody>();
-            diffColliders = new List<VelcroBody>();
+            curColliding = new List<FRigidbody>();
+            wasColliding = new List<FRigidbody>();
+            diffColliders = new List<FRigidbody>();
             activeTimer.OnEnd += ctx => DeactivateBox(ctx);
 
             isActive = false;
@@ -57,7 +51,7 @@ namespace ActionGameEngine.Gameplay
         protected override void OnStart()
         {
             base.OnStart();
-            trigger.Body.ContCollision += (a, b, c) => Test(c);
+            trigger.Body.OnOverlap += (c) => Test(c);
 
         }
 
@@ -97,9 +91,9 @@ namespace ActionGameEngine.Gameplay
             }*/
         }
 
-        private void Test(Contact c)
+        private void Test(ContactData c)
         {
-            GameObject other = c.FixtureB.Body.gameObject;
+            GameObject other = c.other;
             if (isActive)// && (other != null))
             {
                 IAlligned otherObj = other.GetComponent<IAlligned>();
@@ -112,7 +106,7 @@ namespace ActionGameEngine.Gameplay
                     //Debug.Log("collided -- " + this.name);
 
                     //Debug.Log("root difference");
-                    VelcroBody newCol = other.GetComponent<VelcroBody>();
+                    FRigidbody newCol = other.GetComponent<FRigidbody>();
                     if (!curColliding.Contains(newCol) && !curCollidingGo.Contains(other.transform.parent.gameObject))
                     {
                         //Debug.Log(_ownerID + " -- overlapping - " + other.name);
@@ -131,10 +125,9 @@ namespace ActionGameEngine.Gameplay
         public void ActivateHitBox(HitboxData boxData)
         {
             isActive = true;
+            this.trigger.Awake = true;
             data = boxData;
             activeTimer.StartTimer(data.duration);
-            //trigger.localPosition = data.localPos;
-            //trigger.localRotation = new BepuQuaternion(data.localRot.Z, data.localRot.Y, data.localRot.Z, trigger.localRotation.W);
             FVector2 newPos = data.localPos;
             int facing = owner.GetFacing();
             newPos.x *= facing;
@@ -143,16 +136,9 @@ namespace ActionGameEngine.Gameplay
             trigger.SetDimensions(data.localDim);
 
 
-            trigger.Body.ContCollision += (a, b, c) => Test(c);
-            //trigger.Body.OnCollision += (a, b, c) => Test(c);
-
-
-            //trigger.Position = FVector2.zero;
-
 
             trigger.LocalPosition = newPos;
 
-            trigger.Body.constraint.childRotation = FixedMath.C0p5;
             //trigger.FindNewContacts();
             //we need to set this after we jiggle the hitbox's location so that it doesn't add hitboxes  that aren't there
             //trigger.Enabled = true;
@@ -178,7 +164,7 @@ namespace ActionGameEngine.Gameplay
         {
 
             HitIndicator ret = 0;
-            //gets the new bepuColliders to collide with
+            //gets the new colliders to collide with
             diffColliders = curColliding.Except(wasColliding).ToList();
             //remember what we WERE colliding with
             wasColliding = curColliding.ToList();
@@ -229,15 +215,14 @@ namespace ActionGameEngine.Gameplay
             wasColliding.Clear();
             diffColliders.Clear();
 
-            trigger.Enabled = false;
 
             if (activeTimer.IsTicking())
             {
                 activeTimer.EndTimer();
             }
-            trigger.Body.OnCollision -= (a, b, c) => Test(c);
 
-            trigger.MakeForRemoval();
+            this.trigger.Awake = false;
+
 
             Debug.Log("Deactivating Hitbox :: " + gameObject.name + " " + " " + curCollidingGo.Count + " " + curColliding.Count + " " + wasColliding.Count);
 
@@ -256,20 +241,7 @@ namespace ActionGameEngine.Gameplay
         {
             if (trigger != null)
             {
-                Body body = trigger.Body;
 
-                var thing = (body.FixtureList[0].Shape as PolygonShape).Vertices;
-                //Gizmos.color = Color.red;
-                Gizmos.color = new Color(1, 0, 0, 0.5f);
-
-                //Debug.Log(thing[0].x + ", " + thing[0].y + " - " + thing[1].x + ", " + thing[1].y + " - " + thing[2].x + ", " + thing[2].y + " - " + thing[3].x + ", " + thing[3].y);
-
-                //Debug.Log(body.FixtureList[0].)
-
-                Gizmos.matrix = Matrix4x4.TRS(trigger.transform.position, Quaternion.identity, Vector3.one);
-                //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH`    
-                if (trigger.GetBody() != null)
-                    Gizmos.DrawCube(trigger.transform.position, new Vector2((float)(trigger as VelcroBox).Width * 0.8f, (float)(trigger as VelcroBox).Height * 0.8f));
             }
         }
 #endif

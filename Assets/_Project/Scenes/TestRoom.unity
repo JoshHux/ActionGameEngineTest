@@ -195,19 +195,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 161220004}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 0
-  IsKinematic: 0
-  IsStatic: 1
-  lockRotation: 1
-  _height:
+  isStatic: 1
+  isTrigger: 0
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
     m_rawValue: 429496729600
+  _height:
+    m_rawValue: 4294967296
 --- !u!1 &171948188
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,8 +216,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 171948189}
-  - component: {fileID: 171948191}
   - component: {fileID: 171948190}
+  - component: {fileID: 171948191}
   m_Layer: 9
   m_Name: GroundedTrigger
   m_TagString: Untagged
@@ -261,18 +260,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 171948188}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
-    m_rawValue: 429496736
   _width:
+    m_rawValue: 4294967296
+  _height:
     m_rawValue: 4294967296
 --- !u!1 &203000866
 GameObject:
@@ -284,8 +282,8 @@ GameObject:
   m_Component:
   - component: {fileID: 203000867}
   - component: {fileID: 203000870}
-  - component: {fileID: 203000868}
   - component: {fileID: 203000869}
+  - component: {fileID: 203000868}
   m_Layer: 3
   m_Name: TestPlayer
   m_TagString: Player
@@ -320,18 +318,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 203000866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
+  isStatic: 0
+  isTrigger: 0
+  isPushbox: 1
+  mass:
     m_rawValue: 4294967296
-  IsTrigger: 0
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
-    m_rawValue: 8589934592
   _width:
+    m_rawValue: 8589934592
+  _height:
     m_rawValue: 8589934592
 --- !u!114 &203000869
 MonoBehaviour:
@@ -496,19 +493,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 224830393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
-    m_rawValue: 12884901888
   _width:
-    m_rawValue: 12884901888
+    m_rawValue: 4294967296
+  _height:
+    m_rawValue: 4294967296
 --- !u!1 &246501715
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,7 +614,7 @@ Transform:
   m_GameObject: {fileID: 312473718}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 100, z: 1}
   m_Children: []
   m_Father: {fileID: 1445404575}
   m_RootOrder: 0
@@ -714,19 +710,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 320201238}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
-    m_rawValue: 429496736
   _width:
-    m_rawValue: 429496736
+    m_rawValue: 4294967296
+  _height:
+    m_rawValue: 4294967296
 --- !u!114 &320201241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -803,18 +798,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 346395670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
+    m_rawValue: 4294967296
+  _height:
     m_rawValue: 4294967296
 --- !u!1 &354679081
 GameObject:
@@ -2534,14 +2528,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587720156}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 50, y: 25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1288513534}
   m_Father: {fileID: 1727474743}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &587720158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2551,18 +2545,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 587720156}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 0
-  IsKinematic: 0
-  IsStatic: 1
-  lockRotation: 1
-  _height:
+  isStatic: 1
+  isTrigger: 0
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
+    m_rawValue: 4294967296
+  _height:
     m_rawValue: 429496729600
 --- !u!1 &651551828
 GameObject:
@@ -2605,18 +2598,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 651551828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
+    m_rawValue: 4294967296
+  _height:
     m_rawValue: 4294967296
 --- !u!114 &651551831
 MonoBehaviour:
@@ -2671,19 +2663,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 805837888}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
-    m_rawValue: 17179869184
+    m_rawValue: 4294967296
+  _height:
+    m_rawValue: 4294967296
 --- !u!1 &907353875
 GameObject:
   m_ObjectHideFlags: 0
@@ -2725,19 +2716,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 907353875}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 0
-  IsKinematic: 0
-  IsStatic: 1
-  lockRotation: 1
-  _height:
+  isStatic: 1
+  isTrigger: 0
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
     m_rawValue: 429496729600
+  _height:
+    m_rawValue: 4294967296
 --- !u!1 &919014085
 GameObject:
   m_ObjectHideFlags: 0
@@ -2766,18 +2756,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 919014085}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
+  isStatic: 0
+  isTrigger: 0
+  isPushbox: 1
+  mass:
     m_rawValue: 4294967296
-  IsTrigger: 0
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
-    m_rawValue: 8589934592
   _width:
+    m_rawValue: 8589934592
+  _height:
     m_rawValue: 8589934592
 --- !u!114 &919014087
 MonoBehaviour:
@@ -3038,19 +3027,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1034619618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
-    m_rawValue: 17179869184
+    m_rawValue: 4294967296
+  _height:
+    m_rawValue: 4294967296
 --- !u!1 &1083849213
 GameObject:
   m_ObjectHideFlags: 0
@@ -3153,8 +3141,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1188289079}
-  - component: {fileID: 1188289080}
   - component: {fileID: 1188289081}
+  - component: {fileID: 1188289080}
   m_Layer: 9
   m_Name: GroundedTrigger
   m_TagString: Untagged
@@ -3185,18 +3173,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1188289078}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
+  isStatic: 0
+  isTrigger: 1
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
-  IsTrigger: 1
-  IsKinematic: 0
-  IsStatic: 0
-  lockRotation: 1
-  _height:
-    m_rawValue: 429496736
   _width:
+    m_rawValue: 4294967296
+  _height:
     m_rawValue: 4294967296
 --- !u!114 &1188289081
 MonoBehaviour:
@@ -3385,7 +3372,7 @@ Transform:
   m_GameObject: {fileID: 1288513533}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 100, z: 1}
   m_Children: []
   m_Father: {fileID: 587720157}
   m_RootOrder: 0
@@ -3546,14 +3533,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1445404574}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -50, y: 25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 312473719}
   m_Father: {fileID: 1727474743}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1445404576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3563,18 +3550,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1445404574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0e5fbc19d78546829ffe0806befb9, type: 3}
+  m_Script: {fileID: 11500000, guid: bd850c70d94d16747a1567316d05ab26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    m_rawValue: 4294967296
-  IsTrigger: 0
-  IsKinematic: 0
-  IsStatic: 1
-  lockRotation: 1
-  _height:
+  isStatic: 1
+  isTrigger: 0
+  isPushbox: 0
+  mass:
     m_rawValue: 4294967296
   _width:
+    m_rawValue: 4294967296
+  _height:
     m_rawValue: 429496729600
 --- !u!1 &1502120536
 GameObject:
@@ -3684,6 +3670,7 @@ GameObject:
   - component: {fileID: 1766093060}
   - component: {fileID: 1766093059}
   - component: {fileID: 1766093061}
+  - component: {fileID: 1766093062}
   m_Layer: 0
   m_Name: TestManager
   m_TagString: Untagged
@@ -3730,6 +3717,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collisionMatrix: 
+--- !u!114 &1766093062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766093058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8885ad184e1e504ca27bddd83ee32a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1848476098
 GameObject:
   m_ObjectHideFlags: 0

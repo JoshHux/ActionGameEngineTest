@@ -1,6 +1,9 @@
 ﻿using System;
+using UnityEngine;
 using FixMath.NET;
 using FlatPhysics.Shapes;
+using FlatPhysics.Filter;
+using FlatPhysics.Contact;
 
 namespace FlatPhysics
 {
@@ -10,14 +13,19 @@ namespace FlatPhysics
         Box = 1
     }
 
+    public delegate void OverlapEventHandler(ContactData c);
+
     public sealed class FlatBody
     {
+        private bool _awake;
         private FVector2 _position;
+        private FVector2 _localPosition;
         private FVector2 _linearVelocity;
         private Fix64 _rotation;
         private Fix64 _rotationalVelocity;
 
         private FVector2 force;
+        private FlatBody _parent;
 
         public readonly Fix64 Mass;
         public readonly Fix64 InvMass;
@@ -66,11 +74,38 @@ namespace FlatPhysics
 
         public readonly ShapeType ShapeType;
 
+        //what layer this body is on
+        public readonly CollisionLayer Layer;
+        //what layer this body can collide with
+        public readonly CollisionLayer CollidesWith;
+        //gameobject this body corresponds to
+        public readonly GameObject GameObject;
+        public readonly bool IsPushbox;
+
         private Shape _shape;
+
+        private OverlapEventHandler _onOverlap;
+
+        public bool Awake
+        {
+            get { return this._awake; }
+            set { this._awake = value; }
+        }
 
         public FVector2 Position
         {
             get { return this._position; }
+        }
+
+        public FlatBody Parent
+        {
+            get { return this._parent; }
+        }
+
+        public FVector2 LocalPosition
+        {
+            get { return this._localPosition; }
+            set { this._localPosition = value; }
         }
 
         public Shape Shape
@@ -84,10 +119,24 @@ namespace FlatPhysics
             internal set { this._linearVelocity = value; }
         }
 
+        public event OverlapEventHandler OnOverlap
+        {
+            add
+            {
+                this._onOverlap += value;
+            }
+            remove
+            {
+                this._onOverlap -= value;
+            }
+        }
+
         private FlatBody(FVector2 position, Fix64 mass, Fix64 restitution,
-            bool isStatic, bool isTrigger, Fix64 radius, Fix64 width, Fix64 height, ShapeType shapeType)
+            bool isStatic, bool isPushbox, bool isTrigger, Fix64 radius, Fix64 width, Fix64 height,
+            ShapeType shapeType, CollisionLayer layer, CollisionLayer collidesWith, GameObject gameObject)
         {
             this._position = position;
+            this._localPosition = FVector2.zero;
             this._linearVelocity = FVector2.zero;
             this._rotation = 0;
             this._rotationalVelocity = 0;
@@ -103,6 +152,12 @@ namespace FlatPhysics
             //this.Width = width;
             //this.Height = height;
             this.ShapeType = shapeType;
+            this.Layer = layer;
+            this.CollidesWith = collidesWith;
+            this.GameObject = gameObject;
+            this.IsPushbox = isPushbox;
+            //have it be null to start out with, guarentees null if no parent
+            this._parent = null;
 
             if (!this.IsStatic)
             {
@@ -115,8 +170,9 @@ namespace FlatPhysics
 
             if (this.ShapeType is ShapeType.Box)
             {
-                this._shape = new Rectangle(this.Width, this.Height);
+                this._shape = new Rectangle(width, height);
                 //this.vertices = this.CreateRectVertices();
+                this.CreateRectVertices();
                 this.Triangles = FlatBody.CreateBoxTriangles();
                 this.transformedVertices = new FVector2[this.vertices.Length];
 
@@ -132,6 +188,16 @@ namespace FlatPhysics
 
             this.transformUpdateRequired = true;
             this.aabbUpdateRequired = true;
+        }
+
+        public void OnColOverlap(ContactData c)
+        {
+            this._onOverlap?.Invoke(c);
+        }
+
+        public void SetParent(FlatBody newPar)
+        {
+            this._parent = newPar;
         }
 
         private void CreateRectVertices()
@@ -260,7 +326,6 @@ namespace FlatPhysics
             //FVector2 acceleration = this.force / this.Mass;
             //this._linearVelocity += acceleration * time;
 
-
             this._linearVelocity += gravity * time;
             this._position += this._linearVelocity * time;
 
@@ -269,6 +334,15 @@ namespace FlatPhysics
             this.force = FVector2.zero;
             this.transformUpdateRequired = true;
             this.aabbUpdateRequired = true;
+
+
+        }
+
+        public bool HasParent() { return this._parent != null; }
+
+        public void StepParent()
+        {
+            this._position = this._parent.Position + this._localPosition;
         }
 
         public void Move(FVector2 amount)
@@ -297,7 +371,7 @@ namespace FlatPhysics
             this.force = amount;
         }
 
-        public static bool CreateCircleBody(Fix64 radius, Fix64 mass, FVector2 position, bool isStatic, bool isTrigger, Fix64 restitution, out FlatBody body, out string errorMessage)
+        public static bool CreateCircleBody(Fix64 radius, Fix64 mass, FVector2 position, bool isStatic, bool isPushbox, bool isTrigger, Fix64 restitution, CollisionLayer layer, CollisionLayer collidesWith, GameObject gameObject, out FlatBody body, out string errorMessage)
         {
             body = null;
             errorMessage = string.Empty;
@@ -307,11 +381,11 @@ namespace FlatPhysics
 
             // mass = area * depth * density
 
-            body = new FlatBody(position, mass, restitution, isStatic, isTrigger, radius, 0, 0, ShapeType.Circle);
+            body = new FlatBody(position, mass, restitution, isStatic, isPushbox, isTrigger, radius, 0, 0, ShapeType.Circle, layer, collidesWith, gameObject);
             return true;
         }
 
-        public static bool CreateBoxBody(Fix64 width, Fix64 height, Fix64 mass, FVector2 position, bool isStatic, bool isTrigger, Fix64 restitution, out FlatBody body, out string errorMessage)
+        public static bool CreateBoxBody(Fix64 width, Fix64 height, Fix64 mass, FVector2 position, bool isStatic, bool isPushbox, bool isTrigger, Fix64 restitution, CollisionLayer layer, CollisionLayer collidesWith, GameObject gameObject, out FlatBody body, out string errorMessage)
         {
             body = null;
             errorMessage = string.Empty;
@@ -320,7 +394,7 @@ namespace FlatPhysics
 
             // mass = area * depth * density
 
-            body = new FlatBody(position, mass, restitution, isStatic, isTrigger, 0, width, height, ShapeType.Box);
+            body = new FlatBody(position, mass, restitution, isStatic, isPushbox, isTrigger, 0, width, height, ShapeType.Box, layer, collidesWith, gameObject);
             return true;
         }
     }

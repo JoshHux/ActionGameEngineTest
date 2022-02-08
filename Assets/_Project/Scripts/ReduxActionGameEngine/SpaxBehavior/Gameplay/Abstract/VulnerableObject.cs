@@ -57,7 +57,7 @@ namespace ActionGameEngine.Gameplay
                 box.Initialize();
             }
             ResetHealth();
-            this.allignment = SpaxManager.SpaxInstance.GetTrackingIndexOf(this);
+            this.allignment = SpaxManager.instance.GetTrackingIndexOf(this);
 
         }
 

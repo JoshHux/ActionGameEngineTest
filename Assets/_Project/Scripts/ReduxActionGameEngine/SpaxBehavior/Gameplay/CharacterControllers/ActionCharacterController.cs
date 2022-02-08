@@ -19,8 +19,8 @@ namespace ActionGameEngine
         [SerializeField] private string characterName;
         protected override void OnStart()
         {
-            SpaxManager.SpaxInstance.TrackObject(this);
-            allignment = SpaxManager.SpaxInstance.GetTrackingIndexOf(this);
+            SpaxManager.instance.TrackObject(this);
+            allignment = SpaxManager.instance.GetTrackingIndexOf(this);
             this.data = SpaxJSONSaver.LoadCharacterData(characterName);
             base.OnStart();
             //rb.Body._flags |= BodyFlags.BulletFlag;
@@ -28,6 +28,15 @@ namespace ActionGameEngine
 
         protected override void StateCleanUpdate() { if (status.GetInHitstop()) { return; } }
         protected override void PreUpdate() { if (status.GetInHitstop()) { return; } }
+        protected override void SpaxUpdate()
+        {
+            base.SpaxUpdate();
+
+            //this is a band-aid solution, because there's no exit event for collider, we always set to airborne
+            //that way, whe the delegate is called in the physics step, it will either do nothing, or corrent to a grounded status
+            status.RemoveTransitionFlags(TransitionFlag.GROUNDED);
+            status.AddTransitionFlags(TransitionFlag.AIRBORNE);
+        }
 
         //returns a value describing what happened when we get hit
         //called by attacker hitbox
