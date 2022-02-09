@@ -15,28 +15,30 @@ namespace ActionGameEngine.Data
         public CancelConditions toggleCancelConditions;
         public bool thing;
 
-        //[ShowWhen("flags", FrameEventFlag.SET_TIMER)]
-        public TimerEvent timerEvent;
 
         //flags for whatever event the frame might haves
         public FrameEventFlag flags;
 
 
+        //[ShowWhen("flags", FrameEventFlag.SET_TIMER)]
+        public TimerEvent timerEvent;
+        public ResourceData resources;
         public FVector2 frameVelocity;
         public HitboxData[] hitboxes;
         public HurtboxData[] hurtboxes;
 
-        public FrameData(int f, StateCondition sc, CancelConditions cc, TimerEvent te, FrameEventFlag ff, FVector2 fv, HitboxData[] hib, HurtboxData[] hub)
+        public FrameData(int f, StateCondition sc, CancelConditions cc, FrameEventFlag ff, TimerEvent te, ResourceData rd, FVector2 fv, HitboxData[] hib, HurtboxData[] hub)
         {
-            thing = true;
-            atFrame = f;
-            toggleStateConditions = sc;
-            toggleCancelConditions = cc;
-            timerEvent = te;
-            flags = ff;
-            frameVelocity = fv;
-            hitboxes = hib;
-            hurtboxes = hub;
+            this.thing = true;
+            this.atFrame = f;
+            this.toggleStateConditions = sc;
+            this.toggleCancelConditions = cc;
+            this.flags = ff;
+            this.timerEvent = te;
+            this.resources = rd;
+            this.frameVelocity = fv;
+            this.hitboxes = hib;
+            this.hurtboxes = hub;
         }
 
         public bool isValid() { return (atFrame > 0) || (flags > 0) || HasHitboxes() || HasHurtboxes(); }

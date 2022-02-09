@@ -13,17 +13,23 @@ namespace ActionGameEngine.Data
         public CancelConditions cancelConditions;
         //motion required to transition to state
         public Command cmdMotion;
+        //required resources to transition
+        public ResourceData resources;
 
-        public MotionTransition(int ts, CancelConditions cc, Command cmd)
+        public MotionTransition(int ts, CancelConditions cc, Command cmd, ResourceData rd)
         {
-            targetState = ts;
-            cancelConditions = cc;
-            cmdMotion = cmd;
+            this.targetState = ts;
+            this.cancelConditions = cc;
+            this.cmdMotion = cmd;
+            this.resources = rd;
         }
 
-        public bool Check(RecorderElement[] playerInputs, CancelConditions playerCond, int facing)
+        public bool Check(RecorderElement[] playerInputs, CancelConditions playerCond, int facing, ResourceData playerResources)
         {
-            return EnumHelper.HasEnum((uint)playerCond, (uint)cancelConditions,true) && cmdMotion.Check(playerInputs, facing);
+            var checkCC = EnumHelper.HasEnum((uint)playerCond, (uint)cancelConditions, true);
+            var checkRD = checkCC && resources.Check(playerResources);
+            var checkCMD = checkRD && cmdMotion.Check(playerInputs, facing);
+            return checkCMD;
         }
     }
 }

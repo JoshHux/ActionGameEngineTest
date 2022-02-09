@@ -7,7 +7,12 @@ namespace ActionGameEngine.Data
     {
         //int ID of the current state
         public StateData currentState;
-        public int currentHp;
+        public ResourceData resources;
+        public int currentHp
+        {
+            get { return resources.Health; }
+            set { resources.Health = value; }
+        }
         public int currentArmorHits;
         public int facing;
 

@@ -181,9 +181,9 @@ namespace ActionGameEngine.Gameplay
 
         }
 
-        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents)
+        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents, ResourceData resourceData = new ResourceData())
         {
-            base.ProcessTransitionEvents(transitionEvents);
+            base.ProcessTransitionEvents(transitionEvents, resourceData);
 
             int exitedStun = EnumHelper.HasEnumInt((uint)transitionEvents, (uint)TransitionEvent.RESET_STUN);
             int notExitStun = exitedStun ^ 1;

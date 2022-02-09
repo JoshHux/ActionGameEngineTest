@@ -399,7 +399,15 @@ MonoBehaviour:
       frames: []
       animName: 
       stateName: 
-    currentHp: 0
+    resources:
+      Health: 0
+      Meter: 0
+      Resource1: 0
+      Resource2: 0
+      Resource3: 0
+      Resource4: 0
+      Resource5: 0
+      Resource6: 0
     currentArmorHits: 0
     facing: 0
     currentStateCond: 0
@@ -2826,7 +2834,15 @@ MonoBehaviour:
       frames: []
       animName: 
       stateName: 
-    currentHp: 0
+    resources:
+      Health: 0
+      Meter: 0
+      Resource1: 0
+      Resource2: 0
+      Resource3: 0
+      Resource4: 0
+      Resource5: 0
+      Resource6: 0
     currentArmorHits: 0
     facing: 0
     currentStateCond: 0
@@ -3669,8 +3685,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1766093060}
   - component: {fileID: 1766093059}
-  - component: {fileID: 1766093061}
-  - component: {fileID: 1766093062}
   m_Layer: 0
   m_Name: TestManager
   m_TagString: Untagged
@@ -3704,31 +3718,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1766093061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1766093058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae50308ca00affc448a1d22529d9af03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collisionMatrix: 
---- !u!114 &1766093062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1766093058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8885ad184e1e504ca27bddd83ee32a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1848476098
 GameObject:
   m_ObjectHideFlags: 0

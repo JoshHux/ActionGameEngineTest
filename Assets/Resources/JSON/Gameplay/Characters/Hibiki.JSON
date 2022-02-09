@@ -47,7 +47,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": 0,
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           },
           {
             "targetState": 2,
@@ -63,7 +73,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": 0,
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           },
           {
             "targetState": 1,
@@ -72,7 +92,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "AIRBORNE",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           },
           {
             "targetState": 11,
@@ -81,7 +111,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "GOT_HIT",
-            "transitionEvent": "FACE_ENEMY"
+            "transitionEvent": "FACE_ENEMY",
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [
@@ -90,12 +130,22 @@
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
             "thing": false,
+            "flags": "ACTIVATE_HURTBOXES",
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
               "isPersistent": false
             },
-            "flags": "ACTIVATE_HURTBOXES",
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            },
             "frameVelocity": {
               "x": {
                 "m_rawValue": 0
@@ -154,7 +204,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "GROUNDED",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [],
@@ -166,7 +226,7 @@
         "parentID": 0,
         "duration": 0,
         "stateConditions": "GROUNDED, APPLY_GRAV, CAN_WALK, NO_PARENT_COND",
-        "cancelConditions": "GROUNDED, JUMP",
+        "cancelConditions": "GROUNDED, JUMP, NORM_LV3",
         "enterEvents": 0,
         "exitEvents": 0,
         "transitions": [
@@ -184,7 +244,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": 0,
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [],
@@ -207,7 +277,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           },
           {
             "targetState": 0,
@@ -223,7 +303,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": 0,
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [
@@ -232,12 +322,22 @@
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
             "thing": false,
+            "flags": "AUTO_TURN",
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
               "isPersistent": false
             },
-            "flags": "AUTO_TURN",
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            },
             "frameVelocity": {
               "x": {
                 "m_rawValue": 0
@@ -269,7 +369,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [],
@@ -292,7 +402,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [
@@ -301,12 +421,22 @@
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
             "thing": false,
+            "flags": "APPLY_VEL",
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
               "isPersistent": false
             },
-            "flags": "APPLY_VEL",
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            },
             "frameVelocity": {
               "x": {
                 "m_rawValue": 0
@@ -351,7 +481,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [
@@ -360,12 +500,22 @@
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
             "thing": false,
+            "flags": 0,
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
               "isPersistent": false
             },
-            "flags": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            },
             "frameVelocity": {
               "x": {
                 "m_rawValue": 0
@@ -422,6 +572,16 @@
                 },
                 "forcedProration": {
                   "m_rawValue": 0
+                },
+                "resources": {
+                  "Health": 0,
+                  "Meter": 0,
+                  "Resource1": 0,
+                  "Resource2": 0,
+                  "Resource3": 0,
+                  "Resource4": 0,
+                  "Resource5": 0,
+                  "Resource6": 0
                 },
                 "hitCause": 0,
                 "counterHitCause": 0,
@@ -452,7 +612,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [
@@ -461,12 +631,22 @@
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
             "thing": false,
+            "flags": 0,
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
               "isPersistent": false
             },
-            "flags": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            },
             "frameVelocity": {
               "x": {
                 "m_rawValue": 0
@@ -524,6 +704,16 @@
                 "forcedProration": {
                   "m_rawValue": 0
                 },
+                "resources": {
+                  "Health": 0,
+                  "Meter": 0,
+                  "Resource1": 0,
+                  "Resource2": 0,
+                  "Resource3": 0,
+                  "Resource4": 0,
+                  "Resource5": 0,
+                  "Resource6": 0
+                },
                 "hitCause": 0,
                 "counterHitCause": 0,
                 "hitCancel": 0,
@@ -553,7 +743,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [
@@ -562,12 +762,22 @@
             "toggleStateConditions": 0,
             "toggleCancelConditions": 0,
             "thing": false,
+            "flags": "ACTIVATE_HITBOXES",
             "timerEvent": {
               "TimerDuration": 0,
               "conditions": 0,
               "isPersistent": false
             },
-            "flags": "ACTIVATE_HITBOXES",
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            },
             "frameVelocity": {
               "x": {
                 "m_rawValue": 0
@@ -625,6 +835,16 @@
                 "forcedProration": {
                   "m_rawValue": 0
                 },
+                "resources": {
+                  "Health": 0,
+                  "Meter": 0,
+                  "Resource1": 0,
+                  "Resource2": 0,
+                  "Resource3": 0,
+                  "Resource4": 0,
+                  "Resource5": 0,
+                  "Resource6": 0
+                },
                 "hitCause": 0,
                 "counterHitCause": 0,
                 "hitCancel": 0,
@@ -654,7 +874,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [],
@@ -677,7 +907,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [],
@@ -700,7 +940,17 @@
             },
             "cancelConditions": 0,
             "transitionFlag": "STATE_END",
-            "transitionEvent": 0
+            "transitionEvent": 0,
+            "resources": {
+              "Health": 0,
+              "Meter": 0,
+              "Resource1": 0,
+              "Resource2": 0,
+              "Resource3": 0,
+              "Resource4": 0,
+              "Resource5": 0,
+              "Resource6": 0
+            }
           }
         ],
         "frames": [],
@@ -724,6 +974,16 @@
               "flags": "PRESSED"
             }
           ]
+        },
+        "resources": {
+          "Health": 0,
+          "Meter": 0,
+          "Resource1": 0,
+          "Resource2": 0,
+          "Resource3": 0,
+          "Resource4": 0,
+          "Resource5": 0,
+          "Resource6": 0
         }
       },
       {
@@ -733,11 +993,27 @@
           "commandInput": [
             {
               "inputItem": {
+                "m_rawValue": 2
+              },
+              "flags": "IS_ONLY_CHECK"
+            },
+            {
+              "inputItem": {
                 "m_rawValue": 256
               },
               "flags": "PRESSED"
             }
           ]
+        },
+        "resources": {
+          "Health": 0,
+          "Meter": 0,
+          "Resource1": 0,
+          "Resource2": 0,
+          "Resource3": 0,
+          "Resource4": 0,
+          "Resource5": 0,
+          "Resource6": 0
         }
       }
     ]

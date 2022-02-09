@@ -276,7 +276,7 @@ namespace ActionGameEngine
         protected virtual void TryTransitionState()
         {
             //get a transition, valid if we found a new state to transition to
-            TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), status.GetCancelConditions(), status.GetTransitionFlags(), status.facing);
+            TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), status.GetCancelConditions(), status.GetTransitionFlags(), status.facing, status.resources);
             if (transition.IsValid())
             {
                 int newStateID = transition.targetState;
@@ -288,7 +288,7 @@ namespace ActionGameEngine
                 ProcessTransitionEvents(exitEvents);
 
                 //process the TransitionEvent flags that are set before you transition to the new state
-                ProcessTransitionEvents(transition.transitionEvent);
+                ProcessTransitionEvents(transition.transitionEvent, status.resources);
                 AssignNewState(newStateID);
 
                 //we assign it again since we know that the current state should be the new state 
@@ -306,6 +306,9 @@ namespace ActionGameEngine
         //reads the state conditions and applies certain effects based on that
         protected virtual void ProcessStateData(StateCondition curCond)
         {
+            //don't continue if there aren't any conditions to check
+            if (curCond == 0) { return; }
+
             //apply gravity based on mass, clamps to max fall speed if exceeded
             if (EnumHelper.HasEnum((uint)curCond, (int)StateCondition.APPLY_GRAV))
             {
@@ -326,20 +329,28 @@ namespace ActionGameEngine
             }
         }
 
-        protected virtual void ProcessTransitionEvents(TransitionEvent transitionEvents)
+        protected virtual void ProcessTransitionEvents(TransitionEvent transitionEvents, ResourceData resourceData = new ResourceData())
         {
-            //TransitionEvent te = transitionEvents;
-            //if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_VEL))
-            //{
-            //    if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_X_VEL)) { new FVector2(0, calcVel.y); }
-            //    if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.KILL_Y_VEL)) { new FVector2(calcVel.x, 0); }
-            //if (EnumHelper.HasEnum((int)te, (int)TransitionEvent.KILL_Z_VEL)) { calcVel.x = 0; }
-            //}
-
-            /*branchless velocity killing (I'm proud of this)*/
 
             //int version of event flags to look at
             int te = (int)transitionEvents;
+
+            /*Branchless resource draining*/
+
+            //int version of flag, for convenience
+            int drainRsrcFlag = (int)TransitionEvent.DRAIN_RESOURCES;
+            //do we have the flags? 1 or 0
+            int drainRsrc = EnumHelper.HasEnumInt(te, drainRsrcFlag);
+            //resources that we drain are all 0 if we don't have the drain flag
+            var toDrain = resourceData * drainRsrc;
+            //drain the resource
+            status.resources = status.resources - toDrain;
+
+            //for updating the health bar, addition since damageTaken is amount of health lost
+            helper.damageTaken += toDrain.Health;
+
+
+            /*branchless velocity killing (I'm proud of this)*/
 
             //int mask for the kill velocity flags
             int killXFlag = (int)TransitionEvent.KILL_X_VEL;
@@ -381,9 +392,14 @@ namespace ActionGameEngine
             int flags = (int)frame.flags;
             //velocity from frame
             FVector2 frameVel = frame.frameVelocity;
+            //resources from the frame
+            var frameRsrc = frame.resources;
             //Set and Apply Velocity flags as ints
             int applyVelFlag = (int)FrameEventFlag.APPLY_VEL;
             int setVelFlag = (int)FrameEventFlag.SET_VEL;
+            //Gain and Drain Velocity flags as ints
+            int gainRsrcFlag = (int)FrameEventFlag.GAIN_RESOURCES;
+            int drainRsrcFlag = (int)FrameEventFlag.DRAIN_RESOURCES;
 
             if (EnumHelper.HasEnum((uint)flags, (int)FrameEventFlag.SET_TIMER))
             {
@@ -394,6 +410,23 @@ namespace ActionGameEngine
                 status.AddPersistenConditions(cond);
             }
 
+            /*branchless resource gaining and draining*/
+
+            //is 1 or 0, depending on flag exitence
+            int gainRsrc = EnumHelper.HasEnumInt(flags, gainRsrcFlag);
+            //will be -1 if has the drain flag
+            int drainRsrc = EnumHelper.HasEnumInt(flags, drainRsrcFlag) * -1;
+            //resources to add
+            var rsrcPlus = frameRsrc * gainRsrc;
+            //resources to take away
+            var rsrcMinus = frameRsrc * drainRsrc;
+            //net resources
+            var rsrcNet = rsrcPlus + rsrcMinus;
+            //apply the resource change to status
+            status.resources = status.resources + rsrcNet;
+
+            //for updating the health bar, subtraction since damageTaken is amount of health lost
+            helper.damageTaken -= rsrcNet.Health;
 
             /*branchless velocity application (I'm also proud of this)*/
 
@@ -405,7 +438,7 @@ namespace ActionGameEngine
             //same as above, but should still be 0 if only apply vel flag exists, since that flag's int value is smaller that set vel
             int setVel = EnumHelper.HasEnumInt(flags, setVelFlag);
             //UnityEngine.Debug.Log("frame detected");
-            if (applyVel > 0) { UnityEngine.Debug.Log("applying velocity"); }
+            //if (applyVel > 0) { UnityEngine.Debug.Log("applying velocity"); }
 
             //1 if setVel is 0 and 0 if setVel is 1
             //a flip of 0 to 1 and 1 to 0
@@ -423,13 +456,6 @@ namespace ActionGameEngine
             //set new velocity
             calcVel = newVel;
 
-            //if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.APPLY_VEL))
-            //{
-            //    if (EnumHelper.HasEnum((uint)frame.flags, (int)FrameEventFlag.SET_VEL, true))
-            //    { calcVel = frame.frameVelocity; }
-            //    else
-            //    { calcVel += frame.frameVelocity; }
-            //}
 
         }
 

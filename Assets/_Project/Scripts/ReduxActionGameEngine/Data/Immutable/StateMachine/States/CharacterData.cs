@@ -194,18 +194,18 @@ namespace ActionGameEngine.Data
 
         //returns index of transition if true
         //version without input for non-controllable object
-        public TransitionData TryTransitionState(int fromState, CancelConditions playerCond, TransitionFlag playerFlags, int facing)
+        public TransitionData TryTransitionState(int fromState, CancelConditions playerCond, TransitionFlag playerFlags, int facing, ResourceData playerResources)
         {
             RecorderElement[] playerInputs = new RecorderElement[1];
-            return TryTransitionState(fromState, playerInputs, playerCond, playerFlags, facing);
+            return TryTransitionState(fromState, playerInputs, playerCond, playerFlags, facing, playerResources);
         }
 
         //returns index of transition if true
         //state's transitions are checked before movelist's
-        public TransitionData TryTransitionState(int fromState, RecorderElement[] playerInputs, CancelConditions playerCond, TransitionFlag playerFlags, int facing)
+        public TransitionData TryTransitionState(int fromState, RecorderElement[] playerInputs, CancelConditions playerCond, TransitionFlag playerFlags, int facing, ResourceData playerResources)
         {
             StateData state = stateList[fromState];
-            int check = state.CheckTransitions(playerInputs, playerFlags, playerCond, facing);
+            int check = state.CheckTransitions(playerInputs, playerFlags, playerCond, facing, playerResources);
 
             //make invalid transition by setting the target state to -1
             TransitionData ret = new TransitionData();
@@ -223,7 +223,7 @@ namespace ActionGameEngine.Data
                 //we should NEVER return a transition to a node state
                 if (potenState.IsNodeState())
                 {
-                    ret = TryTransitionState(potenStateID, playerInputs, playerCond, playerFlags, facing);
+                    ret = TryTransitionState(potenStateID, playerInputs, playerCond, playerFlags, facing, playerResources);
                 }
                 //we only transition if we go to another state, ID mismatch *OR* it's okay to transition to self
                 //if ID mimatch failed, then we know the ID are the same
@@ -243,7 +243,7 @@ namespace ActionGameEngine.Data
             {
                 //check the parent's transitions
                 //recur with passing the parent's ID
-                TransitionData potenTransition = TryTransitionState(state.parentID, playerInputs, playerCond, playerFlags, facing);
+                TransitionData potenTransition = TryTransitionState(state.parentID, playerInputs, playerCond, playerFlags, facing, playerResources);
                 int potenStateID = potenTransition.targetState;
 
                 //we only transition if we go to another state, ID mismatch *OR* it's okay to transition to self
@@ -268,18 +268,18 @@ namespace ActionGameEngine.Data
             {
                 UnityEngine.Debug.Log("attempting to find stun state");
                 //all stun states should be attached to the default state
-                ret = TryTransitionState(0, playerInputs, playerCond, playerFlags, facing);
+                ret = TryTransitionState(0, playerInputs, playerCond, playerFlags, facing, playerResources);
             }
 
 
             return ret;
         }
 
-        public int TryMoveList(RecorderElement[] playerInputs, CancelConditions playerCond, int facing)
+        public int TryMoveList(RecorderElement[] playerInputs, CancelConditions playerCond, int facing, ResourceData playerResources)
         {
             //search the movelist for a valid transition
             //integer of the target state
-            int ret = moveList.Check(playerInputs, playerCond, facing);
+            int ret = moveList.Check(playerInputs, playerCond, facing, playerResources);
 
             return ret;
 

@@ -53,7 +53,7 @@ namespace ActionGameEngine.Gameplay
         {
 
             //get a transition, valid if we found a new state to transition to
-            TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), inputRecorder.GetInputArray(), status.GetCancelConditions(), status.GetTransitionFlags(), status.facing);
+            TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), inputRecorder.GetInputArray(), status.GetCancelConditions(), status.GetTransitionFlags(), status.facing, status.resources);
             //UnityEngine.Debug.Log(transition.IsValid() + " " + transition.targetState);
             if (transition.IsValid())
             {
@@ -66,7 +66,7 @@ namespace ActionGameEngine.Gameplay
                 ProcessTransitionEvents(exitEvents);
 
                 //process the TransitionEvent flags that are set before you transition to the new state
-                ProcessTransitionEvents(transition.transitionEvent);
+                ProcessTransitionEvents(transition.transitionEvent, status.resources);
                 AssignNewState(newStateID);
 
                 //we assign it again since we know that the current state should be the new state 
@@ -80,7 +80,7 @@ namespace ActionGameEngine.Gameplay
             else
             {
                 //get new state ID from the movelist
-                int newState = data.TryMoveList(inputRecorder.GetInputArray(), status.GetCancelConditions(), status.facing);
+                int newState = data.TryMoveList(inputRecorder.GetInputArray(), status.GetCancelConditions(), status.facing, status.resources);
 
                 //check if it's valid
                 if (newState != -1)

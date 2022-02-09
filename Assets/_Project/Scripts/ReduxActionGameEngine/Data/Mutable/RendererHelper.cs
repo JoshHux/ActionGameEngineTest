@@ -12,6 +12,8 @@ namespace ActionGameEngine.Data
         //Animator.Update(Time.fixedDeltaTime*(animFrames=1))
         public int renderFrames;
         public int facing;
+        public int damageTaken;
+        public int comboHits;
         public string animState;
         public bool newState;
     }

@@ -13,7 +13,10 @@ namespace ActionGameEngine.Enum
         SET_TIMER = 1 << 2,
         ACTIVATE_HITBOXES = 1 << 3,
         ACTIVATE_HURTBOXES = 1 << 4,
+        DRAIN_RESOURCES = 1 << 5,
+        GAIN_RESOURCES = 1 << 6,
         //for 2d games, reaching tells the character to turn and face the other direction
-        AUTO_TURN = 1 << 7
+        AUTO_TURN = 1 << 7,
+
     }
 }

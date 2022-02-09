@@ -26,6 +26,8 @@ namespace ActionGameEngine.Data
         public Fix64 initProration;
         //scaling on damage not matter what point in combo
         public Fix64 forcedProration;
+        //resources gained on hit
+        public ResourceData resources;
 
         //when you hit a move, what to apply to the hit entity
         public StateCondition hitCause;

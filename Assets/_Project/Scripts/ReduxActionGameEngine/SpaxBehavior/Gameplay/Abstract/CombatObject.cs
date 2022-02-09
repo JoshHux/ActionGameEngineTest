@@ -68,6 +68,8 @@ namespace ActionGameEngine.Gameplay
             if (!EnumHelper.HasEnum((uint)indicator, (int)HitIndicator.WHIFFED))
             {
                 status.AddCancelConditions(boxData.GetCancelConditions(indicator));
+                //gain resources from the hitbox
+                status.resources += boxData.resources;
             }
         }
 
@@ -78,10 +80,10 @@ namespace ActionGameEngine.Gameplay
             if (frame.HasHitboxes()) { ActivateHitboxes(frame.hitboxes); }
         }
 
-        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents)
+        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents, ResourceData resourceData = new ResourceData())
         {
             TransitionEvent te = transitionEvents;
-            base.ProcessTransitionEvents(te);
+            base.ProcessTransitionEvents(te, resourceData);
 
             //deactivate our active hitboxes
             if (EnumHelper.HasEnum((uint)te, (int)TransitionEvent.CLEAN_HITBOXES)) { this.DeactivateHitboxes(); }

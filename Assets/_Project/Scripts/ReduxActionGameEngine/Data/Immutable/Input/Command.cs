@@ -68,22 +68,18 @@ namespace ActionGameEngine.Input
                         //special case where we only want to look at the currently held inputs by the player
                         //only check the first element if we don't have any flags
                         //in this case, we want to check the current inputs the player is pressing
-                        if (i == 0 && j == 0 && (EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.IS_ONLY_CHECK, true) || EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP) || (frag.flags == 0)))
+                        if (i == 0 && j == 0 && EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_CONTROLLER_STATE, true))
                         {
-                            //fragment from the command to check against
-                            InputFragment toCheck = frag;
-                            //toCheck.flags = 0;
-                            //ADD THE FLAG TO SATISFY THE CHECK I AM AN IDIOT
-                            inputFrag.flags |= InputFlags.IS_ONLY_CHECK;
-                            bool checkNot = EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_IS_UP);
-
-                            //UnityEngine.Debug.Log("pass currently held items");
-                            //UnityEngine.Debug.Log(toCheck.inputItem.m_rawValue + " " + inputFrag.inputItem.m_rawValue + " | " + toCheck.flags + " " + inputFrag.flags);
-                            return toCheck.Check(inputFrag, checkNot, isStrict);
+                            inputFrag.flags |= InputFlags.CHECK_CONTROLLER_STATE;
                         }
 
+                        //how many frames of leniency we have in the motion
+                        int leniency = 10;
+                        //if it's the first input and we're looking at the first element, apply first input leniency
+                        if (i == 0 && j == 0) { leniency = 3; }
+
                         //the input is not fast enough, held too long or something like that
-                        if (input.framesHeld > 10)
+                        if (input.framesHeld > leniency)
                         {
                             //UnityEngine.Debug.Log("too many frames passed");
                             return false;
@@ -187,7 +183,7 @@ namespace ActionGameEngine.Input
 
 
                         //check the flag to see if it checks out
-                        if (frag.Check(inputFrag, false, isStrict))
+                        if (frag.Check(inputFrag, isUp, isStrict))
                         {
                             //UnityEngine.Debug.Log(inputFrag.inputItem.m_rawValue + " " + frag.inputItem.m_rawValue);
 

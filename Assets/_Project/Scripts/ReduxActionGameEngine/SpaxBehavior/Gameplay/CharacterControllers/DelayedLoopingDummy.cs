@@ -1,13 +1,5 @@
 using UnityEngine;
-using ActionGameEngine.Data;
-using ActionGameEngine.Data.Helpers;
-using ActionGameEngine.Data.Helpers.Static;
-using ActionGameEngine.Gameplay;
 using ActionGameEngine.Input;
-using ActionGameEngine.Interfaces;
-using VelcroPhysics.Dynamics;
-using FixMath.NET;
-using Spax;
 
 namespace ActionGameEngine
 {

@@ -15,6 +15,7 @@ namespace ActionGameEngine.Data.Drawer
         private bool hasVelocityEvent = false;
         private bool hasHitboxes = false;
         private bool hasHurtboxes = false;
+        private bool hasResources = false;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             //position.height = 16;
@@ -153,6 +154,19 @@ namespace ActionGameEngine.Data.Drawer
                     rectPosY += EditorGUI.GetPropertyHeight(timerProp, timerLabel, true) + EditorGUIUtility.standardVerticalSpacing;
                 }
 
+                if (hasResources)
+                {
+                    //label for the property
+                    var resourceLabel = new GUIContent("Change Resources");
+                    //find the raw property
+                    var resourceProp = property.FindPropertyRelative("resources");
+                    //rect for the toggleCancelConditions property
+                    var resourceRect = new Rect(rectPosX, rectPosY, rectWidth, rectHeight);
+                    //draw the property with the value
+                    EditorGUI.PropertyField(resourceRect, resourceProp, resourceLabel, true);
+                    rectPosY += EditorGUI.GetPropertyHeight(resourceProp, resourceLabel, true) + EditorGUIUtility.standardVerticalSpacing;
+                }
+
                 if (hasHitboxes)
                 {
                     //label for the property
@@ -201,12 +215,14 @@ namespace ActionGameEngine.Data.Drawer
                 var canCondProp = property.FindPropertyRelative("toggleCancelConditions");
                 var hitboxProp = property.FindPropertyRelative("hitboxes");
                 var hurtboxProp = property.FindPropertyRelative("hurtboxes");
+                var resourceProp = property.FindPropertyRelative("resources");
 
 
                 hasTimerEvent = EnumHelper.HasEnum((uint)flagProp.intValue, (uint)FrameEventFlag.SET_TIMER);
                 hasVelocityEvent = EnumHelper.HasEnum((uint)flagProp.intValue, (uint)FrameEventFlag.APPLY_VEL);
                 hasHitboxes = EnumHelper.HasEnum((uint)flagProp.intValue, (uint)FrameEventFlag.ACTIVATE_HITBOXES);
                 hasHurtboxes = EnumHelper.HasEnum((uint)flagProp.intValue, (uint)FrameEventFlag.ACTIVATE_HURTBOXES);
+                hasResources = EnumHelper.HasEnum((uint)flagProp.intValue, (uint)(FrameEventFlag.DRAIN_RESOURCES | FrameEventFlag.GAIN_RESOURCES));
 
                 //totalHeight += EditorGUI.GetPropertyHeight(frameProp) + EditorGUIUtility.standardVerticalSpacing;
                 totalHeight += EditorGUI.GetPropertyHeight(flagProp) + EditorGUIUtility.standardVerticalSpacing;
@@ -215,6 +231,7 @@ namespace ActionGameEngine.Data.Drawer
                 totalHeight += (EditorGUI.GetPropertyHeight(velProp, true) + EditorGUIUtility.standardVerticalSpacing) * Convert.ToInt32(hasVelocityEvent);
                 totalHeight += (EditorGUI.GetPropertyHeight(hitboxProp, true) + EditorGUIUtility.standardVerticalSpacing) * Convert.ToInt32(hasHitboxes);
                 totalHeight += (EditorGUI.GetPropertyHeight(hurtboxProp, true) + EditorGUIUtility.standardVerticalSpacing) * Convert.ToInt32(hasHurtboxes);
+                totalHeight += (EditorGUI.GetPropertyHeight(resourceProp, true) + EditorGUIUtility.standardVerticalSpacing) * Convert.ToInt32(hasResources);
                 totalHeight += EditorGUI.GetPropertyHeight(canCondProp);
             }
             return totalHeight;

@@ -5,7 +5,6 @@ using ActionGameEngine.Data.Helpers.Static;
 using ActionGameEngine.Gameplay;
 using ActionGameEngine.Enum;
 using ActionGameEngine.Interfaces;
-using VelcroPhysics.Dynamics;
 using FixMath.NET;
 using Spax;
 
@@ -138,9 +137,9 @@ namespace ActionGameEngine
             return HitIndicator.WHIFFED;
         }
 
-        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents)
+        protected override void ProcessTransitionEvents(TransitionEvent transitionEvents, ResourceData resourceData = new ResourceData())
         {
-            base.ProcessTransitionEvents(transitionEvents);
+            base.ProcessTransitionEvents(transitionEvents, resourceData);
 
             //if we need to face target when happens
             //if (EnumHelper.HasEnum((int)transitionEvents, (int)TransitionEvent.FACE_ENEMY)) { this.FaceTargetY(lockonTarget); }

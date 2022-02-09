@@ -1749,6 +1749,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         - targetState: 2
           cmdMotion:
             commandInput:
@@ -1758,28 +1767,64 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         - targetState: 1
           cmdMotion:
             commandInput: []
           cancelConditions: 0
           transitionFlag: 2
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         - targetState: 11
           cmdMotion:
             commandInput: []
           cancelConditions: 0
           transitionFlag: 32
           transitionEvent: 8
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames:
         - atFrame: 0
           toggleStateConditions: 0
           toggleCancelConditions: 0
           thing: 0
+          flags: 16
           timerEvent:
             TimerDuration: 0
             conditions: 0
             isPersistent: 0
-          flags: 16
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
           frameVelocity:
             x:
               m_rawValue: 0
@@ -1818,6 +1863,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 1
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames: []
         animName: airborne
         stateName: Airborne
@@ -1825,7 +1879,7 @@ MonoBehaviour:
         parentID: 0
         duration: 0
         stateConditions: 1074266117
-        cancelConditions: 5
+        cancelConditions: 268435461
         enterEvents: 0
         exitEvents: 0
         transitions:
@@ -1838,6 +1892,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames: []
         animName: Run
         stateName: Forward Walk
@@ -1855,6 +1918,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         - targetState: 0
           cmdMotion:
             commandInput:
@@ -1864,16 +1936,34 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 0
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames:
         - atFrame: 4
           toggleStateConditions: 0
           toggleCancelConditions: 0
           thing: 0
+          flags: 128
           timerEvent:
             TimerDuration: 0
             conditions: 0
             isPersistent: 0
-          flags: 128
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
           frameVelocity:
             x:
               m_rawValue: 0
@@ -1897,6 +1987,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames: []
         animName: Pre_Jump
         stateName: Prejump
@@ -1914,16 +2013,34 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames:
         - atFrame: 0
           toggleStateConditions: 0
           toggleCancelConditions: 0
           thing: 0
+          flags: 1
           timerEvent:
             TimerDuration: 0
             conditions: 0
             isPersistent: 0
-          flags: 1
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
           frameVelocity:
             x:
               m_rawValue: 0
@@ -1958,16 +2075,34 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames:
         - atFrame: 11
           toggleStateConditions: 0
           toggleCancelConditions: 0
           thing: 0
+          flags: 0
           timerEvent:
             TimerDuration: 0
             conditions: 0
             isPersistent: 0
-          flags: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
           frameVelocity:
             x:
               m_rawValue: 0
@@ -2006,6 +2141,15 @@ MonoBehaviour:
               m_rawValue: 0
             forcedProration:
               m_rawValue: 0
+            resources:
+              Health: 0
+              Meter: 0
+              Resource1: 0
+              Resource2: 0
+              Resource3: 0
+              Resource4: 0
+              Resource5: 0
+              Resource6: 0
             hitCause: 0
             counterHitCause: 0
             hitCancel: 0
@@ -2028,16 +2172,34 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames:
         - atFrame: 11
           toggleStateConditions: 0
           toggleCancelConditions: 0
           thing: 0
+          flags: 0
           timerEvent:
             TimerDuration: 0
             conditions: 0
             isPersistent: 0
-          flags: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
           frameVelocity:
             x:
               m_rawValue: 0
@@ -2076,6 +2238,15 @@ MonoBehaviour:
               m_rawValue: 0
             forcedProration:
               m_rawValue: 0
+            resources:
+              Health: 0
+              Meter: 0
+              Resource1: 0
+              Resource2: 0
+              Resource3: 0
+              Resource4: 0
+              Resource5: 0
+              Resource6: 0
             hitCause: 0
             counterHitCause: 0
             hitCancel: 0
@@ -2098,16 +2269,34 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames:
         - atFrame: 11
           toggleStateConditions: 0
           toggleCancelConditions: 0
           thing: 0
+          flags: 8
           timerEvent:
             TimerDuration: 0
             conditions: 0
             isPersistent: 0
-          flags: 8
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
           frameVelocity:
             x:
               m_rawValue: 0
@@ -2146,6 +2335,15 @@ MonoBehaviour:
               m_rawValue: 0
             forcedProration:
               m_rawValue: 0
+            resources:
+              Health: 0
+              Meter: 0
+              Resource1: 0
+              Resource2: 0
+              Resource3: 0
+              Resource4: 0
+              Resource5: 0
+              Resource6: 0
             hitCause: 0
             counterHitCause: 0
             hitCancel: 0
@@ -2168,6 +2366,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames: []
         animName: duress
         stateName: Duress
@@ -2185,6 +2392,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames: []
         animName: Hitstun-Ground
         stateName: Hitstun
@@ -2202,6 +2418,15 @@ MonoBehaviour:
           cancelConditions: 0
           transitionFlag: 8
           transitionEvent: 0
+          resources:
+            Health: 0
+            Meter: 0
+            Resource1: 0
+            Resource2: 0
+            Resource3: 0
+            Resource4: 0
+            Resource5: 0
+            Resource6: 0
         frames: []
         animName: Blocking
         stateName: Block
@@ -2214,13 +2439,34 @@ MonoBehaviour:
           - inputItem:
               m_rawValue: 1024
             flags: 1
+        resources:
+          Health: 0
+          Meter: 0
+          Resource1: 0
+          Resource2: 0
+          Resource3: 0
+          Resource4: 0
+          Resource5: 0
+          Resource6: 0
       - targetState: 9
         cancelConditions: 268435457
         cmdMotion:
           commandInput:
           - inputItem:
+              m_rawValue: 2
+            flags: 3
+          - inputItem:
               m_rawValue: 256
             flags: 1
+        resources:
+          Health: 0
+          Meter: 0
+          Resource1: 0
+          Resource2: 0
+          Resource3: 0
+          Resource4: 0
+          Resource5: 0
+          Resource6: 0
 --- !u!4 &1395958343
 Transform:
   m_ObjectHideFlags: 0
