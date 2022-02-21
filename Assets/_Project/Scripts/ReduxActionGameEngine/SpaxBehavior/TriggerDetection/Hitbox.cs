@@ -197,7 +197,7 @@ namespace ActionGameEngine.Gameplay
 
                         //has a sign to denote what direction the attacker was facing when we were hit
                         int signedID = owner.GetFacing() * _ownerID;
-                        ret = hurtbox.HitThisBox(signedID, data);
+                        ret = hurtbox.HitThisBox(signedID, data, owner.GetProration());
                         //Debug.Log("hit with hitbox :: " + gameObject.name+" "+ret);
                         //  player.OnHit(data, box.GetHit());
                         //Debug.Log("found");

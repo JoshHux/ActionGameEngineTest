@@ -192,6 +192,49 @@ namespace ActionGameEngine.Data
             return ret;
         }
 
+        public TransitionEvent GetExitFromState(int stateID)
+        {
+            StateData state = stateList[stateID];
+            TransitionEvent ret = state.exitEvents;
+
+            //recur to keep adding the parent's conditions if there is a parent
+            if (state.HasParent() && (stateID > -1) && (true))
+            {
+                //UnityEngine.Debug.Log(stateID + " " + (int)(ret & StateCondition.NO_PARENT_COND) + " " + ret);
+                ret |= this.GetExitFromState(state.parentID);
+            }
+
+            return ret;
+        }
+        public TransitionEvent GetEnterFromState(int stateID)
+        {
+            StateData state = stateList[stateID];
+            TransitionEvent ret = state.enterEvents;
+
+            //recur to keep adding the parent's conditions if there is a parent
+            if (state.HasParent() && (stateID > -1) && (true))
+            {
+                //UnityEngine.Debug.Log(stateID + " " + (int)(ret & StateCondition.NO_PARENT_COND) + " " + ret);
+                ret |= this.GetEnterFromState(state.parentID);
+            }
+
+            return ret;
+        }
+        public CancelConditions GetCancelsFromState(int stateID)
+        {
+            StateData state = stateList[stateID];
+            CancelConditions ret = state.cancelConditions;
+
+            //recur to keep adding the parent's conditions if there is a parent
+            if (state.HasParent() && (stateID > -1) && (true))
+            {
+                //UnityEngine.Debug.Log(stateID + " " + (int)(ret & StateCondition.NO_PARENT_COND) + " " + ret);
+                ret |= this.GetCancelsFromState(state.parentID);
+            }
+
+            return ret;
+        }
+
         //returns index of transition if true
         //version without input for non-controllable object
         public TransitionData TryTransitionState(int fromState, CancelConditions playerCond, TransitionFlag playerFlags, int facing, ResourceData playerResources)

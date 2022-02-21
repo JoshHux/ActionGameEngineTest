@@ -8,6 +8,7 @@ namespace ActionGameEngine.Enum
     public enum HitIndicator : byte
     {
 
+        WHIFFED = 0,// - on the ground hit, true or false
         GROUNDED = 1 << 0,// - on the ground, true or false
         CROUCHING = 1 << 1,// - crouching, true or false
         COUNTER_HIT = 1 << 2,// - counter hit, true or false
@@ -15,6 +16,6 @@ namespace ActionGameEngine.Enum
         GRABBED = 1 << 4,// - grabbed, true or false
         SUPER = 1 << 5,// - super hit, true or false
         OTG = 1 << 6,// - on the ground hit, true or false
-        WHIFFED = 1 << 7,// - on the ground hit, true or false
+        COMBOED_HIT = 1 << 7,// - on the ground hit, true or false
     }
 }

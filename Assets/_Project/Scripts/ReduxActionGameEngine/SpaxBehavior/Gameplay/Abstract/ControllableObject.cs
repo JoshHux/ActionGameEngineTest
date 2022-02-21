@@ -51,7 +51,6 @@ namespace ActionGameEngine.Gameplay
 
         protected override void TryTransitionState()
         {
-
             //get a transition, valid if we found a new state to transition to
             TransitionData transition = data.TryTransitionState(status.GetCurrentStateID(), inputRecorder.GetInputArray(), status.GetCancelConditions(), status.GetTransitionFlags(), status.facing, status.resources);
             //UnityEngine.Debug.Log(transition.IsValid() + " " + transition.targetState);
@@ -61,8 +60,9 @@ namespace ActionGameEngine.Gameplay
 
                 //get the current state before the transition
                 StateData curState = status.currentState;
+                int curStateID = curState.stateID;
                 //process the exitEvents flags before transitioning
-                TransitionEvent exitEvents = curState.exitEvents;
+                TransitionEvent exitEvents = data.GetExitFromState(curStateID);
                 ProcessTransitionEvents(exitEvents);
 
                 //process the TransitionEvent flags that are set before you transition to the new state
@@ -71,8 +71,9 @@ namespace ActionGameEngine.Gameplay
 
                 //we assign it again since we know that the current state should be the new state 
                 curState = status.currentState;
+                curStateID = curState.stateID;
                 //process the enterEvents flags before transitioning
-                TransitionEvent enterEvents = curState.enterEvents;
+                TransitionEvent enterEvents = data.GetEnterFromState(curStateID);
                 ProcessTransitionEvents(enterEvents);
 
             }
@@ -82,23 +83,30 @@ namespace ActionGameEngine.Gameplay
                 //get new state ID from the movelist
                 int newState = data.TryMoveList(inputRecorder.GetInputArray(), status.GetCancelConditions(), status.facing, status.resources);
 
+                if (newState == 28 && (status.currentState.stateID == 28 || status.currentState.stateID == 28))
+                {
+                    UnityEngine.Debug.Log("check - " + status.GetCancelConditions());
+                }
+
                 //check if it's valid
                 if (newState != -1)
                 {
                     //get the current state before the transition
                     StateData curState = status.currentState;
+                    int curStateID = curState.stateID;
                     //process the exitEvents flags before transitioning
-                    TransitionEvent exitEvents = curState.exitEvents;
+                    TransitionEvent exitEvents = data.GetExitFromState(curStateID);
                     ProcessTransitionEvents(exitEvents);
 
-                    //assign the new state
                     AssignNewState(newState);
 
                     //we assign it again since we know that the current state should be the new state 
                     curState = status.currentState;
+                    curStateID = curState.stateID;
                     //process the enterEvents flags before transitioning
-                    TransitionEvent enterEvents = curState.enterEvents;
+                    TransitionEvent enterEvents = data.GetEnterFromState(curStateID);
                     ProcessTransitionEvents(enterEvents);
+
                 }
                 else
                 {

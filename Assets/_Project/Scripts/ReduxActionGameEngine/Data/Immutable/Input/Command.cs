@@ -22,6 +22,8 @@ namespace ActionGameEngine.Input
             if (len > 0 && lenNested > 0)
             {
                 int pos = 0;
+                int leniency = 3;
+
                 for (int j = 0; j < len; j++)
                 {
                     int totalFramesPassed = 0;
@@ -68,18 +70,17 @@ namespace ActionGameEngine.Input
                         //special case where we only want to look at the currently held inputs by the player
                         //only check the first element if we don't have any flags
                         //in this case, we want to check the current inputs the player is pressing
+                        bool checkConState = EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_CONTROLLER_STATE, true);
                         if (i == 0 && j == 0 && EnumHelper.HasEnum((uint)frag.flags, (uint)InputFlags.CHECK_CONTROLLER_STATE, true))
                         {
                             inputFrag.flags |= InputFlags.CHECK_CONTROLLER_STATE;
                         }
 
-                        //how many frames of leniency we have in the motion
-                        int leniency = 10;
-                        //if it's the first input and we're looking at the first element, apply first input leniency
-                        if (i == 0 && j == 0) { leniency = 3; }
+                        //increment the total frames that have passed since that input wa buffered
+                        totalFramesPassed += input.framesHeld;
 
                         //the input is not fast enough, held too long or something like that
-                        if (input.framesHeld > leniency)
+                        if (totalFramesPassed > leniency)
                         {
                             //UnityEngine.Debug.Log("too many frames passed");
                             return false;
@@ -189,6 +190,14 @@ namespace ActionGameEngine.Input
 
                             //next starting position of the player's inputs
                             pos = i;
+
+                            //we successfully matched the input, should we increase the leniency?
+                            if (!checkConState)
+                            {
+                                //the last check was not against the state of the controller, the first "real" input was passed, increase the lineincy since we're now in a motion
+                                leniency = 10;
+                            }
+
                             //breaks out of nested loop only
                             break;
                         }

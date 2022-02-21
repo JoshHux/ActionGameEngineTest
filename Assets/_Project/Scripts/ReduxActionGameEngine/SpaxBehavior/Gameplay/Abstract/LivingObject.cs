@@ -149,9 +149,16 @@ namespace ActionGameEngine
         protected override void PrepRenderer()
         {
             _renderer.AssignHelper(helper);
+
+        }
+
+        protected override void PreRenderer()
+        {
             //we passed the helper, reset relevent values
             helper.newState = false;
             helper.renderFrames = 0;
+            helper.damageTaken = 0;
+            helper.comboHits = 0;
         }
 
         //----------/PUBLIC METHODS/----------//
@@ -159,7 +166,10 @@ namespace ActionGameEngine
         //only relavent for 2d games, returns the direction we are facing
         //facing right by default
         public int GetFacing() { return status.facing; }
-
+        public void SetNewState(int newState)
+        {
+            this.AssignNewState(newState);
+        }
 
         //----------/PROTECTED METHODS/----------//
 
@@ -226,15 +236,17 @@ namespace ActionGameEngine
             StateData newState = data.GetStateFromID(newStateID);
             //setting new state information to CharacterStatus
             status.SetNewState(newState);
+            //reset state timer
+            stateTimer.StartTimer(newState.duration);
             status.SetNewStateConditions(data.GetConditionsFromState(newStateID));
-            status.SetNewCancelConditions(newState.cancelConditions);
+
+            var newCC = data.GetCancelsFromState(newStateID);
+            status.SetNewCancelConditions(newCC);
             //new state found, remove transition flags
             //status.SetNewTransitionFlags(0);
             status.RemoveTransitionFlags(TransitionFlag.STATE_END);
             status.RemoveTransitionFlags(TransitionFlag.GOT_HIT);
 
-            //reset state timer
-            stateTimer.StartTimer(newState.duration);
 
             //any housekeeping or exceptions we need to cover
             CleanUpNewState();
@@ -283,8 +295,9 @@ namespace ActionGameEngine
 
                 //get the current state before the transition
                 StateData curState = status.currentState;
+                int curStateID = curState.stateID;
                 //process the exitEvents flags before transitioning
-                TransitionEvent exitEvents = curState.exitEvents;
+                TransitionEvent exitEvents = data.GetExitFromState(curStateID);
                 ProcessTransitionEvents(exitEvents);
 
                 //process the TransitionEvent flags that are set before you transition to the new state
@@ -293,8 +306,9 @@ namespace ActionGameEngine
 
                 //we assign it again since we know that the current state should be the new state 
                 curState = status.currentState;
+                curStateID = curState.stateID;
                 //process the enterEvents flags before transitioning
-                TransitionEvent enterEvents = curState.enterEvents;
+                TransitionEvent enterEvents = data.GetEnterFromState(curStateID);
                 ProcessTransitionEvents(enterEvents);
             }
             else

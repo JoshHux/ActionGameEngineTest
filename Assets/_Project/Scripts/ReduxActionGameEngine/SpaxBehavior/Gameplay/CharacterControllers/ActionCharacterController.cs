@@ -14,16 +14,20 @@ namespace ActionGameEngine
     {
         //protected ShapeBase lockonTarget;
         //[SerializeField] private string path;
-
+        //this is proration that is stored and not yet applied
+        //proration will apply on moves that come after it, so we're storing it here for now
         [SerializeField] private string characterName;
         protected override void OnStart()
         {
             SpaxManager.instance.TrackObject(this);
             allignment = SpaxManager.instance.GetTrackingIndexOf(this);
-            this.data = SpaxJSONSaver.LoadCharacterData(characterName);
+            this.PrepCharacterData();
             base.OnStart();
-            //rb.Body._flags |= BodyFlags.BulletFlag;
+
+            //this._pushBackForce = new FVector3();
         }
+
+        public void PrepCharacterData() { this.data = SpaxJSONSaver.LoadCharacterData(characterName); }
 
         protected override void StateCleanUpdate() { if (status.GetInHitstop()) { return; } }
         protected override void PreUpdate() { if (status.GetInHitstop()) { return; } }
@@ -39,14 +43,29 @@ namespace ActionGameEngine
 
         //returns a value describing what happened when we get hit
         //called by attacker hitbox
-        public override HitIndicator GetHit(int attackerID, HitboxData boxData)
+        public override HitIndicator GetHit(int attackerID, HitboxData boxData, Fix64 proration)
         {
-            return OnGetHit(attackerID, boxData);
+            return OnGetHit(attackerID, boxData, proration);
         }
 
         //TODO: what to do when we connect hit with enemy
-        public override int ConnectedHit(HitboxData boxData)
+        public override int ConnectedHit(HitboxData boxData, HitIndicator indicator)
         {
+            status.AddCancelConditions(boxData.GetCancelConditions(indicator));
+            //gain resources from the hitbox
+            status.resources += boxData.resources;
+            //we connected a hit, increase combo count
+            status.comboCount++;
+            //check if we got a comboed hit
+            int comboed = EnumHelper.HasEnumInt((uint)indicator, (uint)HitIndicator.COMBOED_HIT);
+
+            //the flip version of whether or not we comboed
+            //if it wasn't a comboed hit, it must've been a hit to initiate a combo
+            int firstHit = comboed ^ 1;
+
+            //update the stored proration, we connected a hit
+            //apply the hitbox's proration to stored proration
+            this.ApplyProration(boxData.initProration, boxData.forcedProration, firstHit);
             return -1;
         }
 
@@ -76,7 +95,9 @@ namespace ActionGameEngine
 
         }
 
-        public HitIndicator OnGetHit(int attackerID, HitboxData boxData)
+        public override Fix64 GetProration() { return status.proration; }
+
+        public HitIndicator OnGetHit(int attackerID, HitboxData boxData, Fix64 proration)
         {
             HitType type = boxData.type;
             bool onGround = EnumHelper.HasEnum((uint)status.GetStateConditions(), (int)StateCondition.GROUNDED);
@@ -106,7 +127,7 @@ namespace ActionGameEngine
                     {
                         //set chip, blockstun, blockstop, etc.
 
-                        AddPotentialHitbox(attackerID, boxData, HitIndicator.BLOCKED);
+                        AddPotentialHitbox(attackerID, boxData, HitIndicator.BLOCKED, proration);
                         return indicator;
                     }
                     else
@@ -118,8 +139,12 @@ namespace ActionGameEngine
                         }
                     }
                 }
+                //clean hit
                 //set damage, hitstun, hitstop, etc.
-                AddPotentialHitbox(attackerID, boxData, indicator);
+                //if we're in a stunned state when we're hit, then indicate a comboed hit
+                if ((status.currentState.stateConditions & StateCondition.STUN_STATE) > 0) { indicator |= HitIndicator.COMBOED_HIT; }
+
+                AddPotentialHitbox(attackerID, boxData, indicator, proration);
 
                 return indicator;
 
@@ -128,12 +153,12 @@ namespace ActionGameEngine
             {
                 //grab operations, like setting parent and the such
                 indicator |= HitIndicator.GRABBED;
-                AddPotentialHitbox(attackerID, boxData, indicator);
+                AddPotentialHitbox(attackerID, boxData, indicator, proration);
                 return indicator;
             }
 
             Debug.LogError("Invalid HitType, must have GRAB or STRIKE tag");
-
+            //we got hit, but for some reason, we don't know what to do with it
             return HitIndicator.WHIFFED;
         }
 
@@ -162,7 +187,7 @@ namespace ActionGameEngine
         protected override void FlagBlockToOthers() { }
 
         //being hit, process data
-        protected override void ProcessHitbox(HitboxData boxData, int dir)
+        protected override void ProcessHitbox(HitboxData boxData, int dir, Fix64 proration)
         {
             HitboxDataHolder hold = boxData.GetHolder(hitIndicator);
             //knockback force
@@ -174,7 +199,7 @@ namespace ActionGameEngine
             rb.Velocity = force;
 
             //send the box data to have damage and scaling applied
-            DamageHealth(boxData);
+            DamageHealth(boxData, proration);
 
             //we're apply "getting hit" hitstop when we assign hitstun so that we don't lose any frames of hitstop
             //look at CleanUpNewState in the VulnerableObject script to see when we apply it

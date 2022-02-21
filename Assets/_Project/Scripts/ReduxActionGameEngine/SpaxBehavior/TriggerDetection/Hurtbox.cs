@@ -45,10 +45,10 @@ namespace ActionGameEngine.Gameplay
             trigger.LocalPosition = newPos;
         }
 
-        public HitIndicator HitThisBox(int attackerID, HitboxData boxData)
+        public HitIndicator HitThisBox(int attackerID, HitboxData boxData, Fix64 proration)
         {
             //sends signal to owner
-            return damageable.GetHit(attackerID, boxData);
+            return damageable.GetHit(attackerID, boxData, proration);
         }
 
         public void SetAllignment(int allignment) { this._allignment = allignment; }

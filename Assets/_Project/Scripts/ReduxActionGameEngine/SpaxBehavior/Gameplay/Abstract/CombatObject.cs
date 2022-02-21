@@ -1,8 +1,10 @@
 using UnityEngine;
+using FixMath.NET;
 using ActionGameEngine.Interfaces;
 using ActionGameEngine.Enum;
 using ActionGameEngine.Data;
 using Spax;
+
 
 namespace ActionGameEngine.Gameplay
 {
@@ -12,6 +14,7 @@ namespace ActionGameEngine.Gameplay
         //unique to this object
         protected int combatID;
         protected Hitbox[] hitboxes;
+        private Fix64 storedProration;
 
         protected override void OnStart()
         {
@@ -32,6 +35,7 @@ namespace ActionGameEngine.Gameplay
 
                 box.Initialize();
             }
+            storedProration = Fix64.One;
 
 
         }
@@ -42,6 +46,7 @@ namespace ActionGameEngine.Gameplay
             //make invalid hitbox with really low priority, overridden if attack connected
             HitboxData boxData = new HitboxData();
             boxData.priority = int.MinValue;
+            //EQUIVOLENT TO 0
             HitIndicator indicator = HitIndicator.WHIFFED;
 
             for (int i = 0; i < len; i++)
@@ -52,7 +57,7 @@ namespace ActionGameEngine.Gameplay
                     indicator = box.QueryHitboxCollisions();
                     HitboxData potenBoxData = box.GetHitboxData();
                     //record hitbox for later if attack connectes
-                    if ((potenBoxData.priority > boxData.priority) && (!EnumHelper.HasEnum((uint)indicator, (int)HitIndicator.WHIFFED)))
+                    if ((potenBoxData.priority > boxData.priority) && (!(indicator > 0)))
                     { boxData = box.GetHitboxData(); }
 
                     if (!status.inHitstop)
@@ -65,11 +70,10 @@ namespace ActionGameEngine.Gameplay
 
             //we connected with a hitbox
             //aka. we didn't whiff
-            if (!EnumHelper.HasEnum((uint)indicator, (int)HitIndicator.WHIFFED))
+            if (!(indicator > 0))
             {
-                status.AddCancelConditions(boxData.GetCancelConditions(indicator));
-                //gain resources from the hitbox
-                status.resources += boxData.resources;
+                //we connected a hit, apply necessary calcs
+                this.ConnectedHit(boxData, indicator);
             }
         }
 
@@ -78,6 +82,16 @@ namespace ActionGameEngine.Gameplay
             base.ProcessFrameData(frame);
 
             if (frame.HasHitboxes()) { ActivateHitboxes(frame.hitboxes); }
+        }
+
+        protected override void CleanUpNewState()
+        {
+            base.CleanUpNewState();
+            //we apply proration after we transition to a new state, that way multi-hit states don't have scaling until afterwards
+            //apply storedProration to the overall proration, we aren't doing more damage calcs
+            status.proration *= this.storedProration;
+            //reset storedProration to 1, apply the proration gathered to the proration for the next state
+            this.storedProration = Fix64.One;
         }
 
         protected override void ProcessTransitionEvents(TransitionEvent transitionEvents, ResourceData resourceData = new ResourceData())
@@ -122,8 +136,35 @@ namespace ActionGameEngine.Gameplay
             }
         }
 
+        //call to apply and store the proration
+        //call when we want to update storedProration
+        protected void ApplyProration(Fix64 forcedPro, Fix64 initPro, int firstHit)
+        {
+
+            //We'll update proration on next state
+            //the current proration applied to this hit
+            //Fix64 curPro = status.proration;
+            //proration for the current hit in a combo
+            //TODO: make a method to determine the scaling based on the current combo count
+            Fix64 comboPro = Fix64.One;
+            Fix64 fPro = forcedPro;
+
+            //flip firstHit, if it's 0, then it'll become 1, effectively eliminating initial proration
+            int comboedHit = firstHit ^ 1;
+            Fix64 iPro = initPro * firstHit + Fix64.One * comboedHit;
+
+
+            //combines the prorations
+            Fix64 boxPro = fPro * iPro;
+
+            //store the proration to be used later
+            this.storedProration *= boxPro;
+        }
+
         //PLEASE TREAT AS PRIVATE
-        public abstract int ConnectedHit(HitboxData boxData);
+        public abstract int ConnectedHit(HitboxData boxData, HitIndicator indicator);
+
+        public abstract Fix64 GetProration();
         //call to tell any relevant enemies to block (for proximity blocking)
         protected abstract void FlagBlockToOthers();
 

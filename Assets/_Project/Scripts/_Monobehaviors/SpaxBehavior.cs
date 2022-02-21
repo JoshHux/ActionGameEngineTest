@@ -5,12 +5,12 @@ namespace Spax
     public class SpaxBehavior : MonoBehaviour
     {
         // Start is called before the first frame update
-        void Awake()
+        public void SpaxAwake()
         {
             this.OnAwake();
         }
 
-        void Start()
+        public void SpaxStart()
         {
             this.OnStart();
         }

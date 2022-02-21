@@ -1696,7 +1696,7 @@ GameObject:
   - component: {fileID: 1395958343}
   - component: {fileID: 1395958342}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Editor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2152,6 +2152,7 @@ MonoBehaviour:
               Resource6: 0
             hitCause: 0
             counterHitCause: 0
+            blockCancel: 0
             hitCancel: 0
             counterHitCancel: 0
             type: 0
@@ -2249,6 +2250,7 @@ MonoBehaviour:
               Resource6: 0
             hitCause: 0
             counterHitCause: 0
+            blockCancel: 0
             hitCancel: 0
             counterHitCancel: 0
             type: 0
@@ -2346,6 +2348,7 @@ MonoBehaviour:
               Resource6: 0
             hitCause: 0
             counterHitCause: 0
+            blockCancel: 0
             hitCancel: 0
             counterHitCancel: 0
             type: 4

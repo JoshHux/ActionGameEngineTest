@@ -41,7 +41,7 @@
                   "inputItem": {
                     "m_rawValue": 3
                   },
-                  "flags": "IS_ONLY_CHECK"
+                  "flags": "CHECK_CONTROLLER_STATE"
                 }
               ]
             },
@@ -67,7 +67,7 @@
                   "inputItem": {
                     "m_rawValue": 2
                   },
-                  "flags": "IS_ONLY_CHECK"
+                  "flags": "CHECK_CONTROLLER_STATE"
                 }
               ]
             },
@@ -226,7 +226,7 @@
         "parentID": 0,
         "duration": 0,
         "stateConditions": "GROUNDED, APPLY_GRAV, CAN_WALK, NO_PARENT_COND",
-        "cancelConditions": "GROUNDED, JUMP",
+        "cancelConditions": "GROUNDED, JUMP, NORM_LV3",
         "enterEvents": 0,
         "exitEvents": 0,
         "transitions": [
@@ -238,7 +238,7 @@
                   "inputItem": {
                     "m_rawValue": 2
                   },
-                  "flags": "IS_ONLY_CHECK, CHECK_IS_UP"
+                  "flags": "CHECK_CONTROLLER_STATE, CHECK_IS_UP"
                 }
               ]
             },
@@ -297,7 +297,7 @@
                   "inputItem": {
                     "m_rawValue": 3
                   },
-                  "flags": "IS_ONLY_CHECK, CHECK_IS_UP"
+                  "flags": "CHECK_CONTROLLER_STATE, CHECK_IS_UP"
                 }
               ]
             },
@@ -585,6 +585,7 @@
                 },
                 "hitCause": 0,
                 "counterHitCause": 0,
+                "blockCancel": 0,
                 "hitCancel": 0,
                 "counterHitCancel": 0,
                 "type": 0
@@ -716,6 +717,7 @@
                 },
                 "hitCause": 0,
                 "counterHitCause": 0,
+                "blockCancel": 0,
                 "hitCancel": 0,
                 "counterHitCancel": 0,
                 "type": 0
@@ -847,6 +849,7 @@
                 },
                 "hitCause": 0,
                 "counterHitCause": 0,
+                "blockCancel": 0,
                 "hitCancel": 0,
                 "counterHitCancel": 0,
                 "type": "STRIKE_MIDDLE"
@@ -991,6 +994,12 @@
         "cancelConditions": "GROUNDED, NORM_LV3",
         "cmdMotion": {
           "commandInput": [
+            {
+              "inputItem": {
+                "m_rawValue": 2
+              },
+              "flags": "CHECK_CONTROLLER_STATE"
+            },
             {
               "inputItem": {
                 "m_rawValue": 256

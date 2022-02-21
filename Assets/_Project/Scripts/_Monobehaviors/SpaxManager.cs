@@ -74,6 +74,24 @@ namespace Spax
             //asssign world
             this._world = new FlatWorld();
             this._timeStep = (Fix64)1 / (Fix64)60;
+
+
+        }
+
+        void Start()
+        {
+            var s = FindObjectsOfType<SpaxBehavior>();
+            int len = s.Length;
+            for (int i = 0; i < len; i++)
+            {
+                var hold = s[i];
+                hold.SpaxAwake();
+            }
+            for (int i = 0; i < len; i++)
+            {
+                var hold = s[i];
+                hold.SpaxStart();
+            }
         }
 
 
@@ -97,10 +115,10 @@ namespace Spax
             HitQueryUpdate?.Invoke();
             HurtQueryUpdate?.Invoke();
             PostUpdate?.Invoke();
+            PrepRender?.Invoke();
         }
         private void RendererUpdate()
         {
-            PrepRender?.Invoke();
             PreRender?.Invoke();
             RenderUpdate?.Invoke();
         }

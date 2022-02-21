@@ -33,6 +33,8 @@ namespace ActionGameEngine.Data
         public StateCondition hitCause;
         //when you hit a move, what to apply to the counter-hit entity
         public StateCondition counterHitCause;
+        //what we can cancel into when we land a blocked hit
+        public CancelConditions blockCancel;
         //what we can cancel into when we land a hit
         public CancelConditions hitCancel;
         //what we can cancel into when we land a counter-hit
@@ -47,13 +49,14 @@ namespace ActionGameEngine.Data
 
         public CancelConditions GetCancelConditions(HitIndicator indicator)
         {
-            bool isCounterHit = EnumHelper.HasEnum((uint)indicator, (uint)HitIndicator.COUNTER_HIT);
-            if (isCounterHit)
-            {
-                return counterHitCancel;
-            }
+            int isCounterHit = EnumHelper.HasEnumInt((uint)indicator, (uint)HitIndicator.COUNTER_HIT);
+            int isBlockedHit = EnumHelper.HasEnumInt((uint)indicator, (uint)HitIndicator.BLOCKED);
+            int rawHit = isBlockedHit ^ 1;
 
-            return hitCancel;
+            var ret = isBlockedHit * (int)this.blockCancel;
+            ret = ret | (rawHit * (int)this.hitCancel);
+            ret = ret | (isCounterHit * (int)this.counterHitCancel);
+            return (CancelConditions)ret;
         }
 
         //should only every be called and referenced by Vulnerable Object

@@ -23,6 +23,8 @@ namespace ActionGameEngine.Gameplay
                     manager.PostUpdate += (() => PostUpdate());
                     manager.PrepRender += (() => PrepRenderer());
                     //Debug.Log("starting: " + gameObject.name);
+                    manager.PreRender += (() => PreRenderer());
+
                 }
             }
         }
@@ -37,5 +39,6 @@ namespace ActionGameEngine.Gameplay
         protected abstract void HurtboxQueryUpdate();
         protected abstract void PostUpdate();
         protected abstract void PrepRenderer();
+        protected abstract void PreRenderer();
     }
 }
