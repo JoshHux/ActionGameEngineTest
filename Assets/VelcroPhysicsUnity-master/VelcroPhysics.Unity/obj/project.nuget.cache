@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "nnXUgP51VmMPTFp/gLQCmTsFtQlRKGP85/IzdLM5dmuCvV+6GucYUSRHnKAeGhtItAW7IFkdPzGRTMPo1KZx/A==",
+  "success": true,
+  "projectFilePath": "c:\\Users\\spira\\OneDrive\\Documents\\Unity Projects\\ActionGameEngineTest\\Assets\\VelcroPhysicsUnity-master\\VelcroPhysics.Unity\\VelcroPhysics.Unity.csproj",
+  "expectedPackageFiles": [
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
