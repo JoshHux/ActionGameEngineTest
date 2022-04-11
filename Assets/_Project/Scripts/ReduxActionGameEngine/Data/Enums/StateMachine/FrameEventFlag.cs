@@ -5,7 +5,7 @@ namespace ActionGameEngine.Enum
     //flag for any events that a frame might have, like setting or applying velocity
     [System.Flags]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum FrameEventFlag : byte
+    public enum FrameEventFlag : uint
     {
         APPLY_VEL = 1 << 0,
         SET_VEL = APPLY_VEL | 1 << 1,
@@ -17,6 +17,7 @@ namespace ActionGameEngine.Enum
         GAIN_RESOURCES = 1 << 6,
         //for 2d games, reaching tells the character to turn and face the other direction
         AUTO_TURN = 1 << 7,
-
+        SPAWN_PROJECTILE = 1 << 8,
+        SUPER_FLASH = (uint)1 << 31,
     }
 }

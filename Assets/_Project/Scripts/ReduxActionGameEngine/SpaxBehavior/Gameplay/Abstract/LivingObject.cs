@@ -257,7 +257,7 @@ namespace ActionGameEngine
             //tell helper about the new state
             helper.newState = true;
             helper.renderFrames = 0;
-            helper.animState = newState.animName;
+            helper.animState = newState.stateID;
         }
 
 

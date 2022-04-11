@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using ActionGameEngine.Enum;
 
 namespace ActionGameEngine.Data
 {
@@ -14,7 +13,17 @@ namespace ActionGameEngine.Data
         public int facing;
         public int damageTaken;
         public int comboHits;
-        public string animState;
+
+        public int meterChange;
+        public int installChange;
+
+        public HitIndicator hitIndicator;
+        public HitType hitType;
+        public TransitionFlag transitionFlags;
+        public Vector3 hitPos;
+        public int hitVfx;
+
+        public int animState;
         public bool newState;
     }
 }

@@ -31,7 +31,7 @@ namespace ActionGameEngine.Rendering
 
         protected override void RenderUpdate()
         {
-            if (helper.newState && (helper.animState != "NewState"))
+            if (helper.newState)// && (helper.animState != "NewState"))
             {
                 //AssignAnimationState(helper.animState);
             }

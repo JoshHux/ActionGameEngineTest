@@ -1,5 +1,6 @@
 using UnityEngine;
 using ActionGameEngine.Data;
+using ActionGameEngine.Rendering;
 using Spax;
 
 namespace ActionGameEngine
@@ -7,6 +8,8 @@ namespace ActionGameEngine
     public abstract class RendererBehavior : SpaxBehavior
     {
 
+        [SerializeField] protected soVFXHolder p_vfxHolder;
+        [SerializeField] protected soStateStringHolder p_animNameHolder;
         protected RendererHelper helper;
 
         protected override void OnStart()

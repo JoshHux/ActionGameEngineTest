@@ -24,10 +24,11 @@ namespace ActionGameEngine.Data
         public TimerEvent timerEvent;
         public ResourceData resources;
         public FVector2 frameVelocity;
+        public int projectileID;
         public HitboxData[] hitboxes;
         public HurtboxData[] hurtboxes;
 
-        public FrameData(int f, StateCondition sc, CancelConditions cc, FrameEventFlag ff, TimerEvent te, ResourceData rd, FVector2 fv, HitboxData[] hib, HurtboxData[] hub)
+        public FrameData(int f, StateCondition sc, CancelConditions cc, FrameEventFlag ff, TimerEvent te, ResourceData rd, FVector2 fv, int pID, HitboxData[] hib, HurtboxData[] hub)
         {
             this.thing = true;
             this.atFrame = f;
@@ -37,6 +38,7 @@ namespace ActionGameEngine.Data
             this.timerEvent = te;
             this.resources = rd;
             this.frameVelocity = fv;
+            this.projectileID = pID;
             this.hitboxes = hib;
             this.hurtboxes = hub;
         }

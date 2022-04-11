@@ -1,17 +1,41 @@
+using System.Collections.Generic;
 using UnityEngine;
 using ActionGameEngine.Data;
 using Newtonsoft.Json;
 
 public class SpaxJSONSaver : MonoBehaviour
 {
-    [SerializeField]
-    private CharacterData data;
+    [SerializeField, ReadOnly] private soStateStringHolder _nameHolder;
+    [SerializeField] private CharacterData data;
+
+    [HideInInspector] public string characterName;
 
     //public CharacterData fromSave;
 #if UNITY_EDITOR
+
+    public static SpaxJSONSaver instance;
+
     public void EditorLoadCharacterData(string characterName)
     {
         data = LoadCharacterData(characterName);
+        this.characterName = characterName;
+        instance = this;
+
+
+        var so = Resources.Load<soStateStringHolder>("ScriptableObjects/Editor/CharacterData/" + characterName);
+
+        this._nameHolder = so;
+
+
+        /*int len = data.stateList.Length;
+        List<string> nameList = new List<string>();
+        for (int i = 0; i < len; i++)
+        {
+            nameList.Add(data.stateList[i].stateName);
+        }
+
+        this._nameHolder.SetStateNames(nameList.ToArray());
+    */
     }
 
     //call to make the states in the state list have their ID's match their index in the list
@@ -19,6 +43,16 @@ public class SpaxJSONSaver : MonoBehaviour
     public void CorrectStateID()
     {
         data.CorrectStateID();
+    }
+
+    public string GetStateName(int index)
+    {
+        return this._nameHolder.GetStateName(index);
+    }
+
+    public string GetAnimName(int index)
+    {
+        return this._nameHolder.GetAnimName(index);
     }
 #endif
 
@@ -59,8 +93,9 @@ public class SpaxJSONSaver : MonoBehaviour
         //if a built universal windows platform
 #if UNITY_WSA
         //Debug.Log("Dadfsfad");
-        path = Application.persistentDataPath +"/Resources/JSON/Gameplay/Characters/";
+        //path = Application.persistentDataPath +"/Resources/JSON/Gameplay/Characters/";
 #endif
+
 
         path += characterName + ".json";
 
@@ -77,9 +112,10 @@ public class SpaxJSONSaver : MonoBehaviour
             return;
         }
 
+
+
         //writes the text to the json file
         System.IO.File.WriteAllText(path, json);
-
 
 
 

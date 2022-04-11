@@ -42,8 +42,9 @@ namespace ActionGameEngine.Enum
         BOUNCE_GROUND_MEDIUM = 1 << 23,
         BOUNCE_GROUND_WEAK = 1 << 24,
         //character will automatically turn to face pre-defined target
-        AUTO_TURN = IS_ABLE_TO_TURN | 1 << 27,
-        CAN_TRANSITION_TO_SELF = 1 << 28,
+        AUTO_TURN = IS_ABLE_TO_TURN | 1 << 25,
+        CAN_TRANSITION_TO_SELF = 1 << 26,
+        NO_PARENT_CANCELS = 1 << 28,
         //don't look at parent transitions
         NO_PARENT_TRANS = 1 << 29,
         //don't look at parent StateCondition

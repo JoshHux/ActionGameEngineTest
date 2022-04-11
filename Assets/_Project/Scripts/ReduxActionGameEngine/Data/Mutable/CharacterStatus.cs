@@ -24,6 +24,16 @@ namespace ActionGameEngine.Data
 
         //conditions that last despite transitioning to another state
         public StateCondition persistentCond;
+
+        //conditions that last despite transitioning to another state
+        //these aren't erased by a timer and will persist through other states no matter what
+        //  unless explicitely removed
+        public StateCondition superPersistentCond;
+
+        //says whether or we blocked the hits, etc.
+        //says whether we use counterhit, hit, or blocked data
+        //the dictionary being nonzero will tell us if we were even hit at all
+        public HitIndicator hitIndicator;
         //if we need to check for a new state because of a new input
         public bool checkState;
         public bool inHitstop;
@@ -96,7 +106,7 @@ namespace ActionGameEngine.Data
         public int GetCurrentHp() { return currentHp; }
         public bool GetCheckState() { return checkState; }
         public bool GetInHitstop() { return inHitstop; }
-        public StateCondition GetStateConditions() { return currentStateCond | persistentCond; }
+        public StateCondition GetStateConditions() { return currentStateCond | persistentCond | this.superPersistentCond; }
         public StateCondition GetPersistentConditions() { return persistentCond; }
         public CancelConditions GetCancelConditions() { return currentCancelCond; }
         public TransitionFlag GetTransitionFlags() { return currentTransitionFlags; }

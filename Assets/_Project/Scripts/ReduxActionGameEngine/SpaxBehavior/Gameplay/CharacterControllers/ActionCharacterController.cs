@@ -122,8 +122,11 @@ namespace ActionGameEngine
 
                     //replace with block operations like checking if they're blocking the *right* way
                     bool isBlocking = EnumHelper.HasEnum((uint)status.currentState.stateConditions, (uint)StateCondition.GUARD_POINT);
+                    var attackDir = (uint)(boxData.type & HitType.STRIKE) >> 1;
+                    var blockDir = (uint)(status.currentState.stateConditions & StateCondition.GUARD_POINT) >> 12;
+                    bool blocked = isBlocking && ((attackDir & blockDir) == blockDir);
 
-                    if (isBlocking)
+                    if (blocked)
                     {
                         //set chip, blockstun, blockstop, etc.
 

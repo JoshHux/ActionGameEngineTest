@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +17,25 @@ namespace ActionGameEngine.Data.Drawer
         float rectWidth;
         float rectPosY;
         float rectPosX;
+        bool hasRChangeExEvent = false;
+        bool hasRChangeEnEvent = false;
+
+        soStateStringHolder so = null;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            //scriptable object with name data in it
+            if (SpaxJSONSaver.instance == null || SpaxJSONSaver.instance.NameHolder == null)
+            {
+                return;
+            }
+            var characterName = SpaxJSONSaver.instance.characterName;
+
+            if (so == null)
+            {
+                so = SpaxJSONSaver.instance.NameHolder;
+            }
+
+
             //dimensions for each property rect, height is hardcoded because that prevents certain boxes from extending too far down
             rectHeight = EditorGUIUtility.singleLineHeight;
             rectWidth = position.width;
@@ -58,21 +76,26 @@ namespace ActionGameEngine.Data.Drawer
             //offset the y position properly
             rectPosY += this.GetYPosOffset(anProp, anLabel);
 */
+            int id = property.FindPropertyRelative("stateID").intValue;
 
             //we're drawing this one manually to do some foldout shenanigans
             //find the raw property for the atframe value
-            var snProp = property.FindPropertyRelative("stateName");
+            //var snArrProp = so.FindPropertyRelative("_stateNames");
+
+            //var snProp = snArrProp.GetArrayElementAtIndex(id);
+            var sn = so.GetStateName(id);
+
             //rect for the atFrame property
-            var snRect = new Rect(rectPosX + 45f, rectPosY, rectWidth, EditorGUI.GetPropertyHeight(snProp));
-            var snRect2 = new Rect(rectPosX, rectPosY, rectWidth, EditorGUI.GetPropertyHeight(snProp));
+            var snRect = new Rect(rectPosX + 45f, rectPosY, rectWidth, EditorGUIUtility.singleLineHeight);//EditorGUI.GetPropertyHeight(snProp));
+            var snRect2 = new Rect(rectPosX, rectPosY, rectWidth, EditorGUIUtility.singleLineHeight);// EditorGUI.GetPropertyHeight(snProp));
             //label for the atframe value
             var snLabel = new GUIContent("State :");
             //get value from GUI
-            var stringFromGUI = EditorGUI.TextField(snRect, snProp.stringValue);
+            var stringFromGUI = EditorGUI.TextField(snRect, sn);
             //set from gui
-            snProp.stringValue = stringFromGUI;
+            so.SetStateName(stringFromGUI, id);
             //offset the y position properly
-            rectPosY += this.GetYPosOffset(snProp, label);
+            rectPosY += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
             EditorGUI.EndProperty();
 
@@ -83,7 +106,25 @@ namespace ActionGameEngine.Data.Drawer
                 EditorGUI.BeginProperty(position, label, property);
 
                 //ANIMATION NAME PROPERTY
-                this.DrawPropertyForUs("animName", "Animation", property, true, 1);
+                //var hold = this.DrawPropertyForUs("animName", "Animation", property, true, 1);
+
+                var san = so.GetAnimName(id);
+
+                //rect for the atFrame property
+                var sanRect = new Rect(rectPosX + 45f, rectPosY, rectWidth, EditorGUIUtility.singleLineHeight);//EditorGUI.GetPropertyHeight(snProp));
+                var sanRect2 = new Rect(rectPosX, rectPosY, rectWidth, EditorGUIUtility.singleLineHeight);// EditorGUI.GetPropertyHeight(snProp));
+                                                                                                          //label for the atframe value
+                var sanLabel = new GUIContent("State :");
+                //get value from GUI
+                var astringFromGUI = EditorGUI.TextField(sanRect, san);
+                //set from gui
+                so.SetAnimName(astringFromGUI, id);
+                //draw property
+                //EditorGUI.PropertyField(sanRect, prop, label, true);
+                //offset the y position properly
+                rectPosY += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+                //so.SetAnimName(hold.stringValue, id);
+
 
                 //STATE ID PROPERTY int
                 this.DrawPropertyForUs("stateID", "State ID", property, true);
@@ -101,10 +142,35 @@ namespace ActionGameEngine.Data.Drawer
                 this.DrawPropertyForUs("cancelConditions", "Cancel Conditions", property, true, 2, 1);
 
                 //ENTER EVENTS PROPERTY enum
-                this.DrawPropertyForUs("enterEvents", "enter Events", property, true, 2, 2);
+                this.DrawPropertyForUs("enterEvents", "Enter Events", property, true, 2, 2);
 
                 //EXIT EVENTS PROPERTY enum
                 this.DrawPropertyForUs("exitEvents", "Exit Events", property, true, 2, 2);
+
+                if (hasRChangeEnEvent)
+                {
+                    //label for the property
+                    var resourceLabel = new GUIContent("Change Enter Resources");
+                    //find the raw property
+                    var resourceProp = property.FindPropertyRelative("enterResources");
+                    //rect for the toggleCancelConditions property
+                    var resourceRect = new Rect(rectPosX, rectPosY, rectWidth, rectHeight);
+                    //draw the property with the value
+                    EditorGUI.PropertyField(resourceRect, resourceProp, resourceLabel, true);
+                    rectPosY += EditorGUI.GetPropertyHeight(resourceProp, resourceLabel, true) + EditorGUIUtility.standardVerticalSpacing;
+                }
+                if (hasRChangeExEvent)
+                {
+                    //label for the property
+                    var resourceLabel = new GUIContent("Change Exit Resources");
+                    //find the raw property
+                    var resourceProp = property.FindPropertyRelative("exitResources");
+                    //rect for the toggleCancelConditions property
+                    var resourceRect = new Rect(rectPosX, rectPosY, rectWidth, rectHeight);
+                    //draw the property with the value
+                    EditorGUI.PropertyField(resourceRect, resourceProp, resourceLabel, true);
+                    rectPosY += EditorGUI.GetPropertyHeight(resourceProp, resourceLabel, true) + EditorGUIUtility.standardVerticalSpacing;
+                }
 
 
                 //TRANSITION PROPERTY array
@@ -140,9 +206,14 @@ namespace ActionGameEngine.Data.Drawer
                 var ccProp = property.FindPropertyRelative("cancelConditions");
                 var entProp = property.FindPropertyRelative("enterEvents");
                 var exiProp = property.FindPropertyRelative("exitEvents");
+                var exiRProp = property.FindPropertyRelative("exitResources");
+                var entRProp = property.FindPropertyRelative("enterResources");
                 var trProp = property.FindPropertyRelative("transitions");
                 var frProp = property.FindPropertyRelative("frames");
 
+
+                hasRChangeEnEvent = EnumHelper.HasEnum((uint)entProp.intValue, (uint)TransitionEvent.DRAIN_RESOURCES);
+                hasRChangeExEvent = EnumHelper.HasEnum((uint)exiProp.intValue, (uint)TransitionEvent.DRAIN_RESOURCES);
 
 
                 //totalHeight += EditorGUI.GetPropertyHeight(snProp) + EditorGUIUtility.standardVerticalSpacing;
@@ -154,7 +225,9 @@ namespace ActionGameEngine.Data.Drawer
                 totalHeight += EditorGUI.GetPropertyHeight(ccProp) + EditorGUIUtility.standardVerticalSpacing;
                 totalHeight += EditorGUI.GetPropertyHeight(entProp) + EditorGUIUtility.standardVerticalSpacing;
                 totalHeight += EditorGUI.GetPropertyHeight(exiProp) + EditorGUIUtility.standardVerticalSpacing;
-                totalHeight += (EditorGUI.GetPropertyHeight(trProp, true) + EditorGUIUtility.standardVerticalSpacing);
+                totalHeight += EditorGUI.GetPropertyHeight(trProp, true) + EditorGUIUtility.standardVerticalSpacing;
+                totalHeight += (EditorGUI.GetPropertyHeight(exiRProp, true) + EditorGUIUtility.standardVerticalSpacing) * Convert.ToInt32(hasRChangeExEvent);
+                totalHeight += (EditorGUI.GetPropertyHeight(entRProp, true) + EditorGUIUtility.standardVerticalSpacing) * Convert.ToInt32(hasRChangeEnEvent);
                 totalHeight += EditorGUI.GetPropertyHeight(frProp, true);
             }
             return totalHeight;
@@ -162,7 +235,7 @@ namespace ActionGameEngine.Data.Drawer
 
         private float GetYPosOffset(SerializedProperty prop, GUIContent label)
         {
-            var ret = EditorGUI.GetPropertyHeight(prop, label, true) + EditorGUIUtility.standardVerticalSpacing; ;
+            var ret = EditorGUI.GetPropertyHeight(prop, label, true) + EditorGUIUtility.standardVerticalSpacing;
             return ret;
         }
 
@@ -218,7 +291,7 @@ namespace ActionGameEngine.Data.Drawer
                     //draw the field with a +1, fince that make the 0 index frame 1
                     var stringFromGUI = EditorGUI.TextField(rect, label, property.stringValue);
                     //set from gui
-                    property.stringValue = stringFromGUI;
+                    //property.stringValue = stringFromGUI;
                     break;
                 //enum
                 case 2:
