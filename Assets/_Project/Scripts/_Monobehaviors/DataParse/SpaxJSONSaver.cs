@@ -12,6 +12,8 @@ public class SpaxJSONSaver : MonoBehaviour
 
     //public CharacterData fromSave;
 #if UNITY_EDITOR
+    public soStateStringHolder NameHolder { get { return this._nameHolder; } }
+
 
     public static SpaxJSONSaver instance;
 
